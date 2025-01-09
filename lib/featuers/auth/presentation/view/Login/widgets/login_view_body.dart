@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
 class LoginViewBody extends StatelessWidget {
   const LoginViewBody({super.key});
@@ -9,12 +10,9 @@ class LoginViewBody extends StatelessWidget {
     padding: EdgeInsets.all(10),
       child: Column(
         children: [
-          Text(
-            'Login',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 24,
-            )),
+          Text('Login',
+            style: TextStyles.textStyle24Bold,
+          ),
         ],
       ),
     );
