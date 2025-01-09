@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "328443475512",
+    "project_id": "services-7dc93",
+    "storage_bucket": "services-7dc93.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328443475512:android:10c320ce3b7d1b7a9018cd",
+        "android_client_info": {
+          "package_name": "com.app.hadawi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRPDJbxpmGvXXArjnHNPF7UldmWUAGQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328443475512:android:3787b481c214d8269018cd",
+        "android_client_info": {
+          "package_name": "com.hadawi.hadawi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByRPDJbxpmGvXXArjnHNPF7UldmWUAGQA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
