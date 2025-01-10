@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
 
@@ -30,7 +31,9 @@ class DefaultButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           buttonText,
-          style: TextStyles.textStyle18Medium,
+          style: TextStyles.textStyle18Bold.copyWith(
+            color: ColorManager.white
+          ),
         ),
       ),
     );

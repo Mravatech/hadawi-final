@@ -1,8 +1,10 @@
 class AssetsManager{
 
-  static const String darkLogo = "asstes/images/dark_logo.png";
-  static const String lightLogo = "asstes/images/light_logo.png";
-  static const String logoWithoutBackground = "asstes/images/logo_without_background.png";
+  static const String darkLogo = "assets/images/dark_logo.png";
+  static const String lightLogo = "assets/images/light_logo.jpg";
+  static const String logoWithoutBackground = "assets/images/logo_without_background.png";
+  static const String googleIcon = "assets/images/google.png";
+  static const String appleIcon = "assets/images/apple.png";
 
 
 

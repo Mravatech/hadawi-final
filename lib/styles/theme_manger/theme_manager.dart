@@ -5,14 +5,14 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
 ThemeData getApplicationTheme(BuildContext context) {
   return ThemeData(
-    scaffoldBackgroundColor: ColorManager.background,
+    scaffoldBackgroundColor: ColorManager.gray,
     primaryColor: ColorManager.primaryBlue,
     useMaterial3: true,
     fontFamily: 'NanumGothic',
 
     // app bar theme
     appBarTheme: AppBarTheme(
-        color: ColorManager.gray,
+        color: ColorManager.white,
         titleTextStyle: TextStyles.textStyle18Medium,
         iconTheme: const IconThemeData(
           color: ColorManager.black,

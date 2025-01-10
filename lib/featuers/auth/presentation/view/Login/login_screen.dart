@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_view_body.dart';
+import 'package:hadawi_app/widgets/app_bar_without_height_widget.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -7,9 +8,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
+      appBar:appBarWithoutHeightWidget(),
       body: LoginViewBody(),
     );
   }

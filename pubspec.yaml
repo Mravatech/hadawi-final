@@ -45,6 +45,7 @@ dependencies:
   cached_network_image: ^3.4.1
   shimmer_animation: ^2.2.2
   toastification: ^2.3.0
+  salomon_bottom_bar: ^3.3.2
 
   #firebase
   firebase_auth: ^5.4.0

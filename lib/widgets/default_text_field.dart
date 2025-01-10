@@ -15,6 +15,7 @@ class DefaultTextField extends StatefulWidget {
   IconData? suffixIcon;
   int? maxLines;
   Color? fillColor;
+  void Function()? onTap;
 
    DefaultTextField({
     Key? key,
@@ -25,7 +26,8 @@ class DefaultTextField extends StatefulWidget {
     required this.textInputAction,
     this.withSuffix = false,
     this.isPassword = false,
-     this.viewPassword=true,
+    this.onTap,
+    this.viewPassword=true,
     this.suffixIcon,
     this.enable = true,
     this.maxLines = 1,
@@ -41,24 +43,25 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
   Widget build(BuildContext context) {
     return SizedBox(
       child: TextFormField(
+        onTap: widget.onTap,
         textDirection: TextDirection.rtl,
         enabled: widget.enable,
         style: TextStyle(
-          fontSize: MediaQuery.sizeOf(context).height*0.017,
+          fontSize: MediaQuery.sizeOf(context).height*0.016,
           color: ColorManager.black,
         ),
         decoration: InputDecoration(
           filled:  true,
           fillColor: widget.fillColor,
           errorStyle: TextStyle(
-            fontSize: MediaQuery.sizeOf(context).height*0.02,
-            color: ColorManager.primaryBlue,
+            fontSize: MediaQuery.sizeOf(context).height*0.014,
+            color: ColorManager.error,
           ),
 
           hintText: widget.hintText,
           hintStyle: TextStyle(
-            fontSize: MediaQuery.sizeOf(context).height*0.018,
-            color: ColorManager.lightGrey,
+            fontSize: MediaQuery.sizeOf(context).height*0.016,
+            color: ColorManager.black,
           ),
           suffixIcon: widget.withSuffix==true ?
           IconButton(
@@ -107,14 +110,14 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
               color: ColorManager.error,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.03),
+            borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.01),
           ),
           disabledBorder: OutlineInputBorder(
             borderSide:  const BorderSide(
               color: ColorManager.gray,
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.03),
+            borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.01),
           ),
         ),
         controller: widget.controller,

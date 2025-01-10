@@ -52,21 +52,21 @@ class TextStyles {
 
   /// medium text style
   static TextStyle textStyle24Bold= TextStyle(
-      fontSize: SizeConfig.height * 0.024,
+      fontSize: SizeConfig.height * 0.033,
       color: ColorManager.black,
       fontFamily: 'NanumGothic',
       fontWeight: FontWeight.bold
   );
 
   static TextStyle textStyle24Medium= TextStyle(
-      fontSize: SizeConfig.height * 0.024,
+      fontSize: SizeConfig.height * 0.033,
       color: ColorManager.black,
       fontFamily: 'NanumGothic',
       fontWeight: FontWeight.w600
   );
 
   static TextStyle textStyle24Regular= TextStyle(
-      fontSize: SizeConfig.height * 0.024,
+      fontSize: SizeConfig.height * 0.033,
       color: ColorManager.black,
       fontFamily: 'NanumGothic',
       fontWeight: FontWeight.w500

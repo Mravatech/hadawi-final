@@ -1,0 +1,43 @@
+import 'package:flutter/material.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+
+class DefaultButtonWithImage extends StatelessWidget {
+  const DefaultButtonWithImage({super.key,required this.buttonText,required this.image,this.onTap});
+  final String buttonText;
+  final String image;
+  final Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap:onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+            vertical: MediaQuery.sizeOf(context).height*0.015,
+            horizontal: MediaQuery.sizeOf(context).height*0.015
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.015),
+          color:  ColorManager.primaryBlue,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(buttonText,style: TextStyles.textStyle12Medium.copyWith(
+                color: ColorManager.white
+            ),),
+            SizedBox( width:MediaQuery.sizeOf(context).height*0.01,),
+            Image(
+              height: MediaQuery.sizeOf(context).height*0.035,
+              color: ColorManager.white,
+              image: AssetImage(image),
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+}
