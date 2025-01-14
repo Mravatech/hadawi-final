@@ -1,10 +1,18 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ServerExceptions implements Exception {
+class FirebaseExceptions implements Exception {
+
+  FirebaseAuthException firebaseAuthException;
+
+  FirebaseExceptions({required this.firebaseAuthException});
+
+}
+
+class FireStoreException implements Exception {
 
   FirebaseException firebaseException;
 
-  ServerExceptions({required this.firebaseException});
+  FireStoreException({required this.firebaseException});
 
 }
