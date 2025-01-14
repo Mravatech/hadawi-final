@@ -7,7 +7,9 @@ class UserModel extends UserEntities{
     required super.email,
     required super.uId,
     required super.name,
-    required super.phone
+    required super.phone,
+    required super.brithDate,
+    required super.gender
   });
 
   factory UserModel.fromFire(Map<String,dynamic> json){
@@ -16,6 +18,8 @@ class UserModel extends UserEntities{
       uId: json['uId'],
       name: json['name'],
       phone: json['phone'],
+      brithDate: json['brithDate'],
+      gender: json['gender'],
     );
   }
 
@@ -25,6 +29,8 @@ class UserModel extends UserEntities{
       'uId':uId,
       'name':name,
       'phone':phone,
+      'gender':gender,
+      'brithDate':brithDate,
     };
   }
 
