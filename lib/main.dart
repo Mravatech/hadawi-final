@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_screen.dart';
 import 'package:hadawi_app/firebase_options.dart';
 import 'package:hadawi_app/styles/theme_manger/theme_manager.dart';
 import 'package:hadawi_app/utiles/services/dio_helper.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Hadawi',
       theme: getApplicationTheme(context),
-      home: const LoginScreen(),
+      home: const OccasionScreen(),
     );
   }
 }
