@@ -14,18 +14,19 @@ class DefaultButtonWithImage extends StatelessWidget {
     return GestureDetector(
       onTap:onTap,
       child: Container(
+        height: MediaQuery.sizeOf(context).height*0.05,
         padding: EdgeInsets.symmetric(
-            vertical: MediaQuery.sizeOf(context).height*0.015,
+            vertical: MediaQuery.sizeOf(context).height*0.01,
             horizontal: MediaQuery.sizeOf(context).height*0.015
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.015),
+          borderRadius: BorderRadius.circular(MediaQuery.sizeOf(context).height*0.01),
           color:  ColorManager.primaryBlue,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(buttonText,style: TextStyles.textStyle12Medium.copyWith(
+            Text(buttonText,style: TextStyles.textStyle18Bold.copyWith(
                 color: ColorManager.white
             ),),
             SizedBox( width:MediaQuery.sizeOf(context).height*0.01,),

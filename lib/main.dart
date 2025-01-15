@@ -2,12 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_screen.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_gift_screen.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/firebase_options.dart';
 import 'package:hadawi_app/styles/theme_manger/theme_manager.dart';
 import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'featuers/payment_page/presentation/view/my_gift_payments_list.dart';
 import 'utiles/shared_preferences/shared_preference.dart';
 
 void main() async{
@@ -33,7 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Hadawi',
       theme: getApplicationTheme(context),
-      home: const OccasionScreen(),
+      home: const MyGiftPaymentsList(),
     );
   }
 }
