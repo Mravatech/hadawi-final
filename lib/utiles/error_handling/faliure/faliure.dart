@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 
 class Faliure extends Equatable{
 
   final String message;
 
   const Faliure({required this.message});
-
   @override
   List<Object?> get props => [message];
 
@@ -16,8 +16,8 @@ class FirebaseFaliure extends Faliure{
 
   const FirebaseFaliure({required super.message});
 
-  factory FirebaseFaliure.fromMessage(FirebaseAuthException error){
-    switch(error.code){
+  factory FirebaseFaliure.fromMessage(FirebaseExceptions error){
+    switch(error.firebaseAuthException.code){
 
       case "invalid-email":
         return FirebaseFaliure(message: "Invalid email");
@@ -41,7 +41,29 @@ class FirebaseFaliure extends Faliure{
         return FirebaseFaliure(message: "Weak password");
 
       default:
-        return FirebaseFaliure(message: error.code);
+        return FirebaseFaliure(message: error.firebaseAuthException.message!);
+
+    }
+  }
+
+
+}
+
+class GoogleAuthFaliure extends Faliure{
+
+  const GoogleAuthFaliure({required super.message});
+
+  factory GoogleAuthFaliure.fromMessage(FirebaseExceptions error){
+    switch(error.firebaseAuthException.code){
+
+      case "account-exists-with-different-credential":
+        return GoogleAuthFaliure(message: "Account exists with a different credential. Please use the correct sign-in method");
+
+      case "invalid-credential":
+        return GoogleAuthFaliure(message: "Invalid credentials provided.");
+
+      default:
+        return GoogleAuthFaliure(message: 'An error occurred: ${error.firebaseAuthException.message}');
 
     }
   }

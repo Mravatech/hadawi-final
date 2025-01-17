@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/constants/app_constants.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -23,7 +24,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.home),
-              title: Text("Profile"),
+              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -31,7 +32,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.add_circle_rounded),
-              title: Text("Occaisons"),
+              title:  Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -39,7 +40,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.people),
-              title: Text("Friends"),
+              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -47,7 +48,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.settings),
-              title: Text("Settings"),
+              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
               selectedColor: ColorManager.primaryBlue,
             ),
           ],

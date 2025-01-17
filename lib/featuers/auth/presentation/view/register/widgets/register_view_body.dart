@@ -15,14 +15,12 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
   TextEditingController nameController = TextEditingController();
-  TextEditingController brithDateController = TextEditingController();
 
   @override
   void dispose() {
     passController.dispose();
     phoneController.dispose();
     nameController.dispose();
-    brithDateController.dispose();
     super.dispose();
   }
 
@@ -42,7 +40,6 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
             phoneController:  phoneController,
             passController:  passController,
             nameController:  nameController,
-            brithDateController:  brithDateController,
           ),
         ),
 

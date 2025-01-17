@@ -36,3 +36,14 @@ class UserGetDataErrorState extends AuthStates{
   String message;
   UserGetDataErrorState({required this.message});
 }
+
+class SignInWithSocialMediaLoadingState extends AuthStates{}
+class SignInWithSocialMediaSuccessState extends AuthStates{}
+class SignInWithSocialMediaErrorState extends AuthStates{
+  String message;
+  SignInWithSocialMediaErrorState({required this.message});
+}
+
+class SetBrithDayValueState extends AuthStates{}
+
+class SelectGenderTypeState extends AuthStates{}
