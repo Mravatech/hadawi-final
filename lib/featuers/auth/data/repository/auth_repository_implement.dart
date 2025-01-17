@@ -16,18 +16,35 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   Future<Either<Faliure,void>> login({required String email, required String password}) async{
     try{
       return Right(await baseAuthDataSource.login(email: email, password: password));
-    }on FirebaseAuthException catch(e){
+    }on FirebaseExceptions catch(e){
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 
 
   @override
-  Future<Either<Faliure,void>> register({required String email, required String password})async {
+  Future<Either<Faliure,void>> register({
+    required String email,
+    required String password,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String gender
+  })async {
     try{
-      return Right(await baseAuthDataSource.register(email: email, password: password));
-    }on FirebaseAuthException catch(e){
+      return Right(await baseAuthDataSource.register(
+          email: email,
+          password: password,
+          brithDate: brithDate,
+          gender: gender,
+          name: name,
+          phone: phone
+      ));
+    }on FirebaseExceptions catch(e){
     return Left(FirebaseFaliure.fromMessage(e));
+    }catch (e) {
+      print('error in register $e');
+      return Left(FirebaseFaliure(message: e.toString()));
     }
   }
 
@@ -44,7 +61,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   Future<Either<Faliure, void>> logout()async {
     try{
       return Right(await baseAuthDataSource.logout());
-    }on FirebaseAuthException catch(e){
+    }on FirebaseExceptions catch(e){
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
@@ -70,6 +87,25 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     }on FireStoreException catch(e){
     return Left(FirebaseFaliure(message: e.firebaseException.message!));
     }
+  }
+
+  @override
+  Future<Either<Faliure, void>> loginWithGoogle(
+      {
+        required String brithDate,
+        required String gender
+      }) async{
+    try{
+      return Right(await baseAuthDataSource.loginWithGoogle(
+          brithDate: brithDate,
+          gender: gender
+      )
+      );
+    }on FirebaseExceptions catch(e){
+      return Left(GoogleAuthFaliure.fromMessage(e));
+    }
+
+
   }
 
 }

@@ -12,4 +12,10 @@ class HomeCubit extends Cubit<HomeStates> {
     emit(HomeChangeIndexState());
   }
 
+  bool switchValue=false;
+  void changeSwitchState({required bool value}){
+    switchValue=value;
+    emit(ChangeSwitchState());
+  }
+
 }

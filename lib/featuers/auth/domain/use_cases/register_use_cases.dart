@@ -11,8 +11,20 @@ class RegisterUseCases{
 
   Future<Either<Faliure,void>> register({
     required String email,
-    required String password})async {
-    return await authBaseRepository.register(email:email, password:password,);
+    required String password,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String gender
+  })async {
+    return await authBaseRepository.register(
+        email: email,
+        password: password,
+        brithDate: brithDate,
+        gender: gender,
+        name: name,
+        phone: phone
+    );
   }
 
 }
