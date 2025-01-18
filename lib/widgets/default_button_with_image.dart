@@ -27,11 +27,12 @@ class DefaultButtonWithImage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(buttonText,style: TextStyles.textStyle18Bold.copyWith(
-                color: ColorManager.white
+                color: ColorManager.white,
+                fontSize: MediaQuery.sizeOf(context).height*0.016
             ),),
             SizedBox( width:MediaQuery.sizeOf(context).height*0.01,),
             Image(
-              height: MediaQuery.sizeOf(context).height*0.035,
+              height: MediaQuery.sizeOf(context).height*0.03,
               color: ColorManager.white,
               image: AssetImage(image),
             )

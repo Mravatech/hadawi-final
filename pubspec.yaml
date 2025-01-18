@@ -48,6 +48,7 @@ dependencies:
   salomon_bottom_bar: ^3.3.2
   intl: ^0.18.0
   google_sign_in: ^6.2.2
+  modal_progress_hud_nsn: ^0.5.1
 
   #firebase
   firebase_auth: ^5.4.0
