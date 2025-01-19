@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cub
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_screen.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/profile_screen.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
 import 'package:hadawi_app/firebase_options.dart';
@@ -16,6 +17,9 @@ import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'featuers/occasions_list/presentation/view/my_occasions.dart';
+import 'featuers/occasions_list/presentation/view/others_occasions.dart';
+import 'featuers/payment_page/presentation/view/payment_screen.dart';
 import 'utiles/shared_preferences/shared_preference.dart';
 
 void main() async{
@@ -43,6 +47,7 @@ class MyApp extends StatelessWidget {
               getIt(), getIt(), getIt(),
               getIt(), getIt(), getIt(),
           )),
+          BlocProvider(create: (context)=> PaymentCubit()),
         ],
         child: BlocBuilder<AuthCubit,AuthStates>(
           builder: (context, state) {
@@ -50,7 +55,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Hadawi',
               theme: getApplicationTheme(context),
-              home: const SplashScreen(),
+              home: const PaymentScreen(),
             );
           },
         )

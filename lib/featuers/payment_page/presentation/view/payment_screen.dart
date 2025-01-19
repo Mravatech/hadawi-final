@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/counter_widget.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
@@ -23,8 +25,8 @@ class PaymentScreen extends StatelessWidget {
               padding: const EdgeInsets.all(15.0),
               child: Text(
                 "أعياد ميلاد (محمد ممدوح) الدفع",
-                style: TextStyles.textStyle18Bold.copyWith(
-                    color: ColorManager.primaryBlue),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.primaryBlue),
               ),
             ),
             actions: [
@@ -40,35 +42,11 @@ class PaymentScreen extends StatelessWidget {
             padding: EdgeInsets.all(SizeConfig.height * 0.02),
             child: Column(
               children: [
-                SizedBox(
-                  height: SizeConfig.height * 0.02,
-                ),
+                SizedBox(height: SizeConfig.height * 0.02),
+
                 /// payment progress
-                SizedBox(
-                  height: SizeConfig.height * 0.04,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      LinearProgressIndicator(
-                        value: 0.6,
-                        backgroundColor: ColorManager.gray,
-                        color: ColorManager.primaryBlue,
-                        minHeight: SizeConfig.height * 0.04,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.height * 0.03),
-                      ),
-                      Text(
-                        "60%",
-                        style: TextStyles.textStyle18Medium.copyWith(
-                          color: ColorManager.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: SizeConfig.height * 0.04,
-                ),
+                ProgressIndicatorWidget(value: 0.6),
+                SizedBox(height: SizeConfig.height * 0.04),
 
                 /// payment amount
                 Row(
@@ -84,64 +62,14 @@ class PaymentScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Expanded(
                       flex: 4,
-                      child: Row(
-                        children: [
-                          Container(
-                            height: SizeConfig.height * 0.05,
-                            width: SizeConfig.height * 0.2,
-                            decoration: BoxDecoration(
-                              color: ColorManager.gray,
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.height * 0.01),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.remove,
-                                    color: ColorManager.primaryBlue,
-                                  ),
-                                ),
-                                Text(
-                                  "100",
-                                  style: TextStyles.textStyle18Medium.copyWith(
-                                    color: ColorManager.primaryBlue,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.add,
-                                    color: ColorManager.primaryBlue,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.width * 0.02,
-                          ),
-                          Text(
-                            "ريال",
-                            style: TextStyles.textStyle18Bold.copyWith(
-                              color: ColorManager.black,
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: CounterWidget(),
                     ),
                   ],
                 ),
 
-
-                SizedBox(
-                  height: SizeConfig.height * 0.01,
-                ),
+                SizedBox(height: SizeConfig.height * 0.01),
 
                 /// payment name
                 Row(
@@ -156,50 +84,42 @@ class PaymentScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-
                     Expanded(
                       flex: 4,
                       child: DefaultTextField(
-                          controller: nameController,
-                          hintText: '',
-                          validator: (value) {
-                            if (value.isEmpty) {
-                              return 'الرجاء ادخال الاسم';
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
-                          fillColor: ColorManager.gray,
+                        controller: nameController,
+                        hintText: '',
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'الرجاء ادخال الاسم';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.done,
+                        fillColor: ColorManager.gray,
                       ),
                     ),
-
                   ],
                 ),
 
-                SizedBox(
-                  height: SizeConfig.height * 0.08,
-                ),
+                SizedBox(height: SizeConfig.height * 0.08),
 
                 /// payment with apple
                 DefaultButtonWithImage(
-                    buttonText: "Apple Pay",
-                    image: AssetsManager.appleIcon,
+                  buttonText: "Apple Pay",
+                  image: AssetsManager.appleIcon,
                 ),
 
-                SizedBox(
-                  height: SizeConfig.height * 0.01,
-                ),
+                SizedBox(height: SizeConfig.height * 0.01),
 
                 DefaultButton(
-                    buttonText: "بطاقة مدى فيزا",
-                    onPressed: () {},
-                    buttonColor: ColorManager.primaryBlue,
+                  buttonText: "بطاقة مدى فيزا",
+                  onPressed: () {},
+                  buttonColor: ColorManager.primaryBlue,
                 ),
 
-                SizedBox(
-                  height: SizeConfig.height * 0.01,
-                ),
+                SizedBox(height: SizeConfig.height * 0.01),
 
                 DefaultButton(
                   buttonText: "الدفع",
