@@ -13,12 +13,12 @@ class RegisterViewBody extends StatefulWidget {
 class _RegisterViewBodyState extends State<RegisterViewBody> {
 
   TextEditingController phoneController = TextEditingController();
-  TextEditingController passController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
 
   @override
   void dispose() {
-    passController.dispose();
+    emailController.dispose();
     phoneController.dispose();
     nameController.dispose();
     super.dispose();
@@ -38,8 +38,8 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
           flex: 5,
           child: RegisterFormWidget(
             phoneController:  phoneController,
-            passController:  passController,
-            nameController:  nameController,
+            emailController:  emailController,
+            nameController:   nameController,
           ),
         ),
 

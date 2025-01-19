@@ -1,45 +1,55 @@
-//
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/widgets/verifiy_otp_code_body.dart';
-// import 'package:hadawi_app/styles/colors/color_manager.dart';
-// import 'package:hadawi_app/styles/text_styles/text_styles.dart';
-//
-// class VerifyPhoneScreen extends StatelessWidget {
-//   final String verificationId;
-//   final String phoneNumber;
-//   final int id;
-//   final bool isRegister;
-//
-//   const VerifyPhoneScreen({super.key,
-//     required this.verificationId,
-//     required this.phoneNumber,
-//     required this.id,
-//     required this.isRegister
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       appBar: AppBar(
-//         elevation: 0.0,
-//         iconTheme: const IconThemeData(color: Colors.white),
-//         systemOverlayStyle: const SystemUiOverlayStyle(
-//             statusBarColor: Colors.transparent,
-//             statusBarIconBrightness: Brightness.light
-//         ),
-//         backgroundColor: ColorManager.primaryBlue,
-//         centerTitle: true,
-//         title: Text('Verify Phone Number',style: TextStyles.textStyle18Bold,),
-//       ),
-//       body: VerfiyCodeViewBody(
-//         phoneNumber: phoneNumber,
-//         verificationId:verificationId ,
-//         id: id,
-//         isRegister: isRegister,
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/widgets/verifiy_otp_code_body.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+
+class VerifyPhoneScreen extends StatelessWidget {
+  final String verificationId;
+  final String gender;
+  final String name;
+  final String phone;
+  final String brithDate;
+  final String email;
+
+  const VerifyPhoneScreen({super.key,
+    required this.verificationId,
+    required this.gender,
+    required this.name,
+    required this.phone,
+    required this.brithDate,
+    required this.email
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        leading: IconButton(onPressed: (){
+          customPushAndRemoveUntil(context, RegisterScreen());
+          },
+          icon: Icon(Icons.arrow_back_ios
+        ),),
+        backgroundColor: ColorManager.gray,
+        centerTitle: true,
+        title: Text('تاكيد رقم الهاتف',style: TextStyles.textStyle18Bold,),
+      ),
+      body: WillPopScope(
+        onWillPop: (){
+          customPushAndRemoveUntil(context, RegisterScreen());
+          return Future.value(true);
+        },
+        child: VerfiyCodeViewBody(
+          verificationId: verificationId,
+          gender: gender,
+          name: name,
+          phone: phone,
+          brithDate: brithDate,
+          email: email,
+        ),
+      ),
+    );
+  }
+}

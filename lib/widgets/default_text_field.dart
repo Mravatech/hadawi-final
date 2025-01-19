@@ -13,6 +13,7 @@ class DefaultTextField extends StatefulWidget {
   bool viewPassword;
   bool? enable;
   IconData? suffixIcon;
+  Widget? prefix;
   int? maxLines;
   Color? fillColor;
   void Function()? onTap;
@@ -29,6 +30,7 @@ class DefaultTextField extends StatefulWidget {
     this.onTap,
     this.viewPassword=true,
     this.suffixIcon,
+    this.prefix,
     this.enable = true,
     this.maxLines = 1,
      required this.fillColor,
@@ -51,6 +53,7 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
           color: ColorManager.black,
         ),
         decoration: InputDecoration(
+          prefixIcon: widget.prefix,
           filled:  true,
           fillColor: widget.fillColor,
           errorStyle: TextStyle(

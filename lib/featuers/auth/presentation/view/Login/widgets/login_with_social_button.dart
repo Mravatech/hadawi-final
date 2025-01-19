@@ -32,7 +32,7 @@ class LoginWithSocialButton extends StatelessWidget {
             Expanded(
               child: DefaultButtonWithImage(
                 image:AssetsManager.googleIcon ,
-                buttonText: 'Continue with',
+                buttonText: 'ادخل باستخدام',
                 onTap: (){
                   cubit.signInWithGoogle(brithDate: '', gender:'');
                 },
@@ -42,7 +42,7 @@ class LoginWithSocialButton extends StatelessWidget {
             Expanded(
               child: DefaultButtonWithImage(
                 image:AssetsManager.appleIcon ,
-                buttonText: 'Continue with',
+                buttonText: 'ادخل باستخدام',
                 onTap: (){},
               ),
             ),
