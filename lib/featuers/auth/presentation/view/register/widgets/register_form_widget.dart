@@ -4,9 +4,12 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/already_have_an_account.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/select_gender_widget.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/verifiy_otp_code_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -15,12 +18,12 @@ class RegisterFormWidget extends StatelessWidget {
    RegisterFormWidget({super.key,
     required this.nameController,
     required this.phoneController,
-    required this.passController,
+    required this.emailController,
     });
 
   final TextEditingController nameController ;
   final TextEditingController phoneController ;
-  final TextEditingController passController ;
+  final TextEditingController emailController ;
 
   GlobalKey<FormState> registerKey = GlobalKey<FormState>();
 
@@ -41,7 +44,7 @@ class RegisterFormWidget extends StatelessWidget {
 
               SizedBox( height:  MediaQuery.sizeOf(context).height*0.01,),
 
-              Text('Personal information',style: TextStyles.textStyle24Bold.copyWith(
+              Text('المعلومات الشخصية',style: TextStyles.textStyle24Bold.copyWith(
                   fontSize: MediaQuery.sizeOf(context).height*0.025
               )),
 
@@ -50,10 +53,10 @@ class RegisterFormWidget extends StatelessWidget {
               // name
               DefaultTextField(
                   controller: nameController,
-                  hintText: 'Enter your name',
+                  hintText: 'ادخل اسمك',
                   validator: (value) {
                     if(value.isEmpty){
-                      return 'Please enter your name';
+                      return 'رجاء ادخال اسمك';
                     }
                     return null;
                   },
@@ -66,11 +69,12 @@ class RegisterFormWidget extends StatelessWidget {
 
               // phone number
               DefaultTextField(
+                  prefix:CountryCodeWidget(),
                   controller: phoneController,
-                  hintText: 'Enter your phone number',
+                  hintText: ' ادخل رقم هاتفك',
                   validator: (value) {
                     if(value.isEmpty){
-                      return 'Please enter your phone number';
+                      return 'رجاء ادخال رقم هاتفك';
                     }
                     return null;
                   },
@@ -81,19 +85,17 @@ class RegisterFormWidget extends StatelessWidget {
 
               SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
 
-              // password
+              // email
               DefaultTextField(
-                  viewPassword: true,
-                  withSuffix: true,
-                  controller: passController,
-                  hintText: 'Enter your password',
+                  controller: emailController,
+                  hintText: 'ادخل البريد الالكتروني',
                   validator: (value) {
                     if(value.isEmpty){
-                      return 'Please enter your password';
+                      return 'رجاء ادخال البريد الالكتروني';
                     }
                     return null;
                   },
-                  keyboardType: TextInputType.visiblePassword,
+                  keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
                   fillColor: ColorManager.gray
               ),
@@ -106,7 +108,7 @@ class RegisterFormWidget extends StatelessWidget {
                   var cubit= context.read<AuthCubit>();
                   return GestureDetector(
                     onTap:  ()=>showDatePicker(
-                      helpText: 'Select your birth date',
+                      helpText: 'ادخل تاريخ ميلادك',
                       context: context,
                       firstDate: DateTime(1920),
                       lastDate: DateTime.now(),
@@ -115,10 +117,10 @@ class RegisterFormWidget extends StatelessWidget {
                         enable: false,
                         controller: cubit.brithDateController,
                         hintText: cubit.brithDateController.text.isEmpty?
-                        'Select your birth date':cubit.brithDateController.text,
+                        'ادخل تاريخ ميلادك':cubit.brithDateController.text,
                         validator: (value) {
                           if(value.isEmpty){
-                            return 'Please enter your birth date';
+                            return 'رجاء ادخال تاريخ ميلادك';
                           }
                           return null;
                         },
@@ -140,30 +142,26 @@ class RegisterFormWidget extends StatelessWidget {
               // sign up
               BlocConsumer<AuthCubit,AuthStates>(
                 listener: (context, state) {
-                  if(state is UserRegisterSuccessState){
-                    Navigator.pushNamed(context, '/login_screen');
-                  }
-                  if(state is UserRegisterErrorState){
-                    customToast(title: state.message, color: ColorManager.error);
-                  }
+                 print('state $state');
                 },
                 builder: (context, state) {
                   var cubit = context.read<AuthCubit>();
-                  return state is UserRegisterLoadingState?
+                  return state is LoginWithPhoneLoadingState?
                   Center(
                     child: CircularProgressIndicator(),
                   ):
                   DefaultButton(
-                      buttonText: 'Sign up',
+                      buttonText: 'تسجيل',
                       onPressed: (){
                         if(registerKey.currentState!.validate()){
-                          cubit.register(
-                              email: phoneController.text,
-                              password: passController.text,
+                          cubit.loginWithPhone(
+                              phone: phoneController.text,
+                              context: context,
+                              resendCode: false,
+                              email:emailController.text,
                               brithDate: cubit.brithDateController.text,
                               gender: cubit.genderValue,
-                              name: nameController.text,
-                              phone: phoneController.text
+                              name: nameController.text
                           );
                         }
                       },

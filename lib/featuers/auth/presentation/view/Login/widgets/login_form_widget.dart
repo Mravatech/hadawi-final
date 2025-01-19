@@ -5,6 +5,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dar
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/donot_have_an_account.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_password_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
@@ -35,17 +36,18 @@ class LoginFormWidget extends StatelessWidget {
           child: Column(
             children: [
 
-              Text('Sign in',style: TextStyles.textStyle24Bold),
+              Text('تسجيل الدخول',style: TextStyles.textStyle24Bold),
 
               SizedBox( height:  MediaQuery.sizeOf(context).height*0.035,),
 
               // phone number
               DefaultTextField(
+                  prefix:CountryCodeWidget(),
                   controller: phoneController,
-                  hintText: 'Enter your phone number',
+                  hintText: 'ادخل رقم هاتفك',
                   validator: (value) {
                     if(value.isEmpty){
-                      return 'Please enter your phone number';
+                      return 'رجاء ادخال رقم هاتفك';
                     }
                     return null;
                   },
@@ -53,30 +55,6 @@ class LoginFormWidget extends StatelessWidget {
                   textInputAction: TextInputAction.next,
                   fillColor: ColorManager.gray
               ),
-
-              SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
-
-              // password
-              DefaultTextField(
-                  viewPassword: true,
-                  withSuffix: true,
-                  controller: passController,
-                  hintText: 'Enter your password',
-                  validator: (value) {
-                    if(value.isEmpty){
-                      return 'Please enter your password';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  fillColor: ColorManager.gray
-              ),
-
-              SizedBox( height:  MediaQuery.sizeOf(context).height*0.01,),
-
-              // forget password
-              ForgetPasswordButton(),
 
               SizedBox( height:  MediaQuery.sizeOf(context).height*0.045,),
 
@@ -95,14 +73,16 @@ class LoginFormWidget extends StatelessWidget {
                   return state is UserLoginLoadingState?
                   const Center(child: CircularProgressIndicator(),):
                   DefaultButton(
-                      buttonText: 'Sign in',
+                      buttonText: 'تسجيل الدخول',
                       onPressed: (){
-                        if(loginKey.currentState!.validate()){
-                          cubit.login(
-                              email: phoneController.text,
-                              password: passController.text
-                          );
-                        }
+                        customPushAndRemoveUntil(context, HomeLayout());
+
+                        // if(loginKey.currentState!.validate()){
+                        //   // cubit.loginWithPhone(
+                        //   //     email: phoneController.text,
+                        //   //     password: passController.text
+                        //   // );
+                        // }
                       },
                       buttonColor: ColorManager.primaryBlue
                   );
@@ -111,7 +91,7 @@ class LoginFormWidget extends StatelessWidget {
 
               SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
 
-              Text('Or',style: TextStyles.textStyle18Bold.copyWith(
+              Text('او',style: TextStyles.textStyle18Bold.copyWith(
                   color: ColorManager.darkGrey
               )),
 

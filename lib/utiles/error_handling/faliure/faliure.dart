@@ -22,6 +22,15 @@ class FirebaseFaliure extends Faliure{
       case "invalid-email":
         return FirebaseFaliure(message: "Invalid email");
 
+      case "invalid-phone-number":
+        return FirebaseFaliure(message: "Invalid phone number");
+
+      case "invalid-verification-code":
+        return FirebaseFaliure(message: "Invalid verification code");
+
+      case "session-expired":
+        return FirebaseFaliure(message: "Session expired");
+
       case "user-not-found":
         return FirebaseFaliure(message: "User not found");
 
@@ -30,6 +39,9 @@ class FirebaseFaliure extends Faliure{
 
       case "user-disabled":
         return FirebaseFaliure(message: "User disabled");
+
+      case "network-request-failed":
+        return FirebaseFaliure(message: "Network request failed");
 
       case "email-already-in-use":
         return FirebaseFaliure(message: "Email already in use");

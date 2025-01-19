@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/data/data_source/auth_data_source.dart';
 import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/base_repository/auth_base_repository.dart';
@@ -106,6 +107,58 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     }
 
 
+  }
+
+  @override
+  Future<Either<Faliure, void>> loginWithPhoneNumber({
+    required String phone,
+    required BuildContext context,
+    required String email,
+    required String name,
+    required bool resendCode,
+    required String brithDate,
+    required String gender,
+  }) async{
+    try{
+       return Right(await baseAuthDataSource.loginWithPhoneNumber(
+           email: email,
+           name: name,
+           brithDate: brithDate,
+           gender: gender,
+           phone: phone,
+           resendCode: resendCode,
+           context: context
+       ));
+    }on FirebaseExceptions catch(e){
+       return Left(FirebaseFaliure.fromMessage(e));
+    }on Exception catch(e){
+      return Left(FirebaseFaliure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Faliure, void>> verifiyPhoneNumber({
+    required String email,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String verificationId,
+    required String verifyOtpPinPut,
+    required String gender
+  })async {
+    try{
+      return Right(await baseAuthDataSource.verifiyPhoneNumber(
+          email: email,
+          phone: phone,
+          name: name,
+          brithDate: brithDate,
+          verificationId: verificationId,
+          verifyOtpPinPut: verifyOtpPinPut,
+          gender: gender
+    ));
+    }on FirebaseExceptions catch(e){
+    return Left(FirebaseFaliure.fromMessage(e));
+    }
   }
 
 }

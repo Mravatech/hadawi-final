@@ -47,30 +47,32 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDTLFH-4UkTSv9jeGR3vojBfXWEmwwiUvc',
-    appId: '1:328443475512:web:1ad43b60e1906d099018cd',
-    messagingSenderId: '328443475512',
-    projectId: 'services-7dc93',
-    authDomain: 'services-7dc93.firebaseapp.com',
-    storageBucket: 'services-7dc93.appspot.com',
-    measurementId: 'G-RM2VMWWDVY',
+    apiKey: 'AIzaSyCC81uvMM5fGs2niVq077R8l9E7dlaSvSU',
+    appId: '1:1698335350:web:39721f7276effbf98aed57',
+    messagingSenderId: '1698335350',
+    projectId: 'transport-app-d662f',
+    authDomain: 'transport-app-d662f.firebaseapp.com',
+    databaseURL: 'https://transport-app-d662f-default-rtdb.firebaseio.com',
+    storageBucket: 'transport-app-d662f.appspot.com',
+    measurementId: 'G-YPE4HP3KTZ',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyByRPDJbxpmGvXXArjnHNPF7UldmWUAGQA',
-    appId: '1:328443475512:android:10c320ce3b7d1b7a9018cd',
-    messagingSenderId: '328443475512',
-    projectId: 'services-7dc93',
-    storageBucket: 'services-7dc93.appspot.com',
+    apiKey: 'AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM',
+    appId: '1:1698335350:android:8d2c58625fd69ca08aed57',
+    messagingSenderId: '1698335350',
+    projectId: 'transport-app-d662f',
+    databaseURL: 'https://transport-app-d662f-default-rtdb.firebaseio.com',
+    storageBucket: 'transport-app-d662f.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCLYXvgC_d52PeDrBWaT8ETSERYO5Dy5fw',
-    appId: '1:328443475512:ios:00cbd0d50c7694939018cd',
-    messagingSenderId: '328443475512',
-    projectId: 'services-7dc93',
-    storageBucket: 'services-7dc93.appspot.com',
-    androidClientId: '328443475512-8s14h9h5nv2umi8k9akr5r41f4k0nl5p.apps.googleusercontent.com',
+    apiKey: 'AIzaSyDD7a4sYFGVEEc8cZkgahjm6XhvKO7d5OM',
+    appId: '1:1698335350:ios:76209b1f710d416c8aed57',
+    messagingSenderId: '1698335350',
+    projectId: 'transport-app-d662f',
+    databaseURL: 'https://transport-app-d662f-default-rtdb.firebaseio.com',
+    storageBucket: 'transport-app-d662f.appspot.com',
     iosBundleId: 'com.app.hadawiApp',
   );
 }

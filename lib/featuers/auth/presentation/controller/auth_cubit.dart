@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/get_user_data_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/google_auth_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/login_use_cases.dart';
+import 'package:hadawi_app/featuers/auth/domain/use_cases/login_with_phone_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/logout.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/register_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/save_data_use_cases.dart';
+import 'package:hadawi_app/featuers/auth/domain/use_cases/verifiy_code_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -21,6 +25,8 @@ class AuthCubit extends Cubit<AuthStates> {
       this.getUserDataUseCases,
       this.logoutUseCases,
       this.googleAuthUseCases,
+      this.loginWithPhoneUseCases,
+      this.verifiyCodeUseCases,
       ) : super(AuthInitialState());
 
   LoginUseCases loginUseCases;
@@ -29,6 +35,8 @@ class AuthCubit extends Cubit<AuthStates> {
   GetUserDataUseCases getUserDataUseCases;
   LogoutUseCases logoutUseCases;
   GoogleAuthUseCases googleAuthUseCases;
+  LoginWithPhoneUseCases loginWithPhoneUseCases;
+  VerifiyCodeUseCases verifiyCodeUseCases;
 
   TextEditingController brithDateController = TextEditingController();
 
@@ -144,6 +152,87 @@ class AuthCubit extends Cubit<AuthStates> {
     genderValue= value!;
     print(genderValue);
     emit(SelectGenderTypeState());
+  }
+
+  bool isLoading = false;
+
+  Future<void> loginWithPhone({
+    required String phone,
+    required String email,
+    required String name,
+    required String brithDate,
+    required String gender,
+    required bool resendCode,
+    required BuildContext context
+  })async {
+    isLoading = true;
+    emit(LoginWithPhoneLoadingState());
+    final result = await loginWithPhoneUseCases.call(
+      context:  context,
+      phone: phone,
+      email: email,
+      name: name,
+      resendCode: resendCode,
+      brithDate: brithDate,
+      gender: gender
+    );
+    result.fold((l) {
+       isLoading = false;
+      emit(LoginWithPhoneErrorState(message: l.message));
+    }, (r)async {
+      isLoading = false;
+      emit(LoginWithPhoneSuccessState());
+    });
+  }
+
+  Future<void> verifiyOtpCode({
+    required String email,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String gender,
+    required String verificationId,
+    required String verifyOtpPinPut,
+  })async {
+    emit(VerifiyOtpCodeLoadingState());
+
+    final result = await verifiyCodeUseCases.call(
+          email: email,
+          phone: phone,
+          name: name,
+          brithDate: brithDate,
+          gender: gender,
+          verificationId: verificationId,
+          verifyOtpPinPut: verifyOtpPinPut
+      );
+
+      result.fold((l) {
+        emit(VerifiyOtpCodeErrorState(message: l.message));
+      }, (r) {
+        customToast(title: 'تم التحقق', color: ColorManager.primaryBlue);
+        emit(VerifiyOtpCodeSuccessState());
+      });
+
+  }
+
+
+  int second = 0;
+  Timer? secondTimer;
+  bool resendButton = false;
+
+  resendOtpTimer() {
+    second = 31;
+    secondTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (second > 0) {
+        --second;
+        emit(ResendCodeTimerState());
+      } else {
+        resendButton = true;
+        second = 0;
+        secondTimer!.cancel();
+        emit(ResendCodeTimerFinishedState());
+      }
+    });
   }
 
 
