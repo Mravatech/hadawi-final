@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Hadawi',
               theme: getApplicationTheme(context),
-              home: const PaymentScreen(),
+              home: const SplashScreen(),
             );
           },
         )
