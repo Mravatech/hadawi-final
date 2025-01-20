@@ -94,42 +94,49 @@ class ForMeBody extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     showDatePicker(
-                      helpText: 'Select the date of the occasion',
+                      helpText: 'تاريخ المناسبة',
                       context: context,
                       firstDate: DateTime(1920),
                       lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
+                    ).then((value) =>cubit.setOccasionDate(brithDateValue: value!));
                   },
-                  child: Container(
-                    height: mediaQuery.height * .06,
-                    decoration: BoxDecoration(
-                      color: ColorManager.gray,
-                      borderRadius:
-                          BorderRadius.circular(mediaQuery.height * 0.01),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(
-                            Icons.calendar_month_rounded,
-                            color: ColorManager.primaryBlue,
-                            size:  mediaQuery.height * 0.032,
-                          ),
-                          Text(
-                            '',
-                          ),
-
-                        ],
-                      ),
-                    ),
-                  ),
+                  child: DefaultTextField(
+                      controller: cubit.occasionDateController,
+                      hintText: cubit.occasionDateController.text.isEmpty
+                          ? ''
+                          : cubit.occasionDateController.text,
+                      validator: (value) {
+                        return null;
+                      },
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.next,
+                      enable: false,
+                      fillColor: ColorManager.gray),
                 )
               ],
             ),
             SizedBox(height: mediaQuery.height * 0.03),
-
+            /// money gift
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  ' :المبلغ المطلوب',
+                  style: TextStyles.textStyle18Bold
+                      .copyWith(color: ColorManager.black),
+                ),
+                DefaultTextField(
+                    controller: cubit.moneyAmountController,
+                    hintText: '',
+                    validator: (value) {
+                      return '';
+                    },
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    fillColor: ColorManager.gray)
+              ],
+            ),
+            SizedBox(height: mediaQuery.height * 0.03),
             /// requested gift
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -174,14 +181,7 @@ class ForMeBody extends StatelessWidget {
 
                     /// money
                     GestureDetector(
-                      onTap: () {
-                        customPushNavigator(
-                            context,
-                            BlocProvider<OccasionCubit>(
-                              create: (context) => OccasionCubit(),
-                              child: MoneyScreen(),
-                            ));
-                      },
+                      onTap: () {},
                       child: Container(
                         height: mediaQuery.height * .055,
                         width: mediaQuery.width * .25,
@@ -214,7 +214,7 @@ class ForMeBody extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: mediaQuery.height * 0.05),
+            SizedBox(height: mediaQuery.height * 0.02),
 
             /// service fees text
             RichText(
@@ -229,7 +229,7 @@ class ForMeBody extends StatelessWidget {
                         .copyWith(color: ColorManager.primaryBlue),
                   )
                 ])),
-            SizedBox(height: mediaQuery.height * 0.05),
+            SizedBox(height: mediaQuery.height * 0.02),
 
             ///  continue button
             GestureDetector(
