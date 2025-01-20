@@ -12,7 +12,7 @@ class DonotHaveAnAccount extends StatelessWidget {
     return  Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Don\'t have an account?',style: TextStyles.textStyle18Bold.copyWith(
+        Text('ليس لديك حساب؟',style: TextStyles.textStyle18Bold.copyWith(
             color: ColorManager.darkGrey,
             fontSize: MediaQuery.sizeOf(context).height*0.018
         )),
@@ -20,7 +20,7 @@ class DonotHaveAnAccount extends StatelessWidget {
           onTap: () {
             customPushNavigator(context, RegisterScreen());
           },
-          child: Text(' Sign up',style: TextStyles.textStyle18Bold.copyWith(
+          child: Text(' انشاء حساب',style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.primaryBlue,
               fontSize: MediaQuery.sizeOf(context).height*0.022
           )),

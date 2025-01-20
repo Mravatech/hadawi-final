@@ -36,3 +36,31 @@ class UserGetDataErrorState extends AuthStates{
   String message;
   UserGetDataErrorState({required this.message});
 }
+
+class LoginWithPhoneLoadingState extends AuthStates{}
+class LoginWithPhoneSuccessState extends AuthStates{}
+class LoginWithPhoneErrorState extends AuthStates{
+  String message;
+  LoginWithPhoneErrorState({required this.message});
+}
+
+class VerifiyOtpCodeLoadingState extends AuthStates{}
+class VerifiyOtpCodeSuccessState extends AuthStates{}
+class VerifiyOtpCodeErrorState extends AuthStates{
+  String message;
+  VerifiyOtpCodeErrorState({required this.message});
+}
+
+class SignInWithSocialMediaLoadingState extends AuthStates{}
+class SignInWithSocialMediaSuccessState extends AuthStates{}
+class SignInWithSocialMediaErrorState extends AuthStates{
+  String message;
+  SignInWithSocialMediaErrorState({required this.message});
+}
+
+class SetBrithDayValueState extends AuthStates{}
+
+class SelectGenderTypeState extends AuthStates{}
+
+class ResendCodeTimerState extends AuthStates{}
+class ResendCodeTimerFinishedState extends AuthStates{}

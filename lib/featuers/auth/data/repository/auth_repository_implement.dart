@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/data/data_source/auth_data_source.dart';
 import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/base_repository/auth_base_repository.dart';
@@ -16,18 +17,35 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   Future<Either<Faliure,void>> login({required String email, required String password}) async{
     try{
       return Right(await baseAuthDataSource.login(email: email, password: password));
-    }on FirebaseAuthException catch(e){
+    }on FirebaseExceptions catch(e){
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 
 
   @override
-  Future<Either<Faliure,void>> register({required String email, required String password})async {
+  Future<Either<Faliure,void>> register({
+    required String email,
+    required String password,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String gender
+  })async {
     try{
-      return Right(await baseAuthDataSource.register(email: email, password: password));
-    }on FirebaseAuthException catch(e){
+      return Right(await baseAuthDataSource.register(
+          email: email,
+          password: password,
+          brithDate: brithDate,
+          gender: gender,
+          name: name,
+          phone: phone
+      ));
+    }on FirebaseExceptions catch(e){
     return Left(FirebaseFaliure.fromMessage(e));
+    }catch (e) {
+      print('error in register $e');
+      return Left(FirebaseFaliure(message: e.toString()));
     }
   }
 
@@ -44,7 +62,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   Future<Either<Faliure, void>> logout()async {
     try{
       return Right(await baseAuthDataSource.logout());
-    }on FirebaseAuthException catch(e){
+    }on FirebaseExceptions catch(e){
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
@@ -69,6 +87,77 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           ));
     }on FireStoreException catch(e){
     return Left(FirebaseFaliure(message: e.firebaseException.message!));
+    }
+  }
+
+  @override
+  Future<Either<Faliure, void>> loginWithGoogle(
+      {
+        required String brithDate,
+        required String gender
+      }) async{
+    try{
+      return Right(await baseAuthDataSource.loginWithGoogle(
+          brithDate: brithDate,
+          gender: gender
+      )
+      );
+    }on FirebaseExceptions catch(e){
+      return Left(GoogleAuthFaliure.fromMessage(e));
+    }
+
+
+  }
+
+  @override
+  Future<Either<Faliure, void>> loginWithPhoneNumber({
+    required String phone,
+    required BuildContext context,
+    required String email,
+    required String name,
+    required bool resendCode,
+    required String brithDate,
+    required String gender,
+  }) async{
+    try{
+       return Right(await baseAuthDataSource.loginWithPhoneNumber(
+           email: email,
+           name: name,
+           brithDate: brithDate,
+           gender: gender,
+           phone: phone,
+           resendCode: resendCode,
+           context: context
+       ));
+    }on FirebaseExceptions catch(e){
+       return Left(FirebaseFaliure.fromMessage(e));
+    }on Exception catch(e){
+      return Left(FirebaseFaliure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Faliure, void>> verifiyPhoneNumber({
+    required String email,
+    required String phone,
+    required String name,
+    required String brithDate,
+    required String verificationId,
+    required String verifyOtpPinPut,
+    required String gender
+  })async {
+    try{
+      return Right(await baseAuthDataSource.verifiyPhoneNumber(
+          email: email,
+          phone: phone,
+          name: name,
+          brithDate: brithDate,
+          verificationId: verificationId,
+          verifyOtpPinPut: verifyOtpPinPut,
+          gender: gender
+    ));
+    }on FirebaseExceptions catch(e){
+    return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 

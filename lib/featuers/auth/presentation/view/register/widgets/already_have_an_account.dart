@@ -12,17 +12,19 @@ class AlreadyHaveAnAccount extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Already have an account?',style: TextStyles.textStyle18Bold.copyWith(
+        Text('لديك حساب بالفعل؟',style: TextStyles.textStyle18Bold.copyWith(
             color: ColorManager.darkGrey,
             fontSize: MediaQuery.sizeOf(context).height*0.018
         )),
         GestureDetector(
           onTap: ()=> customPushNavigator(context, LoginScreen()),
-          child: Text(' Sign in',style: TextStyles.textStyle18Bold.copyWith(
+          child: Text(' تسجيل الدخول ',style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.primaryBlue,
-              fontSize: MediaQuery.sizeOf(context).height*0.022
+              fontSize: MediaQuery.sizeOf(context).height*0.02
           )),
         ),
+
+
       ],
     );
   }

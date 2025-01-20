@@ -1,65 +1,65 @@
 {
   "project_info": {
-    "project_number": "328443475512",
-    "project_id": "services-7dc93",
-    "storage_bucket": "services-7dc93.appspot.com"
+    "project_number": "1698335350",
+    "firebase_url": "https://transport-app-d662f-default-rtdb.firebaseio.com",
+    "project_id": "transport-app-d662f",
+    "storage_bucket": "transport-app-d662f.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:328443475512:android:10c320ce3b7d1b7a9018cd",
+        "mobilesdk_app_id": "1:1698335350:android:8d2c58625fd69ca08aed57",
         "android_client_info": {
           "package_name": "com.app.hadawi_app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyByRPDJbxpmGvXXArjnHNPF7UldmWUAGQA"
+          "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:328443475512:android:3787b481c214d8269018cd",
+        "mobilesdk_app_id": "1:1698335350:android:785fe81f4e8505888aed57",
         "android_client_info": {
-          "package_name": "com.hadawi.hadawi"
+          "package_name": "com.client_transport_app.client_transport_app"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyByRPDJbxpmGvXXArjnHNPF7UldmWUAGQA"
+          "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "328443475512-uhlm4j5t5rvbv3atc4tpsi5g3n487nrd.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1698335350:android:ba978fd00660bb858aed57",
+        "android_client_info": {
+          "package_name": "com.transport_app.transport_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
         }
       }
     }
