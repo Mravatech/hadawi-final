@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
 import 'package:hadawi_app/firebase_options.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
               getIt(), getIt(),
           )),
           BlocProvider(create: (context)=> PaymentCubit()),
+          BlocProvider(create: (context)=> OccasionsListCubit()),
           BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
         ],
         child: BlocBuilder<LocalizationCubit,LocalizationStates>(

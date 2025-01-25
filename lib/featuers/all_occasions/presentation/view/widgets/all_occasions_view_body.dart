@@ -1,4 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/view/my_occasions.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/view/others_occasions.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/row_data_widget.dart';
 
 class AllOccasionsViewBody extends StatelessWidget {
@@ -14,12 +17,22 @@ class AllOccasionsViewBody extends StatelessWidget {
           SizedBox(height: MediaQuery.sizeOf(context).height*0.07,),
 
           // المناسبات المسحله جديثا
-          RowDataWidget(image: '', title: 'المناسبات المسحله جديثا'),
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_)=>MyOccasions()));
+            },
+              child: RowDataWidget(image: '', title: 'المناسباتى المسحله جديثا')
+          ),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 
           // المناسبات المسحله لاخر
-          RowDataWidget(image: '', title: 'المناسبات المسحله لاخر'),
+          InkWell(
+            onTap: (){
+              Navigator.push(context, MaterialPageRoute(builder: (_)=>OthersOccasions()));
+            },
+            child: RowDataWidget(image: '', title: 'المناسبات المسحله لاخر'),
+          ),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 
