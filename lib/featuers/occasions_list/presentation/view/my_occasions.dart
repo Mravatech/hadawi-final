@@ -9,7 +9,6 @@ import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
-
 class MyOccasions extends StatefulWidget {
   const MyOccasions({super.key});
 
@@ -18,7 +17,6 @@ class MyOccasions extends StatefulWidget {
 }
 
 class _MyOccasionsState extends State<MyOccasions> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -45,8 +43,8 @@ class _MyOccasionsState extends State<MyOccasions> {
           actions: [
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Image(
-                  image: AssetImage(AssetsManager.logoWithoutBackground)),
+              child:
+                  Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
             ),
           ],
         ),
@@ -59,50 +57,70 @@ class _MyOccasionsState extends State<MyOccasions> {
                 image: AssetsManager.shareIcon,
                 onTap: () {},
               ),
-
               SizedBox(
                 height: SizeConfig.height * 0.02,
               ),
-
               BlocConsumer<OccasionsListCubit, OccasionsListStates>(
                 listener: (context, state) {},
                 builder: (context, state) {
-                  return Expanded(
-                    child: OccasionsListCubit.get(context).myOccasionsList.isNotEmpty? RefreshIndicator(
-                      onRefresh: () async {
-                        await OccasionsListCubit.get(context).getMyOccasionsList();
-                      },
-                      child: GridView.builder(
-                        physics: BouncingScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns
-                          crossAxisSpacing: 10.0,
-                          mainAxisSpacing: 10.0,
-                          childAspectRatio: 0.96,
-
-                        ),
-                        itemCount: OccasionsListCubit.get(context).myOccasionsList.length,
-                        itemBuilder: (context, index) {
-                          final occasionItem = OccasionsListCubit.get(context).myOccasionsList[index];
-                          return OccasionCard(
-                            onTap: () {},
-                            forOthers: false,
-                            occasionName: occasionItem.occasionName,
-                            personName: "",
-                            imageUrl: occasionItem.occasionImage,
-                          );
-                        },
-                      ),
-                    ): Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(AssetsManager.noData),
-                          Text("لا يوجد مناسبات ��سجلة حديثا",style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),),
-                        ],
-                      ),
-                    ),
-                  );
+                  return state is GetMyOccasionListLoadingState
+                      ? Expanded(
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : Expanded(
+                          child: state is GetMyOccasionListSuccessState &&
+                                  OccasionsListCubit.get(context)
+                                      .myOccasionsList
+                                      .isNotEmpty
+                              ? RefreshIndicator(
+                                  onRefresh: () async {
+                                    await OccasionsListCubit.get(context)
+                                        .getMyOccasionsList();
+                                  },
+                                  child: GridView.builder(
+                                    physics: BouncingScrollPhysics(),
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2, // Number of columns
+                                      crossAxisSpacing: 10.0,
+                                      mainAxisSpacing: 10.0,
+                                      childAspectRatio: 0.96,
+                                    ),
+                                    itemCount: OccasionsListCubit.get(context)
+                                        .myOccasionsList
+                                        .length,
+                                    itemBuilder: (context, index) {
+                                      final occasionItem =
+                                          OccasionsListCubit.get(context)
+                                              .myOccasionsList[index];
+                                      return OccasionCard(
+                                        onTap: () {},
+                                        forOthers: false,
+                                        occasionName: occasionItem.occasionName,
+                                        personName: "",
+                                        imageUrl: occasionItem.occasionImage,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Image.asset(AssetsManager.noData),
+                                      Text(
+                                        "لا يوجد مناسبات سجلة حديثا",
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(
+                                                color:
+                                                    ColorManager.primaryBlue),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                        );
                 },
               ),
             ],

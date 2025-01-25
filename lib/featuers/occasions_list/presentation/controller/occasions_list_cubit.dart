@@ -15,6 +15,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
   List<OccasionModel> myOccasionsList = [];
 
   Future<void> getOthersOccasionsList() async {
+    othersOccasionsList = [];
     emit(GetOthersOccasionListLoadingState());
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
@@ -33,6 +34,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
   }
 
   Future<void> getMyOccasionsList() async {
+    myOccasionsList = [];
     emit(GetMyOccasionListLoadingState());
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
