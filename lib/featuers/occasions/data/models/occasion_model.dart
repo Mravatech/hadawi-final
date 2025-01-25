@@ -2,7 +2,7 @@ import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.d
 
 class OccasionModel extends OccasionEntity {
   OccasionModel(
-      {required super.id,
+      {
       required super.isForMe,
       required super.occasionName,
       required super.occasionDate,
@@ -17,29 +17,30 @@ class OccasionModel extends OccasionEntity {
       required super.giftName,
       required super.giftLink,
       required super.giftPrice,
-      required super.giftType});
+      required super.giftType,
+      required super.isSharing,
+      });
 
   factory OccasionModel.fromJson(Map<String, dynamic> json) => OccasionModel(
-        id: json['id'],
-        isForMe: json['isForMe'],
-        occasionName: json['occasionName'],
-        occasionDate: json['occasionDate'],
-        occasionId: json['occasionId'],
-        occasionType: json['occasionType'],
-        moneyGiftAmount: json['moneyGiftAmount'],
-        personId: json['personId'],
-        personName: json['personName'],
-        personPhone: json['personPhone'],
-        personEmail: json['personEmail'],
-        giftImage: json['occasionImage'],
-        giftName: json['giftName'],
-        giftLink: json['giftLink'],
-        giftPrice: json['giftPrice'],
-        giftType: json['giftType'],
+        isForMe: json['isForMe']??'',
+        occasionName: json['occasionName']??'',
+        occasionDate: json['occasionDate']??'',
+        occasionId: json['occasionId']??'',
+        occasionType: json['occasionType']??'',
+        moneyGiftAmount: json['moneyGiftAmount']??'',
+        personId: json['personId']??'',
+        personName: json['personName']??'',
+        personPhone: json['personPhone']??'',
+        personEmail: json['personEmail']??'',
+        giftImage: json['occasionImage']??'',
+        giftName: json['giftName']??'',
+        giftLink: json['giftLink']??'',
+        giftPrice: json['giftPrice']??'',
+        giftType: json['giftType']??'',
+        isSharing: json['isSharing']??false,
       );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
         'isForMe': isForMe,
         'occasionName': occasionName,
         'occasionDate': occasionDate,
@@ -54,6 +55,7 @@ class OccasionModel extends OccasionEntity {
         'giftName': giftName,
         'giftLink': giftLink,
         'giftPrice': giftPrice,
-        'giftType': giftType
+        'giftType': giftType,
+        'isSharing': isSharing,
       };
 }

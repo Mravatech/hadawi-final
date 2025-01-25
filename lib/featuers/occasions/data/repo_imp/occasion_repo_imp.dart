@@ -7,11 +7,10 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 class OccasionRepoImp extends OccasionRepo {
   @override
   Future<Either<Faliure, OccasionEntity>> addOccasions(
-      {required String id,
+      {
       required bool isForMe,
       required String occasionName,
       required String occasionDate,
-      required String occasionId,
       required String occasionType,
       required String moneyGiftAmount,
       required String personId,
@@ -22,13 +21,13 @@ class OccasionRepoImp extends OccasionRepo {
       required String giftName,
       required String giftLink,
       required int giftPrice,
-      required String giftType}) async {
+      required String giftType,
+      required bool isSharing
+      }) async {
     final result = await OccasionDataSource().addOccasion(
-        id: id,
         isForMe: isForMe,
         occasionName: occasionName,
         occasionDate: occasionDate,
-        occasionId: occasionId,
         occasionType: occasionType,
         moneyGiftAmount: moneyGiftAmount,
         personId: personId,
@@ -39,7 +38,9 @@ class OccasionRepoImp extends OccasionRepo {
         giftName: giftName,
         giftLink: giftLink,
         giftPrice: giftPrice,
-        giftType: giftType);
+        giftType: giftType,
+        isSharing: isSharing,
+    );
     try {
       return Right(result);
     } on Exception catch (e) {
@@ -48,8 +49,8 @@ class OccasionRepoImp extends OccasionRepo {
   }
 
   @override
-  Future<Either<Faliure, OccasionEntity>> getOccasions() async {
-    final result = await OccasionDataSource().getOccasion();
+  Future<Either<Faliure, List<OccasionEntity>>> getOccasions() async {
+    final result = await OccasionDataSource().getAllOccasions();
     try {
       return Right(result);
     } on Exception catch (e) {

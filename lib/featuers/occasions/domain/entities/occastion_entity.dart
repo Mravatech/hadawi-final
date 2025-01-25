@@ -1,5 +1,4 @@
 class OccasionEntity {
-  final String id;
   final bool isForMe;
   final String occasionName;
   final String occasionDate;
@@ -15,10 +14,10 @@ class OccasionEntity {
   final int giftPrice;
   final String giftImage;
   final String giftType;
+  final bool isSharing;
 
   OccasionEntity(
   {
-    required this.id,
     required this.isForMe,
     required this.occasionName,
     required this.occasionDate,
@@ -33,6 +32,7 @@ class OccasionEntity {
     required this.giftName,
     required this.giftLink,
     required this.giftPrice,
-    required this.giftType
+    required this.giftType,
+    required this.isSharing
   });
 }

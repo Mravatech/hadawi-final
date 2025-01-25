@@ -3,14 +3,13 @@ import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.d
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
 abstract class OccasionRepo {
-  Future<Either<Faliure, OccasionEntity>> getOccasions();
+  Future<Either<Faliure, List<OccasionEntity>>> getOccasions();
 
   Future<Either<Faliure, OccasionEntity>> addOccasions(
-      {required String id,
+      {
       required bool isForMe,
       required String occasionName,
       required String occasionDate,
-      required String occasionId,
       required String occasionType,
       required String moneyGiftAmount,
       required String personId,
@@ -21,5 +20,7 @@ abstract class OccasionRepo {
       required String giftName,
       required String giftLink,
       required int giftPrice,
-      required String giftType});
+      required String giftType,
+      required bool isSharing
+      });
 }

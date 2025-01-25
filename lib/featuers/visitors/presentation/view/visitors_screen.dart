@@ -12,7 +12,7 @@ class VisitorsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<VisitorsCubit>(
-      create: (context) => VisitorsCubit(),
+      create: (context) => VisitorsCubit()..getOccasions(),
       child: Scaffold(
         backgroundColor: ColorManager.white,
         body: VisitorsViewBody(),

@@ -5,17 +5,24 @@ import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 class OccasionDataSource {
   final FirebaseFirestore fireStore = FirebaseFirestore.instance;
 
-  Future<OccasionModel> getOccasion() async {
-    final doc = await fireStore.collection('Occasions').doc().get();
-    return OccasionModel.fromJson(doc.data()!);
+  Future<List<OccasionModel>> getAllOccasions() async {
+    try {
+      final querySnapshot = await fireStore.collection('Occasions').get();
+
+      final occasions = querySnapshot.docs
+          .map((doc) => OccasionModel.fromJson(doc.data()))
+          .toList();
+
+      return occasions;
+    } catch (e) {
+      throw Exception("Failed to fetch occasions: $e");
+    }
   }
 
   Future<OccasionModel> addOccasion({
-    required String id,
     required bool isForMe,
     required String occasionName,
     required String occasionDate,
-    required String occasionId,
     required String occasionType,
     required String moneyGiftAmount,
     required String personId,
@@ -27,9 +34,12 @@ class OccasionDataSource {
     required String giftLink,
     required int giftPrice,
     required String giftType,
+    required bool isSharing,
   }) async {
+    final docRef = fireStore.collection('Occasions').doc();
+    final occasionId = docRef.id;
+
     OccasionModel occasionModel = OccasionModel(
-      id: id,
       isForMe: isForMe,
       occasionName: occasionName,
       occasionDate: occasionDate,
@@ -45,12 +55,15 @@ class OccasionDataSource {
       giftLink: giftLink,
       giftPrice: giftPrice,
       giftType: giftType,
+      isSharing: isSharing,
     );
+
     try {
-      await fireStore.collection('Occasions').doc().set(occasionModel.toJson());
+      await docRef.set(occasionModel.toJson());
       return occasionModel;
     } on FireStoreException catch (e) {
       throw FireStoreException(firebaseException: e.firebaseException);
     }
   }
+
 }
