@@ -9,7 +9,7 @@ class AssetsManager{
   static const String friendsIcon = "assets/images/friends.png";
   static const String userIcon = "assets/images/user.png";
   static const String shareIcon = "assets/images/share.png";
-
+  static const String noData = "assets/images/box.png";
 
 
 
