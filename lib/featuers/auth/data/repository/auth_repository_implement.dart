@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/data/data_source/auth_data_source.dart';
 import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/base_repository/auth_base_repository.dart';
+import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
@@ -46,15 +47,6 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     }catch (e) {
       print('error in register $e');
       return Left(FirebaseFaliure(message: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Faliure, UserModel>> getUserData({required String uId}) async{
-    try{
-      return Right(await baseAuthDataSource.getUserData(uId: uId));
-    }on FireStoreException catch(e){
-    return Left(FirebaseFaliure(message: e.firebaseException.message!));
     }
   }
 
@@ -117,6 +109,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String name,
     required bool resendCode,
     required String brithDate,
+    required bool isLogin,
     required String gender,
   }) async{
     try{
@@ -126,6 +119,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
            brithDate: brithDate,
            gender: gender,
            phone: phone,
+           isLogin: isLogin,
            resendCode: resendCode,
            context: context
        ));
@@ -141,6 +135,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String email,
     required String phone,
     required String name,
+    required bool isLogin,
     required String brithDate,
     required String verificationId,
     required String verifyOtpPinPut,
@@ -152,12 +147,31 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           phone: phone,
           name: name,
           brithDate: brithDate,
+          isLogin: isLogin,
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut,
           gender: gender
     ));
     }on FirebaseExceptions catch(e){
     return Left(FirebaseFaliure.fromMessage(e));
+    }
+  }
+
+  @override
+  Future<Either<Faliure, bool>> checkUserLogin({required String phoneNumber})async {
+     try{
+       return Right(await baseAuthDataSource.checkUserLogin(phoneNumber: phoneNumber));
+     }on FireStoreException catch(e){
+       return Left(FireStoreFaliure.fromMessage(e));
+     }
+  }
+
+  @override
+  Future<Either<Faliure, UserEntities>> getUserInfo({required String uId}) async{
+    try{
+      return Right(await baseAuthDataSource.getUserData(uId: uId));
+    }on FireStoreException catch(e){
+      return Left(FireStoreFaliure.fromMessage(e));
     }
   }
 

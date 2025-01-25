@@ -46,7 +46,6 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
     return SizedBox(
       child: TextFormField(
         onTap: widget.onTap,
-        textDirection: TextDirection.rtl,
         enabled: widget.enable,
         style: TextStyle(
           fontSize: MediaQuery.sizeOf(context).height*0.016,

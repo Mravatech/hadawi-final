@@ -3,6 +3,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/register/register_scr
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class DonotHaveAnAccount extends StatelessWidget {
   const DonotHaveAnAccount({super.key});
@@ -12,7 +13,8 @@ class DonotHaveAnAccount extends StatelessWidget {
     return  Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('ليس لديك حساب؟',style: TextStyles.textStyle18Bold.copyWith(
+        Text(AppLocalizations.of(context)!.translate('don\'tHaveAccount').toString(),
+            style: TextStyles.textStyle18Bold.copyWith(
             color: ColorManager.darkGrey,
             fontSize: MediaQuery.sizeOf(context).height*0.018
         )),
@@ -20,9 +22,10 @@ class DonotHaveAnAccount extends StatelessWidget {
           onTap: () {
             customPushNavigator(context, RegisterScreen());
           },
-          child: Text(' انشاء حساب',style: TextStyles.textStyle18Bold.copyWith(
+          child: Text(AppLocalizations.of(context)!.translate('createAccount').toString(),
+              style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.primaryBlue,
-              fontSize: MediaQuery.sizeOf(context).height*0.022
+              fontSize: MediaQuery.sizeOf(context).height*0.02
           )),
         ),
       ],

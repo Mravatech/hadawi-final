@@ -1,24 +1,20 @@
 import 'package:equatable/equatable.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 
-class Faliure extends Equatable{
-
+class Faliure extends Equatable {
   final String message;
 
   const Faliure({required this.message});
+
   @override
   List<Object?> get props => [message];
-
 }
 
-class FirebaseFaliure extends Faliure{
-
+class FirebaseFaliure extends Faliure {
   const FirebaseFaliure({required super.message});
 
-  factory FirebaseFaliure.fromMessage(FirebaseExceptions error){
-    switch(error.firebaseAuthException.code){
-
+  factory FirebaseFaliure.fromMessage(FirebaseExceptions error) {
+    switch (error.firebaseAuthException.code) {
       case "invalid-email":
         return FirebaseFaliure(message: "Invalid email");
 
@@ -37,6 +33,9 @@ class FirebaseFaliure extends Faliure{
       case "wrong-password":
         return FirebaseFaliure(message: "Wrong password");
 
+      case "invalid-credential":
+        return FirebaseFaliure(message: "Email or password is incorrect");
+
       case "user-disabled":
         return FirebaseFaliure(message: "User disabled");
 
@@ -53,33 +52,65 @@ class FirebaseFaliure extends Faliure{
         return FirebaseFaliure(message: "Weak password");
 
       default:
-        return FirebaseFaliure(message: error.firebaseAuthException.message!);
-
+        return FirebaseFaliure(message: error.firebaseAuthException.code);
     }
   }
-
-
 }
 
-class GoogleAuthFaliure extends Faliure{
-
+class GoogleAuthFaliure extends Faliure {
   const GoogleAuthFaliure({required super.message});
 
-  factory GoogleAuthFaliure.fromMessage(FirebaseExceptions error){
-    switch(error.firebaseAuthException.code){
-
+  factory GoogleAuthFaliure.fromMessage(FirebaseExceptions error) {
+    switch (error.firebaseAuthException.code) {
       case "account-exists-with-different-credential":
-        return GoogleAuthFaliure(message: "Account exists with a different credential. Please use the correct sign-in method");
+        return GoogleAuthFaliure(
+            message:
+                "Account exists with a different credential. Please use the correct sign-in method");
 
       case "invalid-credential":
         return GoogleAuthFaliure(message: "Invalid credentials provided.");
 
       default:
-        return GoogleAuthFaliure(message: 'An error occurred: ${error.firebaseAuthException.message}');
-
+        return GoogleAuthFaliure(
+            message:
+                'An error occurred: ${error.firebaseAuthException.message}');
     }
   }
-
-
 }
 
+class FireStoreFaliure extends Faliure {
+  const FireStoreFaliure({required super.message});
+
+  factory FireStoreFaliure.fromMessage(FireStoreException error) {
+    switch (error.firebaseException.code) {
+      case 'not-found':
+        return FireStoreFaliure(
+            message: 'The requested document or collection does not exist.');
+
+      case 'already-exists':
+        return FireStoreFaliure(
+            message:
+                'An attempt was made to create a document that already exists.');
+      case 'permission-denied':
+        return FireStoreFaliure(
+            message: 'You do not have permission to perform this action.');
+      case 'failed-precondition':
+        return FireStoreFaliure(
+            message:
+                'The request was rejected due to improper configuration or violated rules.');
+      case 'invalid-argument':
+        return FireStoreFaliure(
+            message:
+                'An invalid argument was provided in the Firestore query.');
+      case 'resource-exhausted':
+        return FireStoreFaliure(
+            message: 'Quota or resource limits have been exceeded.');
+      case 'deadline-exceeded':
+        return FireStoreFaliure(
+            message: 'The request took too long to process.');
+      default:
+        return FireStoreFaliure(
+            message: 'An unknown error occurred. Please try again.');
+    }
+  }
+}

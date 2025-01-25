@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/veri
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
 abstract class BaseAuthDataSource {
@@ -31,14 +32,10 @@ abstract class BaseAuthDataSource {
       required String brithDate,
       required String gender});
 
-  Future<UserModel> getUserData({
-    required String uId,
-  });
 
   Future<void> logout();
 
-  Future<void> loginWithGoogle(
-      {required String brithDate, required String gender});
+  Future<void> loginWithGoogle({required String brithDate, required String gender});
 
   Future<void> loginWithPhoneNumber({
     required String phone,
@@ -47,6 +44,7 @@ abstract class BaseAuthDataSource {
     required String brithDate,
     required String gender,
     required bool resendCode,
+    required bool isLogin,
     required BuildContext context
   });
 
@@ -56,10 +54,15 @@ abstract class BaseAuthDataSource {
         required String phone,
         required String name,
         required String brithDate,
+        required bool isLogin,
         required String verificationId,
         required String verifyOtpPinPut,
         required String gender
       });
+
+  Future<bool> checkUserLogin({required String phoneNumber});
+  Future<UserModel>getUserData ({required String uId});
+
 }
 
 class AuthDataSourceImplement extends BaseAuthDataSource {
@@ -69,7 +72,9 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   @override
   Future<void> login({required String email, required String password}) async {
     try {
-      firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      final user = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      print(user.user!.uid);
+      await getUserData(uId:  user.user!.uid);
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
     }
@@ -94,14 +99,15 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String gender}) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
-          email: '$phone@gmail.com', password: password);
-      saveUserData(
+          email: email, password: password);
+      await saveUserData(
           email: email,
           phone: phone,
           name: name,
           uId: user.user!.uid,
           brithDate: brithDate,
           gender: gender);
+      await getUserData(uId:  user.user!.uid);
     } on FirebaseAuthException catch (e) {
       print('error $e');
       throw FirebaseExceptions(firebaseAuthException: e);
@@ -133,11 +139,20 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     }
   }
 
+
   @override
   Future<UserModel> getUserData({required String uId}) async {
     try {
       final user = await firestore.collection('users').doc(uId).get();
-      return UserModel.fromFire(user.data()!);
+      UserModel userModel = UserModel.fromFire(user.data()!);
+      UserDataFromStorage.setUserName(userModel.name);
+      UserDataFromStorage.setEmail(userModel.email);
+      UserDataFromStorage.setPhoneNumber(userModel.phone);
+      UserDataFromStorage.setUid(userModel.uId);
+      UserDataFromStorage.setGender(userModel.gender);
+      UserDataFromStorage.setBrithDate(userModel.brithDate);
+      print('Email is ${userModel.email}');
+      return userModel;
     } on FireStoreException catch (e) {
       throw FireStoreException(firebaseException: e.firebaseException);
     }
@@ -177,6 +192,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     required String brithDate,
     required String gender,
     required bool resendCode,
+    required bool isLogin,
     required BuildContext context
   }) async {
     try {
@@ -184,8 +200,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         phoneNumber: '+20${phone.trim()}',
         verificationCompleted: (PhoneAuthCredential phoneAuthCredential) async {
           if (!kIsWeb && Platform.isIOS) {
-            await FirebaseAuth.instance
-                .signInWithCredential(phoneAuthCredential);
+            await FirebaseAuth.instance.signInWithCredential(phoneAuthCredential);
           }
         },
         codeSent: (String verificationId, int? forceResendingToken) {
@@ -194,6 +209,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
               email: email,
               phone: phone,
               name: name,
+              isLogin: isLogin,
               brithDate: brithDate,
               gender: gender,
               verificationId: verificationId,
@@ -239,6 +255,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String name,
       required String brithDate,
       required String gender,
+      required bool isLogin,
       required String verificationId,
       required String verifyOtpPinPut,
       }) async {
@@ -251,14 +268,16 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       try {
         await FirebaseAuth.instance.signInWithCredential(credential)
             .then((value) async {
-          saveUserData(
-              email: email,
-              phone: phone,
-              name: name,
-              uId: value.user!.uid,
-              brithDate: brithDate,
-              gender: gender
-          );
+              if(isLogin==false){
+                saveUserData(
+                    email: email,
+                    phone: phone,
+                    name: name,
+                    uId: value.user!.uid,
+                    brithDate: brithDate,
+                    gender: gender
+                );
+              }
         });
       } on FirebaseAuthException catch (e) {
         throw FirebaseExceptions(firebaseAuthException: e);
@@ -267,4 +286,19 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       throw FirebaseExceptions(firebaseAuthException: e);
     }
   }
+
+
+  @override
+  Future<bool> checkUserLogin({required String phoneNumber}) async {
+    try {
+      await FirebaseFirestore.instance.collection('users').doc(phoneNumber).get();
+      return true;
+    } on FirebaseException catch (error) {
+      {
+        print('error in happen $error');
+        throw FireStoreException(firebaseException: error);
+      }
+    }
+  }
+
 }

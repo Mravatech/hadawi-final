@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import '../../../../../../utiles/helper/material_navigation.dart';
 
 class AlreadyHaveAnAccount extends StatelessWidget {
@@ -12,13 +13,15 @@ class AlreadyHaveAnAccount extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('لديك حساب بالفعل؟',style: TextStyles.textStyle18Bold.copyWith(
+        Text(AppLocalizations.of(context)!.translate('haveAccount').toString(),
+            style: TextStyles.textStyle18Bold.copyWith(
             color: ColorManager.darkGrey,
             fontSize: MediaQuery.sizeOf(context).height*0.018
         )),
         GestureDetector(
           onTap: ()=> customPushNavigator(context, LoginScreen()),
-          child: Text(' تسجيل الدخول ',style: TextStyles.textStyle18Bold.copyWith(
+          child: Text(AppLocalizations.of(context)!.translate('login').toString(),
+              style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.primaryBlue,
               fontSize: MediaQuery.sizeOf(context).height*0.02
           )),

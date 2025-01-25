@@ -64,3 +64,17 @@ class SelectGenderTypeState extends AuthStates{}
 
 class ResendCodeTimerState extends AuthStates{}
 class ResendCodeTimerFinishedState extends AuthStates{}
+
+class GetUserDataLoadingState extends AuthStates{}
+class GetUserDataSuccessState extends AuthStates{}
+class GetUserDataErrorState extends AuthStates{
+  String message;
+  GetUserDataErrorState({required this.message});
+}
+
+class CheckUserLoadingState extends AuthStates{}
+class CheckUserSuccessState extends AuthStates{}
+class CheckUserErrorState extends AuthStates{
+  String message;
+  CheckUserErrorState({required this.message});
+}

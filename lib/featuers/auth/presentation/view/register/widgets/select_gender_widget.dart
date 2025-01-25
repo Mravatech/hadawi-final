@@ -4,6 +4,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class SelectGenderWidget extends StatelessWidget {
   const SelectGenderWidget ({super.key});
@@ -16,15 +17,17 @@ class SelectGenderWidget extends StatelessWidget {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('النوع :',style: TextStyles.textStyle18Bold.copyWith(
+            Text(AppLocalizations.of(context)!.translate('gender').toString(),
+              style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.black,
-              fontSize: MediaQuery.sizeOf(context).height*0.022
+              fontSize: MediaQuery.sizeOf(context).height*0.02
             ),),
             Row(
               children: [
                 Expanded(
                   child: RadioListTile(
-                    title: Text('ذكر',style: TextStyles.textStyle18Medium,),
+                    title: Text(AppLocalizations.of(context)!.translate('male').toString(),
+                      style: TextStyles.textStyle18Medium,),
                     value: 'Male',
                     groupValue: cubit.genderValue,
                     onChanged: (String? value) {
@@ -36,7 +39,8 @@ class SelectGenderWidget extends StatelessWidget {
                 Expanded(
                   child: RadioListTile(
                     value: 'Female',
-                    title: Text('انثى',style: TextStyles.textStyle18Medium,),
+                    title: Text(AppLocalizations.of(context)!.translate('female').toString(),
+                      style: TextStyles.textStyle18Medium,),
                       groupValue: cubit.genderValue,
                       onChanged: (String? value) {
                         cubit.changeGenderValue(value);

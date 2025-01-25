@@ -21,7 +21,8 @@ class VerfiyCodeViewBody extends StatefulWidget {
     required this.name,
     required this.phone,
     required this.brithDate,
-    required this.email
+    required this.email,
+    required this.isLogin,
   });
   final String verificationId;
   final String gender;
@@ -29,6 +30,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
   final String phone;
   final String brithDate;
   final String email;
+  final bool isLogin;
 
 
   @override
@@ -151,6 +153,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                               email: widget.email,
                               phone: widget.phone,
                               name: widget.name,
+                              isLogin: widget.isLogin,
                               brithDate: widget.brithDate,
                               gender: widget.gender,
                               verificationId: widget.verificationId,

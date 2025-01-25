@@ -12,6 +12,7 @@ class VerifyPhoneScreen extends StatelessWidget {
   final String phone;
   final String brithDate;
   final String email;
+  final bool isLogin;
 
   const VerifyPhoneScreen({super.key,
     required this.verificationId,
@@ -19,7 +20,8 @@ class VerifyPhoneScreen extends StatelessWidget {
     required this.name,
     required this.phone,
     required this.brithDate,
-    required this.email
+    required this.email,
+    required this.isLogin,
   });
 
   @override
@@ -48,6 +50,7 @@ class VerifyPhoneScreen extends StatelessWidget {
           phone: phone,
           brithDate: brithDate,
           email: email,
+          isLogin: isLogin,
         ),
       ),
     );

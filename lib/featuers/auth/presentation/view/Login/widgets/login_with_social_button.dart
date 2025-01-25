@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
@@ -6,6 +8,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/ho
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
@@ -17,7 +20,7 @@ class LoginWithSocialButton extends StatelessWidget {
     return BlocConsumer<AuthCubit,AuthStates>(
       listener: (context, state) {
         if(state is SignInWithSocialMediaErrorState){
-          customToast(title: state.message, color: ColorManager.primaryBlue);
+          // customToast(title: state.message, color: ColorManager.primaryBlue);
         }
         if(state is SignInWithSocialMediaSuccessState){
           customPushAndRemoveUntil(context, HomeLayout());
@@ -29,20 +32,20 @@ class LoginWithSocialButton extends StatelessWidget {
         const CircularProgressIndicator():
         Row(
           children: [
+            Platform.isAndroid?
             Expanded(
               child: DefaultButtonWithImage(
                 image:AssetsManager.googleIcon ,
-                buttonText: 'ادخل باستخدام',
+                buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
                 onTap: (){
                   cubit.signInWithGoogle(brithDate: '', gender:'');
                 },
               ),
-            ),
-            SizedBox( width:  MediaQuery.sizeOf(context).height*0.02,),
+            ):
             Expanded(
               child: DefaultButtonWithImage(
                 image:AssetsManager.appleIcon ,
-                buttonText: 'ادخل باستخدام',
+                buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
                 onTap: (){},
               ),
             ),

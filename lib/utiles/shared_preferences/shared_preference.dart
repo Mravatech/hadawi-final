@@ -20,6 +20,8 @@ class UserDataFromStorage {
   static late String adminUidFromStorage;
   static late String adminNameFromStorage;
   static late String emailFromStorage;
+  static late String genderFromStorage;
+  static late String brithDateFromStorage;
   static late String phoneNumberFromStorage;
   static late String countryFromStorage;
   static late String mainGroupFromStorage;
@@ -139,6 +141,16 @@ class UserDataFromStorage {
     _setData();
   }
 
+  static  setGender(String value)  {
+    genderFromStorage=value;
+    _setData();
+  }
+
+  static  setBrithDate(String value)  {
+    brithDateFromStorage=value;
+    _setData();
+  }
+
   static  setOrganizationId(String value)  {
     organizationIdFromStorage=value;
     _setData();
@@ -214,6 +226,8 @@ class UserDataFromStorage {
     prefs.setString("phoneNumberFromStorage",phoneNumberFromStorage);
     prefs.setString("countryFromStorage",countryFromStorage);
     prefs.setString("mainGroupFromStorage",mainGroupFromStorage);
+    prefs.setString("genderFromStorage",genderFromStorage);
+    prefs.setString("brithDateFromStorage",brithDateFromStorage);
     prefs.setString("macAddressFromStorage",macAddressFromStorage);
     prefs.setString("subGroupFromStorage",subGroupFromStorage);
     prefs.setString("userNameFromStorage",userNameFromStorage);
@@ -259,6 +273,8 @@ class UserDataFromStorage {
     cityFromStorage = prefs.getString("cityFromStorage")??'';
     macAddressFromStorage = prefs.getString("macAddressFromStorage")??'';
     uIdFromStorage = prefs.getString("uIdFromStorage")??'';
+    brithDateFromStorage = prefs.getString("brithDateFromStorage")??'';
+    genderFromStorage = prefs.getString("genderFromStorage")??'';
     cReductionFromStorage = prefs.getDouble("cReductionFromStorage")??0.0;
     balanceFromStorage = prefs.getDouble("balanceFromStorage")??0.0;
     detectionFromStorage = prefs.getDouble("detectionFromStorage")??0.0;

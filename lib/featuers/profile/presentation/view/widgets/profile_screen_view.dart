@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/all_occasions/presentation/view/all_occasions_screen.dart';
+import 'package:hadawi_app/featuers/edit_personal_info/view/screens/edit_personal_info.dart';
 import 'package:hadawi_app/featuers/friends/presentation/view/friends_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
@@ -25,7 +26,12 @@ class ProfileBodyView extends StatelessWidget {
            SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
 
            // البيانات الشخصية
-           RowDataWidget(image: AssetsManager.userIcon, title: 'البيانات الشخصية',),
+           GestureDetector(
+               onTap:  (){
+                 customPushNavigator(context, EditProfileScreen());
+               },
+               child: RowDataWidget(image: AssetsManager.userIcon, title: 'البيانات الشخصية',)
+           ),
 
            SizedBox(height: MediaQuery.sizeOf(context).height*0.035,),
 

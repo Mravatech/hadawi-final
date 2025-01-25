@@ -8,9 +8,11 @@ class SettingViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.infinity,
       child: Column(
+        crossAxisAlignment:  CrossAxisAlignment.center,
         children: [
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
+          SizedBox(height: MediaQuery.sizeOf(context).height*0.05,),
 
           // اللغه
           RowDataWidget(image: '', title: 'اللغه'),
@@ -28,12 +30,12 @@ class SettingViewBody extends StatelessWidget {
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
           // الرمز الترويجي
-          RowDataWidget(image:AssetsManager.lightLogo, title: 'الرمز الترويجي'),
+          RowDataWidget(image:'', title: 'الرمز الترويجي'),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
           // تواصل معنا
-          RowDataWidget(image:AssetsManager.lightLogo, title: 'تواصل معنا'),
+          RowDataWidget(image:'', title: 'تواصل معنا'),
         ],
       ),
     );

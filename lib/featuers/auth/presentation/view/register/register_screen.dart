@@ -23,10 +23,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBarWithoutHeightWidget(),
-      body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: RegisterViewBody()
-      )
+      body: RegisterViewBody()
     );
   }
 }

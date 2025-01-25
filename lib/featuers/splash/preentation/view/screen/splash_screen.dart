@@ -14,7 +14,7 @@ class SplashScreen extends StatelessWidget {
         padding: EdgeInsets.zero,
         height: MediaQuery.sizeOf(context).height,
         width: MediaQuery.sizeOf(context).width,
-        child: const SplashBodyView(),
+        child: const  SplashBodyView(),
       ),
     );
   }

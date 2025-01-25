@@ -38,6 +38,7 @@ class ResendCodeButton extends StatelessWidget {
                   cubit.loginWithPhone(
                      brithDate: cubit.brithDateController.text,
                      email: '',
+                     isLogin: false,
                      gender: cubit.genderValue,
                      name: '',
                      phone: '',

@@ -15,12 +15,14 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  TextEditingController passController = TextEditingController();
 
   @override
   void dispose() {
     emailController.dispose();
     phoneController.dispose();
     nameController.dispose();
+    passController.dispose();
     super.dispose();
   }
 
@@ -29,17 +31,27 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
     return Column(
       children: [
 
+        Align(
+          alignment: AlignmentDirectional.bottomStart,
+          child: IconButton(
+              padding: EdgeInsets.zero,
+              onPressed: ()=>Navigator.pop(context),
+              icon: Icon(Icons.arrow_back)
+          ),
+        ),
+
         Expanded(
             flex: 1,
             child: LogoWidget()
         ),
 
         Expanded(
-          flex: 5,
+          flex: 7,
           child: RegisterFormWidget(
             phoneController:  phoneController,
             emailController:  emailController,
             nameController:   nameController,
+            passController:   passController,
           ),
         ),
 

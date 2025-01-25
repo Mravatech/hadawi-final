@@ -9,10 +9,7 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:appBarWithoutHeightWidget(),
-      body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: LoginViewBody()
-      ),
+      body: LoginViewBody(),
     );
   }
 }

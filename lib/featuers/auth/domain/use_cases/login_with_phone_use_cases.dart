@@ -17,6 +17,7 @@ class LoginWithPhoneUseCases{
     required String brithDate,
     required String gender,
     required bool resendCode,
+    required bool isLogin,
     required BuildContext context
   })async{
       return await authBaseRepository.loginWithPhoneNumber(
@@ -25,6 +26,7 @@ class LoginWithPhoneUseCases{
           name: name,
           brithDate: brithDate,
           resendCode: resendCode,
+          isLogin: isLogin,
           gender: gender,
           context: context
       );

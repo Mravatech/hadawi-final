@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
-import 'package:hadawi_app/featuers/auth/domain/use_cases/get_user_data_use_cases.dart';
+import 'package:hadawi_app/featuers/auth/domain/use_cases/check_user_login_use_cases.dart';
+import 'package:hadawi_app/featuers/auth/domain/use_cases/get_user_info_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/google_auth_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/login_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/login_with_phone_use_cases.dart';
@@ -13,6 +14,7 @@ import 'package:hadawi_app/featuers/auth/domain/use_cases/save_data_use_cases.da
 import 'package:hadawi_app/featuers/auth/domain/use_cases/verifiy_code_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:intl/intl.dart';
 
@@ -22,21 +24,23 @@ class AuthCubit extends Cubit<AuthStates> {
       this.loginUseCases,
       this.registerUseCases,
       this.saveDataUseCases,
-      this.getUserDataUseCases,
       this.logoutUseCases,
       this.googleAuthUseCases,
       this.loginWithPhoneUseCases,
       this.verifiyCodeUseCases,
+      this.getUserInfoUseCases,
+      this.checkUserLoginUseCases,
       ) : super(AuthInitialState());
 
   LoginUseCases loginUseCases;
   RegisterUseCases registerUseCases;
   SaveDataUseCases saveDataUseCases;
-  GetUserDataUseCases getUserDataUseCases;
   LogoutUseCases logoutUseCases;
   GoogleAuthUseCases googleAuthUseCases;
   LoginWithPhoneUseCases loginWithPhoneUseCases;
   VerifiyCodeUseCases verifiyCodeUseCases;
+  GetUserInfoUseCases getUserInfoUseCases;
+  CheckUserLoginUseCases checkUserLoginUseCases;
 
   TextEditingController brithDateController = TextEditingController();
 
@@ -70,7 +74,6 @@ class AuthCubit extends Cubit<AuthStates> {
     result.fold((l) {
       emit(UserRegisterErrorState(message: l.message));
     }, (r) {
-      customToast(title: 'تم التسجيل', color: ColorManager.primaryBlue);
       emit(UserRegisterSuccessState());
     });
   }
@@ -109,18 +112,6 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-  UserEntities ?userEntities ;
-  Future<void> getUserData({
-    required String uId,
-})async {
-    emit(UserGetDataLoadingState());
-    final result = await getUserDataUseCases.getUserData(uId: uId);
-    result.fold((l) {
-      emit(UserGetDataErrorState(message: l.message));
-    }, (r) {
-      emit(UserGetDataSuccessState());
-    });
-  }
 
   void setBrithDate({
     required DateTime brithDateValue
@@ -134,16 +125,21 @@ class AuthCubit extends Cubit<AuthStates> {
     required String gender,
   })async {
     emit(SignInWithSocialMediaLoadingState());
-    final result = await googleAuthUseCases.loginWithGoogle(
+    try{
+      final result = await googleAuthUseCases.loginWithGoogle(
         brithDate: brithDate,
         gender: gender,
-    );
-    result.fold((l) {
-      emit(SignInWithSocialMediaErrorState(message: l.message));
-    }, (r) {
-      customToast(title: 'تم التسجيل', color: ColorManager.primaryBlue);
-      emit(SignInWithSocialMediaSuccessState());
-    });
+      );
+      result.fold((l) {
+        emit(SignInWithSocialMediaErrorState(message: l.message));
+      }, (r) {
+        customToast(title: 'تم التسجيل', color: ColorManager.primaryBlue);
+        emit(SignInWithSocialMediaSuccessState());
+      });
+    }catch (e){
+      emit(SignInWithSocialMediaErrorState(message: ''));
+    }
+
   }
 
   String genderValue='Male';
@@ -163,6 +159,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String brithDate,
     required String gender,
     required bool resendCode,
+    required bool isLogin,
     required BuildContext context
   })async {
     isLoading = true;
@@ -173,6 +170,7 @@ class AuthCubit extends Cubit<AuthStates> {
       email: email,
       name: name,
       resendCode: resendCode,
+      isLogin: isLogin,
       brithDate: brithDate,
       gender: gender
     );
@@ -192,6 +190,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String brithDate,
     required String gender,
     required String verificationId,
+    required bool isLogin,
     required String verifyOtpPinPut,
   })async {
     emit(VerifiyOtpCodeLoadingState());
@@ -202,6 +201,7 @@ class AuthCubit extends Cubit<AuthStates> {
           name: name,
           brithDate: brithDate,
           gender: gender,
+          isLogin: isLogin,
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut
       );
@@ -236,6 +236,27 @@ class AuthCubit extends Cubit<AuthStates> {
   }
 
 
+  Future<void> getUserInfo({required String uId})async {
+    emit(GetUserDataLoadingState());
+    final result = await getUserInfoUseCases.getUserInfo(uId: uId);
+    result.fold(
+          (l) => emit(GetUserDataErrorState(message: l.message)),
+          (r){
+            emit(GetUserDataSuccessState());
+          }
+    );
+  }
 
 
+  Future<void> checkUserLogin({required String phoneNumber})async {
+    emit(CheckUserLoadingState());
+    final result = await checkUserLoginUseCases
+        .checkUserLogin(phoneNumber: phoneNumber);
+    result.fold(
+            (l) => emit(CheckUserErrorState(message: l.message)),
+            (r){
+              emit(CheckUserSuccessState());
+            }
+    );
+  }
 }
