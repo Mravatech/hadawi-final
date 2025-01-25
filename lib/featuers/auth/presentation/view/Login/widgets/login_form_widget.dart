@@ -24,16 +24,16 @@ class LoginFormWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(MediaQuery.sizeOf(context).height*0.03),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: ColorManager.white,
-      ),
-      child: SingleChildScrollView(
-        child: GestureDetector(
-          onTap: ()=>FocusScope.of(context).unfocus(),
+    return GestureDetector(
+      onTap: ()=>FocusScope.of(context).unfocus(),
+      child: Container(
+        padding: EdgeInsets.all(MediaQuery.sizeOf(context).height*0.03),
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: ColorManager.white,
+        ),
+        child: SingleChildScrollView(
           child: Form(
             key: loginKey,
             child: Column(
