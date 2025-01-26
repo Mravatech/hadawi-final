@@ -5,6 +5,7 @@ import 'package:hadawi_app/featuers/settings/presentation/view/widgets/settings_
 import 'package:hadawi_app/featuers/wallets/presentation/view/widgets/wallets_view_body.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
+import 'package:hadawi_app/widgets/main_app_bar_widget.dart';
 
 class FriendsScreen extends StatelessWidget {
   const FriendsScreen({super.key});
@@ -13,7 +14,7 @@ class FriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      appBar: defaultAppBarWidget(appBarTitle: 'البروفيل \n- الاصدقاء'),
+      appBar: mainAppBarWidget(appBarTitle: 'الاصدقاء'),
       body: FriendsViewBody(),
     );
   }

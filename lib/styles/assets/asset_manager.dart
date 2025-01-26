@@ -10,8 +10,10 @@ class AssetsManager{
   static const String userIcon = "assets/images/user.png";
   static const String shareIcon = "assets/images/share.png";
   static const String noData = "assets/images/box.png";
-
-
-
+  static const String deleteAccount = "assets/images/delete.png";
+  static const String globalAccount = "assets/images/global.png";
+  static const String notificationAccount = "assets/images/notification.png";
+  static const String supportAccount = "assets/images/support.png";
+  static const String logoutAccount = "assets/images/logout.png";
 
 }

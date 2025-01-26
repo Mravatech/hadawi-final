@@ -84,6 +84,12 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   Future<void> logout() async {
     try {
       await firebaseAuth.signOut();
+      UserDataFromStorage.setUid('');
+      UserDataFromStorage.setUserName('');
+      UserDataFromStorage.setEmail('');
+      UserDataFromStorage.setPhoneNumber('');
+      UserDataFromStorage.setGender('');
+      UserDataFromStorage.setBrithDate('');
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
     }

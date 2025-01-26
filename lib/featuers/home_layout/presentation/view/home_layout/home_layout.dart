@@ -5,6 +5,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/widgets/bottom_navigation_bar_widget.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
@@ -33,8 +34,17 @@ class _HomeLayoutState extends State<HomeLayout> {
           var cubit = context.read<HomeCubit>();
           return Scaffold(
             backgroundColor: ColorManager.white,
-            appBar: defaultAppBarWidget(
-            appBarTitle: AppConstants().homeLayoutTitles[cubit.currentIndex],
+            appBar: AppBar(
+                backgroundColor: ColorManager.gray,
+                title: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
+                    AppConstants().homeLayoutTitles[cubit.currentIndex],
+                    style: TextStyles.textStyle18Bold.copyWith(
+                        color: ColorManager.primaryBlue
+                    ),
+                  ),
+                ),
             ),
             body: AppConstants().homeLayoutWidgets[cubit.currentIndex],
 

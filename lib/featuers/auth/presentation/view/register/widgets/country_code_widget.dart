@@ -3,8 +3,9 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
 class CountryCodeWidget extends StatelessWidget {
-  const CountryCodeWidget({super.key});
+  const CountryCodeWidget({super.key,required this.color});
 
+  final Color color;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -18,13 +19,13 @@ class CountryCodeWidget extends StatelessWidget {
       height:  MediaQuery.sizeOf(context).height*0.04,
       width:  MediaQuery.sizeOf(context).height*0.07,
       decoration: BoxDecoration(
-        color: ColorManager.gray,
+        color: color,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisAlignment:  MainAxisAlignment.center,
         children: [
-          Text('+20',style: TextStyles.textStyle18Medium.copyWith(
+          Text('+966',style: TextStyles.textStyle18Medium.copyWith(
               color: ColorManager.black,
               fontSize:  MediaQuery.sizeOf(context).height*0.017
           )),
