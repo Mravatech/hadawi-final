@@ -45,6 +45,7 @@ class UserDataFromStorage {
   static late String giftName;
   static late String link;
   static late String giftAmount;
+  static late bool isForMe;
 
   static setFirstTimeApp(bool value) {
     firstTime = value;
@@ -240,6 +241,10 @@ class UserDataFromStorage {
       giftAmount = value;
       _setData();
     }
+  static setIsForMe(bool value) {
+    isForMe = value;
+    _setData();
+  }
 
     /// this function to remove all storage
     static removeAllDataFromStorage() async {
@@ -317,6 +322,7 @@ class UserDataFromStorage {
       prefs.setString("giftName", giftName);
       prefs.setString("link", link);
       prefs.setString("giftAmount", giftAmount);
+      prefs.setBool("isForMe", isForMe);
     }
 
     static getData() async {
@@ -389,6 +395,7 @@ class UserDataFromStorage {
       detectionFromStorage = prefs.getDouble("detectionFromStorage") ?? 0.0;
       suspendedBalanceFromStorage =
           prefs.getDouble("suspendedBalanceFromStorage") ?? 0.0;
+      isForMe = prefs.getBool("isForMe") ?? false;
     }
 
 

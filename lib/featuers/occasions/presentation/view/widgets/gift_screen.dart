@@ -5,6 +5,7 @@ import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/present_
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -19,6 +20,15 @@ class GiftScreen extends StatelessWidget {
         if(state is AddOccasionSuccessState){
           customToast(title: " تمت اضافة المناسبة", color: ColorManager.success);
           Navigator.pop(context);
+          UserDataFromStorage.removeDataFromStorage('giftName');
+          UserDataFromStorage.removeDataFromStorage('giftLink');
+          UserDataFromStorage.removeDataFromStorage('giftType');
+          UserDataFromStorage.removeDataFromStorage('giftImage');
+          UserDataFromStorage.removeDataFromStorage('giftBySharing');
+          UserDataFromStorage.removeDataFromStorage('moneyGiftAmount');
+          UserDataFromStorage.removeDataFromStorage('occasionName');
+          UserDataFromStorage.removeDataFromStorage('occasionDate');
+          UserDataFromStorage.removeDataFromStorage('occasionType');
         }
       },
       builder: (context, state) {
@@ -59,193 +69,204 @@ class GiftScreen extends StatelessWidget {
             body: Padding(
               padding: EdgeInsets.all(15),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    /// by sharing switch
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Switch(
-                            value: cubit.bySharingValue,
-                            onChanged: (value) {
-                              cubit.switchBySharing();
-                            }),
-                        Text(
-                          ' :مشاركة الهدية',
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.03),
+                child: Form(
+                  key: cubit.giftFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      /// by sharing switch
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Switch(
+                              value: cubit.bySharingValue,
+                              onChanged: (value) {
+                                cubit.switchBySharing();
+                              }),
+                          Text(
+                            ' :مشاركة الهدية',
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.03),
 
-                    /// gift name
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          ' :اسم الهدية',
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        DefaultTextField(
-                            controller: cubit.giftNameController,
-                            hintText: '',
-                            validator: (value) {
-                              return '';
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray),
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.04),
+                      /// gift name
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            ' :اسم الهدية',
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          DefaultTextField(
+                              controller: cubit.giftNameController,
+                              hintText: '',
+                              validator: (value) {
+                                if (value!.trim().isEmpty) {
+                                  return 'الرجاء ادخال اسم الهدية';
+                                }
+                                return null;
 
-                    /// link
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          ' :رابطها ',
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        DefaultTextField(
-                            controller: cubit.linkController,
-                            hintText: '',
-                            validator: (value) {
-                              return '';
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray),
-                      ],
-                    ),
+                              },
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              fillColor: ColorManager.gray),
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.04),
 
-                    SizedBox(height: mediaQuery.height * 0.04),
+                      /// link
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            ' :رابطها ',
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          DefaultTextField(
+                              controller: cubit.linkController,
+                              hintText: '',
+                              validator: (value) {
+                                return null;
+                              },
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.next,
+                              fillColor: ColorManager.gray),
+                        ],
+                      ),
 
-                    /// picture
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              cubit.pickGiftImage();
-                            },
-                            icon: Icon(
-                              Icons.file_upload_outlined,
-                              size: mediaQuery.height * 0.04,
-                              color: ColorManager.primaryBlue,
-                            )),
-                        Container(
-                          height: mediaQuery.height * 0.2,
-                          width: mediaQuery.width * 0.5,
-                          decoration: BoxDecoration(
-                              color: ColorManager.gray,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: cubit.image == null
-                              ? Center(
-                                  child: Container(),
-                                )
-                              : Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
+                      SizedBox(height: mediaQuery.height * 0.04),
+
+                      /// picture
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                cubit.pickGiftImage();
+                              },
+                              icon: Icon(
+                                Icons.file_upload_outlined,
+                                size: mediaQuery.height * 0.04,
+                                color: ColorManager.primaryBlue,
+                              )),
+                          Container(
+                            height: mediaQuery.height * 0.2,
+                            width: mediaQuery.width * 0.5,
+                            decoration: BoxDecoration(
+                                color: ColorManager.gray,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: cubit.image == null
+                                ? Center(
+                                    child: Container(),
+                                  )
+                                : Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Image.file(
+                                      cubit.image!,
+                                      fit: BoxFit.fill,
+                                      height: mediaQuery.height * 0.2,
+                                      width: mediaQuery.width * 0.5,
+                                    ),
                                   ),
-                                  child: Image.file(
-                                    cubit.image!,
-                                    fit: BoxFit.fill,
-                                    height: mediaQuery.height * 0.2,
-                                    width: mediaQuery.width * 0.5,
-                                  ),
+                          ),
+                          Text(
+                            ' :صورتها ',
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.04),
+
+                      /// amount
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          PresentAmountWidget(),
+                          Text(
+                            ' :قيمتها',
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.12),
+
+                      /// add another and save
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          /// share button
+                          GestureDetector(
+                            onTap: () {},
+                            child: Container(
+                              height: mediaQuery.height * .055,
+                              width: mediaQuery.width * .4,
+                              decoration: BoxDecoration(
+                                color: ColorManager.primaryBlue,
+                                borderRadius:
+                                    BorderRadius.circular(mediaQuery.height * 0.05),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'اضافة اخرى',
+                                      style: TextStyles.textStyle18Bold
+                                          .copyWith(color: ColorManager.white),
+                                    ),
+                                  ],
                                 ),
-                        ),
-                        Text(
-                          ' :صورتها ',
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.04),
-
-                    /// amount
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        PresentAmountWidget(),
-                        Text(
-                          ' :قيمتها',
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.12),
-
-                    /// add another and save
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        /// share button
-                        GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            height: mediaQuery.height * .055,
-                            width: mediaQuery.width * .4,
-                            decoration: BoxDecoration(
-                              color: ColorManager.primaryBlue,
-                              borderRadius:
-                                  BorderRadius.circular(mediaQuery.height * 0.05),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'اضافة اخرى',
-                                    style: TextStyles.textStyle18Bold
-                                        .copyWith(color: ColorManager.white),
-                                  ),
-                                ],
                               ),
                             ),
                           ),
-                        ),
 
-                        /// save button
-                        GestureDetector(
-                          onTap: () {
-                            cubit.addOccasion();
-                          },
-                          child: Container(
-                            height: mediaQuery.height * .055,
-                            width: mediaQuery.width * .4,
-                            decoration: BoxDecoration(
-                              color: ColorManager.primaryBlue,
-                              borderRadius:
-                                  BorderRadius.circular(mediaQuery.height * 0.05),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'حفظ',
-                                    style: TextStyles.textStyle18Bold
-                                        .copyWith(color: ColorManager.white),
-                                  ),
-                                ],
+                          /// save button
+                          GestureDetector(
+                            onTap: () {
+                              if (cubit.giftFormKey.currentState!.validate() &&
+                                  cubit.image != null && cubit.giftValue != 0) {
+                              cubit.addOccasion();} else {
+                                customToast(title: 'الرجاء ادخال جميع البيانات', color: ColorManager.error);
+                              }
+                            },
+                            child: Container(
+                              height: mediaQuery.height * .055,
+                              width: mediaQuery.width * .4,
+                              decoration: BoxDecoration(
+                                color: ColorManager.primaryBlue,
+                                borderRadius:
+                                    BorderRadius.circular(mediaQuery.height * 0.05),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'حفظ',
+                                      style: TextStyles.textStyle18Bold
+                                          .copyWith(color: ColorManager.white),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  ],
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),

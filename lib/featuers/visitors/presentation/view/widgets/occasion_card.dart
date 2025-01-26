@@ -48,26 +48,36 @@ class OccasionCard extends StatelessWidget {
                   ),
                 ),
               ),
-               Expanded(
-                 child: ClipRRect(
+              Expanded(
+                child: ClipRRect(
                   borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
                   ),
                   child: CachedNetworkImage(
-                    width: double.infinity,
+                    width: cubit.occasions[index].giftImage.isEmpty
+                        ? MediaQuery.sizeOf(context).width * 0.25
+                        : double.infinity,
                     fit: BoxFit.cover,
                     imageUrl: cubit.occasions[index].giftImage,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
                     ),
-                    errorWidget: (context, url, error) => const Icon(
-                      Icons.error,
-                      color: Colors.red,
-                    ),
+                    errorWidget: (context, url, error) {
+                      return cubit.occasions[index].giftImage.isEmpty &&
+                              cubit.occasions[index].giftType == 'مبلغ مالي'
+                          ? Image.asset(
+                            'assets/images/money_bag.png',
+                            fit: BoxFit.contain,
+                          )
+                          : const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            );
+                    },
                   ),
-                               ),
-               ),
+                ),
+              ),
             ],
           ),
         );

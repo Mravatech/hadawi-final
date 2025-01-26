@@ -15,14 +15,16 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   bool isForMe = true;
   bool isForOther = false;
-  bool isPresent = false;
+  bool isPresent = true;
   bool isMoney = false;
   int selectedIndex = 0;
   bool bySharingValue = false;
   int giftValue = 0;
   String giftType = '';
-  GlobalKey<FormState> occasionFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> moneyFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> giftFormKey = GlobalKey<FormState>();
   TextEditingController giftNameController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController occasionDateController = TextEditingController();
@@ -39,12 +41,24 @@ class OccasionCubit extends Cubit<OccasionState> {
       isForMe = false;
       isForOther = true;
       selectedIndex = 1;
+      UserDataFromStorage.setIsForMe(false);
+      debugPrint('isForMe $isForMe');
     } else {
       isForMe = true;
       isForOther = false;
       selectedIndex = 0;
+      UserDataFromStorage.setIsForMe(true);
+      debugPrint('isForMe $isForMe');
+
     }
     emit(SwitchForWhomOccasionSuccess());
+  }
+
+  void switchGiftType() {
+    isPresent = !isPresent; // Toggle the `isPresent` value
+    isMoney = !isMoney;     // Toggle the `isMoney` value
+
+    emit(SwitchGiftTypeSuccess());
   }
 
   void switchBySharing() {
@@ -81,7 +95,6 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   Future<String> uploadImage() async {
     emit(UploadImageLoadingState());
-
     try {
       final uploadTask = await firebase_storage.FirebaseStorage.instance
           .ref()
@@ -102,33 +115,39 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(AddOccasionLoadingState());
 
     try {
-      final imageUrl = await uploadImage();
+      final String? imageUrl = UserDataFromStorage.giftType == 'هدية'
+          ? await uploadImage()
+          : null;
       final result = await OccasionRepoImp().addOccasions(
-        isForMe: isForMe,
+        isForMe: UserDataFromStorage.isForMe,
         occasionName: UserDataFromStorage.occasionName,
         occasionDate: UserDataFromStorage.occasionDate,
-        occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
-        moneyGiftAmount: moneyAmountController.text,
+        occasionType: UserDataFromStorage.isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
+        moneyGiftAmount: '${giftValue == 0 ? int.parse(moneyAmountController.text) : giftValue}',
         personId: UserDataFromStorage.uIdFromStorage,
-        personName: UserDataFromStorage.userNameFromStorage,
+        personName: nameController.text.isEmpty
+            ? UserDataFromStorage.userNameFromStorage
+            : nameController.text,
         personPhone: UserDataFromStorage.phoneNumberFromStorage,
         personEmail: UserDataFromStorage.emailFromStorage,
-        giftImage: imageUrl,
-        giftName: giftNameController.text,
-        giftLink: linkController.text,
-        giftPrice:
-            giftValue == 0 ? int.parse(moneyAmountController.text) : giftValue,
+        giftImage: imageUrl ?? '',
+        giftName: giftNameController.text.isEmpty ? '' : giftNameController.text,
+        giftLink: linkController.text.isEmpty ? '' : linkController.text,
+        giftPrice: giftValue == 0 ? int.parse(moneyAmountController.text) : giftValue,
         giftType: UserDataFromStorage.giftType,
         isSharing: bySharingValue,
       );
+
       result.fold((failure) {
+        debugPrint('============');
         emit(AddOccasionErrorState(error: failure.message));
       }, (occasion) {
         emit(AddOccasionSuccessState(occasion: occasion));
       });
     } catch (error) {
+      debugPrint('*************');
+      debugPrint('error: $error');
       emit(AddOccasionErrorState(error: error.toString()));
     }
   }
-
 }
