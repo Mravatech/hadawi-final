@@ -7,13 +7,19 @@ class Assets {
   static const String fontsNanumGothicRegular = 'assets/fonts/NanumGothic-Regular.ttf';
   static const String imagesApple = 'assets/images/apple.png';
   static const String imagesBalloons = 'assets/images/balloons.png';
+  static const String imagesBox = 'assets/images/box.png';
   static const String imagesDarkLogo = 'assets/images/dark_logo.png';
   static const String imagesFriends = 'assets/images/friends.png';
   static const String imagesGiftbox = 'assets/images/giftbox.png';
   static const String imagesGoogle = 'assets/images/google.png';
   static const String imagesLightLogo = 'assets/images/light_logo.jpg';
   static const String imagesLogoWithoutBackground = 'assets/images/logo_without_background.png';
+  static const String imagesMoney = 'assets/images/money.png';
+  static const String imagesMoneyBag = 'assets/images/money_bag.png';
+  static const String imagesMoneyBag2 = 'assets/images/money_bag2.png';
   static const String imagesShare = 'assets/images/share.png';
   static const String imagesUser = 'assets/images/user.png';
+  static const String translationsAr = 'assets/translations/ar.json';
+  static const String translationsEn = 'assets/translations/en.json';
 
 }

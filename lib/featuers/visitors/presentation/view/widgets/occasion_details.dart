@@ -77,7 +77,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: occasionEntity.giftName,
+                    hintText: occasionEntity.giftName.isEmpty? '${occasionEntity.giftPrice} ريال':occasionEntity.giftName,
                     validator: (value) {
                       return null;
                     },
@@ -103,15 +103,21 @@ class OccasionDetails extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: CachedNetworkImage(
+                    child: occasionEntity.giftImage.isEmpty && occasionEntity.giftType == 'مبلغ مالي'? SizedBox(): CachedNetworkImage(
                       imageUrl: occasionEntity.giftImage,
                       placeholder: (context, url) => const Center(
                         child: CircularProgressIndicator(),
                       ),
-                      errorWidget: (context, url, error) => const Icon(
-                        Icons.error,
-                        color: Colors.red,
-                      ),
+                      errorWidget: (context, url, error) {
+                        return occasionEntity.giftImage.isEmpty &&
+                            occasionEntity.giftType == 'مبلغ مالي' ? Image.asset(
+                          'assets/images/money_bag.png',
+                          fit: BoxFit.contain,
+                        ):const Icon(
+                          Icons.error,
+                          color: Colors.red,
+                        );
+                      },
                       height: MediaQuery.sizeOf(context).height * 0.3,
                       width: double.infinity,
                       fit: BoxFit.fill,
@@ -120,38 +126,24 @@ class OccasionDetails extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      cubit.openExerciseLink(occasionEntity.giftLink);
-                    },
-                    child: Container(
-                      height: MediaQuery.sizeOf(context).height * .055,
-                      width: MediaQuery.sizeOf(context).width,
-                      decoration: BoxDecoration(
-                        color: ColorManager.primaryBlue,
-                        borderRadius: BorderRadius.circular(
-                            MediaQuery.sizeOf(context).height * 0.05),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'الرابط',
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
-                  GiftDetailsProgressIndicatorWidget(
-                    value: .6,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GiftDetailsProgressIndicatorWidget(
+                          value: .6,
+                        ),
+                      ),
+                      IconButton(onPressed: () {
+                        cubit.openExerciseLink(occasionEntity.giftLink);
+                      }, icon: Icon(Icons.link,
+                        color: ColorManager.black,
+                        size: MediaQuery.sizeOf(context).height * 0.03,
+                      )),
+
+                    ],
                   ),
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.02,
@@ -173,7 +165,7 @@ class OccasionDetails extends StatelessWidget {
                     enable: false,
                   ),
                   SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
+                    height: occasionEntity.giftImage.isEmpty?  MediaQuery.sizeOf(context).height * 0.18:MediaQuery.sizeOf(context).height * 0.04,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

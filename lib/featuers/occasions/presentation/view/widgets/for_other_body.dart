@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_screen.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/money_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -16,9 +17,8 @@ class ForOtherBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
       listener: (context, state) {
-        if(state is AddOccasionSuccessState){
+        if (state is AddOccasionSuccessState) {
           customToast(title: 'تمت إضافة المناسبة', color: ColorManager.success);
-
         }
       },
       builder: (context, state) {
@@ -120,35 +120,6 @@ class ForOtherBody extends StatelessWidget {
               ),
               SizedBox(height: mediaQuery.height * 0.03),
 
-              /// money gift
-              Visibility(
-                visible: cubit.isMoney,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      ' :المبلغ المطلوب',
-                      style: TextStyles.textStyle18Bold
-                          .copyWith(color: ColorManager.black),
-                    ),
-                    DefaultTextField(
-                        controller: cubit.moneyAmountController,
-                        hintText: '',
-                        validator: (value) {
-                          if (value!.isEmpty && cubit.isMoney==true) {
-                            return 'رجاء ادخال المبلغ المطلوب';
-                          } else {
-                            return null;
-                          }
-                        },
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        fillColor: ColorManager.gray)
-                  ],
-                ),
-              ),
-              SizedBox(height: mediaQuery.height * 0.03),
-
               /// requested gift
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -160,13 +131,16 @@ class ForOtherBody extends StatelessWidget {
                         onTap: () {
                           cubit.giftType = 'هدية';
                           UserDataFromStorage.giftType = cubit.giftType;
+                          cubit.switchGiftType();
                           debugPrint('giftType: ${cubit.giftType}');
                         },
                         child: Container(
                           height: mediaQuery.height * .055,
                           width: mediaQuery.width * .25,
                           decoration: BoxDecoration(
-                            color: cubit.isPresent? ColorManager.primaryBlue: ColorManager.gray,
+                            color: cubit.isPresent
+                                ? ColorManager.primaryBlue
+                                : ColorManager.gray,
                             borderRadius:
                                 BorderRadius.circular(mediaQuery.height * 0.05),
                           ),
@@ -190,17 +164,18 @@ class ForOtherBody extends StatelessWidget {
                       /// money
                       GestureDetector(
                         onTap: () {
-                          cubit.isMoney=!cubit.isMoney;
+                          cubit.switchGiftType();
                           cubit.giftType = 'مبلغ مالي';
                           UserDataFromStorage.giftType = cubit.giftType;
                           debugPrint('giftType: ${cubit.giftType}');
-
                         },
                         child: Container(
                           height: mediaQuery.height * .055,
                           width: mediaQuery.width * .25,
                           decoration: BoxDecoration(
-                            color: cubit.isMoney? ColorManager.primaryBlue: ColorManager.gray,
+                            color: cubit.isMoney
+                                ? ColorManager.primaryBlue
+                                : ColorManager.gray,
                             borderRadius:
                                 BorderRadius.circular(mediaQuery.height * 0.05),
                           ),
@@ -233,39 +208,52 @@ class ForOtherBody extends StatelessWidget {
               ///  continue button
               state is AddOccasionLoadingState
                   ? const Center(
-                child: CircularProgressIndicator(),
-              )
-                  :GestureDetector(
-                onTap: () {
-                  // if (cubit.forOtherFormKey.currentState!.validate()) {
-                  //   cubit.addOccasion();
-                  // }
-                  customPushNavigator(
-                      context,
-                      BlocProvider<OccasionCubit>(
-                        create: (context) => OccasionCubit(),
-                        child: GiftScreen(),
-                      ));
-                },
-                child: Container(
-                  height: mediaQuery.height * .06,
-                  width: mediaQuery.width * .5,
-                  decoration: BoxDecoration(
-                    color: ColorManager.primaryBlue,
-                    borderRadius: BorderRadius.circular(mediaQuery.height * 0.05),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        'المتابعة',
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.white),
+                      child: CircularProgressIndicator(),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        if (cubit.forOtherFormKey.currentState!.validate()) {
+                          if (cubit.giftType == 'هدية') {
+                            customPushNavigator(
+                                context,
+                                BlocProvider<OccasionCubit>(
+                                  create: (context) => OccasionCubit(),
+                                  child: GiftScreen(),
+                                ));
+                          } else {
+                            customPushNavigator(
+                                context,
+                                BlocProvider<OccasionCubit>(
+                                  create: (context) => OccasionCubit(),
+                                  child: MoneyScreen(),
+                                ));
+                          }
+                        }
+                        UserDataFromStorage.occasionName =
+                            cubit.occasionNameController.text;
+                        UserDataFromStorage.occasionDate =
+                            cubit.occasionDateController.text;
+                      },
+                      child: Container(
+                        height: mediaQuery.height * .06,
+                        width: mediaQuery.width * .5,
+                        decoration: BoxDecoration(
+                          color: ColorManager.primaryBlue,
+                          borderRadius:
+                              BorderRadius.circular(mediaQuery.height * 0.05),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: Text(
+                              'المتابعة',
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.white),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              )
+                    )
             ],
           ),
         );

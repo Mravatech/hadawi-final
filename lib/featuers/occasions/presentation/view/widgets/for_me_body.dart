@@ -9,6 +9,8 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
+import 'money_screen.dart';
+
 class ForMeBody extends StatefulWidget {
   const ForMeBody({super.key});
 
@@ -29,7 +31,7 @@ class _ForMeBodyState extends State<ForMeBody> {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
         return Form(
-          key: cubit.occasionFormKey,
+          key: cubit.forMeFormKey,
           child: Column(
             children: [
               /// old occasions
@@ -132,32 +134,6 @@ class _ForMeBodyState extends State<ForMeBody> {
               ),
               SizedBox(height: mediaQuery.height * 0.03),
 
-              /// money gift
-              Visibility(
-                visible: cubit.isMoney,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      ' :المبلغ المطلوب',
-                      style: TextStyles.textStyle18Bold
-                          .copyWith(color: ColorManager.black),
-                    ),
-                    DefaultTextField(
-                        controller: cubit.moneyAmountController,
-                        hintText: '',
-                        validator: (value) {
-                          if (value!.trim().isNotEmpty) return null;
-                          return 'المبلغ المطلوب مطلوب';
-                        },
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        fillColor: ColorManager.gray),
-                    SizedBox(height: mediaQuery.height * 0.03),
-                  ],
-                ),
-              ),
-
               /// requested gift
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -169,9 +145,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                         onTap: () {
                           cubit.giftType = 'هدية';
                           UserDataFromStorage.giftType = cubit.giftType;
-                          setState(() {
-                            cubit.isPresent = !cubit.isPresent;
-                          });
+                          cubit.switchGiftType();
                           debugPrint('giftType: ${cubit.giftType}');
                         },
                         child: Container(
@@ -206,9 +180,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                         onTap: () {
                           cubit.giftType = 'مبلغ مالي';
                           UserDataFromStorage.giftType = cubit.giftType;
-                          setState(() {
-                            cubit.isMoney = !cubit.isMoney;
-                          });
+                          cubit.switchGiftType();
                           debugPrint('giftType: ${cubit.giftType}');
                         },
                         child: Container(
@@ -263,46 +235,51 @@ class _ForMeBodyState extends State<ForMeBody> {
               SizedBox(height: mediaQuery.height * 0.02),
 
               ///  continue button
-              state is AddOccasionLoadingState
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : GestureDetector(
-                      onTap: () {
-                        // if (cubit.occasionFormKey.currentState!.validate()) {
-                        //   cubit.addOccasion();
-                        // }
-                        UserDataFromStorage.occasionName =
-                            cubit.occasionNameController.text;
-                        UserDataFromStorage.occasionDate =
-                            cubit.occasionDateController.text;
-                        customPushNavigator(
-                            context,
-                            BlocProvider<OccasionCubit>(
-                              create: (context) => OccasionCubit(),
-                              child: GiftScreen(),
-                            ));
-                      },
-                      child: Container(
-                        height: mediaQuery.height * .06,
-                        width: mediaQuery.width * .5,
-                        decoration: BoxDecoration(
-                          color: ColorManager.primaryBlue,
-                          borderRadius:
-                              BorderRadius.circular(mediaQuery.height * 0.05),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'المتابعة',
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.white),
-                            ),
-                          ),
-                        ),
+              GestureDetector(
+                onTap: () {
+                  if (cubit.forMeFormKey.currentState!.validate()) {
+                    if (cubit.giftType == 'هدية') {
+                      customPushNavigator(
+                          context,
+                          BlocProvider<OccasionCubit>(
+                            create: (context) => OccasionCubit(),
+                            child: GiftScreen(),
+                          ));
+                    } else {
+                      customPushNavigator(
+                          context,
+                          BlocProvider<OccasionCubit>(
+                            create: (context) => OccasionCubit(),
+                            child: MoneyScreen(),
+                          ));
+                    }
+                  }
+                  UserDataFromStorage.occasionName =
+                      cubit.occasionNameController.text;
+
+                  UserDataFromStorage.occasionDate =
+                      cubit.occasionDateController.text;
+                },
+                child: Container(
+                  height: mediaQuery.height * .06,
+                  width: mediaQuery.width * .5,
+                  decoration: BoxDecoration(
+                    color: ColorManager.primaryBlue,
+                    borderRadius:
+                        BorderRadius.circular(mediaQuery.height * 0.05),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'المتابعة',
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(color: ColorManager.white),
                       ),
-                    )
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         );
