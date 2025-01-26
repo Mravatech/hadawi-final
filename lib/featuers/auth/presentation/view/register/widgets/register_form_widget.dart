@@ -76,7 +76,7 @@ class RegisterFormWidget extends StatelessWidget {
 
                 // phone number
                 DefaultTextField(
-                    prefix:CountryCodeWidget(),
+                    prefix:CountryCodeWidget(color: ColorManager.gray,),
                     controller: phoneController,
                     hintText: AppLocalizations.of(context)!.translate('loginPhoneHint').toString(),
                     validator: (value) {

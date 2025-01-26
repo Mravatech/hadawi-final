@@ -22,17 +22,17 @@ class WalletsViewBody extends StatelessWidget {
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
           // المبالغ بالمحفظة
-          RowDataWidget(image: '', title: 'المبالغ بالمحفظة'),
+          RowDataWidget(image: '', title: 'المبالغ بالمحفظة',lang: false),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
           // المبالغ المسحوبه
-          RowDataWidget(image: '', title: 'المبالغ المسحوبه'),
+          RowDataWidget(image: '', title: 'المبالغ المسحوبه',lang: false),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
           // البيانات البنكيه
-          RowDataWidget(image: '', title: 'البيانات البنكيه'),
+          RowDataWidget(image: '', title: 'البيانات البنكيه',lang: false,),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.02,),
 
