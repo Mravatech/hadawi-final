@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/progress_indecator.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 
@@ -158,6 +160,7 @@ class OccasionDetails extends StatelessWidget {
                     ':المتبقي',
                     style: TextStyles.textStyle18Bold.copyWith(),
                   ),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.01,),
                   DefaultTextField(
                     controller: TextEditingController(),
                     hintText: occasionEntity.moneyGiftAmount,
@@ -208,7 +211,7 @@ class OccasionDetails extends StatelessWidget {
 
                           /// pay
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () =>customPushNavigator(context, PaymentScreen()),
                             child: Container(
                               height: MediaQuery.sizeOf(context).height * .055,
                               width: MediaQuery.sizeOf(context).width * .4,

@@ -48,25 +48,26 @@ class OccasionCard extends StatelessWidget {
                   ),
                 ),
               ),
-               ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(15),
-                  bottomRight: Radius.circular(15),
-                ),
-                child: CachedNetworkImage(
-                  height: MediaQuery.sizeOf(context).height * 0.154,
-                  width: double.infinity,
-                  fit: BoxFit.fill,
-                  imageUrl: cubit.occasions[index].giftImage,
-                  placeholder: (context, url) => const Center(
-                    child: CircularProgressIndicator(),
+               Expanded(
+                 child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(15),
+                    bottomRight: Radius.circular(15),
                   ),
-                  errorWidget: (context, url, error) => const Icon(
-                    Icons.error,
-                    color: Colors.red,
+                  child: CachedNetworkImage(
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    imageUrl: cubit.occasions[index].giftImage,
+                    placeholder: (context, url) => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    errorWidget: (context, url, error) => const Icon(
+                      Icons.error,
+                      color: Colors.red,
+                    ),
                   ),
-                ),
-              ),
+                               ),
+               ),
             ],
           ),
         );

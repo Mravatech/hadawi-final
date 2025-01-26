@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
               debugShowCheckedModeBanner: false,
               title: 'Hadawi',
               theme: getApplicationTheme(context),
-              home: const LoginScreen(),
+              home: const SplashScreen(),
                 localizationsDelegates:  [
                   AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,

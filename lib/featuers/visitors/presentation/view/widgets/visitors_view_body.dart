@@ -35,6 +35,7 @@ class VisitorsViewBody extends StatelessWidget {
                       mainAxisSpacing: 15,
                       crossAxisSpacing: 15,
                       crossAxisCount: 2,
+                      childAspectRatio: 1/1.1
                     ),
                     itemBuilder: (context, index) {
                       return InkWell(

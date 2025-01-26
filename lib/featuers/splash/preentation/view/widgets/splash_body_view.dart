@@ -55,8 +55,8 @@ class _SplashScreenState extends State<SplashBodyView>
 
 void timeDelay({required BuildContext context}) {
   Future.delayed(const Duration(seconds: 2), () async {
-    UserDataFromStorage.uIdFromStorage != ''?
-    customPushAndRemoveUntil(context, const HomeLayout()):
+    // UserDataFromStorage.uIdFromStorage != ''?
+    // customPushAndRemoveUntil(context, const HomeLayout()):
     customPushAndRemoveUntil(context, const LoginScreen());
   });
 }

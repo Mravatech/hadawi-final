@@ -151,7 +151,6 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setUid(userModel.uId);
       UserDataFromStorage.setGender(userModel.gender);
       UserDataFromStorage.setBrithDate(userModel.brithDate);
-      print('Email is ${userModel.email}');
       return userModel;
     } on FireStoreException catch (e) {
       throw FireStoreException(firebaseException: e.firebaseException);

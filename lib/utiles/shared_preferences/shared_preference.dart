@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/material.dart';
 
 
 class UserDataFromStorage {
@@ -50,6 +51,7 @@ class UserDataFromStorage {
     _setData();
   }
 
+
   static setOnBoardingOpened(bool value) {
     onBoardingIsOpen = value;
     _setData();
@@ -60,7 +62,7 @@ class UserDataFromStorage {
     _setData();
   }
 
-  static setUserIsLogin(bool block) {
+  static  setUserIsLogin(bool block) {
     userIsLogin = block;
     _setData();
   }
@@ -150,242 +152,245 @@ class UserDataFromStorage {
     _setData();
   }
 
-  static  setGender(String value)  {
-    genderFromStorage=value;
+  static setGender(String value) {
+    genderFromStorage = value;
     _setData();
   }
 
-  static  setBrithDate(String value)  {
-    brithDateFromStorage=value;
+  static setBrithDate(String value) {
+    brithDateFromStorage = value;
     _setData();
   }
 
-  static  setOrganizationId(String value)  {
-    organizationIdFromStorage=value;
   static setOrganizationId(String value) {
     organizationIdFromStorage = value;
     _setData();
   }
 
-  static setBalance(double value) {
-    balanceFromStorage = value;
-    _setData();
+    static setBalance(double value) {
+      balanceFromStorage = value;
+      _setData();
+    }
+
+    static setCReduction(double value) {
+      cReductionFromStorage = value;
+      _setData();
+    }
+
+    static setDetection(double value) {
+      detectionFromStorage = value;
+      _setData();
+    }
+
+    static setSuspendedBalance(double value) {
+      suspendedBalanceFromStorage = value;
+      _setData();
+    }
+
+    static setFolderNum(String value) {
+      folderNumFromStorage = value;
+      _setData();
+    }
+
+    static setCity(String value) {
+      cityFromStorage = value;
+      _setData();
+    }
+
+    static setUid(String value) {
+      uIdFromStorage = value;
+      _setData();
+    }
+
+    static setNewOccasion(String value) {
+      newOccasion = value;
+      _setData();
+    }
+    static setGiftType(String value) {
+      giftType = value;
+      _setData();
+    }
+
+    static setOccasionDate(String value) {
+      occasionDate = value;
+      _setData();
+    }
+
+    static setMoneyGiftAmount(String value) {
+      moneyGiftAmount = value;
+      _setData();
+    }
+
+    static setOccasionName(String value) {
+      occasionName = value;
+      _setData();
+    }
+
+    static setGiftName(String value) {
+      giftName = value;
+      _setData();
+    }
+
+    static setLink(String value) {
+      link = value;
+      _setData();
+    }
+
+    static setGiftAmount(String value) {
+      giftAmount = value;
+      _setData();
+    }
+
+    /// this function to remove all storage
+    static removeAllDataFromStorage() async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+    }
+
+    /// this function to remove any data from local storage by key
+    static removeDataFromStorage(String key) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(key);
+    }
+
+    //#region private
+    static _setData() async {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setBool("userIsGuest", userIsGuest);
+      prefs.setBool("userIsLogin", userIsLogin);
+      prefs.setBool("firstTime", firstTime);
+      prefs.setBool("themeIsDarkMode", themeIsDarkMode);
+      prefs.setBool("onBoardingIsOpen", onBoardingIsOpen);
+      prefs.setBool("cameraFrontFromStorage", cameraFrontFromStorage);
+      prefs.setBool("emailNotFound", emailNotFound);
+      prefs.setBool("attendenceAdminFromStorage", attendenceAdminFromStorage);
+      prefs.setBool("gradeAdminFromStorage", gradeAdminFromStorage);
+      prefs.setString("languageCodeFromStorage", languageCodeFromStorage);
+      prefs.setString("languageNameFromStorage", languageNameFromStorage);
+
+      prefs.setString("fullNameFromStorage", fullNameFromStorage);
+      prefs.setString("emailFromStorage", emailFromStorage);
+      prefs.setString("adminUidFromStorage", adminUidFromStorage);
+      prefs.setString("adminNameFromStorage", adminNameFromStorage);
+      prefs.setString("phoneNumberFromStorage", phoneNumberFromStorage);
+      prefs.setString("countryFromStorage", countryFromStorage);
+      prefs.setString("mainGroupFromStorage", mainGroupFromStorage);
+      prefs.setString("macAddressFromStorage", macAddressFromStorage);
+      prefs.setString("subGroupFromStorage", subGroupFromStorage);
+      prefs.setString("userNameFromStorage", userNameFromStorage);
+      prefs.setString("organizationIdFromStorage", organizationIdFromStorage);
+      prefs.setString("folderNumFromStorage", folderNumFromStorage);
+      prefs.setString("cityFromStorage", cityFromStorage);
+      prefs.setString("uIdFromStorage", uIdFromStorage);
+      prefs.setDouble("cReductionFromStorage", cReductionFromStorage);
+      prefs.setDouble("balanceFromStorage", balanceFromStorage);
+      prefs.setDouble("detectionFromStorage", detectionFromStorage);
+      prefs.setDouble(
+          "suspendedBalanceFromStorage", suspendedBalanceFromStorage);
+      prefs.setString("fullNameFromStorage", fullNameFromStorage);
+      prefs.setString("emailFromStorage", emailFromStorage);
+      prefs.setString("adminUidFromStorage", adminUidFromStorage);
+      prefs.setString("adminNameFromStorage", adminNameFromStorage);
+      prefs.setString("phoneNumberFromStorage", phoneNumberFromStorage);
+      prefs.setString("countryFromStorage", countryFromStorage);
+      prefs.setString("mainGroupFromStorage", mainGroupFromStorage);
+      prefs.setString("genderFromStorage", genderFromStorage);
+      prefs.setString("brithDateFromStorage", brithDateFromStorage);
+      prefs.setString("macAddressFromStorage", macAddressFromStorage);
+      prefs.setString("subGroupFromStorage", subGroupFromStorage);
+      prefs.setString("userNameFromStorage", userNameFromStorage);
+      prefs.setString("organizationIdFromStorage", organizationIdFromStorage);
+      prefs.setString("folderNumFromStorage", folderNumFromStorage);
+      prefs.setString("cityFromStorage", cityFromStorage);
+      prefs.setString("uIdFromStorage", uIdFromStorage);
+      prefs.setDouble("cReductionFromStorage", cReductionFromStorage);
+      prefs.setDouble("balanceFromStorage", balanceFromStorage);
+      prefs.setDouble("detectionFromStorage", detectionFromStorage);
+      prefs.setDouble(
+          "suspendedBalanceFromStorage", suspendedBalanceFromStorage);
+
+      prefs.setString("occasionDate", occasionDate);
+      prefs.setString("occasionName", occasionName);
+      prefs.setString("moneyGiftAmount", moneyGiftAmount);
+      prefs.setString("newOccasion", newOccasion);
+      prefs.setString("giftType", giftType);
+      prefs.setString("giftName", giftName);
+      prefs.setString("link", link);
+      prefs.setString("giftAmount", giftAmount);
+    }
+
+    static getData() async {
+      final prefs = await SharedPreferences.getInstance();
+      userIsGuest = prefs.getBool("userIsGuest") ?? true;
+      userIsLogin = prefs.getBool("userIsLogin") ?? false;
+      cameraFrontFromStorage = prefs.getBool("cameraFrontFromStorage") ?? false;
+      firstTime = prefs.getBool("firstTime") ?? true;
+      themeIsDarkMode = prefs.getBool("themeIsDarkMode") ?? false;
+      onBoardingIsOpen = prefs.getBool("onBoardingIsOpen") ?? false;
+      emailNotFound = prefs.getBool("emailNotFound") ?? false;
+      attendenceAdminFromStorage =
+          prefs.getBool("attendenceAdminFromStorage") ?? false;
+      gradeAdminFromStorage = prefs.getBool("gradeAdminFromStorage") ?? false;
+      languageCodeFromStorage =
+          prefs.getString("languageCodeFromStorage") ?? 'ar';
+      languageNameFromStorage =
+          prefs.getString("languageNameFromStorage") ?? 'langArabic';
+      userPhoneTypeFromStorage =
+          prefs.getString("userPhoneTypeFromStorage") ?? '';
+
+      fullNameFromStorage = prefs.getString("fullNameFromStorage") ?? '';
+      emailFromStorage = prefs.getString("emailFromStorage") ?? '';
+      adminUidFromStorage = prefs.getString("adminUidFromStorage") ?? '';
+      adminNameFromStorage = prefs.getString("adminNameFromStorage") ?? '';
+      phoneNumberFromStorage = prefs.getString("phoneNumberFromStorage") ?? '';
+      countryFromStorage = prefs.getString("countryFromStorage") ?? '';
+      mainGroupFromStorage = prefs.getString("mainGroupFromStorage") ?? '';
+      subGroupFromStorage = prefs.getString("subGroupFromStorage") ?? '';
+      userNameFromStorage = prefs.getString("userNameFromStorage") ?? '';
+      organizationIdFromStorage =
+          prefs.getString("organizationIdFromStorage") ?? '';
+      folderNumFromStorage = prefs.getString("folderNumFromStorage") ?? '';
+      cityFromStorage = prefs.getString("cityFromStorage") ?? '';
+      macAddressFromStorage = prefs.getString("macAddressFromStorage") ?? '';
+      uIdFromStorage = prefs.getString("uIdFromStorage") ?? '';
+      cReductionFromStorage = prefs.getDouble("cReductionFromStorage") ?? 0.0;
+      balanceFromStorage = prefs.getDouble("balanceFromStorage") ?? 0.0;
+      detectionFromStorage = prefs.getDouble("detectionFromStorage") ?? 0.0;
+      suspendedBalanceFromStorage =
+          prefs.getDouble("suspendedBalanceFromStorage") ?? 0.0;
+
+      occasionDate = prefs.getString("occasionDate") ?? '';
+      occasionName = prefs.getString("occasionName") ?? '';
+      moneyGiftAmount = prefs.getString("moneyGiftAmount") ?? '';
+      newOccasion = prefs.getString("newOccasion") ?? '';
+      giftType = prefs.getString("giftType") ?? '';
+      giftName = prefs.getString("giftName") ?? '';
+      link = prefs.getString("link") ?? '';
+      giftAmount = prefs.getString("giftAmount") ?? '';
+      fullNameFromStorage = prefs.getString("fullNameFromStorage") ?? '';
+      emailFromStorage = prefs.getString("emailFromStorage") ?? '';
+      adminUidFromStorage = prefs.getString("adminUidFromStorage") ?? '';
+      adminNameFromStorage = prefs.getString("adminNameFromStorage") ?? '';
+      phoneNumberFromStorage = prefs.getString("phoneNumberFromStorage") ?? '';
+      countryFromStorage = prefs.getString("countryFromStorage") ?? '';
+      mainGroupFromStorage = prefs.getString("mainGroupFromStorage") ?? '';
+      subGroupFromStorage = prefs.getString("subGroupFromStorage") ?? '';
+      userNameFromStorage = prefs.getString("userNameFromStorage") ?? '';
+      organizationIdFromStorage =
+          prefs.getString("organizationIdFromStorage") ?? '';
+      folderNumFromStorage = prefs.getString("folderNumFromStorage") ?? '';
+      cityFromStorage = prefs.getString("cityFromStorage") ?? '';
+      macAddressFromStorage = prefs.getString("macAddressFromStorage") ?? '';
+      uIdFromStorage = prefs.getString("uIdFromStorage") ?? '';
+      brithDateFromStorage = prefs.getString("brithDateFromStorage") ?? '';
+      genderFromStorage = prefs.getString("genderFromStorage") ?? '';
+      cReductionFromStorage = prefs.getDouble("cReductionFromStorage") ?? 0.0;
+      balanceFromStorage = prefs.getDouble("balanceFromStorage") ?? 0.0;
+      detectionFromStorage = prefs.getDouble("detectionFromStorage") ?? 0.0;
+      suspendedBalanceFromStorage =
+          prefs.getDouble("suspendedBalanceFromStorage") ?? 0.0;
+    }
+
+
   }
 
-  static setCReduction(double value) {
-    cReductionFromStorage = value;
-    _setData();
-  }
-
-  static setDetection(double value) {
-    detectionFromStorage = value;
-    _setData();
-  }
-
-  static setSuspendedBalance(double value) {
-    suspendedBalanceFromStorage = value;
-    _setData();
-  }
-
-  static setFolderNum(String value) {
-    folderNumFromStorage = value;
-    _setData();
-  }
-
-  static setCity(String value) {
-    cityFromStorage = value;
-    _setData();
-  }
-
-  static setUid(String value) {
-    uIdFromStorage = value;
-    _setData();
-  }
-
-  static setNewOccasion(String value) {
-    newOccasion = value;
-    _setData();
-  }  static setGiftType(String value) {
-    giftType = value;
-    _setData();
-  }
-
-  static setOccasionDate(String value) {
-    occasionDate = value;
-    _setData();
-  }
-
-  static setMoneyGiftAmount(String value) {
-    moneyGiftAmount = value;
-    _setData();
-  }
-
-  static setOccasionName(String value) {
-    occasionName = value;
-    _setData();
-  }
-
-  static setGiftName(String value) {
-    giftName = value;
-    _setData();
-  }
-
-  static setLink(String value) {
-    link = value;
-    _setData();
-  }
-
-  static setGiftAmount(String value) {
-    giftAmount = value;
-    _setData();
-  }
-
-  /// this function to remove all storage
-  static removeAllDataFromStorage() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-  }
-
-  /// this function to remove any data from local storage by key
-  static removeDataFromStorage(String key) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(key);
-  }
-
-  //#region private
-  static void _setData() async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setBool("userIsGuest", userIsGuest);
-    prefs.setBool("userIsLogin", userIsLogin);
-    prefs.setBool("firstTime", firstTime);
-    prefs.setBool("themeIsDarkMode", themeIsDarkMode);
-    prefs.setBool("onBoardingIsOpen", onBoardingIsOpen);
-    prefs.setBool("cameraFrontFromStorage", cameraFrontFromStorage);
-    prefs.setBool("emailNotFound", emailNotFound);
-    prefs.setBool("attendenceAdminFromStorage", attendenceAdminFromStorage);
-    prefs.setBool("gradeAdminFromStorage", gradeAdminFromStorage);
-    prefs.setString("languageCodeFromStorage", languageCodeFromStorage);
-    prefs.setString("languageNameFromStorage", languageNameFromStorage);
-
-    prefs.setString("fullNameFromStorage", fullNameFromStorage);
-    prefs.setString("emailFromStorage", emailFromStorage);
-    prefs.setString("adminUidFromStorage", adminUidFromStorage);
-    prefs.setString("adminNameFromStorage", adminNameFromStorage);
-    prefs.setString("phoneNumberFromStorage", phoneNumberFromStorage);
-    prefs.setString("countryFromStorage", countryFromStorage);
-    prefs.setString("mainGroupFromStorage", mainGroupFromStorage);
-    prefs.setString("macAddressFromStorage", macAddressFromStorage);
-    prefs.setString("subGroupFromStorage", subGroupFromStorage);
-    prefs.setString("userNameFromStorage", userNameFromStorage);
-    prefs.setString("organizationIdFromStorage", organizationIdFromStorage);
-    prefs.setString("folderNumFromStorage", folderNumFromStorage);
-    prefs.setString("cityFromStorage", cityFromStorage);
-    prefs.setString("uIdFromStorage", uIdFromStorage);
-    prefs.setDouble("cReductionFromStorage", cReductionFromStorage);
-    prefs.setDouble("balanceFromStorage", balanceFromStorage);
-    prefs.setDouble("detectionFromStorage", detectionFromStorage);
-    prefs.setDouble("suspendedBalanceFromStorage", suspendedBalanceFromStorage);
-    prefs.setString("fullNameFromStorage",fullNameFromStorage);
-    prefs.setString("emailFromStorage",emailFromStorage);
-    prefs.setString("adminUidFromStorage",adminUidFromStorage);
-    prefs.setString("adminNameFromStorage",adminNameFromStorage);
-    prefs.setString("phoneNumberFromStorage",phoneNumberFromStorage);
-    prefs.setString("countryFromStorage",countryFromStorage);
-    prefs.setString("mainGroupFromStorage",mainGroupFromStorage);
-    prefs.setString("genderFromStorage",genderFromStorage);
-    prefs.setString("brithDateFromStorage",brithDateFromStorage);
-    prefs.setString("macAddressFromStorage",macAddressFromStorage);
-    prefs.setString("subGroupFromStorage",subGroupFromStorage);
-    prefs.setString("userNameFromStorage",userNameFromStorage);
-    prefs.setString("organizationIdFromStorage",organizationIdFromStorage);
-    prefs.setString("folderNumFromStorage",folderNumFromStorage);
-    prefs.setString("cityFromStorage",cityFromStorage);
-    prefs.setString("uIdFromStorage",uIdFromStorage);
-    prefs.setDouble("cReductionFromStorage",cReductionFromStorage);
-    prefs.setDouble("balanceFromStorage",balanceFromStorage);
-    prefs.setDouble("detectionFromStorage",detectionFromStorage);
-    prefs.setDouble("suspendedBalanceFromStorage",suspendedBalanceFromStorage);
-
-    prefs.setString("occasionDate", occasionDate);
-    prefs.setString("occasionName", occasionName);
-    prefs.setString("moneyGiftAmount", moneyGiftAmount);
-    prefs.setString("newOccasion", newOccasion);
-    prefs.setString("giftType", giftType);
-    prefs.setString("giftName", giftName);
-    prefs.setString("link", link);
-    prefs.setString("giftAmount", giftAmount);
-  }
-
-  static getData() async {
-    final prefs = await SharedPreferences.getInstance();
-    userIsGuest = prefs.getBool("userIsGuest") ?? true;
-    userIsLogin = prefs.getBool("userIsLogin") ?? false;
-    cameraFrontFromStorage = prefs.getBool("cameraFrontFromStorage") ?? false;
-    firstTime = prefs.getBool("firstTime") ?? true;
-    themeIsDarkMode = prefs.getBool("themeIsDarkMode") ?? false;
-    onBoardingIsOpen = prefs.getBool("onBoardingIsOpen") ?? false;
-    emailNotFound = prefs.getBool("emailNotFound") ?? false;
-    attendenceAdminFromStorage =
-        prefs.getBool("attendenceAdminFromStorage") ?? false;
-    gradeAdminFromStorage = prefs.getBool("gradeAdminFromStorage") ?? false;
-    languageCodeFromStorage =
-        prefs.getString("languageCodeFromStorage") ?? 'ar';
-    languageNameFromStorage =
-        prefs.getString("languageNameFromStorage") ?? 'langArabic';
-    userPhoneTypeFromStorage =
-        prefs.getString("userPhoneTypeFromStorage") ?? '';
-
-    fullNameFromStorage = prefs.getString("fullNameFromStorage") ?? '';
-    emailFromStorage = prefs.getString("emailFromStorage") ?? '';
-    adminUidFromStorage = prefs.getString("adminUidFromStorage") ?? '';
-    adminNameFromStorage = prefs.getString("adminNameFromStorage") ?? '';
-    phoneNumberFromStorage = prefs.getString("phoneNumberFromStorage") ?? '';
-    countryFromStorage = prefs.getString("countryFromStorage") ?? '';
-    mainGroupFromStorage = prefs.getString("mainGroupFromStorage") ?? '';
-    subGroupFromStorage = prefs.getString("subGroupFromStorage") ?? '';
-    userNameFromStorage = prefs.getString("userNameFromStorage") ?? '';
-    organizationIdFromStorage =
-        prefs.getString("organizationIdFromStorage") ?? '';
-    folderNumFromStorage = prefs.getString("folderNumFromStorage") ?? '';
-    cityFromStorage = prefs.getString("cityFromStorage") ?? '';
-    macAddressFromStorage = prefs.getString("macAddressFromStorage") ?? '';
-    uIdFromStorage = prefs.getString("uIdFromStorage") ?? '';
-    cReductionFromStorage = prefs.getDouble("cReductionFromStorage") ?? 0.0;
-    balanceFromStorage = prefs.getDouble("balanceFromStorage") ?? 0.0;
-    detectionFromStorage = prefs.getDouble("detectionFromStorage") ?? 0.0;
-    suspendedBalanceFromStorage =
-        prefs.getDouble("suspendedBalanceFromStorage") ?? 0.0;
-
-    occasionDate = prefs.getString("occasionDate") ?? '';
-    occasionName = prefs.getString("occasionName") ?? '';
-    moneyGiftAmount = prefs.getString("moneyGiftAmount") ?? '';
-    newOccasion = prefs.getString("newOccasion") ?? '';
-    giftType = prefs.getString("giftType") ?? '';
-    giftName = prefs.getString("giftName") ?? '';
-    link = prefs.getString("link") ?? '';
-    giftAmount = prefs.getString("giftAmount") ?? '';
-    fullNameFromStorage = prefs.getString("fullNameFromStorage")??'';
-    emailFromStorage = prefs.getString("emailFromStorage")??'';
-    adminUidFromStorage = prefs.getString("adminUidFromStorage")??'';
-    adminNameFromStorage = prefs.getString("adminNameFromStorage")??'';
-    phoneNumberFromStorage = prefs.getString("phoneNumberFromStorage")??'';
-    countryFromStorage = prefs.getString("countryFromStorage")??'';
-    mainGroupFromStorage = prefs.getString("mainGroupFromStorage")??'';
-    subGroupFromStorage = prefs.getString("subGroupFromStorage")??'';
-    userNameFromStorage = prefs.getString("userNameFromStorage")??'';
-    organizationIdFromStorage = prefs.getString("organizationIdFromStorage")??'';
-    folderNumFromStorage = prefs.getString("folderNumFromStorage")??'';
-    cityFromStorage = prefs.getString("cityFromStorage")??'';
-    macAddressFromStorage = prefs.getString("macAddressFromStorage")??'';
-    uIdFromStorage = prefs.getString("uIdFromStorage")??'';
-    brithDateFromStorage = prefs.getString("brithDateFromStorage")??'';
-    genderFromStorage = prefs.getString("genderFromStorage")??'';
-    cReductionFromStorage = prefs.getDouble("cReductionFromStorage")??0.0;
-    balanceFromStorage = prefs.getDouble("balanceFromStorage")??0.0;
-    detectionFromStorage = prefs.getDouble("detectionFromStorage")??0.0;
-    suspendedBalanceFromStorage = prefs.getDouble("suspendedBalanceFromStorage")??0.0;
-  }
-
-//#endregion
-
-}
