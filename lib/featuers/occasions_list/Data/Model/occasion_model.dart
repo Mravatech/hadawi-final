@@ -14,6 +14,7 @@ class OccasionModel {
   final String personEmail;
   final String personId;
   final String personName;
+  final String personPhone;
 
   OccasionModel({
     required this.giftLink,
@@ -31,6 +32,7 @@ class OccasionModel {
     required this.personEmail,
     required this.personId,
     required this.personName,
+    required this.personPhone,
   });
 
   factory OccasionModel.fromMap(Map<String, dynamic> json) => OccasionModel(
@@ -49,6 +51,7 @@ class OccasionModel {
     personEmail: json["personEmail"]??'',
     personId: json["personId"]??'',
     personName: json["personName"]??'',
+    personPhone: json["personPhone"]??'',
   );
 
   Map<String, dynamic> toMap() => {
@@ -67,5 +70,6 @@ class OccasionModel {
     "personEmail": personEmail,
     "personId": personId,
     "personName": personName,
+    "personPhone": personPhone,
   };
 }

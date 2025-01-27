@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/occasions_card.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
 class OthersOccasions extends StatefulWidget {
@@ -52,11 +55,11 @@ class _OthersOccasionsState extends State<OthersOccasions> {
           padding: EdgeInsets.all(SizeConfig.height * 0.02),
           child: Column(
             children: [
-              DefaultButtonWithImage(
-                buttonText: "مشاركة القائمة",
-                image: AssetsManager.shareIcon,
-                onTap: () {},
-              ),
+              // DefaultButtonWithImage(
+              //   buttonText: "مشاركة القائمة",
+              //   image: AssetsManager.shareIcon,
+              //   onTap: () {},
+              // ),
               SizedBox(
                 height: SizeConfig.height * 0.02,
               ),
@@ -96,7 +99,28 @@ class _OthersOccasionsState extends State<OthersOccasions> {
                                           OccasionsListCubit.get(context)
                                               .othersOccasionsList[index];
                                       return OccasionCard(
-                                          onTap: () {},
+                                          onTap: () {
+                                            customPushNavigator(context, OccasionDetails(
+                                              occasionEntity: OccasionEntity(
+                                                isForMe: occasionItem.isForMe,
+                                                occasionName: occasionItem.occasionName,
+                                                occasionDate: occasionItem.occasionDate,
+                                                occasionId: occasionItem.occasionId,
+                                                occasionType: occasionItem.occasionType,
+                                                moneyGiftAmount: occasionItem.moneyGiftAmount,
+                                                personId: occasionItem.personId,
+                                                personName: occasionItem.personName,
+                                                personPhone: occasionItem.personPhone,
+                                                personEmail: occasionItem.personEmail,
+                                                giftImage: occasionItem.occasionImage,
+                                                giftName: occasionItem.giftName,
+                                                giftLink: occasionItem.giftLink,
+                                                giftPrice: occasionItem.giftPrice,
+                                                giftType: occasionItem.giftType,
+                                                isSharing: occasionItem.isSharing,
+                                              ),
+                                            ));
+                                          },
                                           forOthers: true,
                                           occasionName:
                                               occasionItem.occasionName,

@@ -12,18 +12,18 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
-class MyOccasions extends StatefulWidget {
-  const MyOccasions({super.key});
+class PastOccasions extends StatefulWidget {
+  const PastOccasions({super.key});
 
   @override
-  State<MyOccasions> createState() => _MyOccasionsState();
+  State<PastOccasions> createState() => _PastOccasionsState();
 }
 
-class _MyOccasionsState extends State<MyOccasions> {
+class _PastOccasionsState extends State<PastOccasions> {
   @override
   void initState() {
     // TODO: implement initState
-    OccasionsListCubit.get(context).getMyOccasionsList();
+    OccasionsListCubit.get(context).getPastOccasionsList();
     super.initState();
   }
 
@@ -38,7 +38,7 @@ class _MyOccasionsState extends State<MyOccasions> {
           title: Padding(
             padding: const EdgeInsets.all(15.0),
             child: Text(
-              "قائمة مناسباتى المسجلة حديثا",
+              "قائمة المناسبات المسجلة سابقا",
               style: TextStyles.textStyle18Bold
                   .copyWith(color: ColorManager.primaryBlue),
             ),
@@ -55,32 +55,27 @@ class _MyOccasionsState extends State<MyOccasions> {
           padding: EdgeInsets.all(SizeConfig.height * 0.02),
           child: Column(
             children: [
-              // DefaultButtonWithImage(
-              //   buttonText: "مشاركة القائمة",
-              //   image: AssetsManager.shareIcon,
-              //   onTap: () {},
-              // ),
               SizedBox(
                 height: SizeConfig.height * 0.02,
               ),
               BlocConsumer<OccasionsListCubit, OccasionsListStates>(
                 listener: (context, state) {},
                 builder: (context, state) {
-                  return state is GetMyOccasionListLoadingState
+                  return state is GetPastOccasionListLoadingState
                       ? Expanded(
                           child: Center(
                             child: CircularProgressIndicator(),
                           ),
                         )
                       : Expanded(
-                          child: state is GetMyOccasionListSuccessState &&
+                          child: state is GetPastOccasionListSuccessState &&
                                   OccasionsListCubit.get(context)
-                                      .myOccasionsList
+                                      .pastOccasionsList
                                       .isNotEmpty
                               ? RefreshIndicator(
                                   onRefresh: () async {
                                     await OccasionsListCubit.get(context)
-                                        .getMyOccasionsList();
+                                        .getPastOccasionsList();
                                   },
                                   child: GridView.builder(
                                     physics: BouncingScrollPhysics(),
@@ -89,43 +84,43 @@ class _MyOccasionsState extends State<MyOccasions> {
                                       crossAxisCount: 2, // Number of columns
                                       crossAxisSpacing: 10.0,
                                       mainAxisSpacing: 10.0,
-                                      childAspectRatio: 0.96,
+                                      childAspectRatio: 0.9,
                                     ),
                                     itemCount: OccasionsListCubit.get(context)
-                                        .myOccasionsList
+                                        .pastOccasionsList
                                         .length,
                                     itemBuilder: (context, index) {
                                       final occasionItem =
                                           OccasionsListCubit.get(context)
-                                              .myOccasionsList[index];
+                                              .pastOccasionsList[index];
                                       return OccasionCard(
-                                        onTap: () {
-                                          customPushNavigator(context, OccasionDetails(
-                                            occasionEntity: OccasionEntity(
-                                              isForMe: occasionItem.isForMe,
-                                              occasionName: occasionItem.occasionName,
-                                              occasionDate: occasionItem.occasionDate,
-                                              occasionId: occasionItem.occasionId,
-                                              occasionType: occasionItem.occasionType,
-                                              moneyGiftAmount: occasionItem.moneyGiftAmount,
-                                              personId: occasionItem.personId,
-                                              personName: occasionItem.personName,
-                                              personPhone: occasionItem.personPhone,
-                                              personEmail: occasionItem.personEmail,
-                                              giftImage: occasionItem.occasionImage,
-                                              giftName: occasionItem.giftName,
-                                              giftLink: occasionItem.giftLink,
-                                              giftPrice: occasionItem.giftPrice,
-                                              giftType: occasionItem.giftType,
-                                              isSharing: occasionItem.isSharing,
-                                            ),
-                                          ));
-                                        },
-                                        forOthers: false,
-                                        occasionName: occasionItem.occasionName,
-                                        personName: "",
-                                        imageUrl: occasionItem.occasionImage,
-                                      );
+                                          onTap: () {
+                                            customPushNavigator(context, OccasionDetails(
+                                              occasionEntity: OccasionEntity(
+                                                isForMe: occasionItem.isForMe,
+                                                occasionName: occasionItem.occasionName,
+                                                occasionDate: occasionItem.occasionDate,
+                                                occasionId: occasionItem.occasionId,
+                                                occasionType: occasionItem.occasionType,
+                                                moneyGiftAmount: occasionItem.moneyGiftAmount,
+                                                personId: occasionItem.personId,
+                                                personName: occasionItem.personName,
+                                                personPhone: occasionItem.personPhone,
+                                                personEmail: occasionItem.personEmail,
+                                                giftImage: occasionItem.occasionImage,
+                                                giftName: occasionItem.giftName,
+                                                giftLink: occasionItem.giftLink,
+                                                giftPrice: occasionItem.giftPrice,
+                                                giftType: occasionItem.giftType,
+                                                isSharing: occasionItem.isSharing,
+                                              ),
+                                            ));
+                                          },
+                                          forOthers: true,
+                                          occasionName:
+                                              occasionItem.occasionName,
+                                          personName: occasionItem.personName,
+                                          imageUrl: occasionItem.occasionImage);
                                     },
                                   ),
                                 )
@@ -135,7 +130,7 @@ class _MyOccasionsState extends State<MyOccasions> {
                                     children: [
                                       Image.asset(AssetsManager.noData),
                                       Text(
-                                        "لا يوجد مناسبات سجلة حديثا",
+                                        "لا يوجد مناسبات سجلة سابقا",
                                         style: TextStyles.textStyle18Bold
                                             .copyWith(
                                                 color:
