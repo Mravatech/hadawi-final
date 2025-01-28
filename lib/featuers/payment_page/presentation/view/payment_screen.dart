@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/counter_widget.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -10,7 +11,8 @@ import 'package:hadawi_app/widgets/default_button_with_image.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 
 class PaymentScreen extends StatelessWidget {
-  const PaymentScreen({super.key});
+  final OccasionEntity occasionEntity;
+  const PaymentScreen({super.key, required this.occasionEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class PaymentScreen extends StatelessWidget {
             title: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                "أعياد ميلاد (محمد ممدوح) الدفع",
+                "الدفع ${occasionEntity.occasionName} (${occasionEntity.personName})",
                 style: TextStyles.textStyle18Bold
                     .copyWith(color: ColorManager.primaryBlue),
               ),
@@ -44,8 +46,10 @@ class PaymentScreen extends StatelessWidget {
               children: [
                 SizedBox(height: SizeConfig.height * 0.02),
 
+
+
                 /// payment progress
-                ProgressIndicatorWidget(value: 0.6),
+                ProgressIndicatorWidget(value: (double.parse(occasionEntity.moneyGiftAmount.toString()) / double.parse(occasionEntity.giftPrice.toString()))),
                 SizedBox(height: SizeConfig.height * 0.04),
 
                 /// payment amount

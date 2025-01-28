@@ -8,7 +8,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   static PaymentCubit get(context) => BlocProvider.of(context);
 
-  int paymentCounterValue = 10;
+  int paymentCounterValue = 50;
 
 
   void incrementCounter() {

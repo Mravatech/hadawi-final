@@ -203,7 +203,7 @@ class OccasionDetails extends StatelessWidget {
 
                           /// pay
                           GestureDetector(
-                            onTap: () =>customPushNavigator(context, PaymentScreen()),
+                            onTap: () =>customPushNavigator(context, PaymentScreen(occasionEntity: occasionEntity,)),
                             child: Container(
                               height: MediaQuery.sizeOf(context).height * .055,
                               width: MediaQuery.sizeOf(context).width * .4,
