@@ -2,12 +2,15 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
+import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
 part 'visitors_state.dart';
 
 class VisitorsCubit extends Cubit<VisitorsState> {
-  VisitorsCubit() : super(VisitorsInitial());
+  VisitorsCubit(this.sendFollowRequestUseCases) : super(VisitorsInitial());
+
+  SendFollowRequestUseCases sendFollowRequestUseCases;
 
 
   List<OccasionEntity> occasions = [];
@@ -47,6 +50,27 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     searchOccasionsList.addAll(occasions.where((occasion) => occasion.occasionName.toLowerCase().contains(query.toLowerCase())));
     debugPrint('searchOccasionsList ${searchOccasionsList[0].occasionName}');
     emit(SearchSuccessState(occasions: searchOccasionsList));
-  }
 
+}
+
+  Future<void> sendFollowRequest(
+      {
+        required String userId,
+        required String followerId,
+        required String userName,
+        required String image
+      })async{
+    emit(SendFollowRequestLoadingState());
+    var response = await sendFollowRequestUseCases.call(
+        userId: userId,
+        followerId: followerId,
+        userName: userName,
+        image: image
+    );
+
+    response.fold(
+            (l)=>emit(SendFollowRequestErrorState(message: l.message)),
+            (r)=>emit(SendFollowRequestSuccessState())
+    );
+  }
 }

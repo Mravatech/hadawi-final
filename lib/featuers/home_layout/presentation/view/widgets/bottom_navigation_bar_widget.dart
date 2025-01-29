@@ -4,6 +4,7 @@ import 'package:hadawi_app/constants/app_constants.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 class BottomNavigationBarWidget extends StatelessWidget {
@@ -24,7 +25,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.home),
-              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
+              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -32,7 +33,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.add_circle_rounded),
-              title:  Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
+              title:  Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -40,7 +41,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.people),
-              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
+              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
               selectedColor: ColorManager.primaryBlue,
             ),
 
@@ -48,7 +49,7 @@ class BottomNavigationBarWidget extends StatelessWidget {
             SalomonBottomBarItem(
               unselectedColor: Colors.black38,
               icon: Icon(Icons.settings),
-              title: Text(AppConstants().homeLayoutTitles[cubit.currentIndex]),
+              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
               selectedColor: ColorManager.primaryBlue,
             ),
           ],

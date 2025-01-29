@@ -9,12 +9,7 @@ abstract class FriendsRepo {
   Future<Either<Faliure, List<FollowersModel>>> getMyFollowing({
     required String userId,
   });
-  Future<Either<Faliure, void>> sendFollowRequest({
-    required String userId,
-    required String followerId,
-    required String userName,
-    required String image,
-  });
+
   Future<Either<Faliure, void>> acceptFollowRequest({
     required String userId,
     required String followerId,

@@ -67,24 +67,5 @@ class FriendsRepoImplement extends FriendsRepo {
     }
   }
 
-  @override
-  Future<Either<Faliure, void>> sendFollowRequest({
-    required String userId,
-    required String followerId,
-    required String userName,
-    required String image
-  })async {
-    try{
-      return Right(await friendsDataSource.sendFollowRequest(
-          userId: userId,
-          followerId: followerId,
-          userName: userName,
-          image: image
-      ));
-    }on FireStoreException catch(e){
-      return Left(FireStoreFaliure.fromMessage(e));
-    }on Exception catch(e){
-      return Left(Faliure(message: e.toString()));
-    }
-  }
+
 }

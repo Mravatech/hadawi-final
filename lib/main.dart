@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
               getIt(), getIt(),getIt()
           )),
           BlocProvider(create: (context)=> PaymentCubit()),
-          BlocProvider(create: (context)=> VisitorsCubit()),
+          BlocProvider(create: (context)=> VisitorsCubit(getIt())),
           BlocProvider(create: (context)=> OccasionsListCubit()),
           BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
         ],

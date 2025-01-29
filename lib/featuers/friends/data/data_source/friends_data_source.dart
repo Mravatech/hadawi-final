@@ -12,12 +12,7 @@ abstract class FriendsDataSource {
   Future<List<FollowersModel>> getMyFollowing({
     required String userId,
   });
-  Future<void> sendFollowRequest({
-   required String userId,  
-   required String followerId,  
-   required String userName,  
-   required String image,  
-  });
+
   Future<void> acceptFollowRequest({
     required String userId,
     required String followerId,
@@ -126,38 +121,7 @@ class FriendsDataSourceImplement implements FriendsDataSource {
     }
   }
 
-  @override
-  Future<void> sendFollowRequest({
-    required String userId,
-    required String followerId,
-    required String userName,
-    required String image,
-  }) async{
 
-    FollowersModel followersModel = FollowersModel(
-      userId: userId,
-      userName: userName,
-      image: image,
-      follow: false,
-    );
-    
-    try{
-    await FirebaseFirestore.instance.collection('users')
-        .doc(followerId).collection('followers').doc(userId)
-        .set(followersModel.toMap());
-
-    await FirebaseFirestore.instance.collection('users')
-        .doc(userId).collection('following').doc(followerId)
-        .set(followersModel.toMap());
-    }on FirebaseException catch(e){
-      throw FireStoreException(firebaseException: e);
-    }on Exception catch(e){
-      throw Exception(e.toString());
-    }
-    
-    
-  }
-  
   
   
 }

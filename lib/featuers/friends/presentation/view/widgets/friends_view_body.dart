@@ -26,8 +26,8 @@ class FriendsViewBody extends StatelessWidget {
           // اصدقاء اتابعهم
           GestureDetector(
               onTap: ()=>customPushNavigator(context,
-                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),getIt()),
-                      child: FollowingScreen())),
+                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),),
+                      child: FollowersScreen())),
               child: ProfileRowWidget(image: '',
                   title: AppLocalizations.of(context)!.translate('friendsIFollow').toString())
           ),
@@ -37,8 +37,8 @@ class FriendsViewBody extends StatelessWidget {
           // الاصدقاء يتابعوني
           GestureDetector(
               onTap: ()=>customPushNavigator(context,
-                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),getIt()),
-                      child: FollowersScreen())),
+                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),),
+                      child: FollowingScreen())),
               child: ProfileRowWidget(image: '', title:  AppLocalizations.of(context)!.translate('friendsFollowMe').toString(),)
           ),
 
@@ -47,7 +47,7 @@ class FriendsViewBody extends StatelessWidget {
           // طلبات الصداقه
           GestureDetector(
               onTap: ()=>customPushNavigator(context,
-                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),getIt()),
+                  BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),),
                   child: FollowingRequestScreen())),
               child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('followRequests').toString(),)
           ),

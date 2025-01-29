@@ -23,7 +23,10 @@ import 'package:hadawi_app/featuers/friends/domain/use_cases/accept_follow_reque
 import 'package:hadawi_app/featuers/friends/domain/use_cases/get_followers_use_cases.dart';
 import 'package:hadawi_app/featuers/friends/domain/use_cases/get_following_use_cases.dart';
 import 'package:hadawi_app/featuers/friends/domain/use_cases/reject_follow_request_use_cases.dart';
-import 'package:hadawi_app/featuers/friends/domain/use_cases/send_follow_request_use_cases.dart';
+import 'package:hadawi_app/featuers/visitors/data/data_source/visitors_data_source.dart';
+import 'package:hadawi_app/featuers/visitors/data/repo_implement/visitors_repo_implement.dart';
+import 'package:hadawi_app/featuers/visitors/domain/repo/visitors_repo.dart';
+import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
 
 
 final getIt = GetIt.instance;
@@ -52,13 +55,19 @@ class ServiceLocator {
     getIt.registerLazySingleton<EditProfileRepo>(()=> EditProfileRepoImplement(editProfileDataSource:  getIt()));
 
     /// Friends Layer
-    getIt.registerLazySingleton(()=> SendFollowRequestUseCases(friendsRepo: getIt()));
+    getIt.registerLazySingleton(()=> SendFollowRequestUseCases(visitorsRepo: getIt()));
     getIt.registerLazySingleton(()=> AcceptFollowRequestUseCases(friendsRepo: getIt()));
     getIt.registerLazySingleton(()=> RejectFollowRequestUseCases(friendsRepo: getIt()));
     getIt.registerLazySingleton(()=> GetFollowersUseCases(friendsRepo: getIt()));
     getIt.registerLazySingleton(()=> GetFollowingUseCases(friendsRepo: getIt()));
     getIt.registerLazySingleton<FriendsDataSource>(()=> FriendsDataSourceImplement());
     getIt.registerLazySingleton<FriendsRepo>(()=> FriendsRepoImplement(friendsDataSource:  getIt()));
+
+
+    /// Visitors Layer
+    getIt.registerLazySingleton<VisitorsDataSource>(()=> VisitorsDataSourceImplement());
+    getIt.registerLazySingleton<VisitorsRepo>(()=> VisitorsRepoImplement(visitorsDataSource:  getIt()));
+
 
 
   }

@@ -24,7 +24,7 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<FriendsCubit>().getFollowers(userId: UserDataFromStorage.uIdFromStorage);
+    context.read<FriendsCubit>().getFollowing(userId: UserDataFromStorage.uIdFromStorage);
   }
 
   @override

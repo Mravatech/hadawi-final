@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
@@ -12,7 +13,11 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
+import 'package:hadawi_app/widgets/toast.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class OccasionDetails extends StatelessWidget {
   final OccasionEntity occasionEntity;
@@ -41,7 +46,12 @@ class OccasionDetails extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        child: BlocBuilder<VisitorsCubit, VisitorsState>(
+        child: BlocConsumer<VisitorsCubit, VisitorsState>(
+          listener: (context, state) {
+            if(state is SendFollowRequestErrorState){
+              customToast(title: state.message, color: ColorManager.error);
+            }
+          },
           builder: (context, state) {
             final cubit = context.read<VisitorsCubit>();
             return Padding(
@@ -109,6 +119,24 @@ class OccasionDetails extends StatelessWidget {
                             .toString(),
                         style: TextStyles.textStyle18Bold.copyWith(),
                       ),
+                      Spacer(),
+                      SizedBox(
+                        width:  MediaQuery.sizeOf(context).width * 0.3,
+                        child: DefaultButton(
+                            buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
+                            onPressed: () {
+                               context.read<VisitorsCubit>().sendFollowRequest(
+                                   userId: occasionEntity.personId,
+                                   followerId: UserDataFromStorage.uIdFromStorage,
+                                   userName: occasionEntity.personName,
+                                   image: occasionEntity.giftImage,
+                               ).then((value) {
+                                 customToast(title: 'تم الارسال', color: ColorManager.primaryBlue);
+                               });
+                            },
+                            buttonColor: ColorManager.primaryBlue,
+                        ),
+                      )
                     ],
                   ),
                   SizedBox(
