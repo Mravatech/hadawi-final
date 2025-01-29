@@ -8,22 +8,24 @@ AppBar defaultAppBarWidget({required String appBarTitle}) {
   return AppBar(
       toolbarHeight: SizeConfig.height*0.12,
       backgroundColor: ColorManager.gray,
+      titleSpacing: 0.0,
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
+          SizedBox(width:  SizeConfig.height*0.02,),
+          Text(
+            appBarTitle, style: TextStyles.textStyle18Bold.copyWith(
+              color: ColorManager.darkGrey
+          ),),
+          Spacer(),
           Image(
-              height: SizeConfig.height*0.1,
+              height: SizeConfig.height*0.05,
               image: AssetImage(AssetsManager.logoWithoutBackground
               )
           ),
-          SizedBox(width: SizeConfig.width*0.1,),
-          Expanded(
-            child: Text(
-              textAlign: TextAlign.center,
-              appBarTitle, style: TextStyles.textStyle24Bold.copyWith(
-                color: ColorManager.darkGrey
-            ),),
-          ),
+
+          SizedBox(width:  SizeConfig.height*0.02,)
+
         ],
       ),
   );
