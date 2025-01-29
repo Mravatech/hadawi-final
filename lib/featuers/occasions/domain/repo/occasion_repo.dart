@@ -11,7 +11,7 @@ abstract class OccasionRepo {
       required String occasionName,
       required String occasionDate,
       required String occasionType,
-      required String moneyGiftAmount,
+      required int moneyGiftAmount,
       required String personId,
       required String personName,
       required String personPhone,

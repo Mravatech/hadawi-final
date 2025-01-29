@@ -10,6 +10,9 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
+import '../../../../../utiles/cashe_helper/cashe_helper.dart';
+import '../../../../../utiles/localiztion/app_localization.dart';
+
 class ForOtherBody extends StatelessWidget {
   const ForOtherBody({super.key});
 
@@ -18,7 +21,7 @@ class ForOtherBody extends StatelessWidget {
     return BlocConsumer<OccasionCubit, OccasionState>(
       listener: (context, state) {
         if (state is AddOccasionSuccessState) {
-          customToast(title: 'تمت إضافة المناسبة', color: ColorManager.success);
+          customToast(title: AppLocalizations.of(context)!.translate('occasionAddedSuccessfully').toString(), color: ColorManager.success);
         }
       },
       builder: (context, state) {
@@ -27,105 +30,107 @@ class ForOtherBody extends StatelessWidget {
         return Form(
           key: cubit.forOtherFormKey,
           child: Column(
+            crossAxisAlignment: CashHelper.languageKey == 'ar'
+                ? CrossAxisAlignment.end
+                : CrossAxisAlignment.start,
             children: [
               /// person name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    ' :اسم الشخص',
-                    style: TextStyles.textStyle18Bold
-                        .copyWith(color: ColorManager.black),
-                  ),
-                  DefaultTextField(
-                      controller: cubit.nameController,
-                      hintText: '',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'رجاء ادخال اسم الشخص';
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      fillColor: ColorManager.gray)
-                ],
+              Text(
+                AppLocalizations.of(context)!.translate('personName').toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black),
               ),
+              SizedBox(height: mediaQuery.height * 0.01),
+
+              DefaultTextField(
+                  controller: cubit.nameController,
+                  hintText: AppLocalizations.of(context)!.translate('personNameHint').toString(),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!.translate('validatePersonName').toString();
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  fillColor: ColorManager.gray),
               SizedBox(height: mediaQuery.height * 0.03),
 
               /// occasion
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    ' :المناسبة',
-                    style: TextStyles.textStyle18Bold
-                        .copyWith(color: ColorManager.black),
-                  ),
-                  DefaultTextField(
-                      controller: cubit.occasionNameController,
-                      hintText: '',
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'رجاء ادخال اسم المناسبة';
-                        } else {
-                          return null;
-                        }
-                      },
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.next,
-                      fillColor: ColorManager.gray)
-                ],
+              Text(
+                AppLocalizations.of(context)!.translate('occasionName').toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black),
               ),
+              SizedBox(height: mediaQuery.height * 0.01),
+
+              DefaultTextField(
+                  controller: cubit.occasionNameController,
+                  hintText: AppLocalizations.of(context)!.translate('occasionNameHint').toString(),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!.translate('validateOccasionName').toString();
+                    } else {
+                      return null;
+                    }
+                  },
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.next,
+                  fillColor: ColorManager.gray),
               SizedBox(height: mediaQuery.height * 0.03),
 
               /// date of occasion
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    ':تاريخ المناسبة',
-                    style: TextStyles.textStyle18Bold
-                        .copyWith(color: ColorManager.black),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      showDatePicker(
-                        helpText: 'Select the date of the occasion',
-                        context: context,
-                        firstDate: DateTime(1920),
-                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                      ).then((value) =>
-                          cubit.setOccasionDate(brithDateValue: value!));
+              Text(
+                AppLocalizations.of(context)!.translate('occasionDate').toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black),
+              ),
+              SizedBox(height: mediaQuery.height * 0.01),
+
+              GestureDetector(
+                onTap: () {
+                  showDatePicker(
+                    helpText: 'Select the date of the occasion',
+                    context: context,
+                    firstDate: DateTime(1920),
+                    lastDate: DateTime.now().add(const Duration(days: 365)),
+                  ).then((value) =>
+                      cubit.setOccasionDate(brithDateValue: value!));
+                },
+                child: DefaultTextField(
+                    controller: cubit.occasionDateController,
+                    hintText: cubit.occasionDateController.text.isEmpty
+                        ? AppLocalizations.of(context)!.translate('occasionDateHint').toString()
+                        : cubit.occasionDateController.text,
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return AppLocalizations.of(context)!.translate('validateOccasionDate').toString();
+                      } else {
+                        return null;
+                      }
                     },
-                    child: DefaultTextField(
-                        controller: cubit.occasionDateController,
-                        hintText: cubit.occasionDateController.text.isEmpty
-                            ? ''
-                            : cubit.occasionDateController.text,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'رجاء ادخال تاريخ المناسبة';
-                          } else {
-                            return null;
-                          }
-                        },
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        enable: false,
-                        fillColor: ColorManager.gray),
-                  )
-                ],
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    enable: false,
+                    fillColor: ColorManager.gray),
               ),
               SizedBox(height: mediaQuery.height * 0.03),
 
               /// requested gift
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: CashHelper.languageKey == 'ar'
+                    ? MainAxisAlignment.end
+                    : MainAxisAlignment.start,
                 children: [
                   Row(
                     children: [
+                      Text(
+                        "${AppLocalizations.of(context)!.translate('giftType').toString()}: ",
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(color: ColorManager.black),
+                      ),
+
                       /// present
                       GestureDetector(
                         onTap: () {
@@ -142,7 +147,7 @@ class ForOtherBody extends StatelessWidget {
                                 ? ColorManager.primaryBlue
                                 : ColorManager.gray,
                             borderRadius:
-                                BorderRadius.circular(mediaQuery.height * 0.05),
+                            BorderRadius.circular(mediaQuery.height * 0.05),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -150,7 +155,9 @@ class ForOtherBody extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'هدية',
+                                  AppLocalizations.of(context)!
+                                      .translate('gift')
+                                      .toString(),
                                   style: TextStyles.textStyle18Bold
                                       .copyWith(color: ColorManager.white),
                                 ),
@@ -164,9 +171,9 @@ class ForOtherBody extends StatelessWidget {
                       /// money
                       GestureDetector(
                         onTap: () {
-                          cubit.switchGiftType();
                           cubit.giftType = 'مبلغ مالي';
                           UserDataFromStorage.giftType = cubit.giftType;
+                          cubit.switchGiftType();
                           debugPrint('giftType: ${cubit.giftType}');
                         },
                         child: Container(
@@ -177,7 +184,7 @@ class ForOtherBody extends StatelessWidget {
                                 ? ColorManager.primaryBlue
                                 : ColorManager.gray,
                             borderRadius:
-                                BorderRadius.circular(mediaQuery.height * 0.05),
+                            BorderRadius.circular(mediaQuery.height * 0.05),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -185,7 +192,9 @@ class ForOtherBody extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'مبلغ مالي',
+                                  AppLocalizations.of(context)!
+                                      .translate('money')
+                                      .toString(),
                                   style: TextStyles.textStyle18Bold
                                       .copyWith(color: ColorManager.white),
                                 ),
@@ -196,64 +205,67 @@ class ForOtherBody extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    ' :الهدية المطلوبة',
-                    style: TextStyles.textStyle18Bold
-                        .copyWith(color: ColorManager.black),
-                  ),
                 ],
               ),
-              SizedBox(height: mediaQuery.height * .04),
-
+              SizedBox(height: mediaQuery.height * .02),
+              /// service fees text
+              Text(
+                AppLocalizations.of(context)!.translate('feesNote').toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black.withOpacity(.5)),
+              ),
+              SizedBox(height: mediaQuery.height * 0.02),
               ///  continue button
               state is AddOccasionLoadingState
                   ? const Center(
                       child: CircularProgressIndicator(),
                     )
-                  : GestureDetector(
-                      onTap: () {
-                        if (cubit.forOtherFormKey.currentState!.validate()) {
-                          if (cubit.giftType == 'هدية') {
-                            customPushNavigator(
-                                context,
-                                BlocProvider<OccasionCubit>(
-                                  create: (context) => OccasionCubit(),
-                                  child: GiftScreen(),
-                                ));
-                          } else {
-                            customPushNavigator(
-                                context,
-                                BlocProvider<OccasionCubit>(
-                                  create: (context) => OccasionCubit(),
-                                  child: MoneyScreen(),
-                                ));
+                  : Center(
+                    child: GestureDetector(
+                        onTap: () {
+                          if (cubit.forOtherFormKey.currentState!.validate()) {
+                            if (cubit.isPresent) {
+                              customPushNavigator(
+                                  context,
+                                  BlocProvider<OccasionCubit>(
+                                    create: (context) => OccasionCubit(),
+                                    child: GiftScreen(),
+                                  ));
+                            } else {
+                              customPushNavigator(
+                                  context,
+                                  BlocProvider<OccasionCubit>(
+                                    create: (context) => OccasionCubit(),
+                                    child: MoneyScreen(),
+                                  ));
+                            }
                           }
-                        }
-                        UserDataFromStorage.occasionName =
-                            cubit.occasionNameController.text;
-                        UserDataFromStorage.occasionDate =
-                            cubit.occasionDateController.text;
-                      },
-                      child: Container(
-                        height: mediaQuery.height * .06,
-                        width: mediaQuery.width * .5,
-                        decoration: BoxDecoration(
-                          color: ColorManager.primaryBlue,
-                          borderRadius:
-                              BorderRadius.circular(mediaQuery.height * 0.05),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              'المتابعة',
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.white),
+                          UserDataFromStorage.occasionName =
+                              cubit.occasionNameController.text;
+                          UserDataFromStorage.occasionDate =
+                              cubit.occasionDateController.text;
+                        },
+                        child: Container(
+                          height: mediaQuery.height * .06,
+                          width: mediaQuery.width * .5,
+                          decoration: BoxDecoration(
+                            color: ColorManager.primaryBlue,
+                            borderRadius:
+                                BorderRadius.circular(mediaQuery.height * 0.05),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('continue').toString(),
+                                style: TextStyles.textStyle18Bold
+                                    .copyWith(color: ColorManager.white),
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    )
+                  )
             ],
           ),
         );

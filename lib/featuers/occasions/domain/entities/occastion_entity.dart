@@ -4,7 +4,7 @@ class OccasionEntity {
   final String occasionDate;
   final String occasionId;
   final String occasionType;
-  final String moneyGiftAmount;
+  final int moneyGiftAmount;
   final String personId;
   final String personName;
   final String personPhone;

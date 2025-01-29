@@ -12,6 +12,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   List<OccasionEntity> occasions = [];
 
+  TextEditingController searchController = TextEditingController();
   Future<void> getOccasions() async {
     emit(GetOccasionsLoadingState());
     final result = await OccasionRepoImp().getOccasions();
@@ -23,21 +24,29 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     });
   }
   Future<void> openExerciseLink(String url) async {
-    final Uri uri = Uri.parse(url);
-
     try {
+      final Uri uri = Uri.parse(Uri.encodeFull(url)); // Ensure proper encoding
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(
           uri,
-          mode: LaunchMode.externalApplication,
+          mode: LaunchMode.externalApplication, // Open in external browser
         );
       } else {
         debugPrint('Could not launch $url');
-
       }
     } catch (e) {
       debugPrint('Error launching $url: $e');
-
     }
   }
+  List<OccasionEntity> searchOccasionsList=[];
+
+  void search(String query) {
+    searchOccasionsList.clear();
+    emit(SearchLoadingState());
+    searchOccasionsList.addAll(occasions.where((occasion) => occasion.occasionName.toLowerCase().contains(query.toLowerCase())));
+    debugPrint('searchOccasionsList ${searchOccasionsList[0].occasionName}');
+    emit(SearchSuccessState(occasions: searchOccasionsList));
+  }
+
 }

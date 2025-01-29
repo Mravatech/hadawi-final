@@ -5,7 +5,7 @@ class OccasionModel {
   final String giftType;
   final bool isForMe;
   final bool isSharing;
-  final String moneyGiftAmount;
+  final int moneyGiftAmount;
   final String occasionDate;
   final String occasionId;
   final String occasionImage;

@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+
+import '../../../../../utiles/localiztion/app_localization.dart';
 
 class ForWhomRow extends StatefulWidget {
   const ForWhomRow({super.key});
@@ -29,16 +32,13 @@ class _ForWhomRowState extends State<ForWhomRow> {
           child: Row(
             children: [
               Container(
-                height:
-                mediaQuery.height * .06,
+                height: mediaQuery.height * .06,
                 width: mediaQuery.width * .375,
                 decoration: BoxDecoration(
-                  color: cubit.isForOther == true
+                  color: cubit.isForMe == false
                       ? ColorManager.primaryBlue
                       : Colors.transparent,
-                  borderRadius:
-                  BorderRadius.circular(
-                      25),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -46,31 +46,26 @@ class _ForWhomRowState extends State<ForWhomRow> {
                   },
                   child: Center(
                     child: Text(
-                      'مناسبة لآخر',
+                      AppLocalizations.of(context)!
+                          .translate('forOthers')
+                          .toString(),
                       style: TextStyles.textStyle18Bold.copyWith(
-                        color:
-                        cubit.isForOther ==
-                            true
-                            ? ColorManager
-                            .white
-                            : ColorManager
-                            .black,
+                        color: cubit.isForMe==false
+                            ? ColorManager.white
+                            : ColorManager.black,
                       ),
                     ),
                   ),
                 ),
               ),
               Container(
-                height:
-                mediaQuery.height * .06,
+                height: mediaQuery.height * .06,
                 width: mediaQuery.width * .375,
                 decoration: BoxDecoration(
-                  color: cubit.isForMe == true
+                  color: cubit.isForMe
                       ? ColorManager.primaryBlue
                       : Colors.transparent,
-                  borderRadius:
-                  BorderRadius.circular(
-                      25),
+                  borderRadius: BorderRadius.circular(25),
                 ),
                 child: GestureDetector(
                   onTap: () {
@@ -78,15 +73,13 @@ class _ForWhomRowState extends State<ForWhomRow> {
                   },
                   child: Center(
                     child: Text(
-                     'مناسبة لي',
+                      AppLocalizations.of(context)!
+                          .translate('forMe')
+                          .toString(),
                       style: TextStyles.textStyle18Bold.copyWith(
-                        color:
-                        cubit.isForMe ==
-                            true
-                            ? ColorManager
-                            .white
-                            : ColorManager
-                            .black,
+                        color: cubit.isForMe
+                            ? ColorManager.white
+                            : ColorManager.black,
                       ),
                     ),
                   ),

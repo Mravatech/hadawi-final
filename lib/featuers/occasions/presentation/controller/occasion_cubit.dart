@@ -14,13 +14,12 @@ class OccasionCubit extends Cubit<OccasionState> {
   OccasionCubit() : super(OccasionInitial());
 
   bool isForMe = true;
-  bool isForOther = false;
   bool isPresent = true;
   bool isMoney = false;
   int selectedIndex = 0;
   bool bySharingValue = false;
-  int giftValue = 0;
-  String giftType = '';
+  int giftPrice = 0;
+  String giftType = 'هدية';
   GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> moneyFormKey = GlobalKey<FormState>();
@@ -39,24 +38,21 @@ class OccasionCubit extends Cubit<OccasionState> {
   void switchForWhomOccasion() {
     if (isForMe) {
       isForMe = false;
-      isForOther = true;
       selectedIndex = 1;
       UserDataFromStorage.setIsForMe(false);
       debugPrint('isForMe $isForMe');
     } else {
       isForMe = true;
-      isForOther = false;
       selectedIndex = 0;
       UserDataFromStorage.setIsForMe(true);
       debugPrint('isForMe $isForMe');
-
     }
     emit(SwitchForWhomOccasionSuccess());
   }
 
   void switchGiftType() {
-    isPresent = !isPresent; // Toggle the `isPresent` value
-    isMoney = !isMoney;     // Toggle the `isMoney` value
+    isPresent = !isPresent;
+    isMoney = !isMoney;
 
     emit(SwitchGiftTypeSuccess());
   }
@@ -115,31 +111,28 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(AddOccasionLoadingState());
 
     try {
-      final String? imageUrl = UserDataFromStorage.giftType == 'هدية'
+      final String? imageUrl = UserDataFromStorage.giftType == '' ||
+              UserDataFromStorage.giftType == 'هدية'
           ? await uploadImage()
           : null;
       final result = await OccasionRepoImp().addOccasions(
-        isForMe: UserDataFromStorage.isForMe,
+        isForMe: UserDataFromStorage.isForMe==true?true:UserDataFromStorage.isForMe,
         occasionName: UserDataFromStorage.occasionName,
         occasionDate: UserDataFromStorage.occasionDate,
         occasionType: UserDataFromStorage.isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
-        moneyGiftAmount: '${giftValue == 0 ? int.parse(moneyAmountController.text) : giftValue}',
+        moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,
-        personName: nameController.text.isEmpty
-            ? UserDataFromStorage.userNameFromStorage
-            : nameController.text,
+        personName: nameController.text.isEmpty ? UserDataFromStorage.userNameFromStorage : nameController.text,
         personPhone: UserDataFromStorage.phoneNumberFromStorage,
         personEmail: UserDataFromStorage.emailFromStorage,
         giftImage: imageUrl ?? '',
         giftName: giftNameController.text.isEmpty ? '' : giftNameController.text,
         giftLink: linkController.text.isEmpty ? '' : linkController.text,
-        giftPrice: giftValue == 0 ? int.parse(moneyAmountController.text) : giftValue,
-        giftType: UserDataFromStorage.giftType,
+        giftPrice: giftPrice == 0 ? int.parse(moneyAmountController.text) : giftPrice,
+        giftType: UserDataFromStorage.giftType==""? 'هدية':UserDataFromStorage.giftType,
         isSharing: bySharingValue,
       );
-
       result.fold((failure) {
-        debugPrint('============');
         emit(AddOccasionErrorState(error: failure.message));
       }, (occasion) {
         emit(AddOccasionSuccessState(occasion: occasion));
@@ -150,4 +143,5 @@ class OccasionCubit extends Cubit<OccasionState> {
       emit(AddOccasionErrorState(error: error.toString()));
     }
   }
+
 }

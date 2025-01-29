@@ -4,6 +4,8 @@ import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_c
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
+import '../../../../../utiles/localiztion/app_localization.dart';
+
 class PresentAmountWidget extends StatefulWidget {
   const PresentAmountWidget({super.key});
 
@@ -19,11 +21,6 @@ class _PresentAmountWidgetState extends State<PresentAmountWidget> {
         final cubit = context.read<OccasionCubit>();
         return Row(
           children: [
-            Text(
-              'ريال',
-              style: TextStyles.textStyle18Regular,
-            ),
-            const SizedBox(width: 8),
             Container(
               width:  MediaQuery.sizeOf(context).width*0.4,
               decoration: BoxDecoration(
@@ -37,7 +34,7 @@ class _PresentAmountWidgetState extends State<PresentAmountWidget> {
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        cubit.giftValue++;
+                        cubit.giftPrice++;
                       });
                     },
                     child: Icon(
@@ -47,16 +44,16 @@ class _PresentAmountWidgetState extends State<PresentAmountWidget> {
                     ),
                   ),
                    Text(
-                    cubit.giftValue.toString(),
+                    cubit.giftPrice.toString(),
                     style: TextStyles.textStyle18Bold,
                   ),
                   GestureDetector(
                     onTap: () {
                       setState(() {
-                        if (cubit.giftValue == 0) {
+                        if (cubit.giftPrice == 0) {
                           return;
                         }else{
-                          cubit.giftValue--;
+                          cubit.giftPrice--;
                         }
                       });
                     },
@@ -70,6 +67,14 @@ class _PresentAmountWidgetState extends State<PresentAmountWidget> {
                 ],
               ),
             ),
+            const SizedBox(width: 8),
+
+            Text(
+              AppLocalizations.of(context)!.translate('rsa').toString(),
+
+              style: TextStyles.textStyle18Regular,
+            ),
+
           ],
         );
       },
