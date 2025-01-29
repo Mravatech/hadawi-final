@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class MyGiftPaymentsList extends StatelessWidget {
   const MyGiftPaymentsList({super.key});
@@ -53,7 +54,7 @@ class MyGiftPaymentsList extends StatelessWidget {
                         Expanded(
                             flex: 1,
                             child: Text(
-                              "التاريخ",
+                              AppLocalizations.of(context)!.translate("date").toString(),
                               style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.white),
                               textAlign: TextAlign.center,
@@ -61,7 +62,7 @@ class MyGiftPaymentsList extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            "الأسم",
+                            AppLocalizations.of(context)!.translate("name").toString(),
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.white),
                             textAlign: TextAlign.center,
@@ -70,7 +71,7 @@ class MyGiftPaymentsList extends StatelessWidget {
                         Expanded(
                           flex: 1,
                           child: Text(
-                            "المبلغ",
+                            AppLocalizations.of(context)!.translate("amount").toString(),
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.white),
                             textAlign: TextAlign.center,
@@ -79,7 +80,7 @@ class MyGiftPaymentsList extends StatelessWidget {
                         Expanded(
                           flex: 2,
                           child: Text(
-                            "المناسبة",
+                            AppLocalizations.of(context)!.translate("occasions").toString(),
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.white),
                             textAlign: TextAlign.center,
