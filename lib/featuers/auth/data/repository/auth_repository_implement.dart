@@ -175,4 +175,13 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     }
   }
 
+  @override
+  Future<Either<Faliure, void>> deleteUser({required String uId}) async{
+    try{
+      return  Right(await baseAuthDataSource.deleteUser(uId: uId));
+    }on FireStoreException catch(e){
+      return  Left(FireStoreFaliure.fromMessage(e));
+    }
+  }
+
 }

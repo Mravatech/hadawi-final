@@ -13,6 +13,7 @@ import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class ProfileBodyView extends StatelessWidget {
   const ProfileBodyView({super.key});
@@ -46,7 +47,10 @@ class ProfileBodyView extends StatelessWidget {
               onTap:  (){
                 customPushNavigator(context, EditProfileScreen());
               },
-              child: ProfileRowWidget(image: AssetsManager.userIcon, title: 'البيانات الشخصية')
+              child: ProfileRowWidget(
+                  image: AssetsManager.userIcon,
+                  title: AppLocalizations.of(context)!.translate('info').toString()
+              )
           ),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.035,),
@@ -58,7 +62,7 @@ class ProfileBodyView extends StatelessWidget {
               },
               child: ProfileRowWidget(
                   image: AssetsManager.balloonsIcon,
-                  title: 'قائمة المناسبات',
+                  title: AppLocalizations.of(context)!.translate('occasionsList').toString()
               )
           ),
 
@@ -71,7 +75,7 @@ class ProfileBodyView extends StatelessWidget {
               },
               child: ProfileRowWidget(
                   image: AssetsManager.friendsIcon,
-                  title: 'قائمة الاصدقاء',
+                  title: AppLocalizations.of(context)!.translate('friendsList').toString()
               )
           ),
 
