@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/counter_widget.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 
 class PaymentGiftScreen extends StatelessWidget {
-  const PaymentGiftScreen({super.key});
+  final OccasionEntity occasionEntity;
+  const PaymentGiftScreen({super.key, required this.occasionEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class PaymentGiftScreen extends StatelessWidget {
             title: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                "الدفع لعيد ميلاد محمد ممدوح",
+                "${AppLocalizations.of(context)!.translate("payment").toString()} ${occasionEntity.occasionName} (${occasionEntity.personName})",
                 style: TextStyles.textStyle18Bold
                     .copyWith(color: ColorManager.primaryBlue),
               ),
@@ -57,7 +60,7 @@ class PaymentGiftScreen extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      "المبلغ : ",
+                      "${AppLocalizations.of(context)!.translate("amount").toString()} : ",
                       style: TextStyles.textStyle18Bold.copyWith(
                         color: ColorManager.black,
                       ),
@@ -79,7 +82,7 @@ class PaymentGiftScreen extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Text(
-                      "رقم الجوال : ",
+                      "${AppLocalizations.of(context)!.translate("phone").toString()} : ",
                       style: TextStyles.textStyle18Bold.copyWith(
                         color: ColorManager.black,
                       ),
@@ -92,7 +95,7 @@ class PaymentGiftScreen extends StatelessWidget {
                       hintText: '',
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'الرجاء ادخال رقم الجوال';
+                          return AppLocalizations.of(context)!.translate("phone").toString();
                         }
                         return null;
                       },
@@ -107,7 +110,7 @@ class PaymentGiftScreen extends StatelessWidget {
               SizedBox(height: SizeConfig.height * 0.08),
 
               DefaultButton(
-                buttonText: "الدفع كهدية",
+                buttonText: AppLocalizations.of(context)!.translate("paymentAsGift").toString(),
                 onPressed: () {},
                 buttonColor: ColorManager.primaryBlue,
               ),

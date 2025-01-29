@@ -160,9 +160,18 @@
   "fullNameOnCardHint": "أدخل الاسم الكامل على البطاقة",
   "internationalBankAccountNumber": "رقم الحساب البنكي الدولي (IBAN)",
   "internationalBankAccountNumberHint": "أدخل رقم الحساب البنكي",
-  "add": "إضافة"
-
-
-
+  "add": "إضافة",
+  "previousOccasionsMenu": "قائمة المناسبات المسجلة سابقا",
+  "noOccasions": "لا يوجد مناسبات",
+  "otherOccasions": "قائمة المناسبات المسجلة للأخرين",
+  "myOccasions": "قائمة مناسباتى المسجلة حديث",
+  "closedOccasions": "قائمة المناسبات المغلقة",
+  "payment": "الدفع",
+  "name": "الاسم",
+  "nameHint": "الرجاء ادخال الاسم",
+  "madaVisa": "بطاقة مدى فيزا",
+  "paymentAsGift": "الدفع كهدية",
+  "date": "التاريخ",
+  "occasions": "المناسبة"
 
 }

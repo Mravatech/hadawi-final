@@ -10,6 +10,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
 class PastOccasions extends StatefulWidget {
@@ -29,121 +30,118 @@ class _PastOccasionsState extends State<PastOccasions> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: ColorManager.white,
-        appBar: AppBar(
-          backgroundColor: ColorManager.gray,
-          title: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              "قائمة المناسبات المسجلة سابقا",
-              style: TextStyles.textStyle18Bold
-                  .copyWith(color: ColorManager.primaryBlue),
-            ),
+    return Scaffold(
+      backgroundColor: ColorManager.white,
+      appBar: AppBar(
+        backgroundColor: ColorManager.gray,
+        title: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            AppLocalizations.of(context)!.translate('previousOccasionsMenu').toString(),
+            style: TextStyles.textStyle18Bold
+                .copyWith(color: ColorManager.primaryBlue),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child:
-                  Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child:
+                Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(SizeConfig.height * 0.02),
+        child: Column(
+          children: [
+            SizedBox(
+              height: SizeConfig.height * 0.02,
+            ),
+            BlocConsumer<OccasionsListCubit, OccasionsListStates>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return state is GetPastOccasionListLoadingState
+                    ? Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Expanded(
+                        child: state is GetPastOccasionListSuccessState &&
+                                OccasionsListCubit.get(context)
+                                    .pastOccasionsList
+                                    .isNotEmpty
+                            ? RefreshIndicator(
+                                onRefresh: () async {
+                                  await OccasionsListCubit.get(context)
+                                      .getPastOccasionsList();
+                                },
+                                child: GridView.builder(
+                                  physics: BouncingScrollPhysics(),
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2, // Number of columns
+                                    crossAxisSpacing: 10.0,
+                                    mainAxisSpacing: 10.0,
+                                    childAspectRatio: 0.9,
+                                  ),
+                                  itemCount: OccasionsListCubit.get(context)
+                                      .pastOccasionsList
+                                      .length,
+                                  itemBuilder: (context, index) {
+                                    final occasionItem =
+                                        OccasionsListCubit.get(context)
+                                            .pastOccasionsList[index];
+                                    return OccasionCard(
+                                        onTap: () {
+                                          customPushNavigator(context, OccasionDetails(
+                                            occasionEntity: OccasionEntity(
+                                              isForMe: occasionItem.isForMe,
+                                              occasionName: occasionItem.occasionName,
+                                              occasionDate: occasionItem.occasionDate,
+                                              occasionId: occasionItem.occasionId,
+                                              occasionType: occasionItem.occasionType,
+                                              moneyGiftAmount: occasionItem.moneyGiftAmount,
+                                              personId: occasionItem.personId,
+                                              personName: occasionItem.personName,
+                                              personPhone: occasionItem.personPhone,
+                                              personEmail: occasionItem.personEmail,
+                                              giftImage: occasionItem.occasionImage,
+                                              giftName: occasionItem.giftName,
+                                              giftLink: occasionItem.giftLink,
+                                              giftPrice: occasionItem.giftPrice,
+                                              giftType: occasionItem.giftType,
+                                              isSharing: occasionItem.isSharing,
+                                            ),
+                                          ));
+                                        },
+                                        forOthers: true,
+                                        occasionName:
+                                            occasionItem.occasionName,
+                                        personName: occasionItem.personName,
+                                        imageUrl: occasionItem.occasionImage);
+                                  },
+                                ),
+                              )
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(AssetsManager.noData),
+                                    Text(
+                                      AppLocalizations.of(context)!.translate('noOccasions').toString(),
+                                      style: TextStyles.textStyle18Bold
+                                          .copyWith(
+                                              color:
+                                                  ColorManager.primaryBlue),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                      );
+              },
             ),
           ],
-        ),
-        body: Padding(
-          padding: EdgeInsets.all(SizeConfig.height * 0.02),
-          child: Column(
-            children: [
-              SizedBox(
-                height: SizeConfig.height * 0.02,
-              ),
-              BlocConsumer<OccasionsListCubit, OccasionsListStates>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  return state is GetPastOccasionListLoadingState
-                      ? Expanded(
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        )
-                      : Expanded(
-                          child: state is GetPastOccasionListSuccessState &&
-                                  OccasionsListCubit.get(context)
-                                      .pastOccasionsList
-                                      .isNotEmpty
-                              ? RefreshIndicator(
-                                  onRefresh: () async {
-                                    await OccasionsListCubit.get(context)
-                                        .getPastOccasionsList();
-                                  },
-                                  child: GridView.builder(
-                                    physics: BouncingScrollPhysics(),
-                                    gridDelegate:
-                                        SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2, // Number of columns
-                                      crossAxisSpacing: 10.0,
-                                      mainAxisSpacing: 10.0,
-                                      childAspectRatio: 0.9,
-                                    ),
-                                    itemCount: OccasionsListCubit.get(context)
-                                        .pastOccasionsList
-                                        .length,
-                                    itemBuilder: (context, index) {
-                                      final occasionItem =
-                                          OccasionsListCubit.get(context)
-                                              .pastOccasionsList[index];
-                                      return OccasionCard(
-                                          onTap: () {
-                                            customPushNavigator(context, OccasionDetails(
-                                              occasionEntity: OccasionEntity(
-                                                isForMe: occasionItem.isForMe,
-                                                occasionName: occasionItem.occasionName,
-                                                occasionDate: occasionItem.occasionDate,
-                                                occasionId: occasionItem.occasionId,
-                                                occasionType: occasionItem.occasionType,
-                                                moneyGiftAmount: occasionItem.moneyGiftAmount,
-                                                personId: occasionItem.personId,
-                                                personName: occasionItem.personName,
-                                                personPhone: occasionItem.personPhone,
-                                                personEmail: occasionItem.personEmail,
-                                                giftImage: occasionItem.occasionImage,
-                                                giftName: occasionItem.giftName,
-                                                giftLink: occasionItem.giftLink,
-                                                giftPrice: occasionItem.giftPrice,
-                                                giftType: occasionItem.giftType,
-                                                isSharing: occasionItem.isSharing,
-                                              ),
-                                            ));
-                                          },
-                                          forOthers: true,
-                                          occasionName:
-                                              occasionItem.occasionName,
-                                          personName: occasionItem.personName,
-                                          imageUrl: occasionItem.occasionImage);
-                                    },
-                                  ),
-                                )
-                              : Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image.asset(AssetsManager.noData),
-                                      Text(
-                                        "لا يوجد مناسبات سجلة سابقا",
-                                        style: TextStyles.textStyle18Bold
-                                            .copyWith(
-                                                color:
-                                                    ColorManager.primaryBlue),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                        );
-                },
-              ),
-            ],
-          ),
         ),
       ),
     );
