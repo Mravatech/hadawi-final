@@ -126,27 +126,8 @@
   "privacyPolicy": "Privacy Policy",
   "logout": "Logout",
   "userInfo": "User Info",
-  "closedEvents": "Closed Events",
-  "previousEvents": "Previously registered events",
-  "lastEvents": "Events recorded for someone else",
-  "newEvents": "Newly registered events",
-  "occasionsList": "Occasions List",
-  "friendsList": "Friends List",
-  "friendsIFollow": "Friends I Follow",
-  "friendsFollowMe": "Friends Follow Me",
-  "followRequests": "Follow Requests",
-  "sharedGifts": "Friends who participated in my gift",
-  "inviteFriends": "Invite Friends",
-  "follow": "Follow",
-  "decline": "Decline",
   "gender": "Gender :",
-  "info": "Personal Information",
   "male": "male",
-  "language": "Language",
-  "notification": "Notification",
-  "home": "Home",
-  "friends": "Friends",
-  "pfile": "Profile",
   "female": "Female",
   "other": "Other",
   "locationInfo": "Location Info",
@@ -216,5 +197,9 @@
   "payNow": "Pay Now",
   "remainingBalance": "Remaining Balance",
   "occasionAddedSuccessfully": "Occasion added successfully",
-  "occasionDetails": "Occasion Details"
+  "occasionDetails": "Occasion Details",
+  "myOccasionPaymentList": "List of friends participating in my gift",
+  "paymentDoneSuccessfully": "Payment done successfully"
+
+
 }

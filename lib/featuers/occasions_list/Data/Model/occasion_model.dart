@@ -1,11 +1,11 @@
 class OccasionModel {
   final String giftLink;
   final String giftName;
-  final int giftPrice;
+  final dynamic giftPrice;
   final String giftType;
   final bool isForMe;
   final bool isSharing;
-  final int moneyGiftAmount;
+  final dynamic moneyGiftAmount;
   final String occasionDate;
   final String occasionId;
   final String occasionImage;

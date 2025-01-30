@@ -4,14 +4,14 @@ class OccasionEntity {
   final String occasionDate;
   final String occasionId;
   final String occasionType;
-  final int moneyGiftAmount;
+  final dynamic moneyGiftAmount;
   final String personId;
   final String personName;
   final String personPhone;
   final String personEmail;
   final String giftName;
   final String giftLink;
-  final int giftPrice;
+  final dynamic giftPrice;
   final String giftImage;
   final String giftType;
   final bool isSharing;

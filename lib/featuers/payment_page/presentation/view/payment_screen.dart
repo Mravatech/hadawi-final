@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/counter_widget.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -33,8 +34,8 @@ class PaymentScreen extends StatelessWidget {
           actions: [
             Padding(
               padding: const EdgeInsets.all(5.0),
-              child: Image(
-                  image: AssetImage(AssetsManager.logoWithoutBackground)),
+              child:
+                  Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
             ),
           ]),
       body: SingleChildScrollView(
@@ -45,10 +46,11 @@ class PaymentScreen extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.height * 0.02),
 
-
-
               /// payment progress
-              ProgressIndicatorWidget(value: (double.parse(occasionEntity.moneyGiftAmount.toString()) / double.parse(occasionEntity.giftPrice.toString()))),
+              ProgressIndicatorWidget(
+                  value:
+                      (double.parse(occasionEntity.moneyGiftAmount.toString()) /
+                          double.parse(occasionEntity.giftPrice.toString()))),
               SizedBox(height: SizeConfig.height * 0.04),
 
               /// payment amount
@@ -94,7 +96,9 @@ class PaymentScreen extends StatelessWidget {
                       hintText: '',
                       validator: (value) {
                         if (value.isEmpty) {
-                          return AppLocalizations.of(context)!.translate('nameHint').toString();
+                          return AppLocalizations.of(context)!
+                              .translate('nameHint')
+                              .toString();
                         }
                         return null;
                       },
@@ -117,7 +121,9 @@ class PaymentScreen extends StatelessWidget {
               SizedBox(height: SizeConfig.height * 0.01),
 
               DefaultButton(
-                buttonText: AppLocalizations.of(context)!.translate('madaVisa').toString(),
+                buttonText: AppLocalizations.of(context)!
+                    .translate('madaVisa')
+                    .toString(),
                 onPressed: () {},
                 buttonColor: ColorManager.primaryBlue,
               ),
@@ -125,8 +131,18 @@ class PaymentScreen extends StatelessWidget {
               SizedBox(height: SizeConfig.height * 0.01),
 
               DefaultButton(
-                buttonText: AppLocalizations.of(context)!.translate('payment').toString(),
-                onPressed: () {},
+                buttonText: AppLocalizations.of(context)!
+                    .translate('payment')
+                    .toString(),
+                onPressed: () async {
+                  await PaymentCubit.get(context).addPaymentData(
+                    context: context,
+                    occasionId: occasionEntity.occasionId,
+                    occasionName: occasionEntity.occasionName,
+                    paymentAmount:
+                        double.parse(occasionEntity.moneyGiftAmount.toString()),
+                  );
+                },
                 buttonColor: ColorManager.primaryBlue,
               ),
             ],

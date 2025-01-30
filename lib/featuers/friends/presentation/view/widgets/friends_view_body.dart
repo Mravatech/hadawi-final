@@ -4,12 +4,15 @@ import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubi
 import 'package:hadawi_app/featuers/friends/presentation/view/followers_screen.dart';
 import 'package:hadawi_app/featuers/friends/presentation/view/following_request_screen.dart';
 import 'package:hadawi_app/featuers/friends/presentation/view/following_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/my_occasions_list.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/profile_row_widget.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/row_data_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 
 class FriendsViewBody extends StatelessWidget {
   const FriendsViewBody({super.key});
@@ -55,7 +58,11 @@ class FriendsViewBody extends StatelessWidget {
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 
           // الاصدقاء المشاركين بهديتي
-          ProfileRowWidget(image: '', title:  AppLocalizations.of(context)!.translate('sharedGifts').toString(),),
+          InkWell(
+              onTap: (){
+                customPushNavigator(context, MyOccasionsList());
+              },
+              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),,)),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 
