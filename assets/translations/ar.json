@@ -159,7 +159,7 @@
   "madaVisa": "بطاقة مدى فيزا",
   "paymentAsGift": "الدفع كهدية",
   "date": "التاريخ",
-  "occasions": "المناسبة"
+  "occasions": "المناسبة",
   "addOccasion": "إضافة مناسبة",
   "search": "بحث",
   "welcome": "مرحبًا",
@@ -197,5 +197,7 @@
   "payNow": "ادفع الآن",
   "remainingBalance": "المبلغ المتبقي",
   "occasionAddedSuccessfully": "تمت إضافة المناسبة بنجاح",
-  "occasionDetails": "تفاصيل المناسبة"
+  "occasionDetails": "تفاصيل المناسبة",
+  "myOccasionPaymentList": "قائمة الاصدقاء الشاركين بهديتى",
+  "paymentDoneSuccessfully": "تم الدفع بنجاح"
 }
