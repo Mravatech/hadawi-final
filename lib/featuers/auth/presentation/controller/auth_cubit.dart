@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/check_user_login_use_cases.dart';
+import 'package:hadawi_app/featuers/auth/domain/use_cases/delete_user_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/get_user_info_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/google_auth_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/login_use_cases.dart';
@@ -30,6 +31,7 @@ class AuthCubit extends Cubit<AuthStates> {
       this.verifiyCodeUseCases,
       this.getUserInfoUseCases,
       this.checkUserLoginUseCases,
+      this.deleteUserUseCases,
       ) : super(AuthInitialState());
 
   LoginUseCases loginUseCases;
@@ -41,6 +43,7 @@ class AuthCubit extends Cubit<AuthStates> {
   VerifiyCodeUseCases verifiyCodeUseCases;
   GetUserInfoUseCases getUserInfoUseCases;
   CheckUserLoginUseCases checkUserLoginUseCases;
+  DeleteUserUseCases deleteUserUseCases;
 
   TextEditingController brithDateController = TextEditingController();
 
@@ -109,6 +112,16 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(UserLogoutErrorState(message: l.message));
     }, (r) {
       emit(UserLogoutSuccessState());
+    });
+  }
+
+  Future<void> deleteUser({required String uId})async {
+    emit(DeleteUserLoadingState());
+    final result = await deleteUserUseCases.deleteUser(uId: uId);
+    result.fold((l) {
+      emit(DeleteUserErrorState(message: l.message));
+    }, (r) {
+      emit(DeleteUserSuccessState());
     });
   }
 

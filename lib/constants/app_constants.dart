@@ -7,10 +7,10 @@ import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.d
 class AppConstants{
 
   List<String> homeLayoutTitles=[
-    'الرئيسية',
-    'اضافه مناسبه',
-    'البروفيل',
-    'الاعدادت'
+    'home',
+    'addOccasion',
+    'pfile',
+    'settings',
   ];
 
   List<Widget> homeLayoutWidgets=[

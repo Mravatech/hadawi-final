@@ -78,3 +78,10 @@ class CheckUserErrorState extends AuthStates{
   String message;
   CheckUserErrorState({required this.message});
 }
+
+class DeleteUserLoadingState extends AuthStates{}
+class DeleteUserSuccessState extends AuthStates{}
+class DeleteUserErrorState extends AuthStates{
+  String message;
+  DeleteUserErrorState({required this.message});
+}

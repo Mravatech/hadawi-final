@@ -19,3 +19,10 @@ final class SearchSuccessState extends VisitorsState {
   final List<OccasionEntity> occasions;
   SearchSuccessState({required this.occasions});
 }
+
+final class SendFollowRequestLoadingState extends VisitorsState {}
+final class SendFollowRequestSuccessState extends VisitorsState {}
+final class SendFollowRequestErrorState extends VisitorsState {
+  final String message;
+  SendFollowRequestErrorState({required this.message});
+}

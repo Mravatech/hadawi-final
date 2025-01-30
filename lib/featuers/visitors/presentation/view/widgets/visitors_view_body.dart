@@ -10,6 +10,7 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../../styles/colors/color_manager.dart';
@@ -95,7 +96,7 @@ class VisitorsViewBody extends StatelessWidget {
                               customPushNavigator(
                                   context,
                                   BlocProvider(
-                                    create: (context) => VisitorsCubit(),
+                                    create: (context) => VisitorsCubit(getIt()),
                                     child: OccasionDetails(
                                       occasionEntity: cubit.occasions[index],
                                     ),

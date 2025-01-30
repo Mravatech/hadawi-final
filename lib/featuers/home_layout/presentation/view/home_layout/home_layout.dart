@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/view/widgets/bottom
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
@@ -38,7 +39,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   ? null
                   : defaultAppBarWidget(
                       appBarTitle:
-                          AppConstants().homeLayoutTitles[cubit.currentIndex],
+                          AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString(),
                     ),
               body: AppConstants().homeLayoutWidgets[cubit.currentIndex],
               bottomNavigationBar: BottomNavigationBarWidget(),

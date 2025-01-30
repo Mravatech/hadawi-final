@@ -62,6 +62,7 @@ abstract class BaseAuthDataSource {
 
   Future<bool> checkUserLogin({required String phoneNumber});
   Future<UserModel>getUserData ({required String uId});
+  Future<void>deleteUser ({required String uId});
 
 }
 
@@ -299,10 +300,18 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       await FirebaseFirestore.instance.collection('users').doc(phoneNumber).get();
       return true;
     } on FirebaseException catch (error) {
-      {
         print('error in happen $error');
         throw FireStoreException(firebaseException: error);
-      }
+    }
+  }
+
+  @override
+  Future<void> deleteUser({required String uId})async {
+    try {
+      await FirebaseAuth.instance.currentUser!.delete();
+      await FirebaseFirestore.instance.collection('users').doc(uId).delete();
+    } on FirebaseException catch (error) {
+      throw FireStoreException(firebaseException: error);
     }
   }
 

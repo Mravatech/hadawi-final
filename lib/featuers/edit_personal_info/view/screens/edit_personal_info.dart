@@ -12,6 +12,7 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -47,24 +48,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     genderController.text= UserDataFromStorage.genderFromStorage;
     dateController.text= UserDataFromStorage.brithDateFromStorage;
   }
-
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          titleSpacing: 0.0,
-          backgroundColor: ColorManager.gray,
-          title: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              'الملف الشخصى',
-              style: TextStyles.textStyle18Bold.copyWith(
-                  color: ColorManager.primaryBlue
-              ),
-            ),
-          ),
-        ),
+        appBar: defaultAppBarWidget(appBarTitle: AppLocalizations.of(context)!.translate('info').toString()),
         body: BlocProvider(
           create: (context) => EditProfileCubit(editProfileUseCases: getIt()),
           child: BlocConsumer<EditProfileCubit,EditProfileStates>(
