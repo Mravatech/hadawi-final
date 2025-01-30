@@ -62,7 +62,7 @@ class FriendsViewBody extends StatelessWidget {
               onTap: (){
                 customPushNavigator(context, MyOccasionsList());
               },
-              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),,)),
+              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),)),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 
