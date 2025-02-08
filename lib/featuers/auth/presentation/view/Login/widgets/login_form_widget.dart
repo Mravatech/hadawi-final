@@ -12,6 +12,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -136,12 +137,15 @@ class LoginFormWidget extends StatelessWidget {
 
                 GestureDetector(
                   onTap: (){
+                    UserDataFromStorage.setUserIsGuest(true);
                     customPushNavigator(context, VisitorsScreen());
                   },
-                  child: Text('تسجيل دخول كزاير',
+                  child: Text(
+                      AppLocalizations.of(context)!.translate('loginAsGuest').toString(),
                       style: TextStyles.textStyle18Bold.copyWith(
                           color: ColorManager.darkGrey
-                      )),
+                      ),
+                  ),
                 ),
 
               ],

@@ -218,7 +218,6 @@
   "occasionAddedSuccessfully": "Occasion added successfully",
   "occasionDetails": "Occasion Details",
   "myOccasionPaymentList": "List of friends participating in my gift",
-  "paymentDoneSuccessfully": "Payment done successfully"
-
-
+  "paymentDoneSuccessfully": "Payment done successfully",
+  "loginAsGuest": "Login as guest"
 }

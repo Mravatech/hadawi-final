@@ -91,6 +91,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setPhoneNumber('');
       UserDataFromStorage.setGender('');
       UserDataFromStorage.setBrithDate('');
+      UserDataFromStorage.setUserIsGuest(true);
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
     }
@@ -158,6 +159,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setUid(userModel.uId);
       UserDataFromStorage.setGender(userModel.gender);
       UserDataFromStorage.setBrithDate(userModel.brithDate);
+      UserDataFromStorage.setUserIsGuest(false);
       return userModel;
     } on FireStoreException catch (e) {
       throw FireStoreException(firebaseException: e.firebaseException);

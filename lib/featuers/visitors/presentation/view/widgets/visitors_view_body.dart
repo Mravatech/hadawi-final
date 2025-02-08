@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
@@ -10,6 +11,8 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
+import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -51,23 +54,75 @@ class VisitorsViewBody extends StatelessWidget {
                         height: mediaQuery.height * 0.19,
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(
-                            vertical: mediaQuery.height * 0.02,
+                            vertical: mediaQuery.height * 0.03,
                             horizontal: mediaQuery.width * 0.05),
-                        child: Column(
-                          crossAxisAlignment: CashHelper.languageKey == 'ar'
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('welcome').toString()},",
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.black),
+                            Column(
+                              crossAxisAlignment: CashHelper.languageKey == 'ar'
+                                  ? CrossAxisAlignment.end
+                                  : CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context)!.translate('welcome').toString()},",
+                                  style: TextStyles.textStyle18Bold
+                                      .copyWith(color: ColorManager.black),
+                                ),
+                                Visibility(
+                                  visible: UserDataFromStorage.userIsGuest == false? true:false,
+                                  child: Text(
+                                    UserDataFromStorage.userNameFromStorage,
+                                    style: TextStyles.textStyle18Medium
+                                        .copyWith(color: ColorManager.black),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              UserDataFromStorage.userNameFromStorage,
-                              style: TextStyles.textStyle18Medium
-                                  .copyWith(color: ColorManager.black),
+                            Visibility(
+                              visible: UserDataFromStorage.userIsGuest == true? true:false,
+                              child: Row(
+                                children: [
+                                  BlocBuilder<LocalizationCubit,LocalizationStates>(
+                                    builder: (context,state){
+                                      return GestureDetector(
+                                        onTap: (){
+                                          CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                          context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
+                                          context.read<LocalizationCubit>().changeLanguage(code: 'en');
+                                        },
+                                        child: Container(
+                                            padding:EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.sizeOf(context).width*0.04,
+                                              vertical: MediaQuery.sizeOf(context).width*0.01,
+                                            ),
+                                            decoration:BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ) ,
+                                            child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                            Text('English',style: TextStyles.textStyle18Bold.copyWith(
+                                                color: ColorManager.black,
+                                                fontSize:MediaQuery.sizeOf(context).height*0.018
+                                            ),):
+                                            Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
+                                                color: ColorManager.black,
+                                                fontSize:MediaQuery.sizeOf(context).height*0.018
+                                            ))
+                                        ),
+                                      );
+                                    } ,
+                                  ),
+                                  IconButton(
+                                    onPressed: (){
+                                      customPushAndRemoveUntil(context, LoginScreen());
+                                    },
+                                    icon: const Icon(Icons.login_outlined),color: ColorManager.black,
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         )),
