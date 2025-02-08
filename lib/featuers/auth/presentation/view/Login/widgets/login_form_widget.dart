@@ -7,6 +7,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -96,8 +97,9 @@ class LoginFormWidget extends StatelessWidget {
                   },
                   builder: (context, state) {
                     var cubit = context.read<AuthCubit>();
-                    return state is UserLoginLoadingState?
-                    const Center(child: CircularProgressIndicator(),):
+                    return
+                    //   state is UserLoginLoadingState?
+                    // const Center(child: CircularProgressIndicator(),):
                     DefaultButton(
                         buttonText: AppLocalizations.of(context)!.translate('login').toString(),
                         onPressed: (){
@@ -129,6 +131,18 @@ class LoginFormWidget extends StatelessWidget {
 
                 // don't have an account
                 DonotHaveAnAccount(),
+
+                SizedBox( height: MediaQuery.sizeOf(context).height*0.035,),
+
+                GestureDetector(
+                  onTap: (){
+                    customPushNavigator(context, VisitorsScreen());
+                  },
+                  child: Text('تسجيل دخول كزاير',
+                      style: TextStyles.textStyle18Bold.copyWith(
+                          color: ColorManager.darkGrey
+                      )),
+                ),
 
               ],
             ),
