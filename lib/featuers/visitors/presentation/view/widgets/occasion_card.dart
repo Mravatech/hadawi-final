@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
 class OccasionCard extends StatelessWidget {
-  final int index;
+  final OccasionEntity occasionEntity;
 
-  const OccasionCard({super.key, required this.index});
+  const OccasionCard({super.key, required this.occasionEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class OccasionCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    cubit.occasions[index].occasionName,
+                    occasionEntity.occasionName.toString(),
                     style: TextStyles.textStyle18Regular
                         .copyWith(color: ColorManager.white),
                   ),
@@ -55,17 +56,17 @@ class OccasionCard extends StatelessWidget {
                     bottomRight: Radius.circular(15),
                   ),
                   child: CachedNetworkImage(
-                    width: cubit.occasions[index].giftImage.isEmpty
+                    width: occasionEntity.giftImage.isEmpty
                         ? MediaQuery.sizeOf(context).width * 0.25
                         : double.infinity,
                     fit: BoxFit.cover,
-                    imageUrl: cubit.occasions[index].giftImage,
+                    imageUrl: occasionEntity.giftImage,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
                     ),
                     errorWidget: (context, url, error) {
-                      return cubit.occasions[index].giftImage.isEmpty &&
-                              cubit.occasions[index].giftType == 'مبلغ مالي'
+                      return occasionEntity.giftImage.isEmpty &&
+                              occasionEntity.giftType == 'مبلغ مالي'
                           ? Image.asset(
                             'assets/images/money_bag.png',
                             fit: BoxFit.contain,

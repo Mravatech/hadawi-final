@@ -9,6 +9,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(value);
     return SizedBox(
       height: SizeConfig.height * 0.04,
       child: Stack(
@@ -23,7 +24,7 @@ class ProgressIndicatorWidget extends StatelessWidget {
             BorderRadius.circular(SizeConfig.height * 0.03),
           ),
           Text(
-            "${(value*100).toStringAsFixed(2)}%",
+            "${value>1.0?100:(value*100).toStringAsFixed(2)}%",
             style: TextStyles.textStyle18Medium.copyWith(
               color: ColorManager.black,
             ),

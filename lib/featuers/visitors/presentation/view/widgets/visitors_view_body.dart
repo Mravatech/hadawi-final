@@ -7,6 +7,7 @@ import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_bar_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_result_container.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/visitors_home_shimmer.dart';
+import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -136,7 +137,67 @@ class VisitorsViewBody extends StatelessWidget {
                       searchController: cubit.searchController,
                     ),
                   ),
-                  Expanded(
+
+                  SizedBox(height: mediaQuery.height * 0.01,),
+
+                  state is GetOccasionsLoadingState ? Container():Container(
+                    height: SizeConfig.height * 0.05,
+                    width: SizeConfig.width * 0.9,
+                    decoration: BoxDecoration(
+                      color: ColorManager.gray,
+                      borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
+                    ),
+
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            cubit.changeActiveOrders(true);
+                          },
+                          child: Container(
+                            height: SizeConfig.height * 0.05,
+                            width: SizeConfig.width*0.45,
+                            decoration: BoxDecoration(
+                              color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
+                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
+                            ),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('activeOrders').toString(),
+                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            cubit.changeActiveOrders(false);
+                          },
+                          child: Container(
+                            height: SizeConfig.height * 0.05,
+                            width: SizeConfig.width*0.45,
+                            decoration: BoxDecoration(
+                              color: cubit.isActiveOrders?ColorManager.gray:ColorManager.primaryBlue,
+                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
+                            ),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('completedOrders').toString(),
+                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(
+                    height: SizeConfig.height * 0.02
+                  ),
+
+                  cubit.isActiveOrders? Expanded(
                     child: GridView.builder(
                       padding: const EdgeInsets.all(15),
                       gridDelegate:
@@ -153,16 +214,44 @@ class VisitorsViewBody extends StatelessWidget {
                                   BlocProvider(
                                     create: (context) => VisitorsCubit(getIt()),
                                     child: OccasionDetails(
-                                      occasionEntity: cubit.occasions[index],
+                                      occasionEntity: cubit.activeOccasions[index],
                                     ),
                                   ),
                               );
                             },
                             child: OccasionCard(
-                              index: index,
+                              occasionEntity: cubit.activeOccasions[index],
                             ));
                       },
-                      itemCount: cubit.occasions.length,
+                      itemCount: cubit.activeOccasions.length,
+                    ),
+                  ):  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(15),
+                      gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
+                          crossAxisCount: 2,
+                          childAspectRatio: 1 / 1.1),
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                            onTap: () {
+                              customPushNavigator(
+                                context,
+                                BlocProvider(
+                                  create: (context) => VisitorsCubit(getIt()),
+                                  child: OccasionDetails(
+                                    occasionEntity: cubit.doneOccasions[index],
+                                  ),
+                                ),
+                              );
+                            },
+                            child: OccasionCard(
+                              occasionEntity: cubit.doneOccasions[index],
+                            ));
+                      },
+                      itemCount: cubit.doneOccasions.length,
                     ),
                   )
                 ],

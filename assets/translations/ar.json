@@ -219,5 +219,7 @@
   "occasionDetails": "تفاصيل المناسبة",
   "myOccasionPaymentList": "قائمة الاصدقاء الشاركين بهديتى",
   "paymentDoneSuccessfully": "تم الدفع بنجاح",
-  "loginAsGuest": "تسجيل دخول كزاير"
+  "loginAsGuest": "تسجيل دخول كزاير",
+  "activeOrders": "طلبات نشطة",
+  "completedOrders": "طلبات منجزة"
 }

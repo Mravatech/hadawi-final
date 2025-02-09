@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/progress_indecator.dart';
 import 'package:hadawi_app/generated/assets.dart';
@@ -120,7 +121,7 @@ class OccasionDetails extends StatelessWidget {
                         style: TextStyles.textStyle18Bold.copyWith(),
                       ),
                       Spacer(),
-                      SizedBox(
+                      UserDataFromStorage.userIsGuest==false? SizedBox(
                         width:  MediaQuery.sizeOf(context).width * 0.3,
                         child: DefaultButton(
                             buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
@@ -136,7 +137,7 @@ class OccasionDetails extends StatelessWidget {
                             },
                             buttonColor: ColorManager.primaryBlue,
                         ),
-                      )
+                      ):Container(),
                     ],
                   ),
                   SizedBox(
@@ -250,24 +251,15 @@ class OccasionDetails extends StatelessWidget {
                   SizedBox(
                     height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
 
                   /// gift link and progress indicator
                   Row(
                     children: [
                       Expanded(
-                        child: GiftDetailsProgressIndicatorWidget(
-                          value: min(
-                            double.parse(
-                              ((occasionEntity.giftPrice - occasionEntity.moneyGiftAmount) /
-                                  occasionEntity.giftPrice)
-                                  .toStringAsFixed(2),
-                            ),
-                            1.0,
-                          ),
-                        ),
+                        child: ProgressIndicatorWidget(
+                            value: (double.parse(occasionEntity.moneyGiftAmount.toString()) /
+                                double.parse(occasionEntity.giftPrice.toString()))
+                        ) ,
                       ),
                       IconButton(
                           onPressed: () {
@@ -306,9 +298,7 @@ class OccasionDetails extends StatelessWidget {
                     enable: false,
                   ),
                   SizedBox(
-                    height: occasionEntity.giftImage.isEmpty
-                        ? MediaQuery.sizeOf(context).height * 0.18
-                        : MediaQuery.sizeOf(context).height * 0.04,
+                    height:MediaQuery.sizeOf(context).height * 0.1
                   ),
 
                   /// share and pay

@@ -6,8 +6,9 @@ sealed class VisitorsState {}
 final class VisitorsInitial extends VisitorsState {}
 final class GetOccasionsLoadingState extends VisitorsState {}
 final class GetOccasionsSuccessState extends VisitorsState {
-  final List<OccasionEntity> occasions;
-  GetOccasionsSuccessState({required this.occasions});
+  final List<OccasionEntity> activeOccasions;
+  final List<OccasionEntity> doneOccasions;
+  GetOccasionsSuccessState({required this.activeOccasions, required this.doneOccasions});
 }
 final class GetOccasionsErrorState extends VisitorsState {
   final String error;
@@ -26,3 +27,5 @@ final class SendFollowRequestErrorState extends VisitorsState {
   final String message;
   SendFollowRequestErrorState({required this.message});
 }
+
+final class ChangeActiveOrdersState extends VisitorsState {}

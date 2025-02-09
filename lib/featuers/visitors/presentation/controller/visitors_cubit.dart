@@ -13,7 +13,14 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   SendFollowRequestUseCases sendFollowRequestUseCases;
 
 
-  List<OccasionEntity> occasions = [];
+  List<OccasionEntity> activeOccasions = [];
+  List<OccasionEntity> doneOccasions = [];
+
+
+  convertStringToDateTime(String dateString){
+    DateTime dateTime = DateTime.parse(dateString);
+    return dateTime;
+  }
 
   TextEditingController searchController = TextEditingController();
   Future<void> getOccasions() async {
@@ -22,8 +29,19 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     result.fold((failure) {
       emit(GetOccasionsErrorState(error: failure.message));
     }, (occasion) {
-      occasions.addAll(occasion);
-      emit(GetOccasionsSuccessState(occasions: occasions));
+      activeOccasions.clear();
+      doneOccasions.clear();
+
+      for (var element in occasion) {
+        DateTime occasionDate = convertStringToDateTime(element.occasionDate);
+
+        if (occasionDate.isAfter(DateTime.now()) && element.giftPrice > element.moneyGiftAmount) {
+          activeOccasions.add(element);
+        } else {
+          doneOccasions.add(element);
+        }
+      }
+      emit(GetOccasionsSuccessState(activeOccasions: activeOccasions, doneOccasions: doneOccasions));
     });
   }
   Future<void> openExerciseLink(String url) async {
@@ -47,7 +65,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   void search(String query) {
     searchOccasionsList.clear();
     emit(SearchLoadingState());
-    searchOccasionsList.addAll(occasions.where((occasion) => occasion.occasionName.toLowerCase().contains(query.toLowerCase())));
+    searchOccasionsList.addAll(activeOccasions.where((occasion) => occasion.occasionName.toLowerCase().contains(query.toLowerCase())));
     debugPrint('searchOccasionsList ${searchOccasionsList[0].occasionName}');
     emit(SearchSuccessState(occasions: searchOccasionsList));
 
@@ -73,4 +91,12 @@ class VisitorsCubit extends Cubit<VisitorsState> {
             (r)=>emit(SendFollowRequestSuccessState())
     );
   }
+
+  bool isActiveOrders = true;
+
+  void changeActiveOrders(bool value){
+    isActiveOrders = value;
+    emit(ChangeActiveOrdersState());
+  }
+
 }
