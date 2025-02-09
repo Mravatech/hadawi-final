@@ -37,90 +37,160 @@ class VisitorsViewBody extends StatelessWidget {
               Column(
                 children: [
                   Container(
-                    height: mediaQuery.height * 0.15,
+                    height: mediaQuery.height * 0.18,
                     width: double.infinity,
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.only(
-                              bottomLeft: Radius.circular(20),
-                              bottomRight: Radius.circular(20)),
+                              topLeft: Radius.circular(20),
+                              topRight: Radius.circular(20)),
                           image: const DecorationImage(
                               fit: BoxFit.cover,
                               image: NetworkImage(
                                   'https://img.freepik.com/free-photo/watercolor-gift-card-illustration_23-2151912036.jpg?t=st=1737894355~exp=1737897955~hmac=c642672a986fba67b3321c10c3db7e2e39f2faef06d8faa677b7e5871b097aa6&w=360'),
                               opacity: .3),
                         ),
-                        height: mediaQuery.height * 0.19,
+                        height: mediaQuery.height * 0.2,
                         width: double.infinity,
-                        padding: EdgeInsets.symmetric(
-                            vertical: mediaQuery.height * 0.03,
-                            horizontal: mediaQuery.width * 0.05),
-                        child: Row(
+
+                        child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Column(
-                              crossAxisAlignment: CashHelper.languageKey == 'ar'
-                                  ? CrossAxisAlignment.end
-                                  : CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "${AppLocalizations.of(context)!.translate('welcome').toString()},",
-                                  style: TextStyles.textStyle18Bold
-                                      .copyWith(color: ColorManager.black),
-                                ),
-                                Visibility(
-                                  visible: UserDataFromStorage.userIsGuest == false? true:false,
-                                  child: Text(
-                                    UserDataFromStorage.userNameFromStorage,
-                                    style: TextStyles.textStyle18Medium
-                                        .copyWith(color: ColorManager.black),
-                                  ),
-                                ),
-                              ],
+                            SizedBox(
+                              height: SizeConfig.height * 0.045,
                             ),
-                            Visibility(
-                              visible: UserDataFromStorage.userIsGuest == true? true:false,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: mediaQuery.width * 0.05),
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  BlocBuilder<LocalizationCubit,LocalizationStates>(
-                                    builder: (context,state){
-                                      return GestureDetector(
-                                        onTap: (){
-                                          CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                          context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
-                                          context.read<LocalizationCubit>().changeLanguage(code: 'en');
-                                        },
-                                        child: Container(
-                                            padding:EdgeInsets.symmetric(
-                                              horizontal: MediaQuery.sizeOf(context).width*0.04,
-                                              vertical: MediaQuery.sizeOf(context).width*0.01,
-                                            ),
-                                            decoration:BoxDecoration(
-                                              color: Colors.transparent,
-                                              borderRadius: BorderRadius.circular(10),
-                                            ) ,
-                                            child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                            Text('English',style: TextStyles.textStyle18Bold.copyWith(
-                                                color: ColorManager.black,
-                                                fontSize:MediaQuery.sizeOf(context).height*0.018
-                                            ),):
-                                            Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
-                                                color: ColorManager.black,
-                                                fontSize:MediaQuery.sizeOf(context).height*0.018
-                                            ))
+                                  Column(
+                                    crossAxisAlignment: CashHelper.languageKey == 'ar'
+                                        ? CrossAxisAlignment.end
+                                        : CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "${AppLocalizations.of(context)!.translate('welcome').toString()},",
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(color: ColorManager.black),
+                                      ),
+                                      Visibility(
+                                        visible: UserDataFromStorage.userIsGuest == false? true:false,
+                                        child: Text(
+                                          UserDataFromStorage.userNameFromStorage,
+                                          style: TextStyles.textStyle18Medium
+                                              .copyWith(color: ColorManager.black),
                                         ),
-                                      );
-                                    } ,
+                                      ),
+                                    ],
                                   ),
-                                  IconButton(
-                                    onPressed: (){
-                                      customPushAndRemoveUntil(context, LoginScreen());
+                                  Visibility(
+                                    visible: UserDataFromStorage.userIsGuest == true? true:false,
+                                    child: Row(
+                                      children: [
+                                        BlocBuilder<LocalizationCubit,LocalizationStates>(
+                                          builder: (context,state){
+                                            return GestureDetector(
+                                              onTap: (){
+                                                CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                                context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
+                                                context.read<LocalizationCubit>().changeLanguage(code: 'en');
+                                              },
+                                              child: Container(
+                                                  padding:EdgeInsets.symmetric(
+                                                    horizontal: MediaQuery.sizeOf(context).width*0.04,
+                                                    vertical: MediaQuery.sizeOf(context).width*0.01,
+                                                  ),
+                                                  decoration:BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ) ,
+                                                  child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                                  Text('English',style: TextStyles.textStyle18Bold.copyWith(
+                                                      color: ColorManager.black,
+                                                      fontSize:MediaQuery.sizeOf(context).height*0.018
+                                                  ),):
+                                                  Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
+                                                      color: ColorManager.black,
+                                                      fontSize:MediaQuery.sizeOf(context).height*0.018
+                                                  ))
+                                              ),
+                                            );
+                                          } ,
+                                        ),
+                                        IconButton(
+                                          onPressed: (){
+                                            customPushAndRemoveUntil(context, LoginScreen());
+                                          },
+                                          icon: const Icon(Icons.login_outlined),color: ColorManager.black,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.height * 0.02,
+                            ),
+                            Container(
+                              height: SizeConfig.height * 0.05,
+                              width: SizeConfig.width,
+                              decoration: BoxDecoration(
+                                color: ColorManager.gray,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
+                              ),
+
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  InkWell(
+                                    onTap: () {
+                                      cubit.changeActiveOrders(true);
                                     },
-                                    icon: const Icon(Icons.login_outlined),color: ColorManager.black,
+                                    child: Container(
+                                      height: SizeConfig.height * 0.05,
+                                      width: SizeConfig.width*0.5,
+                                      decoration: BoxDecoration(
+                                        color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
+                                        borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                        topRight: Radius.circular(20)),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!.translate('activeOrders').toString(),
+                                          style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      cubit.changeActiveOrders(false);
+                                    },
+                                    child: Container(
+                                      height: SizeConfig.height * 0.05,
+                                      width: SizeConfig.width*0.5,
+                                      decoration: BoxDecoration(
+                                        color: cubit.isActiveOrders?ColorManager.gray:ColorManager.primaryBlue,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(20),
+                                            topRight: Radius.circular(20)),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!.translate('completedOrders').toString(),
+                                          style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -136,65 +206,6 @@ class VisitorsViewBody extends StatelessWidget {
                       },
                       searchController: cubit.searchController,
                     ),
-                  ),
-
-                  SizedBox(height: mediaQuery.height * 0.01,),
-
-                  state is GetOccasionsLoadingState ? Container():Container(
-                    height: SizeConfig.height * 0.05,
-                    width: SizeConfig.width * 0.9,
-                    decoration: BoxDecoration(
-                      color: ColorManager.gray,
-                      borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
-                    ),
-
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            cubit.changeActiveOrders(true);
-                          },
-                          child: Container(
-                            height: SizeConfig.height * 0.05,
-                            width: SizeConfig.width*0.45,
-                            decoration: BoxDecoration(
-                              color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
-                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
-                            ),
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('activeOrders').toString(),
-                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            cubit.changeActiveOrders(false);
-                          },
-                          child: Container(
-                            height: SizeConfig.height * 0.05,
-                            width: SizeConfig.width*0.45,
-                            decoration: BoxDecoration(
-                              color: cubit.isActiveOrders?ColorManager.gray:ColorManager.primaryBlue,
-                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.2),
-                            ),
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('completedOrders').toString(),
-                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: SizeConfig.height * 0.02
                   ),
 
                   cubit.isActiveOrders? Expanded(
