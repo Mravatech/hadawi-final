@@ -6,7 +6,9 @@ import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_bar_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_result_container.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/tutorial_coach_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/visitors_home_shimmer.dart';
+import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
@@ -15,14 +17,199 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
+import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../../styles/colors/color_manager.dart';
 import '../../../../../utiles/shared_preferences/shared_preference.dart';
 
-class VisitorsViewBody extends StatelessWidget {
+class VisitorsViewBody extends StatefulWidget {
   const VisitorsViewBody({super.key});
 
+  @override
+  State<VisitorsViewBody> createState() => _VisitorsViewBodyState();
+}
+
+class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBindingObserver{
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+  final activeOrdersKey = GlobalKey();
+  final completeOrdersKey = GlobalKey();
+  final searchKey = GlobalKey();
+  final languageKey = GlobalKey();
+  final logoutKey = GlobalKey();
+
+
+  void initTargetsUserGuest() {
+    targets = [
+      TargetFocus(identify: "languageKey-Key", keyTarget: languageKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('languageKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "logoutKey-Key", keyTarget: logoutKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('logoutKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "activeOrdersKey-Key", keyTarget: activeOrdersKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('activeOrdersKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "completeOrdersKey-Key", keyTarget: completeOrdersKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('completeOrdersKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "searchKey-Key", keyTarget: searchKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('searchKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+    ];
+  }
+
+  void initTargets() {
+    targets = [
+      TargetFocus(identify: "activeOrdersKey-Key", keyTarget: activeOrdersKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('activeOrdersKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "completeOrdersKey-Key", keyTarget: completeOrdersKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('completeOrdersKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+      TargetFocus(identify: "searchKey-Key", keyTarget: searchKey, shape: ShapeLightFocus.RRect,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller) {
+                  return TutorialCoachWidget(
+                      text: AppLocalizations.of(context)!.translate('searchKey').toString(),
+                      onNext: () {
+                        controller.next();
+                      },
+                      onSkip: () {
+                        controller.skip();
+                        UserDataFromStorage.userGuideFromStorage = true;
+                      });
+                }),
+          ]),
+    ];
+  }
+
+  void showTutorialCoachMark() {
+    UserDataFromStorage.userIsGuest == true ? initTargetsUserGuest() : initTargets();
+    tutorialCoachMark = TutorialCoachMark(
+      targets: targets,
+      pulseEnable: true,
+      colorShadow: const Color(0xFF055062),
+      showSkipInLastTarget: false,
+      onFinish: () {
+        UserDataFromStorage.userGuideFromStorage = true;
+      },
+      onClickTarget: (target) {
+        print("onClickTarget: " + target.identify.toString());
+      },
+      hideSkip: true,
+    )..show(context: context);
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    UserDataFromStorage.userGuideFromStorage = false;
+    if(!UserDataFromStorage.userGuideFromStorage){
+      Future.delayed(const Duration(seconds: 1), () {
+        showTutorialCoachMark();
+      });
+    }
+    super.initState();
+
+  }
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VisitorsCubit, VisitorsState>(
@@ -37,20 +224,12 @@ class VisitorsViewBody extends StatelessWidget {
               Column(
                 children: [
                   Container(
-                    height: mediaQuery.height * 0.18,
+                    height: mediaQuery.height * 0.2,
                     width: double.infinity,
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Container(
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20)),
-                          image: const DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                  'https://img.freepik.com/free-photo/watercolor-gift-card-illustration_23-2151912036.jpg?t=st=1737894355~exp=1737897955~hmac=c642672a986fba67b3321c10c3db7e2e39f2faef06d8faa677b7e5871b097aa6&w=360'),
-                              opacity: .3),
                         ),
                         height: mediaQuery.height * 0.2,
                         width: double.infinity,
@@ -67,27 +246,39 @@ class VisitorsViewBody extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Column(
-                                    crossAxisAlignment: CashHelper.languageKey == 'ar'
-                                        ? CrossAxisAlignment.end
-                                        : CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  Row(
                                     children: [
-                                      Text(
-                                        "${AppLocalizations.of(context)!.translate('welcome').toString()},",
-                                        style: TextStyles.textStyle18Bold
-                                            .copyWith(color: ColorManager.black),
-                                      ),
-                                      Visibility(
-                                        visible: UserDataFromStorage.userIsGuest == false? true:false,
-                                        child: Text(
-                                          UserDataFromStorage.userNameFromStorage,
-                                          style: TextStyles.textStyle18Medium
-                                              .copyWith(color: ColorManager.black),
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Image.asset(
+                                          Assets.imagesLogoWithoutBackground,
+                                          height: MediaQuery.sizeOf(context).height * 0.05,
                                         ),
+                                      ),
+                                      Column(
+                                        crossAxisAlignment: CashHelper.languageKey == 'ar'
+                                            ? CrossAxisAlignment.end
+                                            : CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "${AppLocalizations.of(context)!.translate('welcome').toString()},",
+                                            style: TextStyles.textStyle18Bold
+                                                .copyWith(color: ColorManager.black),
+                                          ),
+                                          Visibility(
+                                            visible: UserDataFromStorage.userIsGuest == false? true:false,
+                                            child: Text(
+                                              UserDataFromStorage.userNameFromStorage,
+                                              style: TextStyles.textStyle18Medium
+                                                  .copyWith(color: ColorManager.black),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
+
                                   Visibility(
                                     visible: UserDataFromStorage.userIsGuest == true? true:false,
                                     child: Row(
@@ -101,6 +292,7 @@ class VisitorsViewBody extends StatelessWidget {
                                                 context.read<LocalizationCubit>().changeLanguage(code: 'en');
                                               },
                                               child: Container(
+                                                key: languageKey,
                                                   padding:EdgeInsets.symmetric(
                                                     horizontal: MediaQuery.sizeOf(context).width*0.04,
                                                     vertical: MediaQuery.sizeOf(context).width*0.01,
@@ -123,6 +315,7 @@ class VisitorsViewBody extends StatelessWidget {
                                           } ,
                                         ),
                                         IconButton(
+                                          key: logoutKey,
                                           onPressed: (){
                                             customPushAndRemoveUntil(context, LoginScreen());
                                           },
@@ -138,7 +331,7 @@ class VisitorsViewBody extends StatelessWidget {
                               height: SizeConfig.height * 0.02,
                             ),
                             Container(
-                              height: SizeConfig.height * 0.05,
+                              height: SizeConfig.height * 0.06,
                               width: SizeConfig.width,
                               decoration: BoxDecoration(
                                 color: ColorManager.gray,
@@ -155,13 +348,14 @@ class VisitorsViewBody extends StatelessWidget {
                                       cubit.changeActiveOrders(true);
                                     },
                                     child: Container(
-                                      height: SizeConfig.height * 0.05,
+                                      key: activeOrdersKey,
+                                      height: SizeConfig.height * 0.06,
                                       width: SizeConfig.width*0.5,
                                       decoration: BoxDecoration(
                                         color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
-                                        borderRadius: BorderRadius.only(
+                                        borderRadius: CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?BorderRadius.only(
                                       topLeft: Radius.circular(20),
-                                        topRight: Radius.circular(20)),
+                                        ):BorderRadius.only( topRight: Radius.circular(20)),
                                       ),
                                       child: Center(
                                         child: Text(
@@ -176,13 +370,13 @@ class VisitorsViewBody extends StatelessWidget {
                                       cubit.changeActiveOrders(false);
                                     },
                                     child: Container(
-                                      height: SizeConfig.height * 0.05,
+                                      key: completeOrdersKey,
+                                      height: SizeConfig.height * 0.06,
                                       width: SizeConfig.width*0.5,
                                       decoration: BoxDecoration(
                                         color: cubit.isActiveOrders?ColorManager.gray:ColorManager.primaryBlue,
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20),
-                                            topRight: Radius.circular(20)),
+                                        borderRadius: CashHelper.getData(key: CashHelper.languageKey).toString()=='en' ?BorderRadius.only(topRight: Radius.circular(20)):BorderRadius.only(
+                                            topLeft: Radius.circular(20)),
                                       ),
                                       child: Center(
                                         child: Text(
@@ -201,6 +395,7 @@ class VisitorsViewBody extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: SearchBarWidget(
+                      key: searchKey,
                       onChanged: (value) {
                         cubit.search(value);
                       },
@@ -271,7 +466,8 @@ class VisitorsViewBody extends StatelessWidget {
               top: mediaQuery.height * 0.22,
               left:  mediaQuery.width * 0.05,
               right:  mediaQuery.width * 0.05,
-              child: SearchResultContainer())
+              child: SearchResultContainer(key: searchKey,),
+             )
             ],
           ),
         );
@@ -279,3 +475,5 @@ class VisitorsViewBody extends StatelessWidget {
     );
   }
 }
+
+

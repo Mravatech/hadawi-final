@@ -221,5 +221,12 @@
   "paymentDoneSuccessfully": "Payment done successfully",
   "loginAsGuest": "Login as guest",
   "activeOrders": "Active Orders",
-  "completedOrders": "Completed Orders"
+  "completedOrders": "Completed Orders",
+  "activeOrdersKey": "Here are active occasions and you can pay for them",
+  "completeOrdersKey": "Here are completed occasions is finished",
+  "searchKey": "Search by occasion name you want to pay for",
+  "languageKey": "You can change language from here",
+  "logoutKey": "You can logout from here",
+  "skip": "Skip",
+  "forgetPassword": "Forget Password"
 }

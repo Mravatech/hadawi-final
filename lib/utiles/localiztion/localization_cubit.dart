@@ -10,7 +10,7 @@ class LocalizationCubit extends Cubit<LocalizationStates>{
 
   static LocalizationCubit get(context) => BlocProvider.of(context);
 
-  Locale _appLocale = const Locale('en');
+  Locale _appLocale = const Locale('ar');
 
   Locale get appLocal => _appLocale;
 

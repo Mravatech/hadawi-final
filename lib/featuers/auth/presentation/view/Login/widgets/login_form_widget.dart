@@ -18,18 +18,19 @@ import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
 class LoginFormWidget extends StatelessWidget {
-   LoginFormWidget({super.key, required this.emailController, required this.passController});
-  final TextEditingController emailController ;
-  final TextEditingController passController ;
+  LoginFormWidget(
+      {super.key, required this.emailController, required this.passController});
+  final TextEditingController emailController;
+  final TextEditingController passController;
 
   GlobalKey<FormState> loginKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: ()=>FocusScope.of(context).unfocus(),
+      onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
-        padding: EdgeInsets.all(MediaQuery.sizeOf(context).height*0.03),
+        padding: EdgeInsets.all(MediaQuery.sizeOf(context).height * 0.03),
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -40,114 +41,129 @@ class LoginFormWidget extends StatelessWidget {
             key: loginKey,
             child: Column(
               children: [
-
-                Text(AppLocalizations.of(context)!.translate('login').toString(),
+                Text(
+                    AppLocalizations.of(context)!.translate('login').toString(),
                     style: TextStyles.textStyle24Bold),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.035,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
+                ),
 
                 // email
                 DefaultTextField(
                     controller: emailController,
-                    hintText: AppLocalizations.of(context)!.translate('emailHint').toString(),
+                    hintText: AppLocalizations.of(context)!
+                        .translate('emailHint')
+                        .toString(),
                     validator: (value) {
-                      if(value.isEmpty){
-                        return AppLocalizations.of(context)!.translate('emailMessage').toString();
+                      if (value.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .translate('emailMessage')
+                            .toString();
                       }
                       return null;
                     },
                     keyboardType: TextInputType.emailAddress,
                     textInputAction: TextInputAction.next,
-                    fillColor: ColorManager.gray
-                ),
+                    fillColor: ColorManager.gray),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.035,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
+                ),
 
                 DefaultTextField(
                     isPassword: true,
                     withSuffix: true,
                     controller: passController,
-                    hintText: AppLocalizations.of(context)!.translate('loginPasswordHint').toString(),
+                    hintText: AppLocalizations.of(context)!
+                        .translate('loginPasswordHint')
+                        .toString(),
                     validator: (value) {
-                      if(value.isEmpty){
-                        return AppLocalizations.of(context)!.translate('validPassword').toString();
+                      if (value.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .translate('validPassword')
+                            .toString();
                       }
                       return null;
                     },
                     keyboardType: TextInputType.visiblePassword,
                     textInputAction: TextInputAction.done,
-                    fillColor: ColorManager.gray
-                ),
+                    fillColor: ColorManager.gray),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.01,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.01,
+                ),
 
                 ForgetPasswordButton(),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.045,),
-
-
-                // sign in
-                BlocConsumer<AuthCubit,AuthStates>(
-                  listener: (context, state) {
-                    if(state is UserLoginSuccessState){
-                      customPushAndRemoveUntil(context, HomeLayout());
-                    }
-                    if(state is UserLoginErrorState){
-                      customToast(title: state.message, color: ColorManager.error);
-                    }
-                  },
-                  builder: (context, state) {
-                    var cubit = context.read<AuthCubit>();
-                    return
-                    //   state is UserLoginLoadingState?
-                    // const Center(child: CircularProgressIndicator(),):
-                    DefaultButton(
-                        buttonText: AppLocalizations.of(context)!.translate('login').toString(),
-                        onPressed: (){
-                          if(loginKey.currentState!.validate()){
-                            cubit.login(
-                                email: emailController.text,
-                                password: passController.text
-                            );
-                          }
-                        },
-                        buttonColor: ColorManager.primaryBlue
-                    );
-                  }
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.045,
                 ),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
+                // sign in
+                BlocConsumer<AuthCubit, AuthStates>(listener: (context, state) {
+                  if (state is UserLoginSuccessState) {
+                    customPushAndRemoveUntil(context, HomeLayout());
+                  }
+                  if (state is UserLoginErrorState) {
+                    customToast(
+                        title: state.message, color: ColorManager.error);
+                  }
+                }, builder: (context, state) {
+                  var cubit = context.read<AuthCubit>();
+                  return
+                      //   state is UserLoginLoadingState?
+                      // const Center(child: CircularProgressIndicator(),):
+                      state is UserLoginLoadingState ? const CircularProgressIndicator(): DefaultButton(
+                          buttonText: AppLocalizations.of(context)!
+                              .translate('login')
+                              .toString(),
+                          onPressed: () {
+                            if (loginKey.currentState!.validate()) {
+                              cubit.login(
+                                  email: emailController.text,
+                                  password: passController.text);
+                            }
+                          },
+                          buttonColor: ColorManager.primaryBlue);
+                }),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
+                ),
 
                 Text(AppLocalizations.of(context)!.translate('or').toString(),
-                    style: TextStyles.textStyle18Bold.copyWith(
-                    color: ColorManager.darkGrey
-                )),
+                    style: TextStyles.textStyle18Bold
+                        .copyWith(color: ColorManager.darkGrey)),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
+                ),
 
                 // login with social
                 LoginWithSocialButton(),
 
-                SizedBox( height:  MediaQuery.sizeOf(context).height*0.035,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
+                ),
 
                 // don't have an account
                 DonotHaveAnAccount(),
 
-                SizedBox( height: MediaQuery.sizeOf(context).height*0.035,),
-
-                GestureDetector(
-                  onTap: (){
-                    UserDataFromStorage.setUserIsGuest(true);
-                    customPushNavigator(context, VisitorsScreen());
-                  },
-                  child: Text(
-                      AppLocalizations.of(context)!.translate('loginAsGuest').toString(),
-                      style: TextStyles.textStyle18Bold.copyWith(
-                          color: ColorManager.darkGrey
-                      ),
-                  ),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
                 ),
 
+                DefaultButton(
+                    buttonText: AppLocalizations.of(context)!
+                        .translate('loginAsGuest')
+                        .toString(),
+                    onPressed: () {
+                      UserDataFromStorage.setUserIsGuest(true);
+                      customPushNavigator(context, VisitorsScreen());
+                    },
+                    buttonColor: ColorManager.primaryBlue,
+                ),
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class ForgetPasswordButton extends StatelessWidget {
   const ForgetPasswordButton({super.key});
@@ -11,7 +12,7 @@ class ForgetPasswordButton extends StatelessWidget {
       onTap: (){},
       child: Align(
           alignment: Alignment.topRight,
-          child: Text('Forgot password',style: TextStyles.textStyle18Bold.copyWith(
+          child: Text(AppLocalizations.of(context)!.translate('forgetPassword').toString(),style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.darkGrey,
               fontSize: MediaQuery.sizeOf(context).height*0.018
           ))

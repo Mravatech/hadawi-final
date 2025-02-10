@@ -15,6 +15,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   List<OccasionEntity> activeOccasions = [];
   List<OccasionEntity> doneOccasions = [];
+  final searchKey = GlobalKey();
 
 
   convertStringToDateTime(String dateString){

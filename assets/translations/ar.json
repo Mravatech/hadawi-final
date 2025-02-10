@@ -219,7 +219,14 @@
   "occasionDetails": "تفاصيل المناسبة",
   "myOccasionPaymentList": "قائمة الاصدقاء الشاركين بهديتى",
   "paymentDoneSuccessfully": "تم الدفع بنجاح",
-  "loginAsGuest": "تسجيل دخول كزاير",
+  "loginAsGuest": "تصفح التطبيق كزائر",
   "activeOrders": "طلبات نشطة",
-  "completedOrders": "طلبات منجزة"
+  "completedOrders": "طلبات منجزة",
+  "activeOrdersKey": "هذي المناسبات النشطة وتقدر تدفع لها.",
+  "completeOrdersKey": "هذي المناسبات المنجزة وانتهت.",
+  "searchKey": "ابحث باسم المناسبة اللي تبغى تدفع لها.",
+  "languageKey": "تقدر تغير اللغة من هنا.",
+  "logoutKey": "تقدر تسجل خروج من هنا.",
+  "skip": "تخطى",
+  "forgetPassword": "نسيت كلمة المرور؟"
 }
