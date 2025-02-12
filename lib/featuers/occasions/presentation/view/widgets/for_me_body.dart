@@ -48,6 +48,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                     .copyWith(color: ColorManager.black),
               ),
               SizedBox(height: mediaQuery.height * 0.01),
+              /// occasion name
               DefaultTextField(
                   controller: cubit.occasionNameController,
                   hintText: AppLocalizations.of(context)!
@@ -106,7 +107,7 @@ class _ForMeBodyState extends State<ForMeBody> {
               ),
               SizedBox(height: mediaQuery.height * 0.03),
 
-              /// requested gift
+              /// requested gift (gift type)
               Row(
                 mainAxisAlignment: CashHelper.languageKey == 'ar'
                     ? MainAxisAlignment.end

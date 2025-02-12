@@ -229,5 +229,9 @@
   "logoutKey": "You can logout from here",
   "skip": "Skip",
   "forgetPassword": "Forget Password",
-  "homeNavBar": "In home navbar you can navigate to see all occasions, add occasion for you or add occasion for others, access your profile and go settings."
+  "homeNavBar": "In home navbar you can navigate to see all occasions, add occasion for you or add occasion for others, access your profile and go settings.",
+  "packaging": "Packaging",
+  "withoutPackaging": "Without Packaging",
+  "withPackaging": "With Packaging",
+  "giftNotePackage": "Please note that additional fees for packaging and delivery will be charged."
 }

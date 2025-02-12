@@ -4,6 +4,7 @@ import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_c
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/present_amount_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
@@ -204,52 +205,245 @@ class GiftScreen extends StatelessWidget {
                           PresentAmountWidget(),
                         ],
                       ),
-                      SizedBox(height: mediaQuery.height * 0.12),
+                      SizedBox(height: mediaQuery.height * 0.02),
+                      Row(
+                        mainAxisAlignment: CashHelper.languageKey == 'ar'
+                            ? MainAxisAlignment.end
+                            : MainAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
+                                style: TextStyles.textStyle18Bold
+                                    .copyWith(color: ColorManager.black),
+                              ),
 
+                              SizedBox(height: mediaQuery.height * 0.01),
+
+                              /// present
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      cubit.switchGiftWithPackage(true);
+                                    },
+                                    child: Container(
+                                      height: mediaQuery.height * .055,
+                                      width: mediaQuery.height * .15,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: cubit.giftWithPackage
+                                            ? ColorManager.primaryBlue
+                                            : ColorManager.gray,
+                                        borderRadius:
+                                        BorderRadius.circular(mediaQuery.height * 0.05),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('withPackaging')
+                                            .toString(),
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(color: ColorManager.white),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: mediaQuery.width * .05),
+
+                                  /// money
+                                  GestureDetector(
+                                    onTap: () {
+                                      cubit.switchGiftWithPackage(false);
+
+                                    },
+                                    child: Container(
+                                      height: mediaQuery.height * .055,
+                                      width: mediaQuery.height * .15,
+                                      alignment: Alignment.center,
+                                      decoration: BoxDecoration(
+                                        color: cubit.giftWithPackage
+                                            ? ColorManager.gray
+                                            : ColorManager.primaryBlue,
+                                        borderRadius:
+                                        BorderRadius.circular(mediaQuery.height * 0.05),
+                                      ),
+                                      child: Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('withoutPackaging')
+                                            .toString(),
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(color: ColorManager.white),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      SizedBox(height: mediaQuery.height * 0.02,),
+
+
+                      // show gift image and price
+                      Visibility(
+                        visible: cubit.giftWithPackage== true? true : false,
+                        child: Column(
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.translate('giftNotePackage').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black.withOpacity(.5)),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.02),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                InkWell(
+                                  onTap: (){
+                                    cubit.switchGiftWithPackageType(true);
+                                  },
+                                  child: SizedBox(
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.height * 0.1,
+                                    child: Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Container(
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            color: cubit.giftWithPackageTypeIsFirst
+                                                ? ColorManager.primaryBlue
+                                                : ColorManager.gray,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                                            child: Image.asset(
+                                              "assets/images/giftbox.png",
+                                              fit: BoxFit.fill,
+                                              height: mediaQuery.height * 0.08,
+                                              width: mediaQuery.height * 0.08,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: mediaQuery.height * 0.04,
+                                          width: mediaQuery.height * 0.04,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.white,
+                                            borderRadius: BorderRadius.circular(500),
+                                          ),
+                                          child: Text(
+                                            "50",
+                                            style: TextStyles.textStyle12Bold
+                                                .copyWith(color: ColorManager.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                InkWell(
+                                  onTap: (){
+                                    cubit.switchGiftWithPackageType(false);
+                                  },
+                                  child: SizedBox(
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.height * 0.1,
+                                    child: Stack(
+                                      alignment: Alignment.bottomCenter,
+                                      children: [
+                                        Container(
+                                          clipBehavior: Clip.antiAlias,
+                                          decoration: BoxDecoration(
+                                            color: cubit.giftWithPackageTypeIsFirst
+                                                ? ColorManager.gray
+                                                : ColorManager.primaryBlue,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                                            child: Image.asset(
+                                              "assets/images/giftbox.png",
+                                              fit: BoxFit.fill,
+                                              height: mediaQuery.height * 0.08,
+                                              width: mediaQuery.height * 0.08,
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: mediaQuery.height * 0.04,
+                                          width: mediaQuery.height * 0.04,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: ColorManager.white,
+                                            borderRadius: BorderRadius.circular(500),
+                                          ),
+                                          child: Text(
+                                            "100",
+                                            style: TextStyles.textStyle12Bold
+                                                .copyWith(color: ColorManager.black),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.05),
                       /// add another and save
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           /// save button
-                          GestureDetector(
-                            onTap: () {
-                              if (cubit.giftFormKey.currentState!.validate() &&
-                                  cubit.image != null &&
-                                  cubit.giftPrice != 0) {
-                                cubit.addOccasion();
-                              } else {
-                                customToast(
-                                    title: AppLocalizations.of(context)!
-                                        .translate('validateGiftScreen')
-                                        .toString(),
-                                    color: ColorManager.error);
-                              }
-                            },
-                            child: Container(
-                              height: mediaQuery.height * .055,
-                              width: mediaQuery.width * .4,
-                              decoration: BoxDecoration(
-                                color: ColorManager.primaryBlue,
-                                borderRadius: BorderRadius.circular(
-                                    mediaQuery.height * 0.05),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      AppLocalizations.of(context)!
-                                          .translate('save')
-                                          .toString(),
-                                      style: TextStyles.textStyle18Bold
-                                          .copyWith(color: ColorManager.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     if (cubit.giftFormKey.currentState!.validate() &&
+                          //         cubit.image != null &&
+                          //         cubit.giftPrice != 0) {
+                          //       cubit.addOccasion();
+                          //     } else {
+                          //       customToast(
+                          //           title: AppLocalizations.of(context)!
+                          //               .translate('validateGiftScreen')
+                          //               .toString(),
+                          //           color: ColorManager.error);
+                          //     }
+                          //   },
+                          //   child: Container(
+                          //     height: mediaQuery.height * .055,
+                          //     width: mediaQuery.width * .4,
+                          //     decoration: BoxDecoration(
+                          //       color: ColorManager.primaryBlue,
+                          //       borderRadius: BorderRadius.circular(
+                          //           mediaQuery.height * 0.05),
+                          //     ),
+                          //     child: Padding(
+                          //       padding: const EdgeInsets.all(8.0),
+                          //       child: Row(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           Text(
+                          //             AppLocalizations.of(context)!
+                          //                 .translate('save')
+                          //                 .toString(),
+                          //             style: TextStyles.textStyle18Bold
+                          //                 .copyWith(color: ColorManager.white),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
 
                           /// share button
                           GestureDetector(
@@ -269,7 +463,7 @@ class GiftScreen extends StatelessWidget {
                                   children: [
                                     Text(
                                       AppLocalizations.of(context)!
-                                          .translate('addAnother')
+                                          .translate('continue')
                                           .toString(),
                                       style: TextStyles.textStyle18Bold
                                           .copyWith(color: ColorManager.white),

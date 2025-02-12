@@ -202,7 +202,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
-    UserDataFromStorage.userGuideFromStorage = false;
     if(!UserDataFromStorage.userGuideFromStorage){
       Future.delayed(const Duration(seconds: 1), () {
         showTutorialCoachMark();

@@ -35,6 +35,19 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController accountOwnerNameController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
 
+  bool giftWithPackage = true;
+  bool giftWithPackageTypeIsFirst = true;
+
+  void switchGiftWithPackageType(bool value) {
+    giftWithPackageTypeIsFirst = value;
+    emit(SwitchGiftWithPackageTypeSuccess());
+  }
+
+  void switchGiftWithPackage(bool value) {
+    giftWithPackage = value;
+    emit(SwitchGiftWithPackageSuccess());
+  }
+
   void switchForWhomOccasion() {
     if (isForMe) {
       isForMe = false;

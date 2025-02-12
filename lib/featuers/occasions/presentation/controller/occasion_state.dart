@@ -25,4 +25,6 @@ final class AddOccasionErrorState extends OccasionState {
   AddOccasionErrorState({required this.error});
 }
 
+final class SwitchGiftWithPackageSuccess extends OccasionState {}
+final class SwitchGiftWithPackageTypeSuccess extends OccasionState {}
 
