@@ -228,5 +228,6 @@
   "languageKey": "You can change language from here",
   "logoutKey": "You can logout from here",
   "skip": "Skip",
-  "forgetPassword": "Forget Password"
+  "forgetPassword": "Forget Password",
+  "homeNavBar": "In home navbar you can navigate to see all occasions, add occasion for you or add occasion for others, access your profile and go settings."
 }

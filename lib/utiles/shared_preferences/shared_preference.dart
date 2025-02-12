@@ -14,6 +14,7 @@ class UserDataFromStorage {
   static late bool attendenceAdminFromStorage;
   static late bool cameraFrontFromStorage;
   static late bool userGuideFromStorage;
+  static late bool userNavBarGuideFromStorage;
   static late String userPhoneTypeFromStorage;
   static String languageCodeFromStorage = 'ar';
   static String languageNameFromStorage = "langArabic";
@@ -61,6 +62,11 @@ class UserDataFromStorage {
 
   static setUserGuide(bool value) {
     userGuideFromStorage = value;
+    _setData();
+  }
+
+  static setUserNavBarGuide(bool value) {
+    userNavBarGuideFromStorage = value;
     _setData();
   }
 
@@ -269,6 +275,7 @@ class UserDataFromStorage {
       final prefs = await SharedPreferences.getInstance();
       prefs.setBool("userIsGuest", userIsGuest);
       prefs.setBool("userGuideFromStorage", userGuideFromStorage);
+      prefs.setBool("userNavBarGuideFromStorage", userNavBarGuideFromStorage);
       prefs.setBool("userIsLogin", userIsLogin);
       prefs.setBool("firstTime", firstTime);
       prefs.setBool("themeIsDarkMode", themeIsDarkMode);
@@ -336,6 +343,7 @@ class UserDataFromStorage {
       final prefs = await SharedPreferences.getInstance();
       userIsGuest = prefs.getBool("userIsGuest") ?? true;
       userGuideFromStorage = prefs.getBool("userGuideFromStorage") ?? false;
+      userNavBarGuideFromStorage = prefs.getBool("userNavBarGuideFromStorage") ?? false;
       userIsLogin = prefs.getBool("userIsLogin") ?? false;
       cameraFrontFromStorage = prefs.getBool("cameraFrontFromStorage") ?? false;
       firstTime = prefs.getBool("firstTime") ?? true;
