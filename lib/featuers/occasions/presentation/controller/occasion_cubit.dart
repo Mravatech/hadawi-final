@@ -18,6 +18,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   bool isMoney = false;
   int selectedIndex = 0;
   bool bySharingValue = false;
+  bool giftContainsNameValue = false;
   int giftPrice = 0;
   String giftType = 'هدية';
   GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
@@ -27,19 +28,25 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftNameController = TextEditingController();
   TextEditingController nameController = TextEditingController();
   TextEditingController occasionDateController = TextEditingController();
+  TextEditingController moneyReceiveDateController = TextEditingController();
   TextEditingController moneyAmountController = TextEditingController();
   TextEditingController occasionNameController = TextEditingController();
   TextEditingController newOccasionNameController = TextEditingController();
   TextEditingController linkController = TextEditingController();
   TextEditingController ibanNumberController = TextEditingController();
-  TextEditingController accountOwnerNameController = TextEditingController();
+  TextEditingController giftReceiverNameController = TextEditingController();
+  TextEditingController giftReceiverNumberController = TextEditingController();
   TextEditingController bankNameController = TextEditingController();
+  TextEditingController moneyGiftMessageController = TextEditingController();
+  TextEditingController giftDeliveryNoteController = TextEditingController();
+  TextEditingController giftDeliveryCityController = TextEditingController();
+  TextEditingController giftDeliveryStreetController = TextEditingController();
 
   bool giftWithPackage = true;
-  bool giftWithPackageTypeIsFirst = true;
+  int giftWithPackageType = 50;
 
-  void switchGiftWithPackageType(bool value) {
-    giftWithPackageTypeIsFirst = value;
+  void switchGiftWithPackageType(int value) {
+    giftWithPackageType = value;
     emit(SwitchGiftWithPackageTypeSuccess());
   }
 
@@ -75,10 +82,20 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchBySharingSuccess());
   }
 
+  void switchGiftContainsName() {
+    giftContainsNameValue = !giftContainsNameValue;
+    emit(SwitchGiftContainsNameSuccess());
+  }
+
   void setOccasionDate({required DateTime brithDateValue}) {
     occasionDateController.text =
         DateFormat('yyyy-MM-dd').format(brithDateValue);
     emit(SetOccasionDateState());
+  }
+
+  void setMoneyReceiveDate({required DateTime brithDateValue}) {
+    moneyReceiveDateController.text = DateFormat('yyyy-MM-dd').format(brithDateValue);
+    emit(SetMoneyReceiveDateState());
   }
 
   var picker = ImagePicker();

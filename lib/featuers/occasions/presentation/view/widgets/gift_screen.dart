@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_delivery_screen.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/present_amount_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -223,9 +225,10 @@ class GiftScreen extends StatelessWidget {
 
                               SizedBox(height: mediaQuery.height * 0.01),
 
-                              /// present
+                              /// with packaging
                               Row(
                                 children: [
+                                  /// with packaging
                                   GestureDetector(
                                     onTap: () {
                                       cubit.switchGiftWithPackage(true);
@@ -252,7 +255,7 @@ class GiftScreen extends StatelessWidget {
                                   ),
                                   SizedBox(width: mediaQuery.width * .05),
 
-                                  /// money
+                                  /// without packaging
                                   GestureDetector(
                                     onTap: () {
                                       cubit.switchGiftWithPackage(false);
@@ -304,7 +307,7 @@ class GiftScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: (){
-                                    cubit.switchGiftWithPackageType(true);
+                                    cubit.switchGiftWithPackageType(50);
                                   },
                                   child: SizedBox(
                                     height: mediaQuery.height * 0.1,
@@ -315,7 +318,7 @@ class GiftScreen extends StatelessWidget {
                                         Container(
                                           clipBehavior: Clip.antiAlias,
                                           decoration: BoxDecoration(
-                                            color: cubit.giftWithPackageTypeIsFirst
+                                            color: cubit.giftWithPackageType==50
                                                 ? ColorManager.primaryBlue
                                                 : ColorManager.gray,
                                             borderRadius: BorderRadius.circular(10),
@@ -350,7 +353,7 @@ class GiftScreen extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: (){
-                                    cubit.switchGiftWithPackageType(false);
+                                    cubit.switchGiftWithPackageType(100);
                                   },
                                   child: SizedBox(
                                     height: mediaQuery.height * 0.1,
@@ -361,9 +364,9 @@ class GiftScreen extends StatelessWidget {
                                         Container(
                                           clipBehavior: Clip.antiAlias,
                                           decoration: BoxDecoration(
-                                            color: cubit.giftWithPackageTypeIsFirst
-                                                ? ColorManager.gray
-                                                : ColorManager.primaryBlue,
+                                            color: cubit.giftWithPackageType==100
+                                                ? ColorManager.primaryBlue
+                                                : ColorManager.gray,
                                             borderRadius: BorderRadius.circular(10),
                                           ),
                                           child: Padding(
@@ -447,7 +450,9 @@ class GiftScreen extends StatelessWidget {
 
                           /// share button
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              customPushNavigator(context, GiftDeliveryScreen());
+                            },
                             child: Container(
                               height: mediaQuery.height * .055,
                               width: mediaQuery.width * .4,
