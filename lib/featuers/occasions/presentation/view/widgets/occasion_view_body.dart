@@ -11,7 +11,8 @@ class OccasionViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.sizeOf(context);
-    return BlocBuilder<OccasionCubit, OccasionState>(
+    return BlocConsumer<OccasionCubit, OccasionState>(
+      listener: (context, state) {},
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         return Padding(

@@ -249,7 +249,9 @@
   "receivingTime": "وقت الاستلام",
   "receivingTimeHint": "أدخل وقت الاستلام",
   "validateReceivingTime": "وقت الاستلام مطلوب",
-  "isContainsNames": "هل يحتوي على أسماء؟",
+  "isContainsNames": "هل يحتوي على أسماء",
+  "containsNames": "يحتوي على أسماء المشاركين",
+  "noContainsNames": "لا يحتوي على أسماء المشاركين",
   "giftCard": "كرت الإهداء",
   "giftCardHint": "أدخل كرت الإهداء",
   "validateGiftCard": "كرت الإهداء مطلوب",
@@ -264,5 +266,9 @@
   "note": "ملاحظة",
   "noteHint": "أدخل ملاحظة",
   "validateNote": "الملاحظة مطلوبة",
-  "receiveData": "بيانات الاستلام"
+  "receiveData": "بيانات الاستلام",
+  "private": "خاص",
+  "public": "عام",
+  "packagingPrice": "سعر التغليف",
+  "occasionSummary": "تفاصيل المناسبة"
 }

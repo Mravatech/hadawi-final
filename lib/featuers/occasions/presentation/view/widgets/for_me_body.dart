@@ -24,11 +24,7 @@ class _ForMeBodyState extends State<ForMeBody> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
-      listener: (context, state) {
-        if (state is AddOccasionSuccessState) {
-          customToast(title: AppLocalizations.of(context)!.translate('occasionAddedSuccessfully').toString(), color: ColorManager.success);
-        }
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
@@ -66,46 +62,46 @@ class _ForMeBodyState extends State<ForMeBody> {
               SizedBox(height: mediaQuery.height * 0.03),
 
               /// date of occasion
-              Text(
-                AppLocalizations.of(context)!
-                    .translate('occasionDate')
-                    .toString(),
-                style: TextStyles.textStyle18Bold
-                    .copyWith(color: ColorManager.black),
-              ),
-              SizedBox(height: mediaQuery.height * 0.01),
-
-              GestureDetector(
-                onTap: () {
-                  showDatePicker(
-                    helpText: AppLocalizations.of(context)!
-                        .translate('occasionDate')
-                        .toString(),
-                    context: context,
-                    firstDate: DateTime(1920),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  ).then(
-                      (value) => cubit.setOccasionDate(brithDateValue: value!));
-                },
-                child: DefaultTextField(
-                    controller: cubit.occasionDateController,
-                    hintText: cubit.occasionDateController.text.isEmpty
-                        ? AppLocalizations.of(context)!
-                            .translate('occasionDateHint')
-                            .toString()
-                        : cubit.occasionDateController.text,
-                    validator: (value) {
-                      if (value!.trim().isNotEmpty) return null;
-                      return AppLocalizations.of(context)!
-                          .translate('validateOccasionDate')
-                          .toString();
-                    },
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    enable: false,
-                    fillColor: ColorManager.gray),
-              ),
-              SizedBox(height: mediaQuery.height * 0.03),
+              // Text(
+              //   AppLocalizations.of(context)!
+              //       .translate('occasionDate')
+              //       .toString(),
+              //   style: TextStyles.textStyle18Bold
+              //       .copyWith(color: ColorManager.black),
+              // ),
+              // SizedBox(height: mediaQuery.height * 0.01),
+              //
+              // GestureDetector(
+              //   onTap: () {
+              //     showDatePicker(
+              //       helpText: AppLocalizations.of(context)!
+              //           .translate('occasionDate')
+              //           .toString(),
+              //       context: context,
+              //       firstDate: DateTime(1920),
+              //       lastDate: DateTime.now().add(const Duration(days: 365)),
+              //     ).then(
+              //         (value) => cubit.setOccasionDate(brithDateValue: value!));
+              //   },
+              //   child: DefaultTextField(
+              //       controller: cubit.occasionDateController,
+              //       hintText: cubit.occasionDateController.text.isEmpty
+              //           ? AppLocalizations.of(context)!
+              //               .translate('occasionDateHint')
+              //               .toString()
+              //           : cubit.occasionDateController.text,
+              //       validator: (value) {
+              //         if (value!.trim().isNotEmpty) return null;
+              //         return AppLocalizations.of(context)!
+              //             .translate('validateOccasionDate')
+              //             .toString();
+              //       },
+              //       keyboardType: TextInputType.text,
+              //       textInputAction: TextInputAction.next,
+              //       enable: false,
+              //       fillColor: ColorManager.gray),
+              // ),
+              // SizedBox(height: mediaQuery.height * 0.03),
 
               /// requested gift (gift type)
               Row(
@@ -215,24 +211,13 @@ class _ForMeBodyState extends State<ForMeBody> {
                       if (cubit.isPresent) {
                         customPushNavigator(
                             context,
-                            BlocProvider<OccasionCubit>(
-                              create: (context) => OccasionCubit(),
-                              child: GiftScreen(),
-                            ));
+                            GiftScreen());
                       } else {
                         customPushNavigator(
                             context,
-                            BlocProvider<OccasionCubit>(
-                              create: (context) => OccasionCubit(),
-                              child: MoneyScreen(),
-                            ));
+                            MoneyScreen());
                       }
                     }
-                    UserDataFromStorage.occasionName =
-                        cubit.occasionNameController.text;
-
-                    UserDataFromStorage.occasionDate =
-                        cubit.occasionDateController.text;
                   },
                   child: Container(
                     height: mediaQuery.height * .06,

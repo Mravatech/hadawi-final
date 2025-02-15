@@ -22,26 +22,7 @@ class GiftScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
-      listener: (BuildContext context, state) {
-        if (state is AddOccasionSuccessState) {
-          customToast(
-              title: AppLocalizations.of(context)!
-                  .translate('occasionAddedSuccessfully')
-                  .toString(),
-              color: ColorManager.success);
-          Navigator.pop(context);
-          UserDataFromStorage.removeDataFromStorage('giftName');
-          UserDataFromStorage.removeDataFromStorage('giftLink');
-          UserDataFromStorage.removeDataFromStorage('giftType');
-          UserDataFromStorage.removeDataFromStorage('giftImage');
-          UserDataFromStorage.removeDataFromStorage('giftBySharing');
-          UserDataFromStorage.removeDataFromStorage('moneyGiftAmount');
-          UserDataFromStorage.removeDataFromStorage('occasionName');
-          UserDataFromStorage.removeDataFromStorage('occasionDate');
-          UserDataFromStorage.removeDataFromStorage('occasionType');
-          UserDataFromStorage.setIsForMe(true);
-        }
-      },
+      listener: (BuildContext context, state) {},
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
@@ -78,22 +59,29 @@ class GiftScreen extends StatelessWidget {
                     children: [
                       /// by sharing switch
                       Row(
-                        mainAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
                             AppLocalizations.of(context)!
-                                .translate('share')
+                                .translate('public')
                                 .toString(),
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
+                          SizedBox(width: 10,),
                           Switch(
-                              value: cubit.bySharingValue,
+                              value: cubit.isPublicValue,
                               onChanged: (value) {
-                                cubit.switchBySharing();
+                                cubit.switchIsPublic();
                               }),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate('private')
+                                .toString(),
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
                         ],
                       ),
                       SizedBox(height: mediaQuery.height * 0.03),
@@ -459,7 +447,8 @@ class GiftScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: ColorManager.primaryBlue,
                                 borderRadius: BorderRadius.circular(
-                                    mediaQuery.height * 0.05),
+                                    mediaQuery.height * 0.05,
+                                ),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),

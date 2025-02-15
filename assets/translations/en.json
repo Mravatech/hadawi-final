@@ -233,6 +233,7 @@
   "packaging": "Packaging",
   "withoutPackaging": "Without Packaging",
   "withPackaging": "With Packaging",
+  "packagingPrice": "Packaging Price",
   "giftNotePackage": "Please note that additional fees for packaging and delivery will be charged.",
   "moneyReceiverName": "Receiver Name",
   "moneyReceiverNameHint": "Enter receiver name",
@@ -249,7 +250,9 @@
   "receivingTime": "Receiving Time",
   "receivingTimeHint": "Enter receiving time",
   "validateReceivingTime": "Receiving time is required",
-  "isContainsNames": "Is contains names ?",
+  "isContainsNames": "Is contains names",
+  "containsNames": "Contains participants' names",
+  "noContainsNames": "Does not contain participants' names",
   "giftCard": "Gift Card",
   "giftCardHint": "Enter gift card",
   "validateGiftCard": "Gift card is required",
@@ -264,5 +267,9 @@
   "note": "Note",
   "noteHint": "Enter Note",
   "validateNote": "Note is required",
-  "receiveData": "Receive Data"
+  "receiveData": "Receive Data",
+  "private": "Private",
+  "public": "Public",
+  "occasionSummary": "Occasion Summary"
+
 }

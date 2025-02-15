@@ -29,4 +29,5 @@ final class SwitchGiftWithPackageSuccess extends OccasionState {}
 final class SwitchGiftWithPackageTypeSuccess extends OccasionState {}
 final class SetMoneyReceiveDateState extends OccasionState {}
 final class SwitchGiftContainsNameSuccess extends OccasionState {}
+final class ResetDataSuccessState extends OccasionState {}
 

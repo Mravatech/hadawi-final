@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
           )),
           BlocProvider(create: (context)=> PaymentCubit()),
           BlocProvider(create: (context)=> HomeCubit()),
+          BlocProvider(create: (context)=> OccasionCubit()),
           BlocProvider(create: (context)=> VisitorsCubit(getIt())),
           BlocProvider(create: (context)=> OccasionsListCubit()),
           BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),

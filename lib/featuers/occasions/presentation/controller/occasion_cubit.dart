@@ -17,7 +17,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   bool isPresent = true;
   bool isMoney = false;
   int selectedIndex = 0;
-  bool bySharingValue = false;
+  bool isPublicValue = false;
   bool giftContainsNameValue = false;
   int giftPrice = 0;
   String giftType = 'هدية';
@@ -44,6 +44,35 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   bool giftWithPackage = true;
   int giftWithPackageType = 50;
+
+
+   void resetData() {
+    isForMe = true;
+    isPresent = true;
+    isMoney = false;
+    selectedIndex = 0;
+    isPublicValue = false;
+    giftContainsNameValue = false;
+    giftPrice = 0;
+    giftType = 'هدية';
+    giftNameController.clear();
+    nameController.clear();
+    occasionDateController.clear();
+    moneyReceiveDateController.clear();
+    moneyAmountController.clear();
+    occasionNameController.clear();
+    newOccasionNameController.clear();
+    linkController.clear();
+    ibanNumberController.clear();
+    giftReceiverNameController.clear();
+    giftReceiverNumberController.clear();
+    bankNameController.clear();
+    moneyGiftMessageController.clear();
+    giftDeliveryNoteController.clear();
+    giftDeliveryCityController.clear();
+    giftDeliveryStreetController.clear();
+    emit(ResetDataSuccessState());
+  }
 
   void switchGiftWithPackageType(int value) {
     giftWithPackageType = value;
@@ -77,8 +106,8 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchGiftTypeSuccess());
   }
 
-  void switchBySharing() {
-    bySharingValue = !bySharingValue;
+  void switchIsPublic() {
+    isPublicValue = !isPublicValue;
     emit(SwitchBySharingSuccess());
   }
 
@@ -160,7 +189,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         giftLink: linkController.text.isEmpty ? '' : linkController.text,
         giftPrice: giftPrice == 0 ? int.parse(moneyAmountController.text) : giftPrice,
         giftType: UserDataFromStorage.giftType==""? 'هدية':UserDataFromStorage.giftType,
-        isSharing: bySharingValue,
+        isSharing: isPublicValue,
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));

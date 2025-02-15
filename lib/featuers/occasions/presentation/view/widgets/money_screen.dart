@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/present_amount_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
@@ -72,20 +74,27 @@ class MoneyScreen extends StatelessWidget {
                     children: [
                       /// by sharing
                       Row(
-                        mainAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "${AppLocalizations.of(context)!.translate('share').toString()} ",
+                            "${AppLocalizations.of(context)!.translate('public').toString()} ",
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.black),
                           ),
+                          SizedBox(width: 10,),
                           Switch(
-                              value: cubit.bySharingValue,
+                              value: cubit.isPublicValue,
                               onChanged: (value) {
-                                cubit.switchBySharing();
+                                cubit.switchIsPublic();
                               }),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate('private')
+                                .toString(),
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
 
                         ],
                       ),
@@ -356,6 +365,7 @@ class MoneyScreen extends StatelessWidget {
                         alignment: Alignment.center,
                         child: GestureDetector(
                           onTap: () {
+                            customPushNavigator(context, OccasionSummary());
                             // if (cubit.giftPrice == 0) {
                             //   customToast(
                             //       title: AppLocalizations.of(context)!
@@ -379,7 +389,7 @@ class MoneyScreen extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   AppLocalizations.of(context)!
-                                      .translate('payAndShare')
+                                      .translate('continue')
                                       .toString(),
                                   style: TextStyles.textStyle18Bold
                                       .copyWith(color: ColorManager.white),
