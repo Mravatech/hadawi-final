@@ -21,8 +21,9 @@ class OccasionViewBody extends StatelessWidget {
             child: Column(
               children: [
                 ForWhomRow(),
-                SizedBox(height: mediaQuery.height * 0.05),
-                cubit.selectedIndex==0? ForMeBody(): ForOtherBody()
+                SizedBox(height: mediaQuery.height * 0.02),
+                // cubit.selectedIndex==0? ForMeBody(): ForOtherBody()
+                ForMeBody()
               ],
             ),
           ),

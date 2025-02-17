@@ -182,19 +182,40 @@ class GiftScreen extends StatelessWidget {
                       SizedBox(height: mediaQuery.height * 0.04),
 
                       /// amount
+                      Text(
+                        "${AppLocalizations.of(context)!.translate('giftAmount').toString()} ",
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(color: ColorManager.black),
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.01),
                       Row(
-                        mainAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
                         children: [
-                          Text(
-                            "${AppLocalizations.of(context)!.translate('giftAmount').toString()} ",
-                            style: TextStyles.textStyle18Bold
-                                .copyWith(color: ColorManager.black),
+                          Expanded(
+                            child: DefaultTextField(
+                                controller: cubit.moneyAmountController,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('giftAmountHint')
+                                    .toString(),
+                                validator: (value) {
+                                  if (value!.trim().isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .translate('validateGiftAmount')
+                                        .toString();
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
                           ),
-                          PresentAmountWidget(),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle18Regular,
+                          )
                         ],
                       ),
+
                       SizedBox(height: mediaQuery.height * 0.02),
                       Row(
                         mainAxisAlignment: CashHelper.languageKey == 'ar'

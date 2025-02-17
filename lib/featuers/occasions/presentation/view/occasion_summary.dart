@@ -212,7 +212,7 @@ class OccasionSummary extends StatelessWidget {
 
 
                       Visibility(
-                        visible: cubit.isPresent == false? true : false,
+                        visible: cubit.isPresent == false && cubit.giftWithPackage == false? true : false,
                         child: Column(
                           children: [
                             /// receiver name if is money
@@ -331,7 +331,7 @@ class OccasionSummary extends StatelessWidget {
                                 .copyWith(color: ColorManager.black),
                           ),
                           Text(
-                            cubit.occasionDateController.text,
+                            cubit.moneyReceiveDateController.text,
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.primaryBlue),
                           ),

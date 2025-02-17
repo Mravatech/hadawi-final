@@ -51,7 +51,7 @@ class GiftDeliveryScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Form(
-                    key: cubit.moneyFormKey,
+                    key: cubit.deliveryFormKey,
                     child: Column(
                       crossAxisAlignment: CashHelper.languageKey == 'ar'
                           ? CrossAxisAlignment.end
@@ -226,13 +226,6 @@ class GiftDeliveryScreen extends StatelessWidget {
                             keyboardType: TextInputType.multiline,
                             textInputAction: TextInputAction.newline,
                             fillColor: ColorManager.gray),
-                        SizedBox(height: mediaQuery.height * 0.01),
-                        /// note for send money fess
-                        Text(
-                          AppLocalizations.of(context)!.translate('moneyGiftFeesNote').toString(),
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
 
                         SizedBox(height: mediaQuery.height * 0.05),
                         /// share and save

@@ -201,7 +201,6 @@
   "share": "مشاركة",
   "moneyAmount": "المبلغ المطلوب",
   "rsa": "ريال سعودي",
-  "validateMoneyAmount": "مبلغ المال مطلوب",
   "addAnother": "إضافة اخري",
   "giftName": "اسم الهدية",
   "giftNameHint": "أدخل اسم الهدية",
@@ -270,5 +269,9 @@
   "private": "خاص",
   "public": "عام",
   "packagingPrice": "سعر التغليف",
-  "occasionSummary": "تفاصيل المناسبة"
+  "occasionSummary": "تفاصيل المناسبة",
+  "giftAmountHint": "ادخل قيمة الهدية",
+  "validateGiftAmount": "قيمة الهدية مطلوبة",
+  "moneyAmountHint": "ادخل مبلغ المال",
+  "validateMoneyAmount": "مبلغ المال مطلوب"
 }

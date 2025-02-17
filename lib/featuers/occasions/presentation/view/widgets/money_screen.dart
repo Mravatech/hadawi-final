@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_delivery_screen.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/present_amount_widget.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -9,6 +10,7 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -101,18 +103,37 @@ class MoneyScreen extends StatelessWidget {
                       SizedBox(height: mediaQuery.height * 0.02),
 
                       /// amount
+                      Text(
+                        "${AppLocalizations.of(context)!.translate('moneyAmount').toString()} ",
+                        style: TextStyles.textStyle12Bold
+                            .copyWith(color: ColorManager.black),
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.01,),
                       Row(
-                        mainAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
                         children: [
-                          Text(
-                            "${AppLocalizations.of(context)!.translate('moneyAmount').toString()} ",
-                            style: TextStyles.textStyle12Bold
-                                .copyWith(color: ColorManager.black),
+                          Expanded(
+                            child: DefaultTextField(
+                                controller: cubit.moneyAmountController,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('moneyAmountHint')
+                                    .toString(),
+                                validator: (value) {
+                                  if (value!.trim().isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .translate('validateMoneyAmount')
+                                        .toString();
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
                           ),
-                          PresentAmountWidget(),
-
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle18Regular,
+                          )
                         ],
                       ),
                       SizedBox(height: mediaQuery.height * 0.02),
@@ -184,188 +205,200 @@ class MoneyScreen extends StatelessWidget {
                       SizedBox(height: mediaQuery.height * 0.02),
 
                       /// receiver name
-                      Text(
-                        AppLocalizations.of(context)!.translate('moneyReceiverName').toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      DefaultTextField(
-                          controller: cubit.giftReceiverNameController,
-                          hintText: AppLocalizations.of(context)!.translate('moneyReceiverNameHint').toString(),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppLocalizations.of(context)!.translate('validateMoneyReceiverName').toString();
-                            } else {
-                              return null;
-                            }
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray),
-                      SizedBox(height: mediaQuery.height * 0.02),
-                      /// receiver number
-                      Text(
-                        AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      DefaultTextField(
-                          controller: cubit.giftReceiverNumberController,
-                          hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                            } else {
-                              return null;
-                            }
-                          },
-                          keyboardType: TextInputType.phone,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray),
-                      SizedBox(height: mediaQuery.height * 0.02),
-                      /// bank name
-                      Text(
-                        AppLocalizations.of(context)!.translate('bankName').toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      DefaultTextField(
-                          controller: cubit.bankNameController,
-                          hintText: AppLocalizations.of(context)!.translate('bankNameHint').toString(),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppLocalizations.of(context)!.translate('validateBankName').toString();
-                            } else {
-                              return null;
-                            }
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray),
-                      SizedBox(height: mediaQuery.height * 0.02),
-                      /// account iban number
-                      Text(
-                        AppLocalizations.of(context)!.translate('ibanNumber').toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      DefaultTextField(
-                          controller: cubit.ibanNumberController,
-                          hintText: AppLocalizations.of(context)!.translate('ibanNumberHint').toString(),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppLocalizations.of(context)!.translate('validateIbanNumber').toString();
-                            } else {
-                              return null;
-                            }
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray),
-                      SizedBox(height: mediaQuery.height * 0.02),
+                      Visibility(
+                        visible: cubit.giftWithPackage== false? true : false,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.translate('moneyReceiverName').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            DefaultTextField(
+                                controller: cubit.giftReceiverNameController,
+                                hintText: AppLocalizations.of(context)!.translate('moneyReceiverNameHint').toString(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateMoneyReceiverName').toString();
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
+                            SizedBox(height: mediaQuery.height * 0.02),
+                            /// receiver number
+                            Text(
+                              AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            DefaultTextField(
+                                controller: cubit.giftReceiverNumberController,
+                                hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.phone,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
+                            SizedBox(height: mediaQuery.height * 0.02),
+                            /// bank name
+                            Text(
+                              AppLocalizations.of(context)!.translate('bankName').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            DefaultTextField(
+                                controller: cubit.bankNameController,
+                                hintText: AppLocalizations.of(context)!.translate('bankNameHint').toString(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateBankName').toString();
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
+                            SizedBox(height: mediaQuery.height * 0.02),
+                            /// account iban number
+                            Text(
+                              AppLocalizations.of(context)!.translate('ibanNumber').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            DefaultTextField(
+                                controller: cubit.ibanNumberController,
+                                hintText: AppLocalizations.of(context)!.translate('ibanNumberHint').toString(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateIbanNumber').toString();
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
+                            SizedBox(height: mediaQuery.height * 0.02),
 
-                      /// date of receive
-                      Text(
-                        AppLocalizations.of(context)!
-                            .translate('receivingTime')
-                            .toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      GestureDetector(
-                        onTap: () {
-                          showDatePicker(
-                            helpText: AppLocalizations.of(context)!
-                                .translate('receivingTime')
-                                .toString(),
-                            context: context,
-                            firstDate: DateTime(1920),
-                            lastDate: DateTime.now().add(const Duration(days: 365)),
-                          ).then(
-                                  (value) => cubit.setMoneyReceiveDate(brithDateValue: value!));
-                        },
-                        child: DefaultTextField(
-                            controller: cubit.moneyReceiveDateController,
-                            hintText: cubit.moneyReceiveDateController.text.isEmpty
-                                ? AppLocalizations.of(context)!
-                                .translate('receivingTimeHint')
-                                .toString()
-                                : cubit.occasionDateController.text,
-                            validator: (value) {
-                              if (value!.trim().isNotEmpty) return null;
-                              return AppLocalizations.of(context)!
-                                  .translate('validateReceivingTime')
-                                  .toString();
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            enable: false,
-                            fillColor: ColorManager.gray),
-                      ),
+                            /// date of receive
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate('receivingTime')
+                                  .toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            GestureDetector(
+                              onTap: () {
+                                showDatePicker(
+                                  helpText: AppLocalizations.of(context)!
+                                      .translate('receivingTime')
+                                      .toString(),
+                                  context: context,
+                                  firstDate: DateTime(1920),
+                                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                                ).then(
+                                        (value) => cubit.setMoneyReceiveDate(brithDateValue: value!));
+                              },
+                              child: DefaultTextField(
+                                  controller: cubit.moneyReceiveDateController,
+                                  hintText: cubit.moneyReceiveDateController.text.isEmpty
+                                      ? AppLocalizations.of(context)!
+                                      .translate('receivingTimeHint')
+                                      .toString()
+                                      : cubit.occasionDateController.text,
+                                  validator: (value) {
+                                    if (value!.trim().isNotEmpty) return null;
+                                    return AppLocalizations.of(context)!
+                                        .translate('validateReceivingTime')
+                                        .toString();
+                                  },
+                                  keyboardType: TextInputType.text,
+                                  textInputAction: TextInputAction.next,
+                                  enable: false,
+                                  fillColor: ColorManager.gray),
+                            ),
 
-                      SizedBox(height: mediaQuery.height * 0.02),
-                      Row(
-                        mainAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? MainAxisAlignment.end
-                            : MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${AppLocalizations.of(context)!.translate('isContainsNames').toString()} ",
-                            style: TextStyles.textStyle12Bold
-                                .copyWith(color: ColorManager.black),
-                          ),
-                          Switch(
-                              value: cubit.giftContainsNameValue,
-                              onChanged: (value) {
-                                cubit.switchGiftContainsName();
-                              }),
+                            SizedBox(height: mediaQuery.height * 0.02),
+                            Row(
+                              mainAxisAlignment: CashHelper.languageKey == 'ar'
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context)!.translate('isContainsNames').toString()} ",
+                                  style: TextStyles.textStyle12Bold
+                                      .copyWith(color: ColorManager.black),
+                                ),
+                                Switch(
+                                    value: cubit.giftContainsNameValue,
+                                    onChanged: (value) {
+                                      cubit.switchGiftContainsName();
+                                    }),
 
-                        ],
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.02),
+                              ],
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.02),
 
 
-                      /// message
-                      Text(
-                        AppLocalizations.of(context)!.translate('giftCard').toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(color: ColorManager.black),
-                      ),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      DefaultTextField(
-                          controller: cubit.moneyGiftMessageController,
-                          maxLines: 8,
-                          hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
-                            } else {
-                              return null;
-                            }
-                          },
-                          keyboardType: TextInputType.multiline,
-                          textInputAction: TextInputAction.newline,
-                          fillColor: ColorManager.gray),
-                      SizedBox(height: mediaQuery.height * 0.01),
-                      /// note for send money fess
-                      Text(
-                        AppLocalizations.of(context)!.translate('moneyGiftFeesNote').toString(),
-                        style: TextStyles.textStyle12Bold
-                            .copyWith(color: ColorManager.black),
+                            /// message
+                            Text(
+                              AppLocalizations.of(context)!.translate('giftCard').toString(),
+                              style: TextStyles.textStyle18Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            DefaultTextField(
+                                controller: cubit.moneyGiftMessageController,
+                                maxLines: 8,
+                                hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                                keyboardType: TextInputType.multiline,
+                                textInputAction: TextInputAction.newline,
+                                fillColor: ColorManager.gray),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            /// note for send money fess
+                            Text(
+                              AppLocalizations.of(context)!.translate('moneyGiftFeesNote').toString(),
+                              style: TextStyles.textStyle12Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                          ],
+                        ),
                       ),
 
                       SizedBox(height: mediaQuery.height * 0.05),
-                      /// share and save
+                      /// continue
                       Align(
                         alignment: Alignment.center,
                         child: GestureDetector(
                           onTap: () {
-                            customPushNavigator(context, OccasionSummary());
+                            if(cubit.giftWithPackage == true){
+                              customPushNavigator(context, GiftDeliveryScreen());
+                            }else{
+                              customPushNavigator(context, OccasionSummary());
+                            }
                             // if (cubit.giftPrice == 0) {
                             //   customToast(
                             //       title: AppLocalizations.of(context)!

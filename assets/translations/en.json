@@ -201,7 +201,6 @@
   "share": "Share",
   "moneyAmount": "Money Amount",
   "rsa": "RSA",
-  "validateMoneyAmount": "Money amount is required",
   "addAnother": "Add Another",
   "giftName": "Gift Name",
   "giftNameHint": "Enter gift name",
@@ -270,6 +269,9 @@
   "receiveData": "Receive Data",
   "private": "Private",
   "public": "Public",
-  "occasionSummary": "Occasion Summary"
-
+  "occasionSummary": "Occasion Summary",
+  "giftAmountHint": "Enter gift amount",
+  "validateGiftAmount": "Gift amount is required",
+  "moneyAmountHint": "ادخل مبلغ المال",
+  "validateMoneyAmount": "مبلغ المال مطلوب"
 }

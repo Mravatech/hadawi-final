@@ -24,6 +24,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> moneyFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> deliveryFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> giftFormKey = GlobalKey<FormState>();
   TextEditingController giftNameController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -47,7 +48,7 @@ class OccasionCubit extends Cubit<OccasionState> {
 
 
    void resetData() {
-    isForMe = true;
+    // isForMe = true;
     isPresent = true;
     isMoney = false;
     selectedIndex = 0;

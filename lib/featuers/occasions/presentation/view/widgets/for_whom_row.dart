@@ -42,6 +42,7 @@ class _ForWhomRowState extends State<ForWhomRow> {
                 ),
                 child: GestureDetector(
                   onTap: () {
+                    cubit.resetData();
                     cubit.switchForWhomOccasion();
                   },
                   child: Center(
@@ -69,6 +70,7 @@ class _ForWhomRowState extends State<ForWhomRow> {
                 ),
                 child: GestureDetector(
                   onTap: () {
+                    cubit.resetData();
                     cubit.switchForWhomOccasion();
                   },
                   child: Center(
