@@ -30,4 +30,7 @@ final class SwitchGiftWithPackageTypeSuccess extends OccasionState {}
 final class SetMoneyReceiveDateState extends OccasionState {}
 final class SwitchGiftContainsNameSuccess extends OccasionState {}
 final class ResetDataSuccessState extends OccasionState {}
+final class GetTotalGiftPriceSuccessState extends OccasionState {}
+final class CaptureAndShareQrSuccessState extends OccasionState {}
+final class CaptureAndShareQrErrorState extends OccasionState {}
 

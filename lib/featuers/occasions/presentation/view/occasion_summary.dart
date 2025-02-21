@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/occasion_qr.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -16,17 +18,33 @@ class OccasionSummary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if (state is AddOccasionSuccessState) {
+            context.read<OccasionCubit>().resetData();
+            customPushReplacement(
+                context,
+                OccasionQr(occasionId: state.occasion.occasionId, occasionName: state.occasion.occasionName,)
+            );
+          } else if (state is AddOccasionErrorState) {
+            // Show error message
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.error))
+            );
+          }
+        },
         builder: (context, state) {
           final cubit = context.read<OccasionCubit>();
           final mediaQuery = MediaQuery.sizeOf(context);
           return ModalProgressHUD(
-            inAsyncCall: state is AddOccasionLoadingState ||
-                state is UploadImageLoadingState,
+            inAsyncCall: state is AddOccasionLoadingState ? true : false,
             child: Scaffold(
               backgroundColor: ColorManager.white,
               appBar: AppBar(
                   backgroundColor: ColorManager.gray,
+                  leading: IconButton(
+                      onPressed: (){
+                        customPushAndRemoveUntil(context, HomeLayout());
+                      }, icon: Icon(Icons.arrow_back)),
                   title: Text(
                     AppLocalizations.of(context)!
                         .translate('occasionSummary')
@@ -157,6 +175,8 @@ class OccasionSummary extends StatelessWidget {
                           child: SizedBox(height: mediaQuery.height * 0.01),
                       ),
 
+                      SizedBox(height: SizeConfig.height * 0.01,),
+
                       /// gift amount
                       Row(
                         children: [
@@ -166,10 +186,15 @@ class OccasionSummary extends StatelessWidget {
                                 .copyWith(color: ColorManager.black),
                           ),
                           Text(
-                            cubit.giftPrice.toString(),
+                            cubit.moneyAmountController.text.toString(),
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.primaryBlue),
                           ),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                          )
                         ],
                       ),
                       SizedBox(height: mediaQuery.height * 0.01),
@@ -205,6 +230,11 @@ class OccasionSummary extends StatelessWidget {
                               style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.primaryBlue),
                             ),
+                            SizedBox(width: 10,),
+                            Text(
+                              AppLocalizations.of(context)!.translate('rsa').toString(),
+                              style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                            )
                           ],
                         ),
                       ),
@@ -266,11 +296,11 @@ class OccasionSummary extends StatelessWidget {
                         ),
                       ),
 
-                      SizedBox(height: mediaQuery.height * 0.01),
+                      Visibility(visible:  cubit.isPresent == false && cubit.giftWithPackage == false? true : false, child: SizedBox(height: mediaQuery.height * 0.01)),
 
                       /// receiver city if is gift
                       Visibility(
-                        visible: cubit.isPresent == true? true : false,
+                        visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false,
                         child: Row(
                           children: [
                             Text(
@@ -286,10 +316,10 @@ class OccasionSummary extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Visibility( visible: cubit.isPresent == true? true : false, child: SizedBox(height: mediaQuery.height * 0.01)),
+                      Visibility( visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false, child: SizedBox(height: mediaQuery.height * 0.01)),
                       /// receiver the District if is gift
                       Visibility(
-                        visible: cubit.isPresent == true? true : false,
+                        visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false,
                         child: Row(
                           children: [
                             Text(
@@ -305,7 +335,7 @@ class OccasionSummary extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Visibility( visible: cubit.isPresent == true? true : false, child: SizedBox(height: mediaQuery.height * 0.01)),
+                      Visibility( visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false, child: SizedBox(height: mediaQuery.height * 0.01)),
                       /// receiver number
                       Row(
                         children: [
@@ -369,7 +399,7 @@ class OccasionSummary extends StatelessWidget {
 
                       /// note if is gift
                       Visibility(
-                        visible: cubit.isPresent,
+                        visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false,
                         child: Row(
                           children: [
                             Text(
@@ -386,6 +416,25 @@ class OccasionSummary extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: mediaQuery.height * 0.01),
+                      Row(
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('totalAmount').toString()} : ",
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          Text(
+                            cubit.getTotalGiftPrice().toString(),
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.primaryBlue),
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                          )
+                        ],
+                      ),
 
 
                       SizedBox(height: mediaQuery.height * 0.05),
@@ -393,9 +442,8 @@ class OccasionSummary extends StatelessWidget {
                       Align(
                         alignment: Alignment.center,
                         child: GestureDetector(
-                          onTap: () {
-                            cubit.resetData();
-                            customPushAndRemoveUntil(context, const HomeLayout());
+                          onTap: () async {
+                            context.read<OccasionCubit>().addOccasion();
                           },
                           child: Container(
                             height: mediaQuery.height * .055,
@@ -410,7 +458,7 @@ class OccasionSummary extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   AppLocalizations.of(context)!
-                                      .translate('payAndShare')
+                                      .translate('createOccasion')
                                       .toString(),
                                   style: TextStyles.textStyle12Bold
                                       .copyWith(color: ColorManager.white),

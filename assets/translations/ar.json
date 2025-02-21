@@ -273,5 +273,8 @@
   "giftAmountHint": "ادخل قيمة الهدية",
   "validateGiftAmount": "قيمة الهدية مطلوبة",
   "moneyAmountHint": "ادخل مبلغ المال",
-  "validateMoneyAmount": "مبلغ المال مطلوب"
+  "validateMoneyAmount": "مبلغ المال مطلوب",
+  "totalAmount": "مجموع المبلغ",
+  "createOccasion": "انشاء مناسبة",
+  "occasionQr": "كود المناسبة QR"
 }

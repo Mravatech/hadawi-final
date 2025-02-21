@@ -28,7 +28,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element["isForMe"]== false && convertStringToDateTime(element['occasionDate']).isAfter(DateTime.now())){
+          if(element["isForMe"]== false){
             othersOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }
@@ -47,7 +47,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element["isForMe"]== true && element['personId'] == UserDataFromStorage.uIdFromStorage && convertStringToDateTime(element['occasionDate']).isAfter(DateTime.now())){
+          if(element["isForMe"]== true && element['personId'] == UserDataFromStorage.uIdFromStorage){
             myOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }
@@ -66,7 +66,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(DateTime.now().isAfter(convertStringToDateTime(element['occasionDate']))){
+          if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
             pastOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }
@@ -86,7 +86,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(convertStringToDateTime(element['occasionDate']).isAfter(DateTime.now()) && element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
+          if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
             closedOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }

@@ -11,7 +11,7 @@ import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/widgets/default_button_with_image.dart';
+
 
 class PastOccasions extends StatefulWidget {
   const PastOccasions({super.key});
@@ -37,7 +37,9 @@ class _PastOccasionsState extends State<PastOccasions> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            AppLocalizations.of(context)!.translate('previousOccasionsMenu').toString(),
+            AppLocalizations.of(context)!
+                .translate('previousOccasionsMenu')
+                .toString(),
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),
@@ -94,30 +96,67 @@ class _PastOccasionsState extends State<PastOccasions> {
                                             .pastOccasionsList[index];
                                     return OccasionCard(
                                         onTap: () {
-                                          customPushNavigator(context, OccasionDetails(
-                                            occasionEntity: OccasionEntity(
-                                              isForMe: occasionItem.isForMe,
-                                              occasionName: occasionItem.occasionName,
-                                              occasionDate: occasionItem.occasionDate,
-                                              occasionId: occasionItem.occasionId,
-                                              occasionType: occasionItem.occasionType,
-                                              moneyGiftAmount: occasionItem.moneyGiftAmount,
-                                              personId: occasionItem.personId,
-                                              personName: occasionItem.personName,
-                                              personPhone: occasionItem.personPhone,
-                                              personEmail: occasionItem.personEmail,
-                                              giftImage: occasionItem.occasionImage,
-                                              giftName: occasionItem.giftName,
-                                              giftLink: occasionItem.giftLink,
-                                              giftPrice: occasionItem.giftPrice,
-                                              giftType: occasionItem.giftType,
-                                              isSharing: occasionItem.isSharing,
-                                            ),
-                                          ));
+                                          customPushNavigator(
+                                              context,
+                                              OccasionDetails(
+                                                occasionEntity: OccasionEntity(
+                                                    isForMe:
+                                                        occasionItem.isForMe,
+                                                    occasionName: occasionItem
+                                                        .occasionName,
+                                                    occasionDate: occasionItem
+                                                        .occasionDate,
+                                                    occasionId:
+                                                        occasionItem.occasionId,
+                                                    occasionType: occasionItem
+                                                        .occasionType,
+                                                    moneyGiftAmount:
+                                                        occasionItem
+                                                            .moneyGiftAmount,
+                                                    personId:
+                                                        occasionItem.personId,
+                                                    personName:
+                                                        occasionItem.personName,
+                                                    personPhone: occasionItem
+                                                        .personPhone,
+                                                    personEmail: occasionItem
+                                                        .personEmail,
+                                                    giftImage: occasionItem
+                                                        .occasionImage,
+                                                    giftName:
+                                                        occasionItem.giftName,
+                                                    giftLink:
+                                                        occasionItem.giftLink,
+                                                    giftPrice:
+                                                        occasionItem.giftPrice,
+                                                    giftType:
+                                                        occasionItem.giftType,
+                                                    isSharing:
+                                                        occasionItem.isSharing,
+                                                    receiverName: occasionItem
+                                                        .receiverName,
+                                                    receiverPhone: occasionItem
+                                                        .receiverPhone,
+                                                    bankName:
+                                                        occasionItem.bankName,
+                                                    ibanNumber:
+                                                        occasionItem.ibanNumber,
+                                                    receivingDate: occasionItem
+                                                        .receivingDate,
+                                                    isContainName: occasionItem
+                                                        .isContainName,
+                                                    giftCard:
+                                                        occasionItem.giftCard,
+                                                    city: occasionItem.city,
+                                                    district:
+                                                        occasionItem.district,
+                                                    note: occasionItem.note,
+                                                    isPrivate:
+                                                        occasionItem.isPrivate),
+                                              ));
                                         },
                                         forOthers: true,
-                                        occasionName:
-                                            occasionItem.occasionName,
+                                        occasionName: occasionItem.occasionName,
                                         personName: occasionItem.personName,
                                         imageUrl: occasionItem.occasionImage);
                                   },
@@ -129,11 +168,12 @@ class _PastOccasionsState extends State<PastOccasions> {
                                   children: [
                                     Image.asset(AssetsManager.noData),
                                     Text(
-                                      AppLocalizations.of(context)!.translate('noOccasions').toString(),
+                                      AppLocalizations.of(context)!
+                                          .translate('noOccasions')
+                                          .toString(),
                                       style: TextStyles.textStyle18Bold
                                           .copyWith(
-                                              color:
-                                                  ColorManager.primaryBlue),
+                                              color: ColorManager.primaryBlue),
                                     ),
                                   ],
                                 ),

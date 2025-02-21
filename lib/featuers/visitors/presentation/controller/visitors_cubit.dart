@@ -34,9 +34,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       doneOccasions.clear();
 
       for (var element in occasion) {
-        DateTime occasionDate = convertStringToDateTime(element.occasionDate);
-
-        if (occasionDate.isAfter(DateTime.now()) && element.giftPrice > element.moneyGiftAmount) {
+        if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
           activeOccasions.add(element);
         } else {
           doneOccasions.add(element);

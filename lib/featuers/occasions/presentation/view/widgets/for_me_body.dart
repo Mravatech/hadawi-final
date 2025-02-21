@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
@@ -788,7 +789,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                   return null;
                                 }
                               },
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.number,
                               textInputAction: TextInputAction.next,
                               fillColor: ColorManager.gray),
                           SizedBox(height: mediaQuery.height * 0.02),
@@ -1079,15 +1080,16 @@ class _ForMeBodyState extends State<ForMeBody> {
                 child: GestureDetector(
                   onTap: () {
                     if (cubit.forMeFormKey.currentState!.validate()) {
-                      if (cubit.isPresent) {
-                        customPushNavigator(
-                            context,
-                            GiftScreen());
-                      } else {
-                        customPushNavigator(
-                            context,
-                            MoneyScreen());
-                      }
+                      // if (cubit.isPresent) {
+                      //   customPushNavigator(
+                      //       context,
+                      //       GiftScreen());
+                      // } else {
+                      //   customPushNavigator(
+                      //       context,
+                      //       MoneyScreen());
+                      // }
+                      customPushNavigator(context, OccasionSummary());
                     }
                   },
                   child: Container(

@@ -273,5 +273,8 @@
   "giftAmountHint": "Enter gift amount",
   "validateGiftAmount": "Gift amount is required",
   "moneyAmountHint": "ادخل مبلغ المال",
-  "validateMoneyAmount": "مبلغ المال مطلوب"
+  "validateMoneyAmount": "مبلغ المال مطلوب",
+  "totalAmount": "Total Amount",
+  "createOccasion": "Create Occasion",
+  "occasionQr": "Occasion QR Code"
 }

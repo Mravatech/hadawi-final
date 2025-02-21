@@ -19,6 +19,17 @@ class OccasionModel extends OccasionEntity {
       required super.giftPrice,
       required super.giftType,
       required super.isSharing,
+      required super.receiverName,
+        required super.receiverPhone,
+        required super.bankName,
+        required super.ibanNumber,
+        required super.receivingDate,
+        required super.isContainName,
+        required super.giftCard,
+        required super.city,
+        required super.district,
+        required super.note,
+        required super.isPrivate,
       });
 
   factory OccasionModel.fromJson(Map<String, dynamic> json) => OccasionModel(
@@ -38,6 +49,17 @@ class OccasionModel extends OccasionEntity {
         giftPrice: json['giftPrice']??'',
         giftType: json['giftType']??'',
         isSharing: json['isSharing']??false,
+        receiverName: json['receiverName']??'',
+        receiverPhone: json['receiverPhone']??'',
+        bankName: json['bankName']??'',
+        ibanNumber: json['ibanNumber']??'',
+        receivingDate: json['receivingDate']??'',
+        isContainName: json['isContainName']??false,
+        giftCard: json['giftCard']??'',
+        city: json['city']??'',
+        district: json['district']??'',
+        note: json['note']??'',
+        isPrivate: json['isPrivate']??false
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,5 +79,16 @@ class OccasionModel extends OccasionEntity {
         'giftPrice': giftPrice,
         'giftType': giftType,
         'isSharing': isSharing,
+        'receiverName': receiverName,
+        'receiverPhone': receiverPhone,
+        'bankName': bankName,
+        'ibanNumber': ibanNumber,
+        'receivingDate': receivingDate,
+        'isContainName': isContainName,
+        'giftCard': giftCard,
+        'city': city,
+        'district': district,
+        'note': note,
+        'isPrivate': isPrivate
       };
 }

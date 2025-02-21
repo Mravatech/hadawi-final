@@ -32,9 +32,20 @@ class OccasionDataSource {
     required String giftImage,
     required String giftName,
     required String giftLink,
-    required int giftPrice,
+    required double giftPrice,
     required String giftType,
     required bool isSharing,
+    required String receiverName,
+    required String receiverPhone,
+    required String bankName,
+    required String ibanNumber,
+    required String receivingDate,
+    required bool isContainName,
+    required String giftCard,
+    required String city,
+    required String district,
+    required String note,
+    required bool isPrivate,
   }) async {
     final docRef = fireStore.collection('Occasions').doc();
     final occasionId = docRef.id;
@@ -56,6 +67,17 @@ class OccasionDataSource {
       giftPrice: giftPrice,
       giftType: giftType,
       isSharing: isSharing,
+      receiverName: receiverName,
+      receiverPhone: receiverPhone,
+      bankName: bankName,
+      ibanNumber: ibanNumber,
+      receivingDate: receivingDate,
+      isContainName: isContainName,
+      giftCard: giftCard,
+      city: city,
+      district: district,
+      note: note,
+      isPrivate: isPrivate
     );
 
     try {

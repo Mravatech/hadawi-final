@@ -7,6 +7,11 @@ import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.d
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 part 'occasion_state.dart';
 
@@ -19,7 +24,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   int selectedIndex = 0;
   bool isPublicValue = false;
   bool giftContainsNameValue = false;
-  int giftPrice = 0;
+  double giftPrice = 0;
   String giftType = 'هدية';
   GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
@@ -42,6 +47,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryNoteController = TextEditingController();
   TextEditingController giftDeliveryCityController = TextEditingController();
   TextEditingController giftDeliveryStreetController = TextEditingController();
+  final GlobalKey qrKey = GlobalKey();
 
   bool giftWithPackage = true;
   int giftWithPackageType = 50;
@@ -128,6 +134,15 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SetMoneyReceiveDateState());
   }
 
+  double getTotalGiftPrice() {
+     double giftPriceNumber = double.parse(moneyAmountController.text);
+     double packagePriceNumber = double.parse(giftWithPackageType.toString());
+     double appCommission = giftPriceNumber * 0.05;
+     giftPrice = giftPriceNumber + packagePriceNumber + appCommission;
+    emit(GetTotalGiftPriceSuccessState());
+     return giftPrice;
+  }
+
   var picker = ImagePicker();
 
   File? image;
@@ -176,31 +191,67 @@ class OccasionCubit extends Cubit<OccasionState> {
           ? await uploadImage()
           : null;
       final result = await OccasionRepoImp().addOccasions(
-        isForMe: UserDataFromStorage.isForMe==true?true:UserDataFromStorage.isForMe,
-        occasionName: UserDataFromStorage.occasionName,
-        occasionDate: UserDataFromStorage.occasionDate,
-        occasionType: UserDataFromStorage.isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
+        isForMe: isForMe,
+        occasionName: occasionNameController.text,
+        occasionDate: occasionDateController.text,
+        occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,
-        personName: nameController.text.isEmpty ? UserDataFromStorage.userNameFromStorage : nameController.text,
+        personName: nameController.text,
         personPhone: UserDataFromStorage.phoneNumberFromStorage,
         personEmail: UserDataFromStorage.emailFromStorage,
         giftImage: imageUrl ?? '',
-        giftName: giftNameController.text.isEmpty ? '' : giftNameController.text,
-        giftLink: linkController.text.isEmpty ? '' : linkController.text,
-        giftPrice: giftPrice == 0 ? int.parse(moneyAmountController.text) : giftPrice,
-        giftType: UserDataFromStorage.giftType==""? 'هدية':UserDataFromStorage.giftType,
+        giftName: giftNameController.text,
+        giftLink: linkController.text,
+        giftPrice: giftPrice,
+        giftType: isPresent? 'هدية':"مبلغ مالى",
         isSharing: isPublicValue,
+        receiverName: giftReceiverNameController.text,
+        receiverPhone: giftReceiverNumberController.text,
+        bankName: bankNameController.text,
+        note: giftDeliveryNoteController.text,
+        city: giftDeliveryCityController.text,
+        district: giftDeliveryStreetController.text,
+        ibanNumber: ibanNumberController.text,
+        receivingDate: moneyReceiveDateController.text,
+        giftCard: moneyGiftMessageController.text,
+        isContainName: giftContainsNameValue,
+        isPrivate: isPublicValue,
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
       }, (occasion) {
+
         emit(AddOccasionSuccessState(occasion: occasion));
       });
     } catch (error) {
       debugPrint('*************');
       debugPrint('error: $error');
       emit(AddOccasionErrorState(error: error.toString()));
+    }
+  }
+
+
+  Future<void> captureAndShareQr({required String occasionName}) async {
+    try {
+      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/occasion_qr.png').create();
+      await file.writeAsBytes(pngBytes);
+
+      await Share.shareXFiles(
+        [XFile(file.path)],
+        text: 'Check out this occasion QR code!, to pay for ($occasionName)',
+      );
+      emit(CaptureAndShareQrSuccessState());
+    } catch (e) {
+      print('Error sharing QR code: $e');
+      emit(CaptureAndShareQrErrorState());
     }
   }
 

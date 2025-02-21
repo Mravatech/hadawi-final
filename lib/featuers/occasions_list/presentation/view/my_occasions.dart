@@ -117,6 +117,17 @@ class _MyOccasionsState extends State<MyOccasions> {
                                             giftPrice: occasionItem.giftPrice,
                                             giftType: occasionItem.giftType,
                                             isSharing: occasionItem.isSharing,
+                                              receiverName: occasionItem.receiverName,
+                                              receiverPhone: occasionItem.receiverPhone,
+                                              bankName: occasionItem.bankName,
+                                              ibanNumber: occasionItem.ibanNumber,
+                                              receivingDate: occasionItem.receivingDate,
+                                              isContainName: occasionItem.isContainName,
+                                              giftCard: occasionItem.giftCard,
+                                              city: occasionItem.city,
+                                              district: occasionItem.district,
+                                              note: occasionItem.note,
+                                              isPrivate: occasionItem.isPrivate
                                           ),
                                         ));
                                       },

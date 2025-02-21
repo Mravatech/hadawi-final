@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/constants/app_constants.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/tutorial_coach_widget.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
@@ -21,7 +22,10 @@ class BottomNavigationBarWidget extends StatelessWidget {
         return SalomonBottomBar(
           backgroundColor: ColorManager.gray.withOpacity(0.5),
           currentIndex: cubit.currentIndex,
-          onTap: (index)=> cubit.changeIndex(index: index),
+          onTap: (index){
+            cubit.changeIndex(index: index);
+            context.read<OccasionCubit>().resetData();
+          },
           items: [
 
             /// Profile

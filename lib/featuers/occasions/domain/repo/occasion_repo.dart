@@ -19,8 +19,19 @@ abstract class OccasionRepo {
       required String giftImage,
       required String giftName,
       required String giftLink,
-      required int giftPrice,
+      required double giftPrice,
       required String giftType,
-      required bool isSharing
+      required bool isSharing,
+      required String receiverName,
+      required String receiverPhone,
+      required String bankName,
+      required String ibanNumber,
+      required String receivingDate,
+      required bool isContainName,
+      required String giftCard,
+      required String city,
+      required String district,
+      required String note,
+      required bool isPrivate
       });
 }

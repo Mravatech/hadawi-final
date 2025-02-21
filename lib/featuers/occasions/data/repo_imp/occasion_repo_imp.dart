@@ -20,9 +20,20 @@ class OccasionRepoImp extends OccasionRepo {
       required String giftImage,
       required String giftName,
       required String giftLink,
-      required int giftPrice,
+      required double giftPrice,
       required String giftType,
-      required bool isSharing
+      required bool isSharing,
+      required receiverName,
+      required receiverPhone,
+      required bankName,
+      required ibanNumber,
+      required receivingDate,
+      required isContainName,
+      required giftCard,
+      required city,
+      required district,
+      required note,
+      required isPrivate
       }) async {
     final result = await OccasionDataSource().addOccasion(
         isForMe: isForMe,
@@ -40,6 +51,17 @@ class OccasionRepoImp extends OccasionRepo {
         giftPrice: giftPrice,
         giftType: giftType,
         isSharing: isSharing,
+        receiverName: receiverName,
+        receiverPhone: receiverPhone,
+        bankName: bankName,
+        ibanNumber: ibanNumber,
+        receivingDate: receivingDate,
+        isContainName: isContainName,
+        giftCard: giftCard,
+        city: city,
+        district: district,
+        note: note,
+        isPrivate: isPrivate
     );
     try {
       return Right(result);
