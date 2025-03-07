@@ -272,9 +272,11 @@
   "occasionSummary": "Occasion Summary",
   "giftAmountHint": "Enter gift amount",
   "validateGiftAmount": "Gift amount is required",
-  "moneyAmountHint": "ادخل مبلغ المال",
-  "validateMoneyAmount": "مبلغ المال مطلوب",
+  "moneyAmountHint": "Enter money amount",
+  "validateMoneyAmount": "Money amount is required",
   "totalAmount": "Total Amount",
   "createOccasion": "Create Occasion",
-  "occasionQr": "Occasion QR Code"
+  "occasionQr": "Occasion QR Code",
+  "no_notification": "No notifications yet",
+  "privacyPolicies": "Privacy Policies"
 }

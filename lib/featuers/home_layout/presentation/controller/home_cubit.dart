@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
+import 'package:hadawi_app/featuers/settings/data/models/notification_model.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
 
@@ -23,6 +26,44 @@ class HomeCubit extends Cubit<HomeStates> {
   void changeSwitchState({required bool value}){
     switchValue=value;
     emit(ChangeSwitchState());
+  }
+
+
+  // get user notifications
+  List<NotificationModel> notifications=[];
+  Future<void> getUserNotifications()async{
+
+    emit(GetUserNotificationsLoadingState());
+    notifications=[];
+
+    FirebaseFirestore.instance.collection('notifications').get().then((value) {
+      value.docs.forEach((element) {
+        if(UserDataFromStorage.uIdFromStorage==element.data()['userId']){
+          notifications.add(NotificationModel.fromMap(element.data()));
+        }
+      });
+      emit(GetUserNotificationsSuccessState());
+    }).catchError((error){
+      debugPrint("error in getting user notifications: $error");
+      emit(GetUserNotificationsErrorState());
+    });
+
+  }
+
+  // get privacy_policies
+
+  String privacyPolicies='';
+
+  Future<void> getPrivacyPolices ()async{
+    emit(GetAppPrivacyPoliciesLoadingState());
+    FirebaseFirestore.instance.collection('privacy_policies').get().then((value) {
+      privacyPolicies = value.docs[0]['text'];
+      debugPrint("privacy policies: $privacyPolicies");
+      emit(GetAppPrivacyPoliciesSuccessState());
+    }).catchError((error){
+      debugPrint("error in getting Privacy Policies : $error");
+      emit(GetAppPrivacyPoliciesErrorState());
+    });
   }
 
 

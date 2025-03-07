@@ -496,7 +496,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                             children: [
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(50);
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[0].toString()));
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
@@ -507,7 +507,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                       Container(
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
-                                          color: cubit.giftWithPackageType==50
+                                          color: cubit.giftWithPackageType==int.parse(cubit.packageListPrice[0].toString())
                                               ? ColorManager.primaryBlue
                                               : ColorManager.gray,
                                           borderRadius: BorderRadius.circular(10),
@@ -531,7 +531,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                           borderRadius: BorderRadius.circular(500),
                                         ),
                                         child: Text(
-                                          "50",
+                                          cubit.packageListPrice[0].toString(),
                                           style: TextStyles.textStyle12Bold
                                               .copyWith(color: ColorManager.black),
                                         ),
@@ -542,7 +542,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                               ),
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(100);
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[1].toString()));
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
@@ -553,7 +553,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                       Container(
                                         clipBehavior: Clip.antiAlias,
                                         decoration: BoxDecoration(
-                                          color: cubit.giftWithPackageType==100
+                                          color: cubit.giftWithPackageType== int.parse(cubit.packageListPrice[1].toString())
                                               ? ColorManager.primaryBlue
                                               : ColorManager.gray,
                                           borderRadius: BorderRadius.circular(10),
@@ -577,7 +577,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                           borderRadius: BorderRadius.circular(500),
                                         ),
                                         child: Text(
-                                          "100",
+                                          cubit.packageListPrice[1].toString(),
                                           style: TextStyles.textStyle12Bold
                                               .copyWith(color: ColorManager.black),
                                         ),

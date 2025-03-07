@@ -131,6 +131,14 @@ class PaymentScreen extends StatelessWidget {
               SizedBox(height: SizeConfig.height * 0.01),
 
               DefaultButton(
+                buttonText: "stcPay",
+                onPressed: () {},
+                buttonColor: ColorManager.primaryBlue,
+              ),
+
+              SizedBox(height: SizeConfig.height * 0.01),
+
+              DefaultButton(
                 buttonText: AppLocalizations.of(context)!
                     .translate('payment')
                     .toString(),

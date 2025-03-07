@@ -34,3 +34,7 @@ final class GetTotalGiftPriceSuccessState extends OccasionState {}
 final class CaptureAndShareQrSuccessState extends OccasionState {}
 final class CaptureAndShareQrErrorState extends OccasionState {}
 
+final class GetOccasionTaxesLoadingState extends OccasionState {}
+final class GetOccasionTaxesSuccessState extends OccasionState {}
+final class GetOccasionTaxesErrorState extends OccasionState {}
+

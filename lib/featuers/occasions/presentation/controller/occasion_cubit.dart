@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -137,9 +138,9 @@ class OccasionCubit extends Cubit<OccasionState> {
   double getTotalGiftPrice() {
      double giftPriceNumber = double.parse(moneyAmountController.text);
      double packagePriceNumber = double.parse(giftWithPackageType.toString());
-     double appCommission = giftPriceNumber * 0.05;
+     double appCommission = giftPriceNumber * serviceTax;
      giftPrice = giftPriceNumber + packagePriceNumber + appCommission;
-    emit(GetTotalGiftPriceSuccessState());
+     emit(GetTotalGiftPriceSuccessState());
      return giftPrice;
   }
 
@@ -253,6 +254,26 @@ class OccasionCubit extends Cubit<OccasionState> {
       print('Error sharing QR code: $e');
       emit(CaptureAndShareQrErrorState());
     }
+  }
+
+  var deliveryTax = 0.0;
+  List packageListPrice = [];
+  var serviceTax = 0.0;
+
+  // get taxes from firebase collection taxs.
+  Future<void> getOccasionTaxes() async{
+    emit(GetOccasionTaxesLoadingState());
+
+    FirebaseFirestore.instance.collection('taxs').get().then((value) {
+      deliveryTax = double.parse(value.docs[0]['delivery_tax'].toString());
+      packageListPrice = value.docs[0]['packaging_tax'];
+      serviceTax = double.parse(value.docs[0]['service_tax'].toString());
+      emit(GetOccasionTaxesSuccessState());
+    }).catchError((error){
+      debugPrint('error when get occasion taxes: $error');
+      emit(GetOccasionTaxesErrorState());
+    });
+
   }
 
 }

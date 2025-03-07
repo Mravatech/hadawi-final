@@ -7,6 +7,8 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.da
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/row_data_widget.dart';
+import 'package:hadawi_app/featuers/settings/presentation/view/widgets/notification_screen.dart';
+import 'package:hadawi_app/featuers/settings/presentation/view/widgets/privacy_policies.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
@@ -98,10 +100,29 @@ class SettingViewBody extends StatelessWidget {
                     ),
 
                     // الاشعارات
-                    RowDataWidget(
-                        image:AssetsManager.notificationAccount,
-                        title: AppLocalizations.of(context)!.translate('notification').toString(),
-                        lang: false),
+                    InkWell(
+                      onTap: ()=>customPushNavigator(context, NotificationScreen()),
+                      child: RowDataWidget(
+                          image:AssetsManager.notificationAccount,
+                          title: AppLocalizations.of(context)!.translate('notification').toString(),
+                          lang: false,
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Divider(color: ColorManager.white,),
+                    ),
+
+                    // الاشعارات
+                    InkWell(
+                      onTap: ()=>customPushNavigator(context, PrivacyPoliciesScreen()),
+                      child: RowDataWidget(
+                        image: AssetsManager.supportAccount,
+                        title: AppLocalizations.of(context)!.translate('privacyPolicies').toString(),
+                        lang: false,
+                      ),
+                    ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),

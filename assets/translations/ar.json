@@ -276,5 +276,7 @@
   "validateMoneyAmount": "مبلغ المال مطلوب",
   "totalAmount": "مجموع المبلغ",
   "createOccasion": "انشاء مناسبة",
-  "occasionQr": "كود المناسبة QR"
+  "occasionQr": "كود المناسبة QR",
+  "no_notification": "لا يوجد إشعارات",
+  "privacyPolicies": "سياسات الخصوصية"
 }
