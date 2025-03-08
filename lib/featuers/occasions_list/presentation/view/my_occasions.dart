@@ -11,7 +11,6 @@ import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
 class MyOccasions extends StatefulWidget {
   const MyOccasions({super.key});
@@ -117,17 +116,20 @@ class _MyOccasionsState extends State<MyOccasions> {
                                             giftPrice: occasionItem.giftPrice,
                                             giftType: occasionItem.giftType,
                                             isSharing: occasionItem.isSharing,
-                                              receiverName: occasionItem.receiverName,
-                                              receiverPhone: occasionItem.receiverPhone,
-                                              bankName: occasionItem.bankName,
-                                              ibanNumber: occasionItem.ibanNumber,
-                                              receivingDate: occasionItem.receivingDate,
-                                              isContainName: occasionItem.isContainName,
-                                              giftCard: occasionItem.giftCard,
-                                              city: occasionItem.city,
-                                              district: occasionItem.district,
-                                              note: occasionItem.note,
-                                              isPrivate: occasionItem.isPrivate
+                                            receiverName: occasionItem.receiverName,
+                                            receiverPhone: occasionItem.receiverPhone,
+                                            bankName: occasionItem.bankName,
+                                            ibanNumber: occasionItem.ibanNumber,
+                                            receivingDate: occasionItem.receivingDate,
+                                            isContainName: occasionItem.isContainName,
+                                            giftCard: occasionItem.giftCard,
+                                            city: occasionItem.city,
+                                            district: occasionItem.district,
+                                            note: occasionItem.note,
+                                            isPrivate: occasionItem.isPrivate,
+                                            discount: occasionItem.discount,
+                                            appCommission: occasionItem.appCommission,
+                                            deliveryPrice: occasionItem.deliveryPrice,
                                           ),
                                         ));
                                       },

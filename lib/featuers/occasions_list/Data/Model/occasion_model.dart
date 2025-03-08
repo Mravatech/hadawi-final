@@ -26,6 +26,9 @@ class OccasionModel {
   final String district;
   final String note;
   final bool isPrivate;
+  final double discount;
+  final double appCommission;
+  final double deliveryPrice;
 
   OccasionModel({
     required this.giftLink,
@@ -54,7 +57,10 @@ class OccasionModel {
     required this.city,
     required this.district,
     required this.note,
-    required this.isPrivate
+    required this.isPrivate,
+    required this.discount,
+    required this.appCommission,
+    required this.deliveryPrice,
   });
 
   factory OccasionModel.fromMap(Map<String, dynamic> json) => OccasionModel(
@@ -84,7 +90,10 @@ class OccasionModel {
     city: json["city"]??'',
     district: json["district"]??'',
     note: json["note"]??'',
-    isPrivate: json["isPrivate"]??false
+    isPrivate: json["isPrivate"]??false,
+    discount: json["discount"]??0.0,
+    appCommission: json["appCommission"]??0.0,
+    deliveryPrice: json["deliveryPrice"]??0.0,
   );
 
   Map<String, dynamic> toMap() => {
@@ -114,6 +123,9 @@ class OccasionModel {
     "city": city,
     "district": district,
     "note": note,
-    "isPrivate": isPrivate
+    "isPrivate": isPrivate,
+    "discount": discount,
+    "appCommission": appCommission,
+    "deliveryPrice": deliveryPrice,
   };
 }

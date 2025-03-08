@@ -38,3 +38,10 @@ final class GetOccasionTaxesLoadingState extends OccasionState {}
 final class GetOccasionTaxesSuccessState extends OccasionState {}
 final class GetOccasionTaxesErrorState extends OccasionState {}
 
+
+final class GetOccasionDiscountLoadingState extends OccasionState {}
+final class GetOccasionDiscountSuccessState extends OccasionState {}
+final class GetOccasionDiscountErrorState extends OccasionState {}
+
+final class SwitchDiscountFieldSuccess extends OccasionState {}
+

@@ -126,7 +126,10 @@ class _OthersOccasionsState extends State<OthersOccasions> {
                                                 city: occasionItem.city,
                                                 district: occasionItem.district,
                                                 note: occasionItem.note,
-                                                isPrivate: occasionItem.isPrivate
+                                                isPrivate: occasionItem.isPrivate,
+                                              discount: occasionItem.discount,
+                                              appCommission: occasionItem.appCommission,
+                                              deliveryPrice: occasionItem.deliveryPrice,
                                             ),
                                           ));
                                         },

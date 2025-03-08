@@ -118,7 +118,7 @@ class SettingViewBody extends StatelessWidget {
                     InkWell(
                       onTap: ()=>customPushNavigator(context, PrivacyPoliciesScreen()),
                       child: RowDataWidget(
-                        image: AssetsManager.supportAccount,
+                        image: AssetsManager.privacyPolices,
                         title: AppLocalizations.of(context)!.translate('privacyPolicies').toString(),
                         lang: false,
                       ),

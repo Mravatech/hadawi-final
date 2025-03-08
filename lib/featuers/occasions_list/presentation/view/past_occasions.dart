@@ -152,7 +152,11 @@ class _PastOccasionsState extends State<PastOccasions> {
                                                         occasionItem.district,
                                                     note: occasionItem.note,
                                                     isPrivate:
-                                                        occasionItem.isPrivate),
+                                                        occasionItem.isPrivate,
+                                                  discount: occasionItem.discount,
+                                                  appCommission: occasionItem.appCommission,
+                                                  deliveryPrice: occasionItem.deliveryPrice,
+                                                ),
                                               ));
                                         },
                                         forOthers: true,

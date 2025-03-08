@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/verifiy_otp_code_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
@@ -104,7 +105,8 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String phone,
       required String name,
       required String brithDate,
-      required String gender}) async {
+      required String gender,
+      }) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -114,13 +116,12 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           name: name,
           uId: user.user!.uid,
           brithDate: brithDate,
-          gender: gender);
+          gender: gender,
+      );
       await getUserData(uId:  user.user!.uid);
     } on FirebaseAuthException catch (e) {
       print('error $e');
       throw FirebaseExceptions(firebaseAuthException: e);
-    } catch (e) {
-      throw Exception('Unexpected error: $e');
     }
   }
 
@@ -131,14 +132,17 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String name,
       required String uId,
       required String brithDate,
-      required String gender}) async {
+      required String gender,
+      }) async {
     UserModel userModel = UserModel(
         email: email,
         phone: phone,
         name: name,
         uId: uId,
         brithDate: brithDate,
-        gender: gender);
+        gender: gender,
+        block: false
+    );
 
     try {
       await firestore.collection('users').doc(uId).set(userModel.toMap());
@@ -153,6 +157,10 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     try {
       final user = await firestore.collection('users').doc(uId).get();
       UserModel userModel = UserModel.fromFire(user.data()!);
+      if(userModel.block==true){
+        logout();
+        throw FirebaseAuthException(code: 'user-blocked');
+      }
       UserDataFromStorage.setUserName(userModel.name);
       UserDataFromStorage.setEmail(userModel.email);
       UserDataFromStorage.setPhoneNumber(userModel.phone);

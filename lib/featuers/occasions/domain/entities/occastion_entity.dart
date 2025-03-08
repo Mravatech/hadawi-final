@@ -26,6 +26,9 @@ class OccasionEntity {
   final String district;
   final String note;
   final bool isPrivate;
+  final double discount;
+  final double appCommission;
+  final double deliveryPrice;
 
   OccasionEntity(
   {
@@ -55,6 +58,9 @@ class OccasionEntity {
     required this.city,
     required this.district,
     required this.note,
-    required this.isPrivate
+    required this.isPrivate,
+    required this.discount,
+    required this.appCommission,
+    required this.deliveryPrice,
   });
 }

@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
+import 'package:hadawi_app/featuers/visitors/data/models/banner_model.dart';
 import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
@@ -96,6 +98,24 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   void changeActiveOrders(bool value){
     isActiveOrders = value;
     emit(ChangeActiveOrdersState());
+  }
+
+  List<BannerModel> banners = [];
+
+  Future<void> getBannerData()async{
+    banners.clear();
+    emit(GetBannerDataLoadingState());
+
+    FirebaseFirestore.instance.collection('Banners').get().then((value) {
+      value.docs.forEach((element) {
+        banners.add(BannerModel.fromMap(element.data()));
+      });
+      emit(GetBannerDataSuccessState());
+    }).catchError((error){
+      debugPrint("error in getting banner data: $error");
+      emit(GetBannerDataErrorState());
+    });
+
   }
 
 }

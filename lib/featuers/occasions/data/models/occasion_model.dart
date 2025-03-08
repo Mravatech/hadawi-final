@@ -30,6 +30,9 @@ class OccasionModel extends OccasionEntity {
         required super.district,
         required super.note,
         required super.isPrivate,
+        required super.discount,
+        required super.appCommission,
+        required super.deliveryPrice,
       });
 
   factory OccasionModel.fromJson(Map<String, dynamic> json) => OccasionModel(
@@ -59,7 +62,10 @@ class OccasionModel extends OccasionEntity {
         city: json['city']??'',
         district: json['district']??'',
         note: json['note']??'',
-        isPrivate: json['isPrivate']??false
+        isPrivate: json['isPrivate']??false,
+        discount: json['discount']??0.0,
+        appCommission: json['appCommission']??0.0,
+        deliveryPrice: json['deliveryPrice']??0.0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -89,6 +95,9 @@ class OccasionModel extends OccasionEntity {
         'city': city,
         'district': district,
         'note': note,
-        'isPrivate': isPrivate
+        'isPrivate': isPrivate,
+        'discount': discount,
+        'appCommission': appCommission,
+        'deliveryPrice': deliveryPrice,
       };
 }

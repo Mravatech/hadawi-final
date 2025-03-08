@@ -10,7 +10,9 @@ import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
+import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../../utiles/cashe_helper/cashe_helper.dart';
 import 'money_screen.dart';
@@ -22,7 +24,16 @@ class ForMeBody extends StatefulWidget {
   State<ForMeBody> createState() => _ForMeBodyState();
 }
 
-class _ForMeBodyState extends State<ForMeBody> {
+class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addObserver(this);
+    context.read<OccasionCubit>().getOccasionTaxes();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
@@ -491,7 +502,7 @@ class _ForMeBodyState extends State<ForMeBody> {
                                 .copyWith(color: ColorManager.black.withOpacity(.5)),
                           ),
                           SizedBox(height: mediaQuery.height * 0.02),
-                          Row(
+                          state is GetOccasionTaxesLoadingState? LoadingAnimationWidget() :Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               InkWell(
@@ -1079,7 +1090,7 @@ class _ForMeBodyState extends State<ForMeBody> {
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    if (cubit.forMeFormKey.currentState!.validate()) {
+                    if (cubit.forMeFormKey.currentState!.validate()){
                       // if (cubit.isPresent) {
                       //   customPushNavigator(
                       //       context,

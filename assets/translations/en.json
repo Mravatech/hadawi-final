@@ -278,5 +278,14 @@
   "createOccasion": "Create Occasion",
   "occasionQr": "Occasion QR Code",
   "no_notification": "No notifications yet",
-  "privacyPolicies": "Privacy Policies"
+  "privacyPolicies": "Privacy Policies",
+  "appCommission": "App Commission",
+  "deliveryPrice": "Delivery Price",
+  "addDiscountCard": "Add Discount Card",
+  "addDiscountCardMessage": "Add a discount code to get discounts",
+  "discountCardHint": "Enter discount code",
+  "validateDiscountCard": "Discount code is required",
+  "discountAmount": "Discount Amount",
+  "apply": "Apply",
+  "cancel": "Cancel"
 }

@@ -10,6 +10,8 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/widgets/default_text_field.dart';
+import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class OccasionSummary extends StatelessWidget {
@@ -71,16 +73,20 @@ class OccasionSummary extends StatelessWidget {
                     children: [
                       /// occasion name
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "${AppLocalizations.of(context)!.translate('occasionName').toString()} : ",
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          Text(
-                            cubit.occasionNameController.text,
-                            style: TextStyles.textStyle12Bold
-                                .copyWith(color: ColorManager.primaryBlue),
+                          Expanded(
+                            child: Text(
+                              cubit.occasionNameController.text,
+                              style: TextStyles.textStyle12Bold
+                                  .copyWith(color: ColorManager.primaryBlue),
+                            ),
                           ),
                         ],
                       ),
@@ -89,16 +95,19 @@ class OccasionSummary extends StatelessWidget {
                       Visibility(
                         visible: cubit.isForMe == false ? true : false,
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "${AppLocalizations.of(context)!.translate('personName').toString()} : ",
                               style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.black),
                             ),
-                            Text(
-                              cubit.nameController.text,
-                              style: TextStyles.textStyle12Bold
-                                  .copyWith(color: ColorManager.primaryBlue),
+                            Expanded(
+                              child: Text(
+                                cubit.nameController.text,
+                                style: TextStyles.textStyle12Bold
+                                    .copyWith(color: ColorManager.primaryBlue),
+                              ),
                             ),
                           ],
                         ),
@@ -114,32 +123,38 @@ class OccasionSummary extends StatelessWidget {
                           children: [
                             /// gift name
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "${AppLocalizations.of(context)!.translate('giftName').toString()} : ",
                                   style: TextStyles.textStyle12Bold
                                       .copyWith(color: ColorManager.black),
                                 ),
-                                Text(
-                                  cubit.giftNameController.text,
-                                  style: TextStyles.textStyle12Bold
-                                      .copyWith(color: ColorManager.primaryBlue),
+                                Expanded(
+                                  child: Text(
+                                    cubit.giftNameController.text,
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.primaryBlue),
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(height: mediaQuery.height * 0.01),
                             /// link
                             Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   "${AppLocalizations.of(context)!.translate('link').toString()} : ",
                                   style: TextStyles.textStyle12Bold
                                       .copyWith(color: ColorManager.black),
                                 ),
-                                Text(
-                                  cubit.linkController.text,
-                                  style: TextStyles.textStyle12Bold
-                                      .copyWith(color: ColorManager.primaryBlue),
+                                Expanded(
+                                  child: Text(
+                                    cubit.linkController.text,
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.primaryBlue),
+                                  ),
                                 ),
                               ],
                             ),
@@ -382,16 +397,19 @@ class OccasionSummary extends StatelessWidget {
 
                       /// message
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "${AppLocalizations.of(context)!.translate('giftCard').toString()} : ",
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          Text(
-                            cubit.moneyGiftMessageController.text,
-                            style: TextStyles.textStyle12Bold
-                                .copyWith(color: ColorManager.primaryBlue),
+                          Expanded(
+                            child: Text(
+                              cubit.moneyGiftMessageController.text,
+                              style: TextStyles.textStyle12Bold
+                                  .copyWith(color: ColorManager.primaryBlue),
+                            ),
                           ),
                         ],
                       ),
@@ -401,21 +419,95 @@ class OccasionSummary extends StatelessWidget {
                       Visibility(
                         visible: cubit.isPresent== true || (cubit.isPresent ==false && cubit.giftWithPackage== true) ? true : false,
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               "${AppLocalizations.of(context)!.translate('note').toString()} : ",
                               style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.black),
                             ),
-                            Text(
-                              cubit.giftDeliveryNoteController.text,
-                              style: TextStyles.textStyle12Bold
-                                  .copyWith(color: ColorManager.primaryBlue),
+                            Expanded(
+                              child: Text(
+                                cubit.giftDeliveryNoteController.text,
+                                style: TextStyles.textStyle12Bold
+                                    .copyWith(color: ColorManager.primaryBlue),
+                              ),
                             ),
                           ],
                         ),
                       ),
                       SizedBox(height: mediaQuery.height * 0.01),
+
+                      Row(
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('appCommission').toString()} : ",
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          Text(
+                            cubit.getAppCommission().toString(),
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.primaryBlue),
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.01),
+
+                      Row(
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('deliveryPrice').toString()} : ",
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          Text(
+                            cubit.deliveryTax.toString(),
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.primaryBlue),
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            AppLocalizations.of(context)!.translate('rsa').toString(),
+                            style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.01),
+
+                      Visibility(
+                        visible: cubit.showDiscountValue == true? true : false,
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "${AppLocalizations.of(context)!.translate('discountAmount').toString()} : ",
+                                  style: TextStyles.textStyle12Bold
+                                      .copyWith(color: ColorManager.black),
+                                ),
+                                Text(
+                                  cubit.discountValue.toString(),
+                                  style: TextStyles.textStyle12Bold
+                                      .copyWith(color: ColorManager.primaryBlue),
+                                ),
+                                SizedBox(width: 10,),
+                                Text(
+                                  AppLocalizations.of(context)!.translate('rsa').toString(),
+                                  style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                          ],
+                        ),
+                      ),
+
                       Row(
                         children: [
                           Text(
@@ -432,41 +524,142 @@ class OccasionSummary extends StatelessWidget {
                           Text(
                             AppLocalizations.of(context)!.translate('rsa').toString(),
                             style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.primaryBlue),
-                          )
+                          ),
                         ],
+                      ),
+
+                      Visibility(
+                        visible: cubit.showDiscountField == true? true : false,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(height: mediaQuery.height * 0.01,),
+                            Text(
+                              "${AppLocalizations.of(context)!.translate('addDiscountCardMessage').toString()} ",
+                              style: TextStyles.textStyle12Bold
+                                  .copyWith(color: ColorManager.black),
+                            ),
+                            SizedBox(height: mediaQuery.height * 0.01),
+                            Form(
+                              key: cubit.discountCardKey,
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: DefaultTextField(
+                                        controller: cubit.discountCodeController,
+                                        hintText: AppLocalizations.of(context)!
+                                            .translate('discountCardHint')
+                                            .toString(),
+                                        validator: (value) {
+                                          if (value!.trim().isEmpty) {
+                                            return AppLocalizations.of(context)!
+                                                .translate('validateDiscountCard')
+                                                .toString();
+                                          }
+                                          return null;
+                                        },
+                                        keyboardType: TextInputType.text,
+                                        textInputAction: TextInputAction.done,
+                                        fillColor: ColorManager.gray),
+                                  ),
+                                  SizedBox(width: SizeConfig.height*0.01,),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if(cubit.discountCardKey.currentState!.validate()){
+                                        cubit.getDiscountCode();
+                                      }
+                                    },
+                                    child: state is GetOccasionDiscountLoadingState? LoadingAnimationWidget() :Container(
+                                      height: mediaQuery.height * .055,
+                                      width: mediaQuery.width * .2,
+                                      decoration: BoxDecoration(
+                                        color: ColorManager.primaryBlue,
+                                        borderRadius: BorderRadius.circular(
+                                            mediaQuery.height * 0.05),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('apply')
+                                                .toString(),
+                                            style: TextStyles.textStyle12Bold
+                                                .copyWith(color: ColorManager.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
 
                       SizedBox(height: mediaQuery.height * 0.05),
                       /// share and save
-                      Align(
-                        alignment: Alignment.center,
-                        child: GestureDetector(
-                          onTap: () async {
-                            context.read<OccasionCubit>().addOccasion();
-                          },
-                          child: Container(
-                            height: mediaQuery.height * .055,
-                            width: mediaQuery.width * .4,
-                            decoration: BoxDecoration(
-                              color: ColorManager.primaryBlue,
-                              borderRadius: BorderRadius.circular(
-                                  mediaQuery.height * 0.05),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('createOccasion')
-                                      .toString(),
-                                  style: TextStyles.textStyle12Bold
-                                      .copyWith(color: ColorManager.white),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              context.read<OccasionCubit>().addOccasion();
+                            },
+                            child: Container(
+                              height: mediaQuery.height * .055,
+                              width: mediaQuery.width * .4,
+                              decoration: BoxDecoration(
+                                color: ColorManager.primaryBlue,
+                                borderRadius: BorderRadius.circular(
+                                    mediaQuery.height * 0.05),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('createOccasion')
+                                        .toString(),
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.white),
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () async {
+                              cubit.switchDiscountField();
+                            },
+                            child: Container(
+                              height: mediaQuery.height * .055,
+                              width: mediaQuery.width * .4,
+                              decoration: BoxDecoration(
+                                color: ColorManager.primaryBlue,
+                                borderRadius: BorderRadius.circular(
+                                    mediaQuery.height * 0.05),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Text(
+                                    cubit.showDiscountField? AppLocalizations.of(context)!
+                                        .translate('cancel')
+                                        .toString():AppLocalizations.of(context)!
+                                        .translate('addDiscountCard')
+                                        .toString(),
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(height: mediaQuery.height * 0.05),
                     ],

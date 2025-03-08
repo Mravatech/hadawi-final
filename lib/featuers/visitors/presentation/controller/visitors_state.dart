@@ -29,3 +29,7 @@ final class SendFollowRequestErrorState extends VisitorsState {
 }
 
 final class ChangeActiveOrdersState extends VisitorsState {}
+
+final class GetBannerDataLoadingState extends VisitorsState {}
+final class GetBannerDataSuccessState extends VisitorsState {}
+final class GetBannerDataErrorState extends VisitorsState {}

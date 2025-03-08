@@ -152,13 +152,17 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                                                         occasionItem.district,
                                                     note: occasionItem.note,
                                                     isPrivate:
-                                                        occasionItem.isPrivate),
+                                                        occasionItem.isPrivate,
+                                                  discount: occasionItem.discount,
+                                                  appCommission: occasionItem.appCommission,
+                                                  deliveryPrice: occasionItem.deliveryPrice,
+                                                ),
                                               ));
                                         },
                                         forOthers: true,
                                         occasionName: occasionItem.occasionName,
                                         personName: occasionItem.personName,
-                                        imageUrl: occasionItem.occasionImage);
+                                        imageUrl: occasionItem.occasionImage,);
                                   },
                                 ),
                               )

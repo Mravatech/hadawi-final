@@ -30,6 +30,9 @@ class FirebaseFaliure extends Faliure {
       case "user-not-found":
         return FirebaseFaliure(message: "User not found");
 
+      case "user-blocked":
+        return FirebaseFaliure(message: "Your account has been blocked, please contact support");
+
       case "wrong-password":
         return FirebaseFaliure(message: "Wrong password");
 

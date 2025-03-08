@@ -158,31 +158,6 @@ class OccasionDetails extends StatelessWidget {
                     height: MediaQuery.sizeOf(context).height * 0.02,
                   ),
 
-                  /// occasion date
-                  Text(
-                    AppLocalizations.of(context)!
-                        .translate('occasionDate')
-                        .toString(),
-                    style: TextStyles.textStyle18Bold.copyWith(),
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.01,
-                  ),
-                  DefaultTextField(
-                    controller: TextEditingController(),
-                    hintText: occasionEntity.occasionDate,
-                    validator: (value) {
-                      return null;
-                    },
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    fillColor: ColorManager.gray,
-                    enable: false,
-                  ),
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.02,
-                  ),
-
                   /// gift
                   Text(
                     AppLocalizations.of(context)!.translate('gift').toString(),
@@ -288,7 +263,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: occasionEntity.moneyGiftAmount.toString(),
+                    hintText: (occasionEntity.giftPrice - occasionEntity.moneyGiftAmount).toString(),
                     validator: (value) {
                       return null;
                     },

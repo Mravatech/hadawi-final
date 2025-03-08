@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:typed_data';
@@ -48,7 +50,9 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryNoteController = TextEditingController();
   TextEditingController giftDeliveryCityController = TextEditingController();
   TextEditingController giftDeliveryStreetController = TextEditingController();
+  TextEditingController discountCodeController = TextEditingController();
   final GlobalKey qrKey = GlobalKey();
+  final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
   bool giftWithPackage = true;
   int giftWithPackageType = 50;
@@ -135,11 +139,18 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SetMoneyReceiveDateState());
   }
 
+  double getAppCommission() {
+    double giftPriceNumber = double.parse(moneyAmountController.text);
+    double appCommission = giftPriceNumber * serviceTax;
+    emit(GetTotalGiftPriceSuccessState());
+    return appCommission;
+  }
+
   double getTotalGiftPrice() {
      double giftPriceNumber = double.parse(moneyAmountController.text);
      double packagePriceNumber = double.parse(giftWithPackageType.toString());
      double appCommission = giftPriceNumber * serviceTax;
-     giftPrice = giftPriceNumber + packagePriceNumber + appCommission;
+     giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
      emit(GetTotalGiftPriceSuccessState());
      return giftPrice;
   }
@@ -187,10 +198,10 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(AddOccasionLoadingState());
 
     try {
-      final String? imageUrl = UserDataFromStorage.giftType == '' ||
-              UserDataFromStorage.giftType == 'هدية'
+      final String? imageUrl = isPresent
           ? await uploadImage()
           : null;
+      debugPrint('imageUrl: $imageUrl');
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
         occasionName: occasionNameController.text,
@@ -198,7 +209,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,
-        personName: nameController.text,
+        personName: UserDataFromStorage.userNameFromStorage,
         personPhone: UserDataFromStorage.phoneNumberFromStorage,
         personEmail: UserDataFromStorage.emailFromStorage,
         giftImage: imageUrl ?? '',
@@ -218,6 +229,9 @@ class OccasionCubit extends Cubit<OccasionState> {
         giftCard: moneyGiftMessageController.text,
         isContainName: giftContainsNameValue,
         isPrivate: isPublicValue,
+        discount: discountValue,
+        appCommission: getAppCommission(),
+        deliveryPrice: deliveryTax,
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
@@ -272,6 +286,48 @@ class OccasionCubit extends Cubit<OccasionState> {
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');
       emit(GetOccasionTaxesErrorState());
+    });
+
+  }
+  
+  
+  bool showDiscountField = false;
+  
+  void switchDiscountField() {
+    showDiscountField = !showDiscountField;
+    emit(SwitchDiscountFieldSuccess());
+  }
+
+  double discountValue = 0.0;
+  bool showDiscountValue = false;
+
+  Future<void> getDiscountCode() async {
+    emit(GetOccasionDiscountLoadingState());
+    
+    FirebaseFirestore.instance.collection("PromoCodes").get().then((value){
+      value.docs.forEach((element) {
+        if(discountCodeController.text.trim() == element.data()['code']){
+          if(element.data()['maxUsage']> element.data()['used'] && DateTime.parse(element.data()['expiryDate']).isAfter(DateTime.now())){
+            discountValue = giftPrice * element.data()['discount'];
+            giftPrice = giftPrice - discountValue;
+            customToast(title: "تم تطبيق الخصم", color: ColorManager.primaryBlue);
+            showDiscountValue = true;
+            emit(GetOccasionDiscountSuccessState());
+          }else{
+            showDiscountValue = false;
+            customToast(title: "كود الخصم غير صالح", color: ColorManager.primaryBlue);
+            emit(GetOccasionDiscountSuccessState());
+          }
+        }else{
+          showDiscountValue = false;
+          customToast(title: "كود الخصم غير صحيح, اعد كتابته مره اخرى", color: ColorManager.red);
+          emit(GetOccasionDiscountSuccessState());
+        }
+      });
+    }).catchError((error){
+      showDiscountValue = false;
+      debugPrint('error when get discount code: $error');
+      emit(GetOccasionDiscountErrorState());
     });
 
   }

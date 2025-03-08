@@ -278,5 +278,16 @@
   "createOccasion": "انشاء مناسبة",
   "occasionQr": "كود المناسبة QR",
   "no_notification": "لا يوجد إشعارات",
-  "privacyPolicies": "سياسات الخصوصية"
+  "privacyPolicies": "سياسات الخصوصية",
+  "appCommission": "عمولة التطبيق",
+  "deliveryPrice": "سعر التوصيل",
+  "addDiscountCard": "إضافة بطاقة خصم",
+  "addDiscountCardMessage": "أدخل الكود للحصول على الخصم",
+  "discountCardHint": "أدخل كود الخصم",
+  "validateDiscountCard": "كود الخصم مطلوب",
+  "discountAmount": "قيمة الخصم",
+  "apply": "تطبيق",
+  "cancel": "إلغاء"
+
+
 }

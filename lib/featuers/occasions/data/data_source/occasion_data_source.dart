@@ -46,6 +46,9 @@ class OccasionDataSource {
     required String district,
     required String note,
     required bool isPrivate,
+    required double discount,
+    required double appCommission,
+    required double deliveryPrice,
   }) async {
     final docRef = fireStore.collection('Occasions').doc();
     final occasionId = docRef.id;
@@ -77,7 +80,10 @@ class OccasionDataSource {
       city: city,
       district: district,
       note: note,
-      isPrivate: isPrivate
+      isPrivate: isPrivate,
+      discount: discount,
+      appCommission: appCommission,
+      deliveryPrice: deliveryPrice,
     );
 
     try {

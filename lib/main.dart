@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           )),
           BlocProvider(create: (context)=> PaymentCubit()),
           BlocProvider(create: (context)=> HomeCubit()..getUserNotifications()..getPrivacyPolices()),
-          BlocProvider(create: (context)=> OccasionCubit()..getOccasionTaxes()),
+          BlocProvider(create: (context)=> OccasionCubit()),
           BlocProvider(create: (context)=> VisitorsCubit(getIt())),
           BlocProvider(create: (context)=> OccasionsListCubit()),
           BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
