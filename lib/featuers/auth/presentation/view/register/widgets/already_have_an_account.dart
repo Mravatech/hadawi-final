@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import '../../../../../../utiles/helper/material_navigation.dart';
 
 class AlreadyHaveAnAccount extends StatelessWidget {
@@ -19,7 +21,7 @@ class AlreadyHaveAnAccount extends StatelessWidget {
             fontSize: MediaQuery.sizeOf(context).height*0.018
         )),
         GestureDetector(
-          onTap: ()=> customPushNavigator(context, LoginScreen()),
+          onTap: ()=> context.replace(AppRouter.login),
           child: Text(AppLocalizations.of(context)!.translate('login').toString(),
               style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.primaryBlue,

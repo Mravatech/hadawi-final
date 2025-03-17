@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
@@ -18,6 +19,7 @@ import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -321,7 +323,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                         IconButton(
                                           key: logoutKey,
                                           onPressed: (){
-                                            customPushAndRemoveUntil(context, LoginScreen());
+                                            context.go(AppRouter.login);
                                           },
                                           icon: const Icon(Icons.login_outlined),color: ColorManager.black,
                                         ),

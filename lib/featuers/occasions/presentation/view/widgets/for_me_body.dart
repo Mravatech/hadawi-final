@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_screen.dart';
@@ -8,6 +9,7 @@ import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
@@ -410,6 +412,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                     ),
 
                     SizedBox(height: mediaQuery.height * 0.02),
+
+
                     Row(
                       mainAxisAlignment: CashHelper.languageKey == 'ar'
                           ? MainAxisAlignment.end
@@ -448,7 +452,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                                       AppLocalizations.of(context)!
                                           .translate('withPackaging')
                                           .toString(),
-                                      style: TextStyles.textStyle18Bold
+                                      style: TextStyles.textStyle12Bold
                                           .copyWith(color: ColorManager.white),
                                     ),
                                   ),
@@ -476,7 +480,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                                       AppLocalizations.of(context)!
                                           .translate('withoutPackaging')
                                           .toString(),
-                                      style: TextStyles.textStyle18Bold
+                                      style: TextStyles.textStyle12Bold
                                           .copyWith(color: ColorManager.white),
                                     ),
                                   ),
@@ -678,7 +682,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               AppLocalizations.of(context)!
                                   .translate('withPackaging')
                                   .toString(),
-                              style: TextStyles.textStyle18Bold
+                              style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.white),
                             ),
                           ),
@@ -706,7 +710,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               AppLocalizations.of(context)!
                                   .translate('withoutPackaging')
                                   .toString(),
-                              style: TextStyles.textStyle18Bold
+                              style: TextStyles.textStyle12Bold
                                   .copyWith(color: ColorManager.white),
                             ),
                           ),
@@ -930,6 +934,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
+                    SizedBox(height: mediaQuery.height * 0.01),
                     /// receiver name
                     Text(
                       AppLocalizations.of(context)!.translate('theDistrict').toString(),

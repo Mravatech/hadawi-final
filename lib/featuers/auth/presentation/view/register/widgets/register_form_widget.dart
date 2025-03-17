@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
@@ -12,6 +13,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -170,7 +172,7 @@ class RegisterFormWidget extends StatelessWidget {
                 BlocConsumer<AuthCubit,AuthStates>(
                   listener: (context, state) {
                      if( state is UserRegisterSuccessState){
-                        customPushAndRemoveUntil(context, HomeLayout());
+                        context.replace(AppRouter.login);
                      }
                      if( state is UserRegisterErrorState){
                        customToast(title: state.message, color: ColorManager.error);

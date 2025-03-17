@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -9,6 +10,7 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -28,6 +30,10 @@ class OccasionQr extends StatelessWidget {
             backgroundColor: ColorManager.white,
             appBar: AppBar(
                 backgroundColor: ColorManager.gray,
+                leading: IconButton(
+                    onPressed: (){
+                      customPushNavigator(context, HomeLayout());
+                    }, icon: Icon(Icons.arrow_back)),
                 title: Text(
                   AppLocalizations.of(context)!
                       .translate('occasionQr')

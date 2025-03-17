@@ -7,11 +7,17 @@ import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_
 class AppRouter {
   static const String splash = '/';
   static const String login = '/login';
+  static const String signUp = '/sign-up';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String occasionsList = '/occasions-list';
   static const String visitors = '/visitors';
   static const String occasionDetails = '/Occasion-details';
+  static const String notification = '/notification';
+  static const String settings = '/settings';
+  static const String payment = '/payment';
+  static const String privacyPolicies = '/privacy-policies';
+  static const String summary = '/summary';
 
 
   // Generate route based on settings

@@ -23,7 +23,7 @@ class OccasionSummary extends StatelessWidget {
         listener: (context, state) {
           if (state is AddOccasionSuccessState) {
             context.read<OccasionCubit>().resetData();
-            customPushReplacement(
+            customPushNavigator(
                 context,
                 OccasionQr(occasionId: state.occasion.occasionId, occasionName: state.occasion.occasionName,)
             );
@@ -45,7 +45,7 @@ class OccasionSummary extends StatelessWidget {
                   backgroundColor: ColorManager.gray,
                   leading: IconButton(
                       onPressed: (){
-                        customPushAndRemoveUntil(context, HomeLayout());
+                        Navigator.pop(context);
                       }, icon: Icon(Icons.arrow_back)),
                   title: Text(
                     AppLocalizations.of(context)!

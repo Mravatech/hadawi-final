@@ -33,7 +33,7 @@ class PrivacyPoliciesScreen extends StatelessWidget {
                 backgroundColor: ColorManager.gray,
                 leading: IconButton(
                     onPressed: (){
-                      customPushAndRemoveUntil(context, HomeLayout());
+                      Navigator.pop(context);
                     }, icon: Icon(Icons.arrow_back)),
                 title: Text(
                   AppLocalizations.of(context)!.translate('privacyPolicies').toString(),

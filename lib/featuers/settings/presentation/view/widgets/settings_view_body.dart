@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
@@ -14,6 +15,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -26,13 +28,13 @@ class SettingViewBody extends StatelessWidget {
     return BlocConsumer<AuthCubit,AuthStates>(
       listener: (context, state) {
          if(state is UserLogoutSuccessState){
-           customPushAndRemoveUntil(context, LoginScreen());
+           context.go(AppRouter.login);
          }
          if(state is UserLogoutErrorState){
            customToast(title: state.message, color: ColorManager.error);
          }
          if(state is DeleteUserSuccessState){
-           customPushAndRemoveUntil(context, LoginScreen());
+           context.go(AppRouter.login);
          }
          if(state is DeleteUserErrorState){
            customToast(title: state.message, color: ColorManager.error);
@@ -101,7 +103,10 @@ class SettingViewBody extends StatelessWidget {
 
                     // الاشعارات
                     InkWell(
-                      onTap: ()=>customPushNavigator(context, NotificationScreen()),
+                      onTap: (){
+                        // context.go(AppRouter.notification);
+                        customPushNavigator(context, NotificationScreen());
+                      },
                       child: RowDataWidget(
                           image:AssetsManager.notificationAccount,
                           title: AppLocalizations.of(context)!.translate('notification').toString(),
@@ -116,7 +121,9 @@ class SettingViewBody extends StatelessWidget {
 
                     // الاشعارات
                     InkWell(
-                      onTap: ()=>customPushNavigator(context, PrivacyPoliciesScreen()),
+                      onTap: (){
+                        customPushNavigator(context, PrivacyPoliciesScreen());
+                      },
                       child: RowDataWidget(
                         image: AssetsManager.privacyPolices,
                         title: AppLocalizations.of(context)!.translate('privacyPolicies').toString(),
