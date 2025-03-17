@@ -107,7 +107,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
             debugPrint("URL changed to: ${change.url}");
 
             // Check for payment result URL
-            if (change.url != null && change.url!.contains("https://eu-test.oppwa.com/payment-result")) {
+            if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
               Uri uri = Uri.parse(change.url!);
               String resourcePath = uri.queryParameters['resourcePath'] ?? '';
 
