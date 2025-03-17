@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
@@ -9,6 +10,7 @@ import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occas
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
 import 'package:hadawi_app/firebase_options.dart';
 import 'package:hadawi_app/styles/theme_manger/theme_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -18,80 +20,149 @@ import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'utiles/shared_preferences/shared_preference.dart';
+import 'package:app_links/app_links.dart';
+import 'dart:async';
+import 'featuers/visitors/presentation/view/widgets/occasion_details.dart';
 
-void main() async{
+final GoRouter _router = GoRouter(
+  initialLocation: '/',
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => SplashScreen(),
+    ),
+    GoRoute(
+      path: '/occasion-details/:id',
+      builder: (context, state) {
+        final occasionId = state.pathParameters['id'];
+        return OccasionDetails(occasionId: occasionId!);
+      },
+    ),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => VisitorsScreen(),
+    ),
+  ],
+);
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ServiceLocator().init();
   SharedPreferences.getInstance();
-  UserDataFromStorage.getData();
   CashHelper.init();
   DioHelper.dioInit();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  String languageCode = CashHelper.getData(key: CashHelper.languageKey).toString();
-  debugPrint('debug $languageCode');
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _appLinks = AppLinks();
+  StreamSubscription? _linkSubscription;
+
+  @override
+  void initState() {
+    super.initState();
+    SharedPreferences.getInstance();
+    UserDataFromStorage.getData();
+    CashHelper.init();
+    DioHelper.dioInit();
+    _initDeepLinkHandling();
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+    super.dispose();
+  }
+
+  Future<void> _initDeepLinkHandling() async {
+    _linkSubscription = _appLinks.uriLinkStream.listen(
+      _handleDeepLink,
+      onError: (error) {
+        debugPrint('Deep link error: $error');
+      },
+    );
+
+    try {
+      final initialLink = await _appLinks.getInitialLink();
+      if (initialLink != null) {
+        _handleDeepLink(Uri.parse(initialLink.toString()));
+      }
+    } catch (e) {
+      debugPrint('Error getting initial deep link: $e');
+    }
+  }
+
+  void _handleDeepLink(Uri uri) {
+    debugPrint('Received deep link: ${uri.toString()}');
+
+    if (uri.pathSegments.isNotEmpty) {
+      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
+        final occasionId = uri.pathSegments[1];
+        context.go('/Occasion-details/$occasionId');
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (context) => AuthCubit(
-              getIt(), getIt(), getIt(),getIt(),
-              getIt(), getIt(), getIt(),
-              getIt(), getIt(),getIt()
-          )),
-          BlocProvider(create: (context)=> PaymentCubit()),
-          BlocProvider(create: (context)=> HomeCubit()..getUserNotifications()..getPrivacyPolices()),
-          BlocProvider(create: (context)=> OccasionCubit()),
-          BlocProvider(create: (context)=> VisitorsCubit(getIt())),
-          BlocProvider(create: (context)=> OccasionsListCubit()),
-          BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
-        ],
-        child: BlocBuilder<LocalizationCubit,LocalizationStates>(
-          builder: (context, state) {
-            return  MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Hadawi',
-              theme: getApplicationTheme(context),
-              home: const SplashScreen(),
-                localizationsDelegates:  [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                  DefaultCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale("ar", ""),
-                  Locale("en", ""),
-                ],
-                locale: LocalizationCubit.get(context).appLocal,
-                localeResolutionCallback: (currentLang , supportLang) {
-                  if (currentLang != null) {
-                    for (Locale locale in supportLang) {
-                      if (locale.languageCode == currentLang.languageCode) {
-                        return currentLang;
-                      }
-                    }
+      providers: [
+        BlocProvider(create: (context) => AuthCubit(
+            getIt(), getIt(), getIt(), getIt(),
+            getIt(), getIt(), getIt(),
+            getIt(), getIt(), getIt())),
+        BlocProvider(create: (context) => PaymentCubit()),
+        BlocProvider(create: (context) => HomeCubit()..getUserNotifications()..getPrivacyPolices()),
+        BlocProvider(create: (context) => OccasionCubit()),
+        BlocProvider(create: (context) => VisitorsCubit(getIt())),
+        BlocProvider(create: (context) => OccasionsListCubit()),
+        BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
+      ],
+      child: BlocBuilder<LocalizationCubit, LocalizationStates>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            title: 'Hadawi',
+            theme: getApplicationTheme(context),
+            routerConfig: _router,
+            localizationsDelegates: [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+              DefaultCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale("ar", ""),
+              Locale("en", ""),
+            ],
+            locale: LocalizationCubit.get(context).appLocal,
+            localeResolutionCallback: (currentLang, supportLang) {
+              if (currentLang != null) {
+                for (Locale locale in supportLang) {
+                  if (locale.languageCode == currentLang.languageCode) {
+                    return currentLang;
                   }
-                  return supportLang.first;
                 }
-            );
-          },
-        )
+              }
+              return supportLang.first;
+            },
+          );
+        },
+      ),
     );
   }
 }
-
-

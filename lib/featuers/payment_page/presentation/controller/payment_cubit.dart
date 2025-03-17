@@ -8,6 +8,8 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class PaymentCubit extends Cubit<PaymentStates> {
 
@@ -15,22 +17,16 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   static PaymentCubit get(context) => BlocProvider.of(context);
 
-  int paymentCounterValue = 50;
+
+  TextEditingController paymentAmountController = TextEditingController();
 
 
-  void incrementCounter() {
-    paymentCounterValue++;
-    emit(PaymentCounterChangedState());
-  }
-
-  void decrementCounter() {
-    paymentCounterValue--;
-    emit(PaymentCounterChangedState());
-  }
   
   
   Future<void> addPaymentData({required BuildContext context, required String occasionId, required String occasionName, required double paymentAmount})async{
     emit(PaymentAddLoadingState());
+
+    double paymentCounterValue = double.parse(paymentAmountController.text);
 
     await FirebaseFirestore.instance.collection("Occasions").doc(occasionId).update({
       "moneyGiftAmount": paymentAmount + paymentCounterValue,
@@ -49,7 +45,25 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "personEmail": UserDataFromStorage.emailFromStorage,
     }).then((value)async{
       await FirebaseFirestore.instance.collection("Occasions").doc(occasionId).collection("payments").doc(value.id).update({"paymentId": value.id});
-      paymentCounterValue = 50;
+      await FirebaseFirestore.instance.collection("payments").doc(value.id).set({
+        "paymentAmount": paymentCounterValue,
+        "paymentDate": DateTime.now().toString(),
+        "paymentId": value.id,
+        "paymentStatus": "success",
+        "occasionId": occasionId,
+        "occasionName": occasionName,
+        "personId": UserDataFromStorage.uIdFromStorage,
+        "personName": UserDataFromStorage.userNameFromStorage,
+        "personPhone": UserDataFromStorage.phoneNumberFromStorage,
+        "personEmail": UserDataFromStorage.emailFromStorage,
+      }).then((value){
+        debugPrint("payment added to payments collection");
+        emit(PaymentAddSuccessState());
+      }).catchError((error){
+        debugPrint("error when add payment to payments collection : ${error.toString()}");
+        emit(PaymentAddErrorState());
+      });
+      paymentAmountController.clear();
       customToast(title: AppLocalizations.of(context)!.translate('paymentAddedSuccessfully').toString(), color: ColorManager.success);
       Navigator.pop(context);
       debugPrint("payment added");
@@ -79,6 +93,87 @@ class PaymentCubit extends Cubit<PaymentStates> {
       debugPrint("error when get payments : ${error.toString()}");
       emit(PaymentGetErrorState());
     });
+  }
+
+  Future<Map<String, dynamic>> getCheckoutId({
+    required String email,
+    required String givenName,
+    required String surname,
+    required String street,
+    required String city,
+    required String state,
+    required String postcode,
+    required String merchantTransactionId,
+  }) async {
+    emit(PaymentHyperPayLoadingState());
+
+    try {
+      // Format amount to ensure it has 2 decimal places
+      String formattedAmount = double.tryParse(paymentAmountController.text)?.toStringAsFixed(2) ?? "0.00";
+
+      final response = await http.post(
+        Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),
+        headers: {
+          "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {
+          "entityId": "8ac7a4c795a0f72f0195a375b38c03f9",
+          "amount": formattedAmount,
+          "currency": "SAR",
+          "paymentType": "DB",
+          "testMode": "EXTERNAL",
+          "customParameters[3DS2_enrolled]": "true",
+          "merchantTransactionId": merchantTransactionId,
+          "customer.email": email,
+          "customer.givenName": givenName,
+          "customer.surname": surname,
+          "billing.street1": street,
+          "billing.city": city,
+          "billing.state": state,
+          "billing.country": "SA",
+          "billing.postcode": postcode,
+          "shopperResultUrl": "https://hadawi.netlify.app/payment-result",
+        },
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        debugPrint("Checkout ID response: ${data.toString()}");
+
+        // Check if the response contains the expected fields
+        if (data.containsKey("id")) {
+          final result = {
+            "checkoutId": data["id"],
+            "fullResponse": data
+          };
+
+          emit(PaymentHyperPaySuccessState());
+          return result;
+        } else {
+          debugPrint("Missing required fields in response: ${data.toString()}");
+          emit(PaymentHyperPayErrorState());
+          return {
+            "error": "Invalid response format",
+            "fullResponse": data
+          };
+        }
+      } else {
+        debugPrint("Error response: ${response.statusCode} - ${response.body}");
+        emit(PaymentHyperPayErrorState());
+        return {
+          "error": "HTTP Error ${response.statusCode}",
+          "message": response.body
+        };
+      }
+    } catch (e) {
+      debugPrint("Exception when getting HyperPay checkout ID: ${e.toString()}");
+      emit(PaymentHyperPayErrorState());
+      return {
+        "error": "Exception",
+        "message": e.toString()
+      };
+    }
   }
 
 

@@ -33,3 +33,11 @@ final class ChangeActiveOrdersState extends VisitorsState {}
 final class GetBannerDataLoadingState extends VisitorsState {}
 final class GetBannerDataSuccessState extends VisitorsState {}
 final class GetBannerDataErrorState extends VisitorsState {}
+
+final class GetOccasionDataLoadingState extends VisitorsState {}
+final class GetOccasionDataSuccessState extends VisitorsState {}
+final class GetOccasionDataErrorState extends VisitorsState {}
+
+final class CreateOccasionLinkLoadingState extends VisitorsState {}
+final class CreateOccasionLinkSuccessState extends VisitorsState {}
+final class CreateOccasionLinkErrorState extends VisitorsState {}

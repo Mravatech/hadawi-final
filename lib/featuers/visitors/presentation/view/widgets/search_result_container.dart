@@ -45,7 +45,7 @@ class SearchResultContainer extends StatelessWidget {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => OccasionDetails(
-                          occasionEntity: occasion,
+                          occasionId: occasion.occasionId,
                         ),
                       ),
                     );

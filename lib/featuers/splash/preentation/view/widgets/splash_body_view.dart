@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/widgets/logo_image.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
 class SplashBodyView extends StatefulWidget {
@@ -56,7 +58,7 @@ class _SplashScreenState extends State<SplashBodyView>
 void timeDelay({required BuildContext context}) {
   Future.delayed(const Duration(seconds: 2), () async {
     UserDataFromStorage.uIdFromStorage != ''?
-    customPushAndRemoveUntil(context, const HomeLayout()):
-    customPushAndRemoveUntil(context, const LoginScreen());
+    context.go(AppRouter.home):
+    context.go(AppRouter.login);
   });
 }

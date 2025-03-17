@@ -478,7 +478,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                         BlocProvider(
                                           create: (context) => VisitorsCubit(getIt()),
                                           child: OccasionDetails(
-                                            occasionEntity: cubit.activeOccasions[index],
+                                            occasionId: cubit.activeOccasions[index].occasionId,
                                           ),
                                         ),
                                     );
@@ -506,7 +506,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                       BlocProvider(
                                         create: (context) => VisitorsCubit(getIt()),
                                         child: OccasionDetails(
-                                          occasionEntity: cubit.doneOccasions[index],
+                                          occasionId: cubit.doneOccasions[index].occasionId,
                                         ),
                                       ),
                                     );

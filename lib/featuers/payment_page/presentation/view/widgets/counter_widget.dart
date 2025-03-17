@@ -25,9 +25,7 @@ class CounterWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () {
-                  PaymentCubit.get(context).decrementCounter();
-                },
+                onPressed: () {},
                 icon: Icon(
                   Icons.remove,
                   color: ColorManager.primaryBlue,
@@ -37,7 +35,7 @@ class CounterWidget extends StatelessWidget {
               BlocBuilder<PaymentCubit, PaymentStates>(
                 builder: (context, state) {
                   return Text(
-                    "${PaymentCubit.get(context).paymentCounterValue}",
+                    PaymentCubit.get(context).paymentAmountController.text,
                     style: TextStyles.textStyle18Medium.copyWith(
                       color: ColorManager.primaryBlue,
                     ),
@@ -46,9 +44,7 @@ class CounterWidget extends StatelessWidget {
               ),
 
               IconButton(
-                onPressed: (){
-                  PaymentCubit.get(context).incrementCounter();
-                },
+                onPressed: (){},
                 icon: Icon(
                   Icons.add,
                   color: ColorManager.primaryBlue,

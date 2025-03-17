@@ -1,10 +1,13 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/visitors/data/models/banner_model.dart';
 import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
 part 'visitors_state.dart';
@@ -117,5 +120,41 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     });
 
   }
+
+  OccasionModel? occasionModel;
+
+  Future<void> getOccasionData({required String occasionId})async{
+    emit(GetOccasionDataLoadingState());
+    FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
+      occasionModel = OccasionModel.fromJson(value.data()!);
+      debugPrint("occasionModel: ${occasionModel!.occasionName}");
+      emit(GetOccasionDataSuccessState());
+    }).catchError((error){
+      debugPrint("error in getting occasion data: $error");
+      emit(GetOccasionDataErrorState());
+    });
+  }
+
+  Future<String> createDynamicLink(String occasionId) async {
+    emit(CreateOccasionLinkLoadingState());
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://hadawiapp.page.link',
+      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
+      androidParameters: const AndroidParameters(
+        packageName: 'com.app.hadawi_app',
+        minimumVersion: 1,
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: 'com.app.hadawiApp',
+        minimumVersion: '1.0.0',
+      ),
+    );
+
+    final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+    debugPrint("shortLink: ${shortLink.shortUrl}");
+    emit(CreateOccasionLinkSuccessState());
+    return shortLink.shortUrl.toString();
+  }
+
 
 }

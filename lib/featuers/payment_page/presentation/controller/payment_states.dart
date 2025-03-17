@@ -11,3 +11,7 @@ class PaymentAddErrorState extends PaymentStates{}
 class PaymentGetLoadingState extends PaymentStates{}
 class PaymentGetSuccessState extends PaymentStates{}
 class PaymentGetErrorState extends PaymentStates{}
+
+class PaymentHyperPayLoadingState extends PaymentStates{}
+class PaymentHyperPaySuccessState extends PaymentStates{}
+class PaymentHyperPayErrorState extends PaymentStates{}

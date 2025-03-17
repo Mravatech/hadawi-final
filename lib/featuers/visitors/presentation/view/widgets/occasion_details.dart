@@ -17,14 +17,32 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
+import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class OccasionDetails extends StatelessWidget {
-  final OccasionEntity occasionEntity;
+class OccasionDetails extends StatefulWidget {
+  final String occasionId;
 
-  const OccasionDetails({super.key, required this.occasionEntity});
+  const OccasionDetails({super.key, required this.occasionId});
 
+  @override
+  State<OccasionDetails> createState() => _OccasionDetailsState();
+}
+
+class _OccasionDetailsState extends State<OccasionDetails> {
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    SharedPreferences.getInstance();
+    UserDataFromStorage.getData();
+    context.read<VisitorsCubit>().getOccasionData(occasionId: widget.occasionId);
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +73,7 @@ class OccasionDetails extends StatelessWidget {
           },
           builder: (context, state) {
             final cubit = context.read<VisitorsCubit>();
-            return Padding(
+            return cubit.occasionModel !=null && state is! GetOccasionDataLoadingState? Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CashHelper.languageKey == 'ar'
@@ -74,7 +92,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: occasionEntity.occasionName,
+                    hintText: cubit.occasionModel!.occasionName,
                     validator: (value) {
                       return null;
                     },
@@ -97,7 +115,7 @@ class OccasionDetails extends StatelessWidget {
                             shape: BoxShape.circle,
                           ),
                           child: CachedNetworkImage(
-                            imageUrl: occasionEntity.giftImage,
+                            imageUrl: cubit.occasionModel!.giftImage,
                             placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -127,10 +145,10 @@ class OccasionDetails extends StatelessWidget {
                             buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
                             onPressed: () {
                                context.read<VisitorsCubit>().sendFollowRequest(
-                                   userId: occasionEntity.personId,
+                                   userId: cubit.occasionModel!.personId,
                                    followerId: UserDataFromStorage.uIdFromStorage,
-                                   userName: occasionEntity.personName,
-                                   image: occasionEntity.giftImage,
+                                   userName: cubit.occasionModel!.personName,
+                                   image: cubit.occasionModel!.giftImage,
                                ).then((value) {
                                  customToast(title: 'تم الارسال', color: ColorManager.primaryBlue);
                                });
@@ -145,7 +163,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: occasionEntity.personName,
+                    hintText: cubit.occasionModel!.personName,
                     validator: (value) {
                       return null;
                     },
@@ -168,9 +186,9 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: occasionEntity.giftName.isEmpty
-                        ? '${occasionEntity.giftPrice} ريال'
-                        : occasionEntity.giftName,
+                    hintText: cubit.occasionModel!.giftName.isEmpty
+                        ? '${cubit.occasionModel!.giftPrice} ريال'
+                        : cubit.occasionModel!.giftName,
                     validator: (value) {
                       return null;
                     },
@@ -198,17 +216,17 @@ class OccasionDetails extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: occasionEntity.giftImage.isEmpty &&
-                            occasionEntity.giftType == 'مبلغ مالي'
+                    child: cubit.occasionModel!.giftImage.isEmpty &&
+                            cubit.occasionModel!.giftType == 'مبلغ مالي'
                         ? SizedBox()
                         : CachedNetworkImage(
-                            imageUrl: occasionEntity.giftImage,
+                            imageUrl: cubit.occasionModel!.giftImage,
                             placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator(),
                             ),
                             errorWidget: (context, url, error) {
-                              return occasionEntity.giftImage.isEmpty &&
-                                      occasionEntity.giftType == 'مبلغ مالي'
+                              return cubit.occasionModel!.giftImage.isEmpty &&
+                                      cubit.occasionModel!.giftType == 'مبلغ مالي'
                                   ? Image.asset(
                                       'assets/images/money_bag.png',
                                       fit: BoxFit.contain,
@@ -232,13 +250,13 @@ class OccasionDetails extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ProgressIndicatorWidget(
-                            value: (double.parse(occasionEntity.moneyGiftAmount.toString()) /
-                                double.parse(occasionEntity.giftPrice.toString()))
+                            value: (double.parse(cubit.occasionModel!.moneyGiftAmount.toString()) /
+                                double.parse(cubit.occasionModel!.giftPrice.toString()))
                         ) ,
                       ),
                       IconButton(
                           onPressed: () {
-                            cubit.openExerciseLink(occasionEntity.giftLink);
+                            cubit.openExerciseLink(cubit.occasionModel!.giftLink);
                           },
                           icon: Icon(
                             Icons.link,
@@ -263,7 +281,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                   DefaultTextField(
                     controller: TextEditingController(),
-                    hintText: (occasionEntity.giftPrice - occasionEntity.moneyGiftAmount).toString(),
+                    hintText: (cubit.occasionModel!.giftPrice - cubit.occasionModel!.moneyGiftAmount).toString(),
                     validator: (value) {
                       return null;
                     },
@@ -284,8 +302,11 @@ class OccasionDetails extends StatelessWidget {
                         children: [
                           /// share
                           GestureDetector(
-                            onTap: () {},
-                            child: Container(
+                            onTap: ()  async {
+                              String link = await cubit.createDynamicLink(widget.occasionId);
+                              Share.share('Check out this occasion: $link');
+                            },
+                            child: state is CreateOccasionLinkLoadingState? LoadingAnimationWidget() :Container(
                               height: MediaQuery.sizeOf(context).height * .055,
                               width: MediaQuery.sizeOf(context).width * .4,
                               decoration: BoxDecoration(
@@ -318,7 +339,7 @@ class OccasionDetails extends StatelessWidget {
                             onTap: () => customPushNavigator(
                                 context,
                                 PaymentScreen(
-                                  occasionEntity: occasionEntity,
+                                  occasionEntity: cubit.occasionModel!,
                                 )),
                             child: Container(
                               height: MediaQuery.sizeOf(context).height * .055,
@@ -351,7 +372,7 @@ class OccasionDetails extends StatelessWidget {
                   ),
                 ],
               ),
-            );
+            ) : const LoadingAnimationWidget();
           },
         ),
       ),

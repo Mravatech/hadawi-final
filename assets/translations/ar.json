@@ -159,6 +159,7 @@
   "donateMessage": "تبرع من رصيدك للمؤسسة التي ترغب في التبرع لها.",
   "organisations": "المؤسسات",
   "amount": "المبلغ",
+  "amountValidate": "المبلغ مطلوب",
   "amountMessage": "أدخل المبلغ",
   "discount": "خصم",
   "bankTransferMessage": "طلب تحويل رصيد إلى أي بطاقات",
