@@ -122,8 +122,9 @@ class PaymentCubit extends Cubit<PaymentStates> {
           "amount": formattedAmount,
           "currency": "SAR",
           "paymentType": "DB",
-          "testMode": "EXTERNAL",
           "customParameters[3DS2_enrolled]": "true",
+          "customParameters[3DS2.challengeIndicator]": "04",
+          "customParameters[3DS2.authenticationFlow]": "challenge",
           "merchantTransactionId": merchantTransactionId,
           "customer.email": email,
           "customer.givenName": givenName,
@@ -175,6 +176,49 @@ class PaymentCubit extends Cubit<PaymentStates> {
       };
     }
   }
+
+
+  // Future<void> checkPaymentStatus(String checkoutId) async {
+  //   final url = Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4c795a0f72f0195a375b38c03f9");
+  //
+  //   final response = await http.get(
+  //     url,
+  //     headers: {
+  //       "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+  //     },
+  //   );
+  //
+  //   if (response.statusCode == 200) {
+  //     final data = jsonDecode(response.body);
+  //     final status = data["result"]["code"];
+  //     final description = data["result"]["description"];
+  //
+  //     print("Payment Status: $description");
+  //
+  //     if (status == "000.100.110") {
+  //       print("✅ الدفع ناجح");
+  //     } else {
+  //       print("❌ فشل الدفع، السبب: $description");
+  //     }
+  //   } else {
+  //     print("خطأ في استعلام الدفع: ${response.body}");
+  //   }
+  // }
+
+  Future<Map<String, dynamic>> checkPaymentStatus(String checkoutId) async {
+    final response = await http.get(
+      Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4c795a0f72f0195a375b38c03f9"),
+      headers: {
+        "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+      },
+    );
+
+    final data = jsonDecode(response.body);
+    debugPrint("Payment Status Response: ${data.toString()}");
+
+    return data;
+  }
+
 
 
 }

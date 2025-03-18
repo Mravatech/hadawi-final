@@ -172,7 +172,7 @@ class RegisterFormWidget extends StatelessWidget {
                 BlocConsumer<AuthCubit,AuthStates>(
                   listener: (context, state) {
                      if( state is UserRegisterSuccessState){
-                        context.replace(AppRouter.login);
+                        context.replace(AppRouter.home);
                      }
                      if( state is UserRegisterErrorState){
                        customToast(title: state.message, color: ColorManager.error);

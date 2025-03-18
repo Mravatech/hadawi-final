@@ -50,17 +50,6 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
           <script type="text/javascript"> 
           var wpwlOptions = {
             paymentTarget: "_top",
-            style: "card",
-            showCVVHint: true,
-            brandDetection: true,
-            onReady: function() {
-              // Change the order of payment methods to show MADA first
-              var madaDiv = document.querySelector('.wpwl-brand-MADA');
-              if (madaDiv) {
-                var brandsDiv = madaDiv.parentNode;
-                brandsDiv.insertBefore(madaDiv, brandsDiv.firstChild);
-              }
-            }
           }
           </script>
           
