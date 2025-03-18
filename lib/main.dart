@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
@@ -29,6 +30,10 @@ import 'featuers/visitors/presentation/view/widgets/occasion_details.dart';
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   routes: [
+    GoRoute(
+      path: '/login',
+      builder: (context, state) => LoginScreen(),
+    ),
     GoRoute(
       path: '/',
       builder: (context, state) => SplashScreen(),

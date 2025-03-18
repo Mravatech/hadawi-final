@@ -165,6 +165,7 @@ class PaymentScreen extends StatelessWidget {
                             postcode: "12345",
                             merchantTransactionId: merchantTransactionId
                        );
+                        await PaymentCubit.get(context).checkPaymentStatus(checkoutData["checkoutId"]);
                        customPushNavigator(context, PaymentWebScreen(checkoutId: checkoutData["checkoutId"], integrity: checkoutData["integrity"]));
                       },
                       buttonColor: ColorManager.primaryBlue,
