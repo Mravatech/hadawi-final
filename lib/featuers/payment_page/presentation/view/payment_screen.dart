@@ -25,7 +25,6 @@ class PaymentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
@@ -48,147 +47,165 @@ class PaymentScreen extends StatelessWidget {
       body: BlocBuilder<PaymentCubit, PaymentStates>(
         builder: (context, state) {
           return ModalProgressHUD(
-            inAsyncCall: state is PaymentHyperPayLoadingState ? true : false,
+            inAsyncCall: state is PaymentHyperPayLoadingState || state is PaymentAddLoadingState ? true : false,
             progressIndicator: LoadingAnimationWidget(),
 
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: EdgeInsets.all(SizeConfig.height * 0.02),
-                child: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.height * 0.02),
+                child: Form(
+                  key: PaymentCubit.get(context).paymentFormKey,
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.height * 0.02),
 
-                    /// payment progress
-                    ProgressIndicatorWidget(
-                        value: (double.parse(
-                                occasionEntity.moneyGiftAmount.toString()) /
-                            double.parse(occasionEntity.giftPrice.toString()))),
-                    SizedBox(height: SizeConfig.height * 0.04),
+                      /// payment progress
+                      ProgressIndicatorWidget(
+                          value: (double.parse(
+                                  occasionEntity.moneyGiftAmount.toString()) /
+                              double.parse(occasionEntity.giftPrice.toString()))),
+                      SizedBox(height: SizeConfig.height * 0.04),
 
-                    Row(
-                      children: [
-                        Text(
-                          "${AppLocalizations.of(context)!.translate('amount')} : ",
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: DefaultTextField(
-                              controller: PaymentCubit.get(context)
-                                  .paymentAmountController,
-                              hintText: AppLocalizations.of(context)!
-                                  .translate('amountMessage')
-                                  .toString(),
+                      Row(
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('amount')} : ",
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: DefaultTextField(
+                                controller: PaymentCubit.get(context)
+                                    .paymentAmountController,
+                                hintText: AppLocalizations.of(context)!
+                                    .translate('amountMessage')
+                                    .toString(),
+                                validator: (value) {
+                                  if (value!.trim().isEmpty) {
+                                    return AppLocalizations.of(context)!
+                                        .translate('amountValidate')
+                                        .toString();
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                fillColor: ColorManager.gray),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!
+                                .translate('rsa')
+                                .toString(),
+                            style: TextStyles.textStyle18Regular,
+                          )
+                        ],
+                      ),
+
+                      SizedBox(height: SizeConfig.height * 0.01),
+
+                      /// payment name
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              "${AppLocalizations.of(context)!.translate("name")} : ",
+                              style: TextStyles.textStyle18Bold.copyWith(
+                                color: ColorManager.black,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: DefaultTextField(
+                              controller: PaymentCubit.get(context).paymentPayerNameController,
+                              hintText: '',
                               validator: (value) {
-                                if (value!.trim().isEmpty) {
+                                if (value.isEmpty) {
                                   return AppLocalizations.of(context)!
-                                      .translate('amountValidate')
+                                      .translate('nameHint')
                                       .toString();
                                 }
                                 return null;
                               },
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.next,
-                              fillColor: ColorManager.gray),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('rsa')
-                              .toString(),
-                          style: TextStyles.textStyle18Regular,
-                        )
-                      ],
-                    ),
-
-                    SizedBox(height: SizeConfig.height * 0.01),
-
-                    /// payment name
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: Text(
-                            "${AppLocalizations.of(context)!.translate("name")} : ",
-                            style: TextStyles.textStyle18Bold.copyWith(
-                              color: ColorManager.black,
+                              keyboardType: TextInputType.text,
+                              textInputAction: TextInputAction.done,
+                              fillColor: ColorManager.gray,
                             ),
                           ),
-                        ),
-                        Expanded(
-                          flex: 4,
-                          child: DefaultTextField(
-                            controller: nameController,
-                            hintText: '',
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return AppLocalizations.of(context)!
-                                    .translate('nameHint')
-                                    .toString();
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.done,
-                            fillColor: ColorManager.gray,
-                          ),
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
 
-                    SizedBox(height: SizeConfig.height * 0.08),
+                      SizedBox(height: SizeConfig.height * 0.08),
 
-                    // /// payment with apple
-                    // DefaultButtonWithImage(
-                    //   buttonText: "Apple Pay",
-                    //   image: AssetsManager.appleIcon,
-                    // ),
+                      // /// payment with apple
+                      // DefaultButtonWithImage(
+                      //   buttonText: "Apple Pay",
+                      //   image: AssetsManager.appleIcon,
+                      // ),
 
-                    DefaultButton(
-                      buttonText: "stcPay",
-                      onPressed: () async {
-                        String merchantTransactionId = "ORDER-${DateTime.now().millisecondsSinceEpoch}";
-                       final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                           email: UserDataFromStorage.emailFromStorage,
-                            givenName: UserDataFromStorage.userNameFromStorage,
-                            surname: UserDataFromStorage.userNameFromStorage,
-                            street: "street",
-                            city: "city",
-                            state: "state",
-                            postcode: "12345",
-                            merchantTransactionId: merchantTransactionId
-                       );
-                        await PaymentCubit.get(context).checkPaymentStatus(checkoutData["checkoutId"]);
-                       customPushNavigator(context, PaymentWebScreen(checkoutId: checkoutData["checkoutId"], integrity: checkoutData["integrity"]));
-                      },
-                      buttonColor: ColorManager.primaryBlue,
-                    ),
+                      DefaultButton(
+                        buttonText: AppLocalizations.of(context)!
+                            .translate('payment')
+                            .toString(),
+                        onPressed: () async {
+                          if(PaymentCubit.get(context).paymentFormKey.currentState!.validate()){
 
-                    SizedBox(height: SizeConfig.height * 0.01),
+                            String merchantTransactionId = "ORDER-${DateTime.now().millisecondsSinceEpoch}";
+                            final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                                email: UserDataFromStorage.emailFromStorage,
+                                givenName: UserDataFromStorage.userNameFromStorage,
+                                surname: UserDataFromStorage.userNameFromStorage,
+                                street: "street",
+                                city: "city",
+                                state: "state",
+                                postcode: "12345",
+                                merchantTransactionId: merchantTransactionId
+                            );
+                            // await PaymentCubit.get(context).checkPaymentStatus(checkoutData["checkoutId"],context);
+                            customPushNavigator(
+                                context,
+                                PaymentWebScreen(
+                                  checkoutId: checkoutData["checkoutId"],
+                                  integrity: checkoutData["integrity"],
+                                  occasionId: occasionEntity.occasionId,
+                                  occasionName: occasionEntity.occasionName,
+                                  paymentAmount: double.parse(
+                                      occasionEntity.moneyGiftAmount.toString()),
 
-                    DefaultButton(
-                      buttonText: AppLocalizations.of(context)!
-                          .translate('payment')
-                          .toString(),
-                      onPressed: () async {
-                        await PaymentCubit.get(context).addPaymentData(
-                          context: context,
-                          occasionId: occasionEntity.occasionId,
-                          occasionName: occasionEntity.occasionName,
-                          paymentAmount: double.parse(
-                              occasionEntity.moneyGiftAmount.toString()),
-                        );
-                      },
-                      buttonColor: ColorManager.primaryBlue,
-                    ),
-                  ],
+                                ));
+                          }
+                        },
+                        buttonColor: ColorManager.primaryBlue,
+                      ),
+
+                      // SizedBox(height: SizeConfig.height * 0.01),
+                      //
+                      // DefaultButton(
+                      //   buttonText: AppLocalizations.of(context)!
+                      //       .translate('payment')
+                      //       .toString(),
+                      //   onPressed: () async {
+                      //     await PaymentCubit.get(context).addPaymentData(
+                      //       context: context,
+                      //       occasionId: occasionEntity.occasionId,
+                      //       occasionName: occasionEntity.occasionName,
+                      //       paymentAmount: double.parse(
+                      //           occasionEntity.moneyGiftAmount.toString()),
+                      //     );
+                      //   },
+                      //   buttonColor: ColorManager.primaryBlue,
+                      // ),
+                    ],
+                  ),
                 ),
               ),
             ),

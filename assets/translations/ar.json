@@ -288,7 +288,14 @@
   "validateDiscountCard": "كود الخصم مطلوب",
   "discountAmount": "قيمة الخصم",
   "apply": "تطبيق",
-  "cancel": "إلغاء"
+  "cancel": "إلغاء",
+  "paymentSuccess": "نجاح الدفع",
+  "paymentSuccessMessage": "تمت عملية الدفع بنجاح.",
+  "paymentFailed": "فشل الدفع",
+  "paymentFailedMessage": "فشلت عملية الدفع.",
+  "paymentPending": "قيد المعالجة",
+  "paymentPendingMessage": "تم استلام طلب الدفع وهو قيد المعالجة.",
+  "completePayment": "اكمال الدفع"
 
 
 }

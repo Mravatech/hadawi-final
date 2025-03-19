@@ -406,120 +406,125 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
 
                   /// body
                   Expanded(
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          /// banner carousel slider
-                          Padding(
-                            padding: EdgeInsets.symmetric(vertical: SizeConfig.height * 0.02),
-                            child: CarouselSlider(
-                              items: cubit.banners.map((image) {
-                                return Builder(
-                                  builder: (BuildContext context) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                                      child: Container(
-                                        width: MediaQuery.of(context).size.width*0.9,
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[300],
-                                          borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
-                                          child: Image.network(
-                                            image.image,
-                                            fit: BoxFit.fill,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return const Icon(Icons.error, size: 50);
-                                            },
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        cubit.getOccasions();
+                      },
+                      child: SingleChildScrollView(
+                        physics: BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            /// banner carousel slider
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: SizeConfig.height * 0.02),
+                              child: CarouselSlider(
+                                items: cubit.banners.map((image) {
+                                  return Builder(
+                                    builder: (BuildContext context) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                                        child: Container(
+                                          width: MediaQuery.of(context).size.width*0.9,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey[300],
+                                            borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                            child: Image.network(
+                                              image.image,
+                                              fit: BoxFit.fill,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return const Icon(Icons.error, size: 50);
+                                              },
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    );
-                                  },
-                                );
-                              }).toList(),
-                              options: CarouselOptions(
-                                autoPlay: true,
-                                height: 180,
-                                enableInfiniteScroll: false,
-                                aspectRatio: 16 / 9,
-                                viewportFraction: 1,
+                                      );
+                                    },
+                                  );
+                                }).toList(),
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  height: 180,
+                                  enableInfiniteScroll: false,
+                                  aspectRatio: 16 / 9,
+                                  viewportFraction: 1,
+                                ),
                               ),
                             ),
-                          ),
 
-                          /// search bar
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: SearchBarWidget(
-                              key: searchKey,
-                              onChanged: (value) {
-                                cubit.search(value);
-                              },
-                              searchController: cubit.searchController,
+                            /// search bar
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: SearchBarWidget(
+                                key: searchKey,
+                                onChanged: (value) {
+                                  cubit.search(value);
+                                },
+                                searchController: cubit.searchController,
+                              ),
                             ),
-                          ),
 
-                          cubit.isActiveOrders? GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(15),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                    mainAxisSpacing: 15,
-                                    crossAxisSpacing: 15,
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 1 / 1.1),
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                  onTap: () {
-                                    customPushNavigator(
+                            cubit.isActiveOrders? GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(15),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                      mainAxisSpacing: 15,
+                                      crossAxisSpacing: 15,
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 1 / 1.1),
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                    onTap: () {
+                                      customPushNavigator(
+                                          context,
+                                          BlocProvider(
+                                            create: (context) => VisitorsCubit(getIt()),
+                                            child: OccasionDetails(
+                                              occasionId: cubit.activeOccasions[index].occasionId,
+                                            ),
+                                          ),
+                                      );
+                                    },
+                                    child: OccasionCard(
+                                      occasionEntity: cubit.activeOccasions[index],
+                                    ));
+                              },
+                              itemCount: cubit.activeOccasions.length,
+                            ):  GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.all(15),
+                              gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisSpacing: 15,
+                                  crossAxisSpacing: 15,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1 / 1.1),
+                              itemBuilder: (context, index) {
+                                return InkWell(
+                                    onTap: () {
+                                      customPushNavigator(
                                         context,
                                         BlocProvider(
                                           create: (context) => VisitorsCubit(getIt()),
                                           child: OccasionDetails(
-                                            occasionId: cubit.activeOccasions[index].occasionId,
+                                            occasionId: cubit.doneOccasions[index].occasionId,
                                           ),
                                         ),
-                                    );
-                                  },
-                                  child: OccasionCard(
-                                    occasionEntity: cubit.activeOccasions[index],
-                                  ));
-                            },
-                            itemCount: cubit.activeOccasions.length,
-                          ):  GridView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.all(15),
-                            gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 15,
-                                crossAxisSpacing: 15,
-                                crossAxisCount: 2,
-                                childAspectRatio: 1 / 1.1),
-                            itemBuilder: (context, index) {
-                              return InkWell(
-                                  onTap: () {
-                                    customPushNavigator(
-                                      context,
-                                      BlocProvider(
-                                        create: (context) => VisitorsCubit(getIt()),
-                                        child: OccasionDetails(
-                                          occasionId: cubit.doneOccasions[index].occasionId,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                  child: OccasionCard(
-                                    occasionEntity: cubit.doneOccasions[index],
-                                  ));
-                            },
-                            itemCount: cubit.doneOccasions.length,
-                          ),
-                        ],
+                                      );
+                                    },
+                                    child: OccasionCard(
+                                      occasionEntity: cubit.doneOccasions[index],
+                                    ));
+                              },
+                              itemCount: cubit.doneOccasions.length,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   )

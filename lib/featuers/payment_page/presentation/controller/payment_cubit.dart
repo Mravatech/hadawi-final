@@ -1,11 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/payment_page/date/models/payment_model.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'dart:convert';
@@ -19,11 +22,13 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
 
   TextEditingController paymentAmountController = TextEditingController();
+  TextEditingController paymentPayerNameController = TextEditingController();
+  GlobalKey<FormState> paymentFormKey = GlobalKey<FormState>();
 
 
   
   
-  Future<void> addPaymentData({required BuildContext context, required String occasionId, required String occasionName, required double paymentAmount})async{
+  Future<void> addPaymentData({required BuildContext context, required String status ,required String occasionId, required String occasionName, required double paymentAmount})async{
     emit(PaymentAddLoadingState());
 
     double paymentCounterValue = double.parse(paymentAmountController.text);
@@ -36,9 +41,10 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "paymentAmount": paymentCounterValue,
       "paymentDate": DateTime.now().toString(),
       "paymentId": "",
-      "paymentStatus": "success",
+      "paymentStatus": status,
       "occasionId": occasionId,
       "occasionName": occasionName,
+      "payerName": paymentPayerNameController.text,
       "personId": UserDataFromStorage.uIdFromStorage,
       "personName": UserDataFromStorage.userNameFromStorage,
       "personPhone": UserDataFromStorage.phoneNumberFromStorage,
@@ -49,8 +55,9 @@ class PaymentCubit extends Cubit<PaymentStates> {
         "paymentAmount": paymentCounterValue,
         "paymentDate": DateTime.now().toString(),
         "paymentId": value.id,
-        "paymentStatus": "success",
+        "paymentStatus": status,
         "occasionId": occasionId,
+        "payerName": paymentPayerNameController.text,
         "occasionName": occasionName,
         "personId": UserDataFromStorage.uIdFromStorage,
         "personName": UserDataFromStorage.userNameFromStorage,
@@ -64,8 +71,8 @@ class PaymentCubit extends Cubit<PaymentStates> {
         emit(PaymentAddErrorState());
       });
       paymentAmountController.clear();
-      customToast(title: AppLocalizations.of(context)!.translate('paymentAddedSuccessfully').toString(), color: ColorManager.success);
-      Navigator.pop(context);
+      paymentPayerNameController.clear();
+      paymentStatusList.clear();
       debugPrint("payment added");
       emit(PaymentAddSuccessState());
     }).catchError((error){
@@ -177,35 +184,9 @@ class PaymentCubit extends Cubit<PaymentStates> {
     }
   }
 
+  List<Map<String, dynamic>> paymentStatusList = [];
 
-  // Future<void> checkPaymentStatus(String checkoutId) async {
-  //   final url = Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4c795a0f72f0195a375b38c03f9");
-  //
-  //   final response = await http.get(
-  //     url,
-  //     headers: {
-  //       "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
-  //     },
-  //   );
-  //
-  //   if (response.statusCode == 200) {
-  //     final data = jsonDecode(response.body);
-  //     final status = data["result"]["code"];
-  //     final description = data["result"]["description"];
-  //
-  //     print("Payment Status: $description");
-  //
-  //     if (status == "000.100.110") {
-  //       print("✅ الدفع ناجح");
-  //     } else {
-  //       print("❌ فشل الدفع، السبب: $description");
-  //     }
-  //   } else {
-  //     print("خطأ في استعلام الدفع: ${response.body}");
-  //   }
-  // }
-
-  Future<Map<String, dynamic>> checkPaymentStatus(String checkoutId) async {
+  Future<Map<String, dynamic>> checkPaymentStatus(String checkoutId, BuildContext context) async {
     final response = await http.get(
       Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4c795a0f72f0195a375b38c03f9"),
       headers: {
@@ -214,11 +195,39 @@ class PaymentCubit extends Cubit<PaymentStates> {
     );
 
     final data = jsonDecode(response.body);
+    final resultCode = data['result']['code'];
+    if(resultCode != "200.300.404"){
+      paymentStatusList.add(data);
+    }
+    // if(resultCode == "200.300.404" && ){
+    //   Navigator.pop(context);
+    // }
+    // else if (resultCode.startsWith('000.000.') ||
+    //     resultCode.startsWith('000.100.') ||
+    //     resultCode.startsWith('000.200.')) {
+    //   customToast(title: "Payment Successful", color: ColorManager.success);
+    //   if(UserDataFromStorage.userIsGuest){
+    //     context.replace(AppRouter.visitors);
+    //     emit(PaymentHyperPaySuccessState());
+    //   }else{
+    //     context.replace(AppRouter.home);
+    //     emit(PaymentHyperPaySuccessState());
+    //   }
+    //   debugPrint("✅ Payment Successful");
+    // }
+    // // Pending codes typically start with 000.200.
+    // else if (resultCode.startsWith('000.200.')) {
+    //   debugPrint("⏳ Payment Pending");
+    // }
+    // // Failure codes can vary
+    // else {
+    //   debugPrint("❌ Payment Failed");
+    // }
+    emit(PaymentHyperPaySuccessState());
     debugPrint("Payment Status Response: ${data.toString()}");
 
     return data;
   }
-
 
 
 }

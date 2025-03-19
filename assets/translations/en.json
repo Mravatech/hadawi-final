@@ -159,7 +159,7 @@
   "donateMessage": "Donate from your balance to the organisation you want to donate to.",
   "organisations": "Organisations",
   "amount": "Amount",
-  "amountValidate": "المبلغ مطلوب",
+  "amountValidate": "Please enter the amount",
   "amountMessage": "Enter amount",
   "discount": "Discount",
   "bankTransferMessage": "Request a balance transfer to any cards",
@@ -288,5 +288,12 @@
   "validateDiscountCard": "Discount code is required",
   "discountAmount": "Discount Amount",
   "apply": "Apply",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "paymentSuccess": "Payment Success",
+  "paymentSuccessMessage": "Your payment was completed successfully!",
+  "paymentFailed": "Payment Failed",
+  "paymentFailedMessage": "Your payment was not completed.",
+  "paymentPending": "Payment Pending",
+  "paymentPendingMessage": "Your payment is being processed.",
+  "completePayment": "Complete Payment"
 }

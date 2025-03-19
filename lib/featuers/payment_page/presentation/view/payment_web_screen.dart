@@ -1,12 +1,22 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentWebScreen extends StatefulWidget {
   final String checkoutId;
+  final String occasionId;
+  final String occasionName;
+  final double paymentAmount;
 
-  PaymentWebScreen({required this.checkoutId, required integrity});
+
+  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount});
 
   @override
   _PaymentWebScreenState createState() => _PaymentWebScreenState();
@@ -95,20 +105,28 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
           onUrlChange: (UrlChange change) async {
             debugPrint("URL changed to: ${change.url}");
 
-            // Check for payment result URL
-            if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
-              Uri uri = Uri.parse(change.url!);
-              String resourcePath = uri.queryParameters['resourcePath'] ?? '';
+            await context.read<PaymentCubit>().checkPaymentStatus(widget.checkoutId, context);
 
-              if (resourcePath.isNotEmpty) {
-                await verifyPayment(resourcePath);
-              } else {
-                String checkoutId = uri.queryParameters['id'] ?? '';
-                if (checkoutId.isNotEmpty) {
-                  await verifyPayment("/v1/checkouts/$checkoutId/payment");
-                }
-              }
+            if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
+
+             Navigator.pop(context);
+             handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
             }
+
+            // Check for payment result URL
+            // if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
+            //   Uri uri = Uri.parse(change.url!);
+            //   String resourcePath = uri.queryParameters['resourcePath'] ?? '';
+            //
+            //   if (resourcePath.isNotEmpty) {
+            //     await verifyPayment(resourcePath);
+            //   } else {
+            //     String checkoutId = uri.queryParameters['id'] ?? '';
+            //     if (checkoutId.isNotEmpty) {
+            //       await verifyPayment("/v1/checkouts/$checkoutId/payment");
+            //     }
+            //   }
+            // }
           },
         ),
       )
@@ -122,48 +140,18 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
       ));
   }
 
-  Future<void> verifyPayment(String resourcePath) async {
-    try {
-      if (!resourcePath.startsWith('/')) {
-        resourcePath = '/$resourcePath';
-      }
-
-      final response = await http.get(
-        Uri.parse("https://eu-test.oppwa.com$resourcePath"),
-        headers: {
-          "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
-        },
-      );
-
-      if (response.statusCode >= 200 && response.statusCode < 300) {
-        final data = jsonDecode(response.body);
-        String resultCode = data['result']['code'] ?? '';
-        String resultDescription = data['result']['description'] ?? 'Unknown status';
-        String transactionId = data['id'] ?? '';
-
-        handlePaymentResult(resultCode, resultDescription, transactionId, data);
-      } else {
-        debugPrint("Error verifying payment: ${response.statusCode} - ${response.body}");
-        showPaymentError("Server error: ${response.statusCode}");
-      }
-    } catch (e) {
-      debugPrint("Exception verifying payment: $e");
-      showPaymentError("Failed to verify payment status");
-    }
-  }
-
-  void handlePaymentResult(String resultCode, String description, String transactionId, Map<String, dynamic> fullData) {
+  void handlePaymentResult(String resultCode, String description, Map<String, dynamic> fullData){
     // Success codes typically start with 000.000., 000.100., or 000.200.
     if (resultCode.startsWith('000.000.') ||
         resultCode.startsWith('000.100.') ||
-        resultCode.startsWith('000.200.')) {
-      debugPrint("✅ Payment Successful: $transactionId");
-      showPaymentSuccess(transactionId, description);
+        resultCode.startsWith('000.200.')){
+      debugPrint("✅ Payment Successful");
+      showPaymentSuccess(description);
     }
     // Pending codes typically start with 000.200.
     else if (resultCode.startsWith('000.200.')) {
-      debugPrint("⏳ Payment Pending: $transactionId");
-      showPaymentPending(transactionId, description);
+      debugPrint("⏳ Payment Pending");
+      showPaymentPending(description);
     }
     // Failure codes can vary
     else {
@@ -172,22 +160,24 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
     }
   }
 
-  void showPaymentSuccess(String transactionId, String description) {
+  void showPaymentSuccess(String description) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text("Payment Successful"),
-        content: Text("Your payment was completed successfully!\n\nTransaction ID: $transactionId"),
+        title: Text(AppLocalizations.of(context)!.translate('paymentSuccess').toString()),
+        content: Text(AppLocalizations.of(context)!.translate('paymentSuccessMessage').toString()),
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
-              Navigator.of(context).pop({
-                "success": true,
-                "transactionId": transactionId,
-                "description": description
-              });
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                occasionId: widget.occasionId,
+                status: "success",
+                occasionName: widget.occasionName,
+                paymentAmount: widget.paymentAmount,
+              );
             },
             child: Text("OK"),
           ),
@@ -196,23 +186,24 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
     );
   }
 
-  void showPaymentPending(String transactionId, String description) {
+  void showPaymentPending(String description) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text("Payment Pending"),
-        content: Text("Your payment is being processed.\n\nTransaction ID: $transactionId\n\nDescription: $description"),
+        title: Text(AppLocalizations.of(context)!.translate('paymentPending').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentPendingMessage').toString()}\n\n$description"),
         actions: [
           TextButton(
-            onPressed: () {
+            onPressed: () async {
               Navigator.of(context).pop();
-              Navigator.of(context).pop({
-                "success": false,
-                "pending": true,
-                "transactionId": transactionId,
-                "description": description
-              });
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                occasionId: widget.occasionId,
+                status: "success",
+                occasionName: widget.occasionName,
+                paymentAmount: widget.paymentAmount,
+              );
             },
             child: Text("OK"),
           ),
@@ -226,17 +217,12 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        title: Text("Payment Failed"),
-        content: Text("Your payment was not completed.\n\nError Code: $resultCode\n\nDescription: $description"),
+        title: Text(AppLocalizations.of(context)!.translate('paymentFailed').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentFailedMessage').toString()}\n\n$description"),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop({
-                "success": false,
-                "resultCode": resultCode,
-                "description": description
-              });
             },
             child: Text("OK"),
           ),
@@ -256,10 +242,6 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              Navigator.of(context).pop({
-                "success": false,
-                "error": message
-              });
             },
             child: Text("OK"),
           ),
@@ -272,14 +254,11 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Complete Payment"),
+        title: Text(AppLocalizations.of(context)!.translate('completePayment').toString()),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop({
-              "success": false,
-              "resultCode": "canceled_by_user"
-            });
+            Navigator.pop(context);
           },
         ),
       ),
