@@ -91,6 +91,25 @@ class OccasionSummary extends StatelessWidget {
                         ],
                       ),
                       SizedBox(height: mediaQuery.height * 0.01),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('occasionType').toString()} : ",
+                            style: TextStyles.textStyle12Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          Expanded(
+                            child: Text(
+                              cubit.dropdownOccasionType,
+                              style: TextStyles.textStyle12Bold
+                                  .copyWith(color: ColorManager.primaryBlue),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: mediaQuery.height * 0.01),
                       /// person name if for other
                       Visibility(
                         visible: cubit.isForMe == false ? true : false,
@@ -631,6 +650,7 @@ class OccasionSummary extends StatelessWidget {
                               ),
                             ),
                           ),
+
                           GestureDetector(
                             onTap: () async {
                               cubit.switchDiscountField();

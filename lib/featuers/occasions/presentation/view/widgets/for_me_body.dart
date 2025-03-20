@@ -36,6 +36,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
@@ -132,6 +134,48 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
                   fillColor: ColorManager.gray),
+              SizedBox(height: mediaQuery.height * 0.01),
+
+              // occasion type
+              Text(
+                AppLocalizations.of(context)!
+                    .translate('occasionType')
+                    .toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black),
+              ),
+              SizedBox(height: mediaQuery.height * 0.01),
+              // occasion type drop down
+              state is GetOccasionTaxesLoadingState ? LoadingAnimationWidget():Container(
+                height: SizeConfig.height * 0.06,
+                width: SizeConfig.width,
+                decoration: BoxDecoration(
+                  color: ColorManager.gray,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
+                    hint: Text(AppLocalizations.of(context)!.translate('occasionTypeHint').toString()),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    isExpanded: true, // This is important to fill the container width
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        cubit.dropdownOccasionType = newValue!;
+                      });
+                    },
+                    items: cubit.occasionTypeItems.map<DropdownMenuItem<String>>((dynamic value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(color: ColorManager.black),),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
               SizedBox(height: mediaQuery.height * 0.01),
               /// service fees text
               Text(
@@ -529,8 +573,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.all(SizeConfig.height * 0.01),
-                                          child: Image.asset(
-                                            "assets/images/giftbox.png",
+                                          child: Image.network(
+                                            cubit.packageListImage[0].toString(),
                                             fit: BoxFit.fill,
                                             height: mediaQuery.height * 0.08,
                                             width: mediaQuery.height * 0.08,
@@ -575,8 +619,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                                         ),
                                         child: Padding(
                                           padding: EdgeInsets.all(SizeConfig.height * 0.01),
-                                          child: Image.asset(
-                                            "assets/images/giftbox.png",
+                                          child: Image.network(
+                                            cubit.packageListImage[1].toString(),
                                             fit: BoxFit.fill,
                                             height: mediaQuery.height * 0.08,
                                             width: mediaQuery.height * 0.08,
@@ -1095,17 +1139,15 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    if (cubit.forMeFormKey.currentState!.validate()){
-                      // if (cubit.isPresent) {
-                      //   customPushNavigator(
-                      //       context,
-                      //       GiftScreen());
-                      // } else {
-                      //   customPushNavigator(
-                      //       context,
-                      //       MoneyScreen());
-                      // }
-                      customPushNavigator(context, OccasionSummary());
+                    if (cubit.forMeFormKey.currentState!.validate() && cubit.dropdownOccasionType.isNotEmpty){
+                      if(cubit.image != null){
+                        customPushNavigator(context, OccasionSummary());
+                      }else{
+                        customToast(title: AppLocalizations.of(context)!.translate('validateImage').toString(), color: Colors.red);
+                      }
+
+                    }else{
+                      customToast(title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(), color: Colors.red);
                     }
                   },
                   child: Container(

@@ -45,3 +45,6 @@ final class GetOccasionDiscountErrorState extends OccasionState {}
 
 final class SwitchDiscountFieldSuccess extends OccasionState {}
 
+final class CreateOccasionLinkLoadingState extends OccasionState {}
+final class CreateOccasionLinkSuccessState extends OccasionState {}
+final class CreateOccasionLinkErrorState extends OccasionState {}

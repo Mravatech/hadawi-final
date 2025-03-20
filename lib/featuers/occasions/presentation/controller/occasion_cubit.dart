@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,11 +52,16 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryCityController = TextEditingController();
   TextEditingController giftDeliveryStreetController = TextEditingController();
   TextEditingController discountCodeController = TextEditingController();
+  String dropdownOccasionType = '';
+
+  // List of items in our dropdown menu
+  List occasionTypeItems = [];
+
   final GlobalKey qrKey = GlobalKey();
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
   bool giftWithPackage = true;
-  int giftWithPackageType = 50;
+  int giftWithPackageType = 0;
 
 
    void resetData() {
@@ -232,6 +238,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         discount: discountValue,
         appCommission: getAppCommission(),
         deliveryPrice: deliveryTax,
+        type: dropdownOccasionType??'',
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
@@ -272,16 +279,20 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   var deliveryTax = 0.0;
   List packageListPrice = [];
+  List packageListImage = [];
   var serviceTax = 0.0;
 
   // get taxes from firebase collection taxs.
   Future<void> getOccasionTaxes() async{
     emit(GetOccasionTaxesLoadingState());
 
-    FirebaseFirestore.instance.collection('taxs').get().then((value) {
+    await FirebaseFirestore.instance.collection('taxs').get().then((value) {
       deliveryTax = double.parse(value.docs[0]['delivery_tax'].toString());
       packageListPrice = value.docs[0]['packaging_tax'];
+      packageListImage = value.docs[0]['pakaging_image'];
+      occasionTypeItems = value.docs[0]['occasionType'];
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
+      debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');
@@ -330,6 +341,30 @@ class OccasionCubit extends Cubit<OccasionState> {
       emit(GetOccasionDiscountErrorState());
     });
 
+  }
+
+  String occasionLink = '';
+
+  Future<String> createDynamicLink(String occasionId) async {
+    emit(CreateOccasionLinkLoadingState());
+    final DynamicLinkParameters parameters = DynamicLinkParameters(
+      uriPrefix: 'https://hadawiapp.page.link',
+      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
+      androidParameters: const AndroidParameters(
+        packageName: 'com.app.hadawi_app',
+        minimumVersion: 1,
+      ),
+      iosParameters: const IOSParameters(
+        bundleId: 'com.app.hadawiApp',
+        minimumVersion: '1.0.0',
+      ),
+    );
+
+    final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+    debugPrint("shortLink: ${shortLink.shortUrl}");
+    occasionLink = shortLink.shortUrl.toString();
+    emit(CreateOccasionLinkSuccessState());
+    return shortLink.shortUrl.toString();
   }
 
 }

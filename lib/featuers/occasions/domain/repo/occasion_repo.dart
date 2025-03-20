@@ -32,6 +32,7 @@ abstract class OccasionRepo {
       required String city,
       required String district,
       required String note,
+      required String type,
       required bool isPrivate,
       required double discount,
       required double appCommission,

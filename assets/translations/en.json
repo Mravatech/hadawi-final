@@ -299,5 +299,9 @@
   "resetPassword": "Reset Password",
   "sentResetLink": "Check your email for a link to reset your password.",
   "enterYourCity": "Enter your city",
-  "validateYourCity": "City is required"
+  "validateYourCity": "City is required",
+  "occasionType": "Occasion Type",
+  "occasionTypeHint": "Choose occasion type",
+  "validateOccasionType": "Occasion type is required",
+  "validateImage": "Image is required"
 }

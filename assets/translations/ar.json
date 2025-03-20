@@ -299,7 +299,9 @@
   "resetPassword": "استعادة كلمة المرور",
   "sentResetLink": "تم ارسال رابط استعادة كلمة المرور الى بريدك الالكتروني",
   "enterYourCity": "ادخل المدينة",
-  "validateYourCity": "المدينة مطلوبة"
-
-
+  "validateYourCity": "المدينة مطلوبة",
+  "occasionType": "نوع المناسبة",
+  "occasionTypeHint": "أختر نوع المناسبة",
+  "validateOccasionType": "نوع المناسبة مطلوب",
+  "validateImage": "الصورة مطلوبة"
 }

@@ -29,6 +29,7 @@ class OccasionEntity {
   final double discount;
   final double appCommission;
   final double deliveryPrice;
+  final String type;
 
   OccasionEntity(
   {
@@ -62,5 +63,6 @@ class OccasionEntity {
     required this.discount,
     required this.appCommission,
     required this.deliveryPrice,
+    required this.type,
   });
 }

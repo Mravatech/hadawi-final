@@ -37,6 +37,7 @@ class OccasionRepoImp extends OccasionRepo {
       required discount,
       required appCommission,
       required deliveryPrice,
+      required type,
       }) async {
     final result = await OccasionDataSource().addOccasion(
         isForMe: isForMe,
@@ -67,7 +68,8 @@ class OccasionRepoImp extends OccasionRepo {
         isPrivate: isPrivate,
         discount: discount,
         appCommission: appCommission,
-        deliveryPrice: deliveryPrice
+        deliveryPrice: deliveryPrice,
+        type: type,
     );
     try {
       return Right(result);

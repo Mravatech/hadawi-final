@@ -11,13 +11,27 @@ import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
+import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-class OccasionQr extends StatelessWidget {
+class OccasionQr extends StatefulWidget {
   final String occasionId;
   final String occasionName;
   const OccasionQr({super.key, required this.occasionId, required this.occasionName,});
+
+  @override
+  State<OccasionQr> createState() => _OccasionQrState();
+}
+
+class _OccasionQrState extends State<OccasionQr> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,16 +72,16 @@ class OccasionQr extends StatelessWidget {
                   children: [
                     SizedBox(height: mediaQuery.height * 0.02,),
                     Text(
-                      occasionName.toString(),
+                      widget.occasionName.toString(),
                       style: TextStyles.textStyle12Bold
                           .copyWith(color: ColorManager.black),
                     ),
 
                     SizedBox(height: mediaQuery.height * 0.02,),
-                    RepaintBoundary(
+                    state is CreateOccasionLinkLoadingState ? LoadingAnimationWidget() :  RepaintBoundary(
                       key: cubit.qrKey,
                       child: QrImageView(
-                        data: occasionId,
+                        data: cubit.occasionLink,
                         version: QrVersions.auto,
                         size: SizeConfig.height * 0.3,
                         backgroundColor: Colors.white,
@@ -84,7 +98,7 @@ class OccasionQr extends StatelessWidget {
                       alignment: Alignment.center,
                       child: GestureDetector(
                         onTap: () async {
-                          await cubit.captureAndShareQr(occasionName: occasionName);
+                          await cubit.captureAndShareQr(occasionName: widget.occasionName);
                         },
                         child: Container(
                           height: mediaQuery.height * .055,
