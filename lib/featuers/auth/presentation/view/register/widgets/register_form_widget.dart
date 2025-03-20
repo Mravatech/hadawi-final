@@ -24,11 +24,13 @@ class RegisterFormWidget extends StatelessWidget {
     required this.phoneController,
     required this.emailController,
     required this.passController,
+     required this.cityController,
     });
 
   final TextEditingController nameController ;
   final TextEditingController phoneController ;
   final TextEditingController emailController ;
+  final TextEditingController cityController ;
   final TextEditingController passController ;
 
   GlobalKey<FormState> registerKey = GlobalKey<FormState>();
@@ -105,6 +107,23 @@ class RegisterFormWidget extends StatelessWidget {
                       return null;
                     },
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.done,
+                    fillColor: ColorManager.gray
+                ),
+
+                SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
+
+                // city
+                DefaultTextField(
+                    controller: cityController,
+                    hintText: AppLocalizations.of(context)!.translate('enterYourCity').toString(),
+                    validator: (value) {
+                      if(value.isEmpty){
+                        return AppLocalizations.of(context)!.translate('validateYourCity').toString();
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.done,
                     fillColor: ColorManager.gray
                 ),
@@ -194,7 +213,8 @@ class RegisterFormWidget extends StatelessWidget {
                                 phone: phoneController.text,
                                 name: nameController.text,
                                 brithDate: cubit.brithDateController.text,
-                                gender: cubit.genderValue
+                                gender: cubit.genderValue,
+                                city: cityController.text
                             );
                           }
                         },

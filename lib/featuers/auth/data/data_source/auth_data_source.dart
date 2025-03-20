@@ -23,7 +23,9 @@ abstract class BaseAuthDataSource {
       required String phone,
       required String name,
       required String brithDate,
-      required String gender});
+      required String gender,
+      required String city
+      });
 
   Future<void> saveUserData(
       {required String email,
@@ -31,12 +33,14 @@ abstract class BaseAuthDataSource {
       required String name,
       required String uId,
       required String brithDate,
-      required String gender});
+      required String gender,
+      required String city,
+      });
 
 
   Future<void> logout();
 
-  Future<void> loginWithGoogle({required String brithDate, required String gender});
+  Future<void> loginWithGoogle({required String brithDate, required String gender,required String city});
 
   Future<void> loginWithPhoneNumber({
     required String phone,
@@ -44,6 +48,7 @@ abstract class BaseAuthDataSource {
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
     required bool resendCode,
     required bool isLogin,
     required BuildContext context
@@ -58,7 +63,8 @@ abstract class BaseAuthDataSource {
         required bool isLogin,
         required String verificationId,
         required String verifyOtpPinPut,
-        required String gender
+        required String gender,
+        required String city
       });
 
   Future<bool> checkUserLogin({required String phoneNumber});
@@ -106,6 +112,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String name,
       required String brithDate,
       required String gender,
+      required String city,
       }) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
@@ -116,6 +123,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           name: name,
           uId: user.user!.uid,
           brithDate: brithDate,
+          city: city,
           gender: gender,
       );
       await getUserData(uId:  user.user!.uid);
@@ -133,6 +141,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String uId,
       required String brithDate,
       required String gender,
+      required String city
       }) async {
     UserModel userModel = UserModel(
         email: email,
@@ -141,6 +150,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         uId: uId,
         brithDate: brithDate,
         gender: gender,
+        city: city,
         block: false
     );
 
@@ -166,6 +176,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setPhoneNumber(userModel.phone);
       UserDataFromStorage.setUid(userModel.uId);
       UserDataFromStorage.setGender(userModel.gender);
+      UserDataFromStorage.setCity(userModel.city);
       UserDataFromStorage.setBrithDate(userModel.brithDate);
       UserDataFromStorage.setUserIsGuest(false);
       return userModel;
@@ -176,7 +187,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
 
   @override
   Future<void> loginWithGoogle(
-      {required String brithDate, required String gender}) async {
+      {required String brithDate, required String gender, required String city}) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -194,6 +205,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           name: user.user!.displayName!,
           uId: user.user!.uid,
           brithDate: brithDate,
+          city: city,
           gender: gender);
     } on FirebaseAuthException catch (firebaseAuthException) {
       throw FirebaseExceptions(firebaseAuthException: firebaseAuthException);
@@ -207,6 +219,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
     required bool resendCode,
     required bool isLogin,
     required BuildContext context
@@ -226,6 +239,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
               phone: phone,
               name: name,
               isLogin: isLogin,
+              city: city,
               brithDate: brithDate,
               gender: gender,
               verificationId: verificationId,
@@ -274,6 +288,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required bool isLogin,
       required String verificationId,
       required String verifyOtpPinPut,
+      required String city
       }) async {
     try {
       final PhoneAuthCredential credential = PhoneAuthProvider.credential(
@@ -291,7 +306,8 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
                     name: name,
                     uId: value.user!.uid,
                     brithDate: brithDate,
-                    gender: gender
+                    gender: gender,
+                  city: city
                 );
               }
         });

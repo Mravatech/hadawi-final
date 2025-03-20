@@ -13,10 +13,11 @@ abstract class AuthBaseRepository {
     required String password,
     required String phone,
     required String name,
+    required String city,
     required String brithDate,
     required String gender
   });
-  Future<Either<Faliure,void>> saveUserData({required String email, required String phone, required String name, required String uId,required String brithDate,required String gender});
+  Future<Either<Faliure,void>> saveUserData({required String email, required String phone, required String name, required String uId,required String brithDate,required String gender, required String city});
   Future<Either<Faliure,void>> logout();
   Future<Either<Faliure,void>> loginWithPhoneNumber({
     required String phone,
@@ -26,6 +27,7 @@ abstract class AuthBaseRepository {
     required String gender,
     required bool isLogin,
     required bool resendCode,
+    required String city,
     required BuildContext context
   });
   Future<Either<Faliure,void>> verifiyPhoneNumber({
@@ -36,11 +38,13 @@ abstract class AuthBaseRepository {
         required bool isLogin,
         required String verificationId,
         required String verifyOtpPinPut,
-        required String gender
+        required String gender,
+        required String city
   });
   Future<Either<Faliure,void>> loginWithGoogle({
     required String brithDate,
-    required String gender
+    required String gender,
+    required String city
   });
 
   Future<Either<Faliure,bool>> checkUserLogin({

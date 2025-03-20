@@ -42,6 +42,7 @@ class ResendCodeButton extends StatelessWidget {
                      gender: cubit.genderValue,
                      name: '',
                      phone: '',
+                     city: '',
                      resendCode:true,
                      context: context
                   ).then((value) {

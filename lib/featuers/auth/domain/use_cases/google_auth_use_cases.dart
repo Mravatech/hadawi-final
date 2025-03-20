@@ -10,11 +10,13 @@ class GoogleAuthUseCases{
 
   Future<Either<Faliure, void>> loginWithGoogle({
     required String brithDate,
-    required String gender
+    required String gender,
+    required String city
   })async {
     return await authBaseRepository.loginWithGoogle(
         brithDate: brithDate,
-        gender: gender
+        gender: gender,
+        city: city
     );
   }
 

@@ -85,3 +85,10 @@ class DeleteUserErrorState extends AuthStates{
   String message;
   DeleteUserErrorState({required this.message});
 }
+
+class ResetPasswordLoadingState extends AuthStates{}
+class ResetPasswordSuccessState extends AuthStates{}
+class ResetPasswordErrorState extends AuthStates{
+  String message;
+  ResetPasswordErrorState({required this.message});
+}

@@ -22,7 +22,7 @@ class DonotHaveAnAccount extends StatelessWidget {
         )),
         GestureDetector(
           onTap: () {
-            context.go(AppRouter.signUp);
+            customPushNavigator(context, RegisterScreen());
           },
           child: Text(AppLocalizations.of(context)!.translate('createAccount').toString(),
               style: TextStyles.textStyle18Bold.copyWith(

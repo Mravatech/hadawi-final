@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
@@ -64,6 +65,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
   })async {
     emit(UserRegisterLoadingState());
     final result = await registerUseCases.register(
@@ -72,7 +74,8 @@ class AuthCubit extends Cubit<AuthStates> {
         brithDate: brithDate,
         gender: gender,
         name: name,
-        phone: phone
+        phone: phone,
+        city: city
     );
     result.fold((l) {
       emit(UserRegisterErrorState(message: l.message));
@@ -88,6 +91,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String name,
     required String brithDate,
     required String gender,
+    required String city
   })async {
     emit(UserSaveDataLoadingState());
     final result = await saveDataUseCases.saveUserData(
@@ -97,6 +101,7 @@ class AuthCubit extends Cubit<AuthStates> {
         name: name,
         brithDate: brithDate,
         gender: gender,
+        city: city
     );
     result.fold((l) {
       emit(UserSaveDataErrorState(message: l.message));
@@ -136,12 +141,14 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> signInWithGoogle({
     required String brithDate,
     required String gender,
+    required String city
   })async {
     emit(SignInWithSocialMediaLoadingState());
     try{
       final result = await googleAuthUseCases.loginWithGoogle(
         brithDate: brithDate,
         gender: gender,
+        city: city
       );
       result.fold((l) {
         emit(SignInWithSocialMediaErrorState(message: l.message));
@@ -171,6 +178,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
     required bool resendCode,
     required bool isLogin,
     required BuildContext context
@@ -185,7 +193,8 @@ class AuthCubit extends Cubit<AuthStates> {
       resendCode: resendCode,
       isLogin: isLogin,
       brithDate: brithDate,
-      gender: gender
+      gender: gender,
+      city: city
     );
     result.fold((l) {
        isLoading = false;
@@ -202,6 +211,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
     required String verificationId,
     required bool isLogin,
     required String verifyOtpPinPut,
@@ -214,6 +224,7 @@ class AuthCubit extends Cubit<AuthStates> {
           name: name,
           brithDate: brithDate,
           gender: gender,
+          city: city,
           isLogin: isLogin,
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut
@@ -272,4 +283,19 @@ class AuthCubit extends Cubit<AuthStates> {
             }
     );
   }
+
+
+  Future<void> resetPassword({required String email})async {
+    emit(ResetPasswordLoadingState());
+    try{
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      emit(ResetPasswordSuccessState());
+    }catch(e){
+      debugPrint("error in reset password: $e");
+      emit(ResetPasswordErrorState(message: e.toString()));
+    }
+
+  }
+
+
 }

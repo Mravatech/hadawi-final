@@ -8,6 +8,7 @@ class UserEntities extends Equatable{
   final String phone;
   final String brithDate;
   final String gender;
+  final String city;
   final bool block;
 
 
@@ -18,11 +19,12 @@ class UserEntities extends Equatable{
     required this.phone,
     required this.brithDate,
     required this.gender,
+    required this.city,
     required this.block
 });
 
   @override
 
-  List<Object?> get props => [email, uId, name, phone, brithDate, gender, block];
+  List<Object?> get props => [email, uId, name, phone, brithDate, gender, city, block];
 
 }

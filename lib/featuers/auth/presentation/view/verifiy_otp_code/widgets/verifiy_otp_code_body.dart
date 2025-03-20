@@ -18,6 +18,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
   const VerfiyCodeViewBody({super.key,
     required this.verificationId,
     required this.gender,
+    required this.city,
     required this.name,
     required this.phone,
     required this.brithDate,
@@ -26,6 +27,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
   });
   final String verificationId;
   final String gender;
+  final String city;
   final String name;
   final String phone;
   final String brithDate;
@@ -156,6 +158,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                               isLogin: widget.isLogin,
                               brithDate: widget.brithDate,
                               gender: widget.gender,
+                              city: widget.city,
                               verificationId: widget.verificationId,
                               verifyOtpPinPut: verifyOtpPinPutController.text
                           );

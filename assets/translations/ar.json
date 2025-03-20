@@ -295,7 +295,11 @@
   "paymentFailedMessage": "فشلت عملية الدفع.",
   "paymentPending": "قيد المعالجة",
   "paymentPendingMessage": "تم استلام طلب الدفع وهو قيد المعالجة.",
-  "completePayment": "اكمال الدفع"
+  "completePayment": "اكمال الدفع",
+  "resetPassword": "استعادة كلمة المرور",
+  "sentResetLink": "تم ارسال رابط استعادة كلمة المرور الى بريدك الالكتروني",
+  "enterYourCity": "ادخل المدينة",
+  "validateYourCity": "المدينة مطلوبة"
 
 
 }

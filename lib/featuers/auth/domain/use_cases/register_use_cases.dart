@@ -15,7 +15,8 @@ class RegisterUseCases{
     required String phone,
     required String name,
     required String brithDate,
-    required String gender
+    required String gender,
+    required String city
   })async {
     return await authBaseRepository.register(
         email: email,
@@ -23,7 +24,8 @@ class RegisterUseCases{
         brithDate: brithDate,
         gender: gender,
         name: name,
-        phone: phone
+        phone: phone,
+        city: city
     );
   }
 

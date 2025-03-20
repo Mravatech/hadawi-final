@@ -10,6 +10,7 @@ class VerifyPhoneScreen extends StatelessWidget {
   final String gender;
   final String name;
   final String phone;
+  final String city;
   final String brithDate;
   final String email;
   final bool isLogin;
@@ -19,6 +20,7 @@ class VerifyPhoneScreen extends StatelessWidget {
     required this.gender,
     required this.name,
     required this.phone,
+    required this.city,
     required this.brithDate,
     required this.email,
     required this.isLogin,
@@ -48,6 +50,7 @@ class VerifyPhoneScreen extends StatelessWidget {
           gender: gender,
           name: name,
           phone: phone,
+          city: city,
           brithDate: brithDate,
           email: email,
           isLogin: isLogin,

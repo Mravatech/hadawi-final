@@ -17,7 +17,8 @@ class VerifiyCodeUseCases{
     required String verificationId,
     required String verifyOtpPinPut,
     required bool isLogin,
-    required String gender
+    required String gender,
+    required String city
 })async{
       return await authBaseRepository.verifiyPhoneNumber(
           email: email,
@@ -27,7 +28,8 @@ class VerifiyCodeUseCases{
           isLogin: isLogin,
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut,
-          gender: gender
+          gender: gender,
+          city: city
       );
   }
 

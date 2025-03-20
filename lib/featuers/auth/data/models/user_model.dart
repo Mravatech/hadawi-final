@@ -10,6 +10,7 @@ class UserModel extends UserEntities{
     required super.phone,
     required super.brithDate,
     required super.gender,
+    required super.city,
     required super.block
   });
 
@@ -21,6 +22,7 @@ class UserModel extends UserEntities{
       phone: json['phone'],
       brithDate: json['brithDate'],
       gender: json['gender'],
+      city: json['city'],
       block: json['block'],
     );
   }
@@ -32,6 +34,7 @@ class UserModel extends UserEntities{
       'name':name,
       'phone':phone,
       'gender':gender,
+      'city':city,
       'brithDate':brithDate,
       'block':block
     };

@@ -31,7 +31,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String phone,
     required String name,
     required String brithDate,
-    required String gender
+    required String gender,
+    required String city
   })async {
     try{
       return Right(await baseAuthDataSource.register(
@@ -40,7 +41,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           brithDate: brithDate,
           gender: gender,
           name: name,
-          phone: phone
+          phone: phone,
+        city: city
       ));
     }on FirebaseExceptions catch(e){
     return Left(FirebaseFaliure.fromMessage(e));
@@ -66,7 +68,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String name,
     required String uId,
     required String brithDate,
-    required String gender
+    required String gender,
+    required String city
   })async {
     try{
       return Right(await baseAuthDataSource.saveUserData(
@@ -75,7 +78,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           name: name,
           uId: uId,
           brithDate: brithDate,
-          gender: gender
+          gender: gender,
+          city: city
           ));
     }on FireStoreException catch(e){
     return Left(FirebaseFaliure(message: e.firebaseException.message!));
@@ -86,12 +90,14 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   Future<Either<Faliure, void>> loginWithGoogle(
       {
         required String brithDate,
-        required String gender
+        required String gender,
+        required String city
       }) async{
     try{
       return Right(await baseAuthDataSource.loginWithGoogle(
           brithDate: brithDate,
-          gender: gender
+          gender: gender,
+          city: city
       )
       );
     }on FirebaseExceptions catch(e){
@@ -111,6 +117,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String brithDate,
     required bool isLogin,
     required String gender,
+    required String city
   }) async{
     try{
        return Right(await baseAuthDataSource.loginWithPhoneNumber(
@@ -120,6 +127,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
            gender: gender,
            phone: phone,
            isLogin: isLogin,
+           city: city,
            resendCode: resendCode,
            context: context
        ));
@@ -139,7 +147,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String brithDate,
     required String verificationId,
     required String verifyOtpPinPut,
-    required String gender
+    required String gender,
+    required String city
   })async {
     try{
       return Right(await baseAuthDataSource.verifiyPhoneNumber(
@@ -150,7 +159,8 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           isLogin: isLogin,
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut,
-          gender: gender
+          gender: gender,
+          city: city
     ));
     }on FirebaseExceptions catch(e){
     return Left(FirebaseFaliure.fromMessage(e));

@@ -295,5 +295,9 @@
   "paymentFailedMessage": "Your payment was not completed.",
   "paymentPending": "Payment Pending",
   "paymentPendingMessage": "Your payment is being processed.",
-  "completePayment": "Complete Payment"
+  "completePayment": "Complete Payment",
+  "resetPassword": "Reset Password",
+  "sentResetLink": "Check your email for a link to reset your password.",
+  "enterYourCity": "Enter your city",
+  "validateYourCity": "City is required"
 }

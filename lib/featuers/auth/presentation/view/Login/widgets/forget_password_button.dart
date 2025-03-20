@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/forget_password_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class ForgetPasswordButton extends StatelessWidget {
@@ -9,7 +11,9 @@ class ForgetPasswordButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        customPushNavigator(context, ForgetPasswordScreen());
+      },
       child: Align(
           alignment: Alignment.topRight,
           child: Text(AppLocalizations.of(context)!.translate('forgetPassword').toString(),style: TextStyles.textStyle18Bold.copyWith(

@@ -16,6 +16,7 @@ class LoginWithPhoneUseCases{
     required String name,
     required String brithDate,
     required String gender,
+    required String city,
     required bool resendCode,
     required bool isLogin,
     required BuildContext context
@@ -28,6 +29,7 @@ class LoginWithPhoneUseCases{
           resendCode: resendCode,
           isLogin: isLogin,
           gender: gender,
+          city: city,
           context: context
       );
   }
