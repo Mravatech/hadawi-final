@@ -178,6 +178,11 @@ class PaymentScreen extends StatelessWidget {
                                   integrity: checkoutData["integrity"],
                                   occasionId: occasionEntity.occasionId,
                                   occasionName: occasionEntity.occasionName,
+                                  transactionId: merchantTransactionId,
+                                  remainingPrice: double.parse(
+                                      occasionEntity.giftPrice.toString()) -
+                                      double.parse(
+                                          occasionEntity.moneyGiftAmount.toString()),
                                   paymentAmount: double.parse(
                                       occasionEntity.moneyGiftAmount.toString()),
 

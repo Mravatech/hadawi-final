@@ -28,7 +28,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   
   
-  Future<void> addPaymentData({required BuildContext context, required String status ,required String occasionId, required String occasionName, required double paymentAmount})async{
+  Future<void> addPaymentData({required BuildContext context, required String status ,required String transactionId,required String occasionId, required String remainingPrince ,required String occasionName, required double paymentAmount})async{
     emit(PaymentAddLoadingState());
 
     double paymentCounterValue = double.parse(paymentAmountController.text);
@@ -40,8 +40,11 @@ class PaymentCubit extends Cubit<PaymentStates> {
     await FirebaseFirestore.instance.collection("Occasions").doc(occasionId).collection("payments").add({
       "paymentAmount": paymentCounterValue,
       "paymentDate": DateTime.now().toString(),
+      "remainingPrince": remainingPrince,
       "paymentId": "",
       "paymentStatus": status,
+      "transactionId": transactionId,
+      "date": DateTime.now().toString(),
       "occasionId": occasionId,
       "occasionName": occasionName,
       "payerName": paymentPayerNameController.text,
@@ -54,8 +57,11 @@ class PaymentCubit extends Cubit<PaymentStates> {
       await FirebaseFirestore.instance.collection("payments").doc(value.id).set({
         "paymentAmount": paymentCounterValue,
         "paymentDate": DateTime.now().toString(),
+        "remainingPrince": remainingPrince,
         "paymentId": value.id,
         "paymentStatus": status,
+        "transactionId": transactionId,
+        "date": DateTime.now().toString(),
         "occasionId": occasionId,
         "payerName": paymentPayerNameController.text,
         "occasionName": occasionName,

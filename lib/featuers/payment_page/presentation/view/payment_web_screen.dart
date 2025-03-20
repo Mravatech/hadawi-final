@@ -13,10 +13,12 @@ class PaymentWebScreen extends StatefulWidget {
   final String checkoutId;
   final String occasionId;
   final String occasionName;
+  final String transactionId;
   final double paymentAmount;
+  final double remainingPrice;
 
 
-  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount});
+  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount, required this.transactionId, required this.remainingPrice});
 
   @override
   _PaymentWebScreenState createState() => _PaymentWebScreenState();
@@ -173,7 +175,9 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
               Navigator.of(context).pop();
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
+                transactionId: widget.transactionId,
                 occasionId: widget.occasionId,
+                remainingPrince: widget.remainingPrice.toString(),
                 status: "success",
                 occasionName: widget.occasionName,
                 paymentAmount: widget.paymentAmount,
@@ -200,6 +204,8 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 occasionId: widget.occasionId,
+                transactionId: widget.transactionId,
+                remainingPrince: widget.remainingPrice.toString(),
                 status: "success",
                 occasionName: widget.occasionName,
                 paymentAmount: widget.paymentAmount,
