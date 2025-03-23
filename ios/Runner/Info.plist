@@ -61,7 +61,7 @@
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
             <key>CFBundleURLName</key>
-            <string>com.app.hadawiApp</string>
+            <string>com.app.hadawiapp</string>
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>hadawi</string>

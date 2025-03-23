@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.app.hadawiApp</string>
+	<string>com.app.hadawiapp</string>
 	<key>PROJECT_ID</key>
 	<string>transport-app-d662f</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1698335350:ios:76209b1f710d416c8aed57</string>
+	<string>1:1698335350:ios:44dfcedaaf0e8d638aed57</string>
 	<key>DATABASE_URL</key>
 	<string>https://transport-app-d662f-default-rtdb.firebaseio.com</string>
 </dict>
