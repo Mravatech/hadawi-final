@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/check_user_login_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/delete_user_use_cases.dart';
@@ -16,9 +18,11 @@ import 'package:hadawi_app/featuers/auth/domain/use_cases/save_data_use_cases.da
 import 'package:hadawi_app/featuers/auth/domain/use_cases/verifiy_code_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:intl/intl.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
 
@@ -310,6 +314,53 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(ResetPasswordErrorState(message: e.toString()));
     }
 
+  }
+
+  Future<void> signInWithApple() async {
+    emit(SignInWithSocialMediaLoadingState());
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      print("User ID: ${credential.userIdentifier}");
+      print("Email: ${credential.email}");
+      print("Name: ${credential.givenName} ${credential.familyName}");
+
+      UserModel userModel = UserModel(
+          email: credential.email.toString(),
+          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+          phone: "",
+          name: "${credential.givenName} ${credential.familyName}",
+          uId: credential.userIdentifier.toString(),
+          brithDate: "",
+          gender: "",
+          city: "",
+          block: false
+      );
+
+      try {
+        await FirebaseFirestore.instance.collection('users').doc(credential.userIdentifier.toString()).set(userModel.toMap());
+        UserDataFromStorage.setUid(credential.userIdentifier.toString());
+        UserDataFromStorage.setUserName("${credential.givenName} ${credential.familyName}");
+        UserDataFromStorage.setEmail(credential.email.toString());
+        UserDataFromStorage.setPhoneNumber('');
+        UserDataFromStorage.setGender('');
+        UserDataFromStorage.setBrithDate('');
+        UserDataFromStorage.setUserIsGuest(false);
+        emit(SignInWithSocialMediaSuccessState());
+      } on FireStoreException catch (e) {
+        emit(SignInWithSocialMediaErrorState(message: e.toString()));
+        throw FireStoreException(firebaseException: e.firebaseException);
+      }
+
+    } catch (e) {
+      emit(SignInWithSocialMediaErrorState(message: e.toString()));
+      debugPrint("خطأ في تسجيل الدخول: $e");
+    }
   }
 
 

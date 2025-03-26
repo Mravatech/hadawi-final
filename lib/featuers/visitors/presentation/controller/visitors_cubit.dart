@@ -156,7 +156,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   }
 
   Future<String> createDynamicLink(String occasionId) async {
-    emit(CreateOccasionLinkLoadingState());
+    emit(CreateOccasionLinkDetailsLoadingState());
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://hadawiapp.page.link',
       link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
@@ -172,7 +172,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
     final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
     debugPrint("shortLink: ${shortLink.shortUrl}");
-    emit(CreateOccasionLinkSuccessState());
+    emit(CreateOccasionLinkDetailsSuccessState());
     return shortLink.shortUrl.toString();
   }
 

@@ -38,9 +38,9 @@ final class GetOccasionDataLoadingState extends VisitorsState {}
 final class GetOccasionDataSuccessState extends VisitorsState {}
 final class GetOccasionDataErrorState extends VisitorsState {}
 
-final class CreateOccasionLinkLoadingState extends VisitorsState {}
-final class CreateOccasionLinkSuccessState extends VisitorsState {}
-final class CreateOccasionLinkErrorState extends VisitorsState {}
+final class CreateOccasionLinkDetailsLoadingState extends VisitorsState {}
+final class CreateOccasionLinkDetailsSuccessState extends VisitorsState {}
+final class CreateOccasionLinkDetailsErrorState extends VisitorsState {}
 
 class GetAnalysisLoadingState extends VisitorsState{}
 class GetAnalysisSuccessState extends VisitorsState{}

@@ -303,5 +303,6 @@
   "occasionType": "Occasion Type",
   "occasionTypeHint": "Choose occasion type",
   "validateOccasionType": "Occasion type is required",
-  "validateImage": "Image is required"
+  "validateImage": "Image is required",
+  "validatePhone": "Phone number must be at least 10 numbers"
 }

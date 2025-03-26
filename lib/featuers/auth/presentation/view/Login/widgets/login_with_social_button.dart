@@ -43,7 +43,9 @@ class LoginWithSocialButton extends StatelessWidget {
               child: DefaultButtonWithImage(
                 image:AssetsManager.appleIcon ,
                 buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
-                onTap: (){},
+                onTap: ()async{
+                  await cubit.signInWithApple();
+                },
               ),
             ),
           ],

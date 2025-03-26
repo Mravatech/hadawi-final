@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/progress_indecator.dart';
 import 'package:hadawi_app/generated/assets.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -20,6 +23,7 @@ import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -40,6 +44,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
     SharedPreferences.getInstance();
     UserDataFromStorage.getData();
     context.read<VisitorsCubit>().getOccasionData(occasionId: widget.occasionId);
+    context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
     super.initState();
   }
   
@@ -73,7 +78,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
           },
           builder: (context, state) {
             final cubit = context.read<VisitorsCubit>();
-            return cubit.occasionModel !=null && state is! GetOccasionDataLoadingState? Padding(
+            return state is GetOccasionDataLoadingState? LoadingAnimationWidget(): Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CashHelper.languageKey == 'ar'
@@ -139,7 +144,9 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         style: TextStyles.textStyle18Bold.copyWith(),
                       ),
                       Spacer(),
-                      UserDataFromStorage.userIsGuest==false? SizedBox(
+                      (UserDataFromStorage.userIsGuest==true) ||
+                          (UserDataFromStorage.uIdFromStorage == cubit.occasionModel!.personId) ?Container() :
+                      SizedBox(
                         width:  MediaQuery.sizeOf(context).width * 0.3,
                         child: DefaultButton(
                             buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
@@ -155,7 +162,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             },
                             buttonColor: ColorManager.primaryBlue,
                         ),
-                      ):Container(),
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -282,8 +289,25 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                     enable: false,
                   ),
                   SizedBox(
-                    height:MediaQuery.sizeOf(context).height * 0.1
+                      height:MediaQuery.sizeOf(context).height * 0.01
                   ),
+
+                  Center(
+                    child: RepaintBoundary(
+                      key: context.read<OccasionCubit>().qrKey,
+                      child: QrImageView(
+                        data: context.read<OccasionCubit>().occasionLink,
+                        version: QrVersions.auto,
+                        size: SizeConfig.height * 0.3,
+                        backgroundColor: Colors.white,
+                        embeddedImage: AssetImage(AssetsManager.logoWithoutBackground), // Your logo
+                        embeddedImageStyle: QrEmbeddedImageStyle(
+                          size: Size(100, 100), // Adjust size as needed
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height:MediaQuery.sizeOf(context).height * 0.05),
 
                   /// share and pay
                   Row(
@@ -295,7 +319,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           GestureDetector(
                             onTap: ()  async {
                               String link = await cubit.createDynamicLink(widget.occasionId);
-                              Share.share('Check out this occasion: $link');
+                              Share.share('قام صديقك ${cubit.occasionModel!.personName} بدعوتك للمشاركة في مناسبة ${cubit.occasionModel!.occasionName} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
                             },
                             child: state is CreateOccasionLinkLoadingState? LoadingAnimationWidget() :Container(
                               height: MediaQuery.sizeOf(context).height * .055,
@@ -363,7 +387,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                   ),
                 ],
               ),
-            ) : const LoadingAnimationWidget();
+            );
           },
         ),
       ),

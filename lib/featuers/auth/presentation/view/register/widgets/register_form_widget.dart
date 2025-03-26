@@ -86,6 +86,8 @@ class RegisterFormWidget extends StatelessWidget {
                     validator: (value) {
                       if(value.isEmpty){
                         return AppLocalizations.of(context)!.translate('loginMessage').toString();
+                      }if (value.length<10){
+                        return AppLocalizations.of(context)!.translate('validatePhone').toString();
                       }
                       return null;
                     },

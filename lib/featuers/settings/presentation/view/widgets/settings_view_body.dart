@@ -64,10 +64,13 @@ class SettingViewBody extends StatelessWidget {
                     CircleAvatar(
                       backgroundColor: ColorManager.white,
                       radius: MediaQuery.sizeOf(context).height*0.035,
-                      child: Image(
-                          height: MediaQuery.sizeOf(context).height*0.12,
-                          image: AssetImage(AssetsManager.logoWithoutBackground
-                          )),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Image(
+                            height: MediaQuery.sizeOf(context).height*0.12,
+                            image: AssetImage(AssetsManager.logoWithoutBackground
+                            )),
+                      ),
                     ),
                     SizedBox(width: MediaQuery.sizeOf(context).height*0.02,),
                     Expanded(
@@ -155,7 +158,32 @@ class SettingViewBody extends StatelessWidget {
 
                     // حذف الحساب
                     GestureDetector(
-                        onTap: ()=>cubit.deleteUser(uId: UserDataFromStorage.uIdFromStorage),
+                        onTap: (){
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("تحذير"),
+                                content: Text("هل أنت متأكد أنك تريد حذف الحساب؟"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);// رفض
+                                    },
+                                    child: Text("إلغاء"),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      cubit.deleteUser(uId: UserDataFromStorage.uIdFromStorage);
+                                    },
+                                    child: Text("حذف"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
                         child: RowDataWidget(
                             image:AssetsManager.deleteAccount,
                             title: AppLocalizations.of(context)!.translate('deleteAccount').toString(),

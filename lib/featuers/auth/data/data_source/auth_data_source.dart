@@ -355,6 +355,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     try {
       await FirebaseAuth.instance.currentUser!.delete();
       await FirebaseFirestore.instance.collection('users').doc(uId).delete();
+      await UserDataFromStorage.removeAllDataFromStorage();
     } on FirebaseException catch (error) {
       throw FireStoreException(firebaseException: error);
     }

@@ -35,7 +35,6 @@ class ProfileBodyView extends StatelessWidget {
 
           Image(
             image: AssetImage(AssetsManager.logoWithoutBackground),
-            color: ColorManager.primaryBlue,
             height: MediaQuery.sizeOf(context).height*0.11,
             width: MediaQuery.sizeOf(context).height*0.11,
           ),
