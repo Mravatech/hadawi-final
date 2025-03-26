@@ -39,12 +39,16 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       doneOccasions.clear();
 
       for (var element in occasion) {
-        if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
-          activeOccasions.add(element);
-        } else {
-          doneOccasions.add(element);
+        if(element.isPrivate == false){
+          if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
+            activeOccasions.add(element);
+          } else {
+            doneOccasions.add(element);
+          }
         }
       }
+      activeOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
+      doneOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
       emit(GetOccasionsSuccessState(activeOccasions: activeOccasions, doneOccasions: doneOccasions));
     });
   }

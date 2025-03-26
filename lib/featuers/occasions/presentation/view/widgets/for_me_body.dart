@@ -91,8 +91,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
-
                     DefaultTextField(
                         controller: cubit.nameController,
                         hintText: AppLocalizations.of(context)!.translate('personNameHint').toString(),
@@ -106,7 +104,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
                   ],
                 ),
               ),
@@ -118,7 +116,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                 style: TextStyles.textStyle18Bold
                     .copyWith(color: ColorManager.black),
               ),
-              SizedBox(height: mediaQuery.height * 0.01),
               /// occasion name
               DefaultTextField(
                   controller: cubit.occasionNameController,
@@ -144,7 +141,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                 style: TextStyles.textStyle18Bold
                     .copyWith(color: ColorManager.black),
               ),
-              SizedBox(height: mediaQuery.height * 0.01),
               // occasion type drop down
               state is GetOccasionTaxesLoadingState ? LoadingAnimationWidget():Container(
                 height: SizeConfig.height * 0.06,
@@ -183,7 +179,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                 style: TextStyles.textStyle12Bold
                     .copyWith(color: ColorManager.black.withOpacity(.5)),
               ),
-              SizedBox(height: mediaQuery.height * 0.02),
+              SizedBox(height: mediaQuery.height * 0.01),
 
               /// date of occasion
               // Text(
@@ -317,7 +313,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                   ),
                 ],
               ),
-              SizedBox(height: mediaQuery.height * 0.02),
+              SizedBox(height: mediaQuery.height * 0.01),
 
               /// gift section
               Visibility(
@@ -333,7 +329,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.giftNameController,
                         hintText: AppLocalizations.of(context)!
@@ -350,7 +345,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
-                    SizedBox(height: mediaQuery.height * 0.04),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// link
                     Text(
@@ -360,20 +355,24 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.linkController,
                         hintText: AppLocalizations.of(context)!
                             .translate('linkHint')
                             .toString(),
                         validator: (value) {
+                          if(value!.trim().isEmpty) {
+                            return AppLocalizations.of(context)!
+                                .translate('validateLink')
+                                .toString();
+                          }
                           return null;
                         },
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
 
-                    SizedBox(height: mediaQuery.height * 0.04),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// picture
                     Row(
@@ -385,8 +384,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               .copyWith(color: ColorManager.black),
                         ),
                         Container(
-                          height: mediaQuery.height * 0.2,
-                          width: mediaQuery.width * 0.5,
+                          height: mediaQuery.height * 0.1,
+                          width: mediaQuery.height * 0.1,
                           decoration: BoxDecoration(
                               color: ColorManager.gray,
                               borderRadius: BorderRadius.circular(10)),
@@ -402,8 +401,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             child: Image.file(
                               cubit.image!,
                               fit: BoxFit.fill,
-                              height: mediaQuery.height * 0.2,
-                              width: mediaQuery.width * 0.5,
+                              height: mediaQuery.height * 0.1,
+                              width: mediaQuery.height * 0.1,
                             ),
                           ),
                         ),
@@ -418,7 +417,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             )),
                       ],
                     ),
-                    SizedBox(height: mediaQuery.height * 0.04),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// amount
                     Text(
@@ -426,7 +425,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     Row(
                       children: [
                         Expanded(
@@ -455,7 +453,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       ],
                     ),
 
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
 
                     Row(
@@ -536,7 +534,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       ],
                     ),
 
-                    SizedBox(height: mediaQuery.height * 0.02,),
+                    SizedBox(height: mediaQuery.height * 0.01,),
 
 
                     // show gift image and price
@@ -667,7 +665,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01,),
                     Row(
                       children: [
                         Expanded(
@@ -695,7 +692,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         )
                       ],
                     ),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// with packaging
                     Row(
@@ -761,7 +758,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         ),
                       ],
                     ),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// receiver name
                     Visibility(
@@ -774,7 +771,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           DefaultTextField(
                               controller: cubit.giftReceiverNameController,
                               hintText: AppLocalizations.of(context)!.translate('moneyReceiverNameHint').toString(),
@@ -788,14 +784,14 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               keyboardType: TextInputType.text,
                               textInputAction: TextInputAction.next,
                               fillColor: ColorManager.gray),
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
+
                           /// receiver number
                           Text(
                             AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           DefaultTextField(
                               controller: cubit.giftReceiverNumberController,
                               hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
@@ -809,49 +805,49 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               keyboardType: TextInputType.phone,
                               textInputAction: TextInputAction.next,
                               fillColor: ColorManager.gray),
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
+
+
                           /// bank name
                           Text(
                             AppLocalizations.of(context)!.translate('bankName').toString(),
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           DefaultTextField(
                               controller: cubit.bankNameController,
                               hintText: AppLocalizations.of(context)!.translate('bankNameHint').toString(),
                               validator: (value) {
-                                if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!.translate('validateBankName').toString();
-                                } else {
-                                  return null;
-                                }
+                                // if (value!.isEmpty) {
+                                //   return AppLocalizations.of(context)!.translate('validateBankName').toString();
+                                // } else {
+                                //   return null;
+                                // }
                               },
                               keyboardType: TextInputType.text,
                               textInputAction: TextInputAction.next,
                               fillColor: ColorManager.gray),
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
                           /// account iban number
                           Text(
                             AppLocalizations.of(context)!.translate('ibanNumber').toString(),
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           DefaultTextField(
                               controller: cubit.ibanNumberController,
                               hintText: AppLocalizations.of(context)!.translate('ibanNumberHint').toString(),
                               validator: (value) {
-                                if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!.translate('validateIbanNumber').toString();
-                                } else {
-                                  return null;
-                                }
+                                // if (value!.isEmpty) {
+                                //   return AppLocalizations.of(context)!.translate('validateIbanNumber').toString();
+                                // } else {
+                                //   return null;
+                                // }
                               },
                               keyboardType: TextInputType.number,
                               textInputAction: TextInputAction.next,
                               fillColor: ColorManager.gray),
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
 
                           /// date of receive
                           Text(
@@ -861,7 +857,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           GestureDetector(
                             onTap: () {
                               showDatePicker(
@@ -893,7 +888,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                                 fillColor: ColorManager.gray),
                           ),
 
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
                           Row(
                             mainAxisAlignment: CashHelper.languageKey == 'ar'
                                 ? MainAxisAlignment.end
@@ -912,7 +907,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
 
                             ],
                           ),
-                          SizedBox(height: mediaQuery.height * 0.02),
+                          SizedBox(height: mediaQuery.height * 0.01),
 
 
                           /// message
@@ -921,17 +916,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             style: TextStyles.textStyle18Bold
                                 .copyWith(color: ColorManager.black),
                           ),
-                          SizedBox(height: mediaQuery.height * 0.01),
                           DefaultTextField(
                               controller: cubit.moneyGiftMessageController,
-                              maxLines: 8,
+                              maxLines: 3,
                               hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
                               validator: (value) {
-                                if (value!.isEmpty) {
-                                  return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
-                                } else {
-                                  return null;
-                                }
+                                // if (value!.isEmpty) {
+                                //   return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
+                                // } else {
+                                //   return null;
+                                // }
                               },
                               keyboardType: TextInputType.multiline,
                               textInputAction: TextInputAction.newline,
@@ -964,7 +958,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.giftDeliveryCityController,
                         hintText: AppLocalizations.of(context)!.translate('CityHint').toString(),
@@ -979,13 +972,13 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
                     SizedBox(height: mediaQuery.height * 0.01),
+
                     /// receiver name
                     Text(
                       AppLocalizations.of(context)!.translate('theDistrict').toString(),
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.giftDeliveryStreetController,
                         hintText: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
@@ -999,14 +992,14 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         keyboardType: TextInputType.text,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
+
                     /// receiver number
                     Text(
                       AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.giftReceiverNumberController,
                         hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
@@ -1020,7 +1013,9 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,
                         fillColor: ColorManager.gray),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
+
+
                     /// date of receive
                     Text(
                       AppLocalizations.of(context)!
@@ -1029,7 +1024,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     GestureDetector(
                       onTap: () {
                         showDatePicker(
@@ -1061,7 +1055,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                           fillColor: ColorManager.gray),
                     ),
 
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
                     Row(
                       mainAxisAlignment: CashHelper.languageKey == 'ar'
                           ? MainAxisAlignment.end
@@ -1080,7 +1074,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
 
                       ],
                     ),
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
 
                     /// message
@@ -1089,23 +1083,22 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.moneyGiftMessageController,
-                        maxLines: 8,
+                        maxLines: 3,
                         hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
-                          } else {
-                            return null;
-                          }
+                          // if (value!.isEmpty) {
+                          //   return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
+                          // } else {
+                          //   return null;
+                          // }
                         },
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.newline,
                         fillColor: ColorManager.gray),
 
-                    SizedBox(height: mediaQuery.height * 0.02),
+                    SizedBox(height: mediaQuery.height * 0.01),
 
                     /// note
                     Text(
@@ -1113,17 +1106,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       style: TextStyles.textStyle18Bold
                           .copyWith(color: ColorManager.black),
                     ),
-                    SizedBox(height: mediaQuery.height * 0.01),
                     DefaultTextField(
                         controller: cubit.giftDeliveryNoteController,
-                        maxLines: 8,
+                        maxLines: 3,
                         hintText: AppLocalizations.of(context)!.translate('noteHint').toString(),
                         validator: (value) {
-                          if (value!.isEmpty) {
-                            return AppLocalizations.of(context)!.translate('validateNote').toString();
-                          } else {
-                            return null;
-                          }
+                          // if (value!.isEmpty) {
+                          //   return AppLocalizations.of(context)!.translate('validateNote').toString();
+                          // } else {
+                          //   return null;
+                          // }
                         },
                         keyboardType: TextInputType.multiline,
                         textInputAction: TextInputAction.newline,
@@ -1133,14 +1125,14 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
               ),
 
 
-              SizedBox(height: mediaQuery.height * 0.05),
+              SizedBox(height: mediaQuery.height * 0.03),
 
               ///  continue button
               Center(
                 child: GestureDetector(
                   onTap: () {
                     if (cubit.forMeFormKey.currentState!.validate() && cubit.dropdownOccasionType.isNotEmpty){
-                      if(cubit.image != null){
+                      if((cubit.image != null && cubit.isPresent)  || !cubit.isPresent){
                         customPushNavigator(context, OccasionSummary());
                       }else{
                         customToast(title: AppLocalizations.of(context)!.translate('validateImage').toString(), color: Colors.red);

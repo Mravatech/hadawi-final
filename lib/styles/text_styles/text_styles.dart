@@ -8,21 +8,21 @@ import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 class TextStyles {
   /// small text style
   static TextStyle textStyle12Bold= TextStyle(
-      fontSize: SizeConfig.height * 0.015,
+      fontSize: SizeConfig.height * 0.014,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.bold
   );
 
   static TextStyle textStyle12Medium= TextStyle(
-      fontSize: SizeConfig.height * 0.015,
+      fontSize: SizeConfig.height * 0.014,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w600
   );
 
   static TextStyle textStyle12Regular= TextStyle(
-      fontSize: SizeConfig.height * 0.015,
+      fontSize: SizeConfig.height * 0.014,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w400
@@ -51,21 +51,21 @@ class TextStyles {
 
   /// normal text style
   static TextStyle textStyle18Bold= TextStyle(
-    fontSize: SizeConfig.height * 0.02,
+    fontSize: SizeConfig.height * 0.017,
     color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.bold
   );
 
   static TextStyle textStyle18Medium= TextStyle(
-      fontSize: SizeConfig.height * 0.02,
+      fontSize: SizeConfig.height * 0.017,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w500
   );
 
   static TextStyle textStyle18Regular= TextStyle(
-      fontSize: SizeConfig.height * 0.02,
+      fontSize: SizeConfig.height * 0.017,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w500
@@ -73,21 +73,21 @@ class TextStyles {
 
   /// medium text style
   static TextStyle textStyle24Bold= TextStyle(
-      fontSize: SizeConfig.height * 0.033,
+      fontSize: SizeConfig.height * 0.03,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.bold
   );
 
   static TextStyle textStyle24Medium= TextStyle(
-      fontSize: SizeConfig.height * 0.033,
+      fontSize: SizeConfig.height * 0.03,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w600
   );
 
   static TextStyle textStyle24Regular= TextStyle(
-      fontSize: SizeConfig.height * 0.033,
+      fontSize: SizeConfig.height * 0.03,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w500
@@ -95,21 +95,21 @@ class TextStyles {
 
   /// large text style
   static TextStyle textStyle30Bold= TextStyle(
-      fontSize: SizeConfig.height * 0.06,
+      fontSize: SizeConfig.height * 0.055,
       color: ColorManager.black,
     fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
     fontWeight: FontWeight.bold,
   );
 
   static TextStyle textStyle30Medium= TextStyle(
-      fontSize: SizeConfig.height * 0.06,
+      fontSize: SizeConfig.height * 0.055,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w500
   );
 
   static TextStyle textStyle30Regular= TextStyle(
-      fontSize: SizeConfig.height * 0.06,
+      fontSize: SizeConfig.height * 0.055,
       color: ColorManager.black,
       fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
       fontWeight: FontWeight.w500

@@ -221,7 +221,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
         final mediaQuery = MediaQuery.sizeOf(context);
         final cubit = context.read<VisitorsCubit>();
         return ModalProgressHUD(
-          inAsyncCall: state is GetOccasionsLoadingState,
+          inAsyncCall: state is GetOccasionsLoadingState? true : false,
           progressIndicator: VisitorsHomeShimmer(),
           child: Stack(
             children: [

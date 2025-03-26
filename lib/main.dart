@@ -84,6 +84,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  debugPrint("current date is ${DateTime.now()}");
+
   runApp(const MyApp());
 }
 

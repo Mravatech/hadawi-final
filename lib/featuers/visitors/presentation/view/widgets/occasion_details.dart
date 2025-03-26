@@ -254,15 +254,6 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 double.parse(cubit.occasionModel!.giftPrice.toString()))
                         ) ,
                       ),
-                      IconButton(
-                          onPressed: () {
-                            cubit.openExerciseLink(cubit.occasionModel!.giftLink);
-                          },
-                          icon: Icon(
-                            Icons.link,
-                            color: ColorManager.black,
-                            size: MediaQuery.sizeOf(context).height * 0.03,
-                          )),
                     ],
                   ),
                   SizedBox(

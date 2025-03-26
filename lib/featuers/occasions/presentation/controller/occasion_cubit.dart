@@ -67,6 +67,7 @@ class OccasionCubit extends Cubit<OccasionState> {
    void resetData() {
     // isForMe = true;
     isPresent = true;
+    dropdownOccasionType = '';
     isMoney = false;
     selectedIndex = 0;
     isPublicValue = false;
@@ -211,7 +212,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
         occasionName: occasionNameController.text,
-        occasionDate: occasionDateController.text,
+        occasionDate: DateTime.now().toString(),
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,
