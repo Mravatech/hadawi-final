@@ -9,8 +9,8 @@ class GetUserInfoUseCases{
 
   GetUserInfoUseCases({required this.authBaseRepository});
 
-  Future<Either<Faliure,UserEntities>> getUserInfo({required String uId})async{
-    return await authBaseRepository.getUserInfo(uId: uId);
+  Future<Either<Faliure,UserEntities>> getUserInfo({required String uId,required context})async{
+    return await authBaseRepository.getUserInfo(uId: uId,context: context);
   }
 
 }

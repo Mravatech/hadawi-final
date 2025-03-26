@@ -4,6 +4,7 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -243,7 +244,14 @@ class OccasionCubit extends Cubit<OccasionState> {
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
-      }, (occasion) {
+      }, (occasion)async {
+        int openCount = 0;
+        await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').get().then((value)async {
+          openCount = value.data()!['openOccasions'];
+          await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').update({
+            'openOccasions': openCount
+          });
+        });
 
         emit(AddOccasionSuccessState(occasion: occasion));
       });
@@ -367,5 +375,9 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(CreateOccasionLinkSuccessState());
     return shortLink.shortUrl.toString();
   }
+
+
+  AnalysisModel ?analysisModel;
+
 
 }

@@ -13,9 +13,12 @@ import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
+import 'package:hadawi_app/widgets/toastification_widget.dart';
+import 'package:intl/intl.dart';
+import 'package:toastification/toastification.dart';
 
 abstract class BaseAuthDataSource {
-  Future<void> login({required String email, required String password});
+  Future<void> login({required String email, required String password,required context});
 
   Future<void> register(
       {required String email,
@@ -24,6 +27,7 @@ abstract class BaseAuthDataSource {
       required String name,
       required String brithDate,
       required String gender,
+      required context,
       required String city
       });
 
@@ -68,7 +72,7 @@ abstract class BaseAuthDataSource {
       });
 
   Future<bool> checkUserLogin({required String phoneNumber});
-  Future<UserModel>getUserData ({required String uId});
+  Future<UserModel>getUserData ({required String uId,required context});
   Future<void>deleteUser ({required String uId});
 
 }
@@ -78,13 +82,15 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login({required String email, required String password,required context}) async {
     try {
       final user = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       print(user.user!.uid);
-      await getUserData(uId:  user.user!.uid);
+      await getUserData(uId:  user.user!.uid,context: context);
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
+    }on Exception catch (e) {
+      throw Exception(e.toString());
     }
   }
 
@@ -112,6 +118,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String name,
       required String brithDate,
       required String gender,
+        required context,
       required String city,
       }) async {
     try {
@@ -126,7 +133,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           city: city,
           gender: gender,
       );
-      await getUserData(uId:  user.user!.uid);
+      await getUserData(uId:  user.user!.uid,context: context);
     } on FirebaseAuthException catch (e) {
       print('error $e');
       throw FirebaseExceptions(firebaseAuthException: e);
@@ -145,6 +152,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       }) async {
     UserModel userModel = UserModel(
         email: email,
+        date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
         phone: phone,
         name: name,
         uId: uId,
@@ -163,13 +171,18 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
 
 
   @override
-  Future<UserModel> getUserData({required String uId}) async {
+  Future<UserModel> getUserData({required String uId,required context}) async {
     try {
       final user = await firestore.collection('users').doc(uId).get();
+      if(user.data() == null) {
+        throw FireStoreException(firebaseException: FirebaseAuthException(code: 'user-not-found'));
+      }
       UserModel userModel = UserModel.fromFire(user.data()!);
       if(userModel.block==true){
+        UserDataFromStorage.setUserBlocked(true);
         logout();
-        throw FirebaseAuthException(code: 'user-blocked');
+      }else{
+        UserDataFromStorage.setUserBlocked(false);
       }
       UserDataFromStorage.setUserName(userModel.name);
       UserDataFromStorage.setEmail(userModel.email);
@@ -179,9 +192,15 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setCity(userModel.city);
       UserDataFromStorage.setBrithDate(userModel.brithDate);
       UserDataFromStorage.setUserIsGuest(false);
+      print('Uid ${UserDataFromStorage.uIdFromStorage}');
       return userModel;
     } on FireStoreException catch (e) {
+      print('error here $e');
+      UserDataFromStorage.setUid('');
       throw FireStoreException(firebaseException: e.firebaseException);
+    }on Exception catch (e) {
+      print('error in getUserData $e');
+      throw Exception(e.toString());
     }
   }
 

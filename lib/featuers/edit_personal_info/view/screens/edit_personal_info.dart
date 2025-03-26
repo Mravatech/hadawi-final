@@ -303,6 +303,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           onPressed: (){
                                             context.read<EditProfileCubit>().editProfile(
                                                 name: nameController.text,
+                                                context: context,
                                                 phone: phoneController.text
                                             );
                                           },

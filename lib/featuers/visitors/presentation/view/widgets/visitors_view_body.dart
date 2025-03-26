@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
@@ -22,7 +23,9 @@ import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
+import 'package:hadawi_app/widgets/toastification_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:toastification/toastification.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../../styles/colors/color_manager.dart';
@@ -354,8 +357,31 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   InkWell(
-                                    onTap: () {
-                                      cubit.changeActiveOrders(true);
+                                    onTap: () async {
+                                      if(UserDataFromStorage.userIsGuest==false){
+                                          await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
+                                          if(UserDataFromStorage.uIdFromStorage=='') {
+                                              toastificationWidget(context: context,
+                                                  title: 'حدث خطا',
+                                                  body: 'تم حذف الحساب من قبل الاداره',
+                                                  type: ToastificationType.error);
+                                              context.go(AppRouter.login);
+
+                                          }else{
+                                            if(UserDataFromStorage.isUserBlocked==true){
+                                              AuthCubit.get(context).logout();
+                                              context.go(AppRouter.login);
+                                              toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                            }else{
+                                              cubit.changeActiveOrders(true);
+                                            }
+                                          }
+
+                                      }else{
+                                        cubit.changeActiveOrders(true);
+                                      }
+
+
                                     },
                                     child: Container(
                                       key: activeOrdersKey,
@@ -376,9 +402,27 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {
-                                      cubit.changeActiveOrders(false);
-                                    },
+                                    onTap: ()async {
+                                      if(UserDataFromStorage.userIsGuest==false){
+                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
+                                        if(UserDataFromStorage.uIdFromStorage==''){
+                                          toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                          context.go(AppRouter.login);
+                                        }else{
+                                          if(UserDataFromStorage.isUserBlocked==true){
+                                            AuthCubit.get(context).logout();
+                                            context.go(AppRouter.login);
+                                            toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                          }else{
+                                            cubit.changeActiveOrders(false);
+                                          }
+                                        }
+
+                                      }else{
+                                        cubit.changeActiveOrders(false);
+                                      }
+
+                                      },
                                     child: Container(
                                       key: completeOrdersKey,
                                       height: SizeConfig.height * 0.06,
@@ -459,8 +503,25 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               padding: const EdgeInsets.all(15.0),
                               child: SearchBarWidget(
                                 key: searchKey,
-                                onChanged: (value) {
-                                  cubit.search(value);
+                                onChanged: (value)async {
+                                  if(UserDataFromStorage.userIsGuest==false){
+                                    await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
+                                    if(UserDataFromStorage.uIdFromStorage==''){
+                                      toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                      context.go(AppRouter.login);
+                                    }else{
+                                      if(UserDataFromStorage.isUserBlocked==true){
+                                        AuthCubit.get(context).logout();
+                                        context.go(AppRouter.login);
+                                        toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                      }else{
+                                        cubit.search(value);
+                                      }
+                                    }
+                                  }else{
+                                    cubit.search(value);
+                                  }
+
                                 },
                                 searchController: cubit.searchController,
                               ),
@@ -478,8 +539,31 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                       childAspectRatio: 1 / 1.1),
                               itemBuilder: (context, index) {
                                 return InkWell(
-                                    onTap: () {
-                                      customPushNavigator(
+                                    onTap: () async {
+                                      if(UserDataFromStorage.userIsGuest==false){
+                                        print('Uid ${UserDataFromStorage.uIdFromStorage}');
+                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
+                                        if(UserDataFromStorage.uIdFromStorage==''){
+                                          toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                          context.go(AppRouter.login);
+                                        }else{
+                                          if(UserDataFromStorage.isUserBlocked==true){
+                                            context.go(AppRouter.login);
+                                            toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                          }else{
+                                            customPushNavigator(
+                                              context,
+                                              BlocProvider(
+                                                create: (context) => VisitorsCubit(getIt()),
+                                                child: OccasionDetails(
+                                                  occasionId: cubit.activeOccasions[index].occasionId,
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        }
+                                      }else{
+                                        customPushNavigator(
                                           context,
                                           BlocProvider(
                                             create: (context) => VisitorsCubit(getIt()),
@@ -487,7 +571,11 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                               occasionId: cubit.activeOccasions[index].occasionId,
                                             ),
                                           ),
-                                      );
+                                        );
+
+                                      }
+
+
                                     },
                                     child: OccasionCard(
                                       occasionEntity: cubit.activeOccasions[index],

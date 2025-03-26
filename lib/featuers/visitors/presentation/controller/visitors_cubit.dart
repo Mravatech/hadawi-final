@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/visitors/data/models/banner_model.dart';
@@ -29,16 +30,25 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   }
 
   TextEditingController searchController = TextEditingController();
+  int closeCount=0;
+  int openCount=0;
   Future<void> getOccasions() async {
+    closeCount=0;
+    openCount=0;
     emit(GetOccasionsLoadingState());
     final result = await OccasionRepoImp().getOccasions();
     result.fold((failure) {
       emit(GetOccasionsErrorState(error: failure.message));
-    }, (occasion) {
+    }, (occasion)async {
       activeOccasions.clear();
       doneOccasions.clear();
 
       for (var element in occasion) {
+        if((element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt()){
+          closeCount =closeCount + 1;
+        }else{
+          openCount =openCount + 1;
+        }
         if(element.isPrivate == false){
           if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
             activeOccasions.add(element);
@@ -47,6 +57,12 @@ class VisitorsCubit extends Cubit<VisitorsState> {
           }
         }
       }
+      await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').update({
+        'closeOccasions': closeCount,
+        'openOccasions': openCount
+      });
+      print('All close $closeCount open $openCount ');
+
       activeOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
       doneOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
       emit(GetOccasionsSuccessState(activeOccasions: activeOccasions, doneOccasions: doneOccasions));
@@ -158,6 +174,21 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     debugPrint("shortLink: ${shortLink.shortUrl}");
     emit(CreateOccasionLinkSuccessState());
     return shortLink.shortUrl.toString();
+  }
+
+  AnalysisModel ?analysisModel ;
+  Future<void> getAnalysis()async{
+
+    emit(GetAnalysisLoadingState());
+
+    await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').get().then((value) {
+      analysisModel = AnalysisModel.fromMap(value.data()!);
+      emit(GetAnalysisSuccessState());
+    }).catchError((error){
+      debugPrint("error in getting analysis: $error");
+      emit(GetAnalysisErrorState());
+    });
+
   }
 
 

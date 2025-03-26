@@ -46,16 +46,23 @@ class AuthCubit extends Cubit<AuthStates> {
   CheckUserLoginUseCases checkUserLoginUseCases;
   DeleteUserUseCases deleteUserUseCases;
 
+  static AuthCubit get(context) => BlocProvider.of(context);
+
   TextEditingController brithDateController = TextEditingController();
 
-  Future<void> login({required String email, required String password})async {
+  Future<void> login({required String email, required String password,required context})async {
     emit(UserLoginLoadingState());
-    final result = await loginUseCases.login(email: email, password: password);
-    result.fold((l) {
-      emit(UserLoginErrorState(message: l.message));
-    }, (r) {
-      emit(UserLoginSuccessState());
-    });
+    try{
+      final result = await loginUseCases.login(email: email, password: password,context: context);
+      result.fold((l) {
+        emit(UserLoginErrorState(message: l.message));
+      }, (r) {
+        emit(UserLoginSuccessState());
+      });
+    }catch(e){
+      emit(UserLoginErrorState(message:'تم حذف الحساب من قبل اداره التطبيق'));
+    }
+
   }
 
   Future<void> register({
@@ -63,6 +70,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String password,
     required String phone,
     required String name,
+    required context,
     required String brithDate,
     required String gender,
     required String city,
@@ -74,6 +82,7 @@ class AuthCubit extends Cubit<AuthStates> {
         brithDate: brithDate,
         gender: gender,
         name: name,
+        context: context,
         phone: phone,
         city: city
     );
@@ -260,15 +269,21 @@ class AuthCubit extends Cubit<AuthStates> {
   }
 
 
-  Future<void> getUserInfo({required String uId})async {
+  Future<void> getUserInfo({required String uId,required context})async {
     emit(GetUserDataLoadingState());
-    final result = await getUserInfoUseCases.getUserInfo(uId: uId);
-    result.fold(
-          (l) => emit(GetUserDataErrorState(message: l.message)),
-          (r){
+    try{
+      final result = await getUserInfoUseCases.getUserInfo(uId: uId,context: context);
+      result.fold(
+              (l) => emit(GetUserDataErrorState(message: l.message)),
+              (r){
             emit(GetUserDataSuccessState());
           }
-    );
+      );
+    }catch(e){
+      print('error in getUserInfo $e');
+      emit(GetUserDataErrorState(message: 'تم حذف الحساب من قبل الاداره'));
+    }
+
   }
 
 

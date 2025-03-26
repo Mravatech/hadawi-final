@@ -214,6 +214,7 @@ class RegisterFormWidget extends StatelessWidget {
                                 name: nameController.text,
                                 brithDate: cubit.brithDateController.text,
                                 gender: cubit.genderValue,
+                                context: context,
                                 city: cityController.text
                             );
                           }

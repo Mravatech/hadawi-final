@@ -15,3 +15,4 @@ class GetAppPrivacyPoliciesSuccessState extends HomeStates{}
 class GetAppPrivacyPoliciesErrorState extends HomeStates{}
 
 
+

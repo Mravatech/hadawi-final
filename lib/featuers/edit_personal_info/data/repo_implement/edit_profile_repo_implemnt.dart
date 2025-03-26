@@ -12,10 +12,11 @@ class EditProfileRepoImplement extends EditProfileRepo{
   EditProfileRepoImplement({required this.editProfileDataSource});
 
   @override
-  Future<Either<Faliure, void>> editProfile({required String userName, required String phone}) async{
+  Future<Either<Faliure, void>> editProfile({required String userName, required String phone,required context}) async{
     try{
       return Right(await editProfileDataSource.editProfileData(
           name: userName,
+          context: context,
           phone: phone
       ));
     }on FireStoreException catch(e){

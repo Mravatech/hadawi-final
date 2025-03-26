@@ -156,7 +156,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => PaymentCubit()),
         BlocProvider(create: (context) => HomeCubit()..getUserNotifications()..getPrivacyPolices()),
         BlocProvider(create: (context) => OccasionCubit()),
-        BlocProvider(create: (context) => VisitorsCubit(getIt())),
+        BlocProvider(create: (context) => VisitorsCubit(getIt())..getAnalysis()),
         BlocProvider(create: (context) => OccasionsListCubit()),
         BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
       ],

@@ -15,9 +15,9 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   AuthRepositoryImplement({required this.baseAuthDataSource});
 
   @override
-  Future<Either<Faliure,void>> login({required String email, required String password}) async{
+  Future<Either<Faliure,void>> login({required String email, required String password,required context}) async{
     try{
-      return Right(await baseAuthDataSource.login(email: email, password: password));
+      return Right(await baseAuthDataSource.login(email: email, password: password,context:context));
     }on FirebaseExceptions catch(e){
       return Left(FirebaseFaliure.fromMessage(e));
     }
@@ -32,6 +32,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String name,
     required String brithDate,
     required String gender,
+    required context,
     required String city
   })async {
     try{
@@ -41,6 +42,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           brithDate: brithDate,
           gender: gender,
           name: name,
+          context: context,
           phone: phone,
         city: city
       ));
@@ -177,9 +179,9 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
   }
 
   @override
-  Future<Either<Faliure, UserEntities>> getUserInfo({required String uId}) async{
+  Future<Either<Faliure, UserEntities>> getUserInfo({required String uId,required context}) async{
     try{
-      return Right(await baseAuthDataSource.getUserData(uId: uId));
+      return Right(await baseAuthDataSource.getUserData(uId: uId,context: context));
     }on FireStoreException catch(e){
       return Left(FireStoreFaliure.fromMessage(e));
     }

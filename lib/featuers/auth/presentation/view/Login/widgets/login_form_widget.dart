@@ -124,6 +124,7 @@ class LoginFormWidget extends StatelessWidget {
                             if (loginKey.currentState!.validate()) {
                               cubit.login(
                                   email: emailController.text,
+                                  context: context,
                                   password: passController.text);
                             }
                           },

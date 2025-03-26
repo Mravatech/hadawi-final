@@ -15,6 +15,7 @@ class RegisterUseCases{
     required String phone,
     required String name,
     required String brithDate,
+    required context,
     required String gender,
     required String city
   })async {
@@ -23,6 +24,7 @@ class RegisterUseCases{
         password: password,
         brithDate: brithDate,
         gender: gender,
+        context: context,
         name: name,
         phone: phone,
         city: city

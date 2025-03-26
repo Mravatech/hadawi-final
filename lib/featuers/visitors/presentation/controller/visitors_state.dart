@@ -41,3 +41,7 @@ final class GetOccasionDataErrorState extends VisitorsState {}
 final class CreateOccasionLinkLoadingState extends VisitorsState {}
 final class CreateOccasionLinkSuccessState extends VisitorsState {}
 final class CreateOccasionLinkErrorState extends VisitorsState {}
+
+class GetAnalysisLoadingState extends VisitorsState{}
+class GetAnalysisSuccessState extends VisitorsState{}
+class GetAnalysisErrorState extends VisitorsState{}

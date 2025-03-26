@@ -57,6 +57,7 @@ class _SplashScreenState extends State<SplashBodyView>
 
 void timeDelay({required BuildContext context}) {
   Future.delayed(const Duration(seconds: 2), () async {
+    print('${UserDataFromStorage.uIdFromStorage}');
     UserDataFromStorage.uIdFromStorage != ''?
     context.replace(AppRouter.home):
     context.go(AppRouter.login);
