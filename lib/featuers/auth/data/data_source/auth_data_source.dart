@@ -86,6 +86,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     try {
       final user = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
       print(user.user!.uid);
+
       await getUserData(uId:  user.user!.uid,context: context);
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
@@ -105,6 +106,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setGender('');
       UserDataFromStorage.setBrithDate('');
       UserDataFromStorage.setUserIsGuest(true);
+      UserDataFromStorage.setGradeAdmin(false);
     } on FirebaseAuthException catch (e) {
       throw FirebaseExceptions(firebaseAuthException: e);
     }
@@ -155,6 +157,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
         phone: phone,
         name: name,
+        token: '',
         uId: uId,
         brithDate: brithDate,
         gender: gender,

@@ -4,6 +4,8 @@ import Firebase
 import FirebaseCore
 import FirebaseAuth
 import cloud_firestore
+import UserNotifications
+
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -13,6 +15,7 @@ import cloud_firestore
   ) -> Bool {
     FirebaseApp.configure()
     GeneratedPluginRegistrant.register(with: self)
+     UNUserNotificationCenter.current().delegate = self
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

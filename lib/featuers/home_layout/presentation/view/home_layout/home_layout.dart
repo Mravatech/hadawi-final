@@ -24,6 +24,9 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   void initState() {
     super.initState();
+    if(UserDataFromStorage.userIsGuest==false && UserDataFromStorage.gradeAdminFromStorage!=true){
+      context.read<HomeCubit>().getToken(uId: UserDataFromStorage.uIdFromStorage);
+    }
   }
 
   @override

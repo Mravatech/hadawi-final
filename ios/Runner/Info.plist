@@ -19,6 +19,11 @@
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
+	<key>UIBackgroundModes</key>
+     <array>
+     <string>fetch</string>
+      <string>remote-notification</string>
+     </array>
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>

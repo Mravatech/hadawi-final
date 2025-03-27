@@ -21,6 +21,7 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
+import 'package:hadawi_app/utiles/services/notification_service.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toastification_widget.dart';
@@ -362,8 +363,8 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                           await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
                                           if(UserDataFromStorage.uIdFromStorage=='') {
                                               toastificationWidget(context: context,
-                                                  title: 'حدث خطا',
-                                                  body: 'تم حذف الحساب من قبل الاداره',
+                                                  title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                                  body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
                                                   type: ToastificationType.error);
                                               context.go(AppRouter.login);
 
@@ -371,7 +372,10 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                             if(UserDataFromStorage.isUserBlocked==true){
                                               AuthCubit.get(context).logout();
                                               context.go(AppRouter.login);
-                                              toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                              toastificationWidget(context: context,
+                                                  title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                                  body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                                  type: ToastificationType.error);
                                             }else{
                                               cubit.changeActiveOrders(true);
                                             }
@@ -406,13 +410,19 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                       if(UserDataFromStorage.userIsGuest==false){
                                         await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
                                         if(UserDataFromStorage.uIdFromStorage==''){
-                                          toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                          toastificationWidget(context: context,
+                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                              type: ToastificationType.error);
                                           context.go(AppRouter.login);
                                         }else{
                                           if(UserDataFromStorage.isUserBlocked==true){
                                             AuthCubit.get(context).logout();
                                             context.go(AppRouter.login);
-                                            toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                            toastificationWidget(context: context,
+                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                                type: ToastificationType.error);
                                           }else{
                                             cubit.changeActiveOrders(false);
                                           }
@@ -507,13 +517,19 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                   if(UserDataFromStorage.userIsGuest==false){
                                     await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
                                     if(UserDataFromStorage.uIdFromStorage==''){
-                                      toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                      toastificationWidget(context: context,
+                                          title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                          body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                          type: ToastificationType.error);
                                       context.go(AppRouter.login);
                                     }else{
                                       if(UserDataFromStorage.isUserBlocked==true){
                                         AuthCubit.get(context).logout();
                                         context.go(AppRouter.login);
-                                        toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                        toastificationWidget(context: context,
+                                            title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                            body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                            type: ToastificationType.error);
                                       }else{
                                         cubit.search(value);
                                       }
@@ -544,12 +560,18 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                         print('Uid ${UserDataFromStorage.uIdFromStorage}');
                                         await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
                                         if(UserDataFromStorage.uIdFromStorage==''){
-                                          toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                                          toastificationWidget(context: context,
+                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                              type: ToastificationType.error);
                                           context.go(AppRouter.login);
                                         }else{
                                           if(UserDataFromStorage.isUserBlocked==true){
                                             context.go(AppRouter.login);
-                                            toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                                            toastificationWidget(context: context,
+                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                                type: ToastificationType.error);
                                           }else{
                                             customPushNavigator(
                                               context,

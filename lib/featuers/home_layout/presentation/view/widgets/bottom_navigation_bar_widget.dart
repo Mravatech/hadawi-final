@@ -34,11 +34,18 @@ class BottomNavigationBarWidget extends StatelessWidget {
               await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
               if(UserDataFromStorage.uIdFromStorage==''){
                 context.go(AppRouter.login);
-                toastificationWidget(context: context, title: 'حدث خطا', body: 'تم حذف الحساب من قبل الاداره', type: ToastificationType.error);
+                toastificationWidget(
+                    context: context,
+                    title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                    body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                    type: ToastificationType.error);
               }else{
                 if(UserDataFromStorage.isUserBlocked==true){
                   context.go(AppRouter.login);
-                  toastificationWidget(context: context, title: 'حظر المستخدم', body: 'تم حظر الحساب من طرف الاداره راجع الاشعارات', type: ToastificationType.error);
+                  toastificationWidget(context: context,
+                      title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                      body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                      type: ToastificationType.error);
                 }else{
                   cubit.changeIndex(index: index);
                   context.read<OccasionCubit>().resetData();
