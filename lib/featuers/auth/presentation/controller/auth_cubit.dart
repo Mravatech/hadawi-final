@@ -25,19 +25,18 @@ import 'package:intl/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
-
   AuthCubit(
-      this.loginUseCases,
-      this.registerUseCases,
-      this.saveDataUseCases,
-      this.logoutUseCases,
-      this.googleAuthUseCases,
-      this.loginWithPhoneUseCases,
-      this.verifiyCodeUseCases,
-      this.getUserInfoUseCases,
-      this.checkUserLoginUseCases,
-      this.deleteUserUseCases,
-      ) : super(AuthInitialState());
+    this.loginUseCases,
+    this.registerUseCases,
+    this.saveDataUseCases,
+    this.logoutUseCases,
+    this.googleAuthUseCases,
+    this.loginWithPhoneUseCases,
+    this.verifiyCodeUseCases,
+    this.getUserInfoUseCases,
+    this.checkUserLoginUseCases,
+    this.deleteUserUseCases,
+  ) : super(AuthInitialState());
 
   LoginUseCases loginUseCases;
   RegisterUseCases registerUseCases;
@@ -54,19 +53,22 @@ class AuthCubit extends Cubit<AuthStates> {
 
   TextEditingController brithDateController = TextEditingController();
 
-  Future<void> login({required String email, required String password,required context})async {
+  Future<void> login(
+      {required String email,
+      required String password,
+      required context}) async {
     emit(UserLoginLoadingState());
-    try{
-      final result = await loginUseCases.login(email: email, password: password,context: context);
+    try {
+      final result = await loginUseCases.login(
+          email: email, password: password, context: context);
       result.fold((l) {
         emit(UserLoginErrorState(message: l.message));
       }, (r) {
         emit(UserLoginSuccessState());
       });
-    }catch(e){
-      emit(UserLoginErrorState(message:'تم حذف الحساب من قبل اداره التطبيق'));
+    } catch (e) {
+      emit(UserLoginErrorState(message: 'تم حذف الحساب من قبل اداره التطبيق'));
     }
-
   }
 
   Future<void> register({
@@ -78,7 +80,7 @@ class AuthCubit extends Cubit<AuthStates> {
     required String brithDate,
     required String gender,
     required String city,
-  })async {
+  }) async {
     emit(UserRegisterLoadingState());
     final result = await registerUseCases.register(
         email: email,
@@ -88,8 +90,7 @@ class AuthCubit extends Cubit<AuthStates> {
         name: name,
         context: context,
         phone: phone,
-        city: city
-    );
+        city: city);
     result.fold((l) {
       emit(UserRegisterErrorState(message: l.message));
     }, (r) {
@@ -97,15 +98,14 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-  Future<void> saveUserData({
-    required String uId,
-    required String email,
-    required String phone,
-    required String name,
-    required String brithDate,
-    required String gender,
-    required String city
-  })async {
+  Future<void> saveUserData(
+      {required String uId,
+      required String email,
+      required String phone,
+      required String name,
+      required String brithDate,
+      required String gender,
+      required String city}) async {
     emit(UserSaveDataLoadingState());
     final result = await saveDataUseCases.saveUserData(
         uId: uId,
@@ -114,8 +114,7 @@ class AuthCubit extends Cubit<AuthStates> {
         name: name,
         brithDate: brithDate,
         gender: gender,
-        city: city
-    );
+        city: city);
     result.fold((l) {
       emit(UserSaveDataErrorState(message: l.message));
     }, (r) {
@@ -123,7 +122,7 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-  Future<void> logout()async {
+  Future<void> logout() async {
     emit(UserLogoutLoadingState());
     final result = await logoutUseCases.logout();
     result.fold((l) {
@@ -133,7 +132,7 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-  Future<void> deleteUser({required String uId})async {
+  Future<void> deleteUser({required String uId}) async {
     emit(DeleteUserLoadingState());
     final result = await deleteUserUseCases.deleteUser(uId: uId);
     result.fold((l) {
@@ -143,76 +142,66 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-
-  void setBrithDate({
-    required DateTime brithDateValue
-  }){
-    brithDateController.text=DateFormat('yyyy-MM-dd').format(brithDateValue);
+  void setBrithDate({required DateTime brithDateValue}) {
+    brithDateController.text = DateFormat('yyyy-MM-dd').format(brithDateValue);
     emit(SetBrithDayValueState());
   }
 
-  Future<void> signInWithGoogle({
-    required String brithDate,
-    required String gender,
-    required String city
-  })async {
+  Future<void> signInWithGoogle(
+      {required String brithDate,
+      required String gender,
+      required String city}) async {
     emit(SignInWithSocialMediaLoadingState());
-    try{
+    try {
       final result = await googleAuthUseCases.loginWithGoogle(
-        brithDate: brithDate,
-        gender: gender,
-        city: city
-      );
+          brithDate: brithDate, gender: gender, city: city);
       result.fold((l) {
         emit(SignInWithSocialMediaErrorState(message: l.message));
       }, (r) {
         customToast(title: 'تم التسجيل', color: ColorManager.primaryBlue);
         emit(SignInWithSocialMediaSuccessState());
       });
-    }catch (e){
+    } catch (e) {
       emit(SignInWithSocialMediaErrorState(message: ''));
     }
-
   }
 
-  String genderValue='Male';
+  String genderValue = 'Male';
 
-  void changeGenderValue(String ?value){
-    genderValue= value!;
+  void changeGenderValue(String? value) {
+    genderValue = value!;
     print(genderValue);
     emit(SelectGenderTypeState());
   }
 
   bool isLoading = false;
 
-  Future<void> loginWithPhone({
-    required String phone,
-    required String email,
-    required String name,
-    required String brithDate,
-    required String gender,
-    required String city,
-    required bool resendCode,
-    required bool isLogin,
-    required BuildContext context
-  })async {
+  Future<void> loginWithPhone(
+      {required String phone,
+      required String email,
+      required String name,
+      required String brithDate,
+      required String gender,
+      required String city,
+      required bool resendCode,
+      required bool isLogin,
+      required BuildContext context}) async {
     isLoading = true;
     emit(LoginWithPhoneLoadingState());
     final result = await loginWithPhoneUseCases.call(
-      context:  context,
-      phone: phone,
-      email: email,
-      name: name,
-      resendCode: resendCode,
-      isLogin: isLogin,
-      brithDate: brithDate,
-      gender: gender,
-      city: city
-    );
+        context: context,
+        phone: phone,
+        email: email,
+        name: name,
+        resendCode: resendCode,
+        isLogin: isLogin,
+        brithDate: brithDate,
+        gender: gender,
+        city: city);
     result.fold((l) {
-       isLoading = false;
+      isLoading = false;
       emit(LoginWithPhoneErrorState(message: l.message));
-    }, (r)async {
+    }, (r) async {
       isLoading = false;
       emit(LoginWithPhoneSuccessState());
     });
@@ -228,30 +217,27 @@ class AuthCubit extends Cubit<AuthStates> {
     required String verificationId,
     required bool isLogin,
     required String verifyOtpPinPut,
-  })async {
+  }) async {
     emit(VerifiyOtpCodeLoadingState());
 
     final result = await verifiyCodeUseCases.call(
-          email: email,
-          phone: phone,
-          name: name,
-          brithDate: brithDate,
-          gender: gender,
-          city: city,
-          isLogin: isLogin,
-          verificationId: verificationId,
-          verifyOtpPinPut: verifyOtpPinPut
-      );
+        email: email,
+        phone: phone,
+        name: name,
+        brithDate: brithDate,
+        gender: gender,
+        city: city,
+        isLogin: isLogin,
+        verificationId: verificationId,
+        verifyOtpPinPut: verifyOtpPinPut);
 
-      result.fold((l) {
-        emit(VerifiyOtpCodeErrorState(message: l.message));
-      }, (r) {
-        customToast(title: 'تم التحقق', color: ColorManager.primaryBlue);
-        emit(VerifiyOtpCodeSuccessState());
-      });
-
+    result.fold((l) {
+      emit(VerifiyOtpCodeErrorState(message: l.message));
+    }, (r) {
+      customToast(title: 'تم التحقق', color: ColorManager.primaryBlue);
+      emit(VerifiyOtpCodeSuccessState());
+    });
   }
-
 
   int second = 0;
   Timer? secondTimer;
@@ -272,48 +258,38 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-
-  Future<void> getUserInfo({required String uId,required context})async {
+  Future<void> getUserInfo({required String uId, required context}) async {
     emit(GetUserDataLoadingState());
-    try{
-      final result = await getUserInfoUseCases.getUserInfo(uId: uId,context: context);
-      result.fold(
-              (l) => emit(GetUserDataErrorState(message: l.message)),
-              (r){
-            emit(GetUserDataSuccessState());
-          }
-      );
-    }catch(e){
+    try {
+      final result =
+          await getUserInfoUseCases.getUserInfo(uId: uId, context: context);
+      result.fold((l) => emit(GetUserDataErrorState(message: l.message)), (r) {
+        emit(GetUserDataSuccessState());
+      });
+    } catch (e) {
       print('error in getUserInfo $e');
       emit(GetUserDataErrorState(message: 'تم حذف الحساب من قبل الاداره'));
     }
-
   }
 
-
-  Future<void> checkUserLogin({required String phoneNumber})async {
+  Future<void> checkUserLogin({required String phoneNumber}) async {
     emit(CheckUserLoadingState());
-    final result = await checkUserLoginUseCases
-        .checkUserLogin(phoneNumber: phoneNumber);
-    result.fold(
-            (l) => emit(CheckUserErrorState(message: l.message)),
-            (r){
-              emit(CheckUserSuccessState());
-            }
-    );
+    final result =
+        await checkUserLoginUseCases.checkUserLogin(phoneNumber: phoneNumber);
+    result.fold((l) => emit(CheckUserErrorState(message: l.message)), (r) {
+      emit(CheckUserSuccessState());
+    });
   }
 
-
-  Future<void> resetPassword({required String email})async {
+  Future<void> resetPassword({required String email}) async {
     emit(ResetPasswordLoadingState());
-    try{
+    try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       emit(ResetPasswordSuccessState());
-    }catch(e){
+    } catch (e) {
       debugPrint("error in reset password: $e");
       emit(ResetPasswordErrorState(message: e.toString()));
     }
-
   }
 
   Future<void> signInWithApple() async {
@@ -339,13 +315,16 @@ class AuthCubit extends Cubit<AuthStates> {
           brithDate: "",
           gender: "",
           city: "",
-          block: false
-      );
+          block: false);
 
       try {
-        await FirebaseFirestore.instance.collection('users').doc(credential.userIdentifier.toString()).set(userModel.toMap());
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(credential.userIdentifier.toString())
+            .set(userModel.toMap());
         UserDataFromStorage.setUid(credential.userIdentifier.toString());
-        UserDataFromStorage.setUserName("${credential.givenName} ${credential.familyName}");
+        UserDataFromStorage.setUserName(
+            "${credential.givenName} ${credential.familyName}");
         UserDataFromStorage.setEmail(credential.email.toString());
         UserDataFromStorage.setPhoneNumber('');
         UserDataFromStorage.setGender('');
@@ -356,12 +335,25 @@ class AuthCubit extends Cubit<AuthStates> {
         emit(SignInWithSocialMediaErrorState(message: e.toString()));
         throw FireStoreException(firebaseException: e.firebaseException);
       }
-
     } catch (e) {
       emit(SignInWithSocialMediaErrorState(message: e.toString()));
       debugPrint("خطأ في تسجيل الدخول: $e");
     }
   }
 
+  bool rememberMe = false;
 
+  void rememberMeFunction(
+      {value,required String emailController,required String passController}) {
+    emit(RememberMeLoadingState());
+    if (value != null) {
+      rememberMe = value;
+      UserDataFromStorage.setRememberMe(value);
+      if (UserDataFromStorage.rememberMe == true) {
+        UserDataFromStorage.setSavedEmail(emailController);
+        UserDataFromStorage.setPassword(passController);
+      }
+    }
+    emit(RememberMeSuccessState());
+  }
 }

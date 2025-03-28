@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
@@ -11,6 +13,7 @@ import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 
 class MyOccasions extends StatefulWidget {
   const MyOccasions({super.key});
@@ -42,10 +45,15 @@ class _MyOccasionsState extends State<MyOccasions> {
           ),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child:
-                Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+          GestureDetector(
+            onTap: () {
+              context.replace(AppRouter.home);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child:
+                  Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+            ),
           ),
         ],
       ),
@@ -98,9 +106,12 @@ class _MyOccasionsState extends State<MyOccasions> {
                                             .myOccasionsList[index];
                                     return OccasionCard(
                                       onTap: () {
-                                        customPushNavigator(context, OccasionDetails(
-                                          occasionId: occasionItem.occasionId,
-                                        ));
+                                        customPushNavigator(
+                                            context,
+                                            OccasionDetails(
+                                              occasionId:
+                                                  occasionItem.occasionId,
+                                            ));
                                       },
                                       forOthers: false,
                                       occasionName: occasionItem.occasionName,
@@ -116,11 +127,12 @@ class _MyOccasionsState extends State<MyOccasions> {
                                   children: [
                                     Image.asset(AssetsManager.noData),
                                     Text(
-                                      AppLocalizations.of(context)!.translate('noOccasions').toString(),
+                                      AppLocalizations.of(context)!
+                                          .translate('noOccasions')
+                                          .toString(),
                                       style: TextStyles.textStyle18Bold
                                           .copyWith(
-                                              color:
-                                                  ColorManager.primaryBlue),
+                                              color: ColorManager.primaryBlue),
                                     ),
                                   ],
                                 ),

@@ -11,6 +11,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/ho
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/view/my_occasions.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/settings/presentation/view/widgets/notification_screen.dart';
 import 'package:hadawi_app/featuers/settings/presentation/view/widgets/privacy_policies.dart';
@@ -48,6 +49,7 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(
       path: '/home',
+      name: 'home',
       builder: (context, state) => HomeLayout(),
     ),
     GoRoute(
@@ -69,6 +71,10 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/login',
       builder: (context, state) => LoginScreen(),
+    ),
+    GoRoute(
+      path: '/my-occasions',
+      builder: (context, state) => MyOccasions(),
     ),
     GoRoute(path: '/sign-up', builder: (context, state) => const RegisterScreen()),
   ],

@@ -6,12 +6,9 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dar
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/donot_have_an_account.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_password_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
-import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
-import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/remember_me_button.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
-import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
@@ -19,16 +16,35 @@ import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
-class LoginFormWidget extends StatelessWidget {
-  LoginFormWidget(
-      {super.key, required this.emailController, required this.passController});
-  final TextEditingController emailController;
-  final TextEditingController passController;
+class LoginFormWidget extends StatefulWidget {
+  final TextEditingController emailController ;
+  final TextEditingController passController ;
 
-  GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+  const LoginFormWidget({
+    super.key,
+    required this.emailController,
+    required this.passController,
+  });
 
   @override
+  State<LoginFormWidget> createState() => _LoginFormWidgetState();
+}
+
+class _LoginFormWidgetState extends State<LoginFormWidget> {
+  final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    saveData(
+        rememberMe: context.read<AuthCubit>().rememberMe,
+        emailController: widget.emailController,
+        passController: widget.passController
+    );
+  }
+    @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Container(
@@ -44,128 +60,134 @@ class LoginFormWidget extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                    AppLocalizations.of(context)!.translate('login').toString(),
-                    style: TextStyles.textStyle24Bold),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.035,
+                  AppLocalizations.of(context)!.translate('login').toString(),
+                  style: TextStyles.textStyle24Bold,
                 ),
-
-                // email
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+                // Email field
                 DefaultTextField(
-                    controller: emailController,
-                    hintText: AppLocalizations.of(context)!
-                        .translate('emailHint')
-                        .toString(),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .translate('emailMessage')
-                            .toString();
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    fillColor: ColorManager.gray),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.035,
+                  controller: widget.emailController,
+                  hintText: AppLocalizations.of(context)!
+                      .translate('emailHint')
+                      .toString(),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!
+                          .translate('emailMessage')
+                          .toString();
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  fillColor: ColorManager.gray,
                 ),
-
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+                // Password field
                 DefaultTextField(
-                    isPassword: true,
-                    withSuffix: true,
-                    controller: passController,
-                    hintText: AppLocalizations.of(context)!
-                        .translate('loginPasswordHint')
-                        .toString(),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .translate('validPassword')
-                            .toString();
-                      }
-                      return null;
-                    },
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.done,
-                    fillColor: ColorManager.gray),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.01,
+                  isPassword: true,
+                  withSuffix: true,
+                  controller: widget.passController,
+                  hintText: AppLocalizations.of(context)!
+                      .translate('loginPasswordHint')
+                      .toString(),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!
+                          .translate('validPassword')
+                          .toString();
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.visiblePassword,
+                  textInputAction: TextInputAction.done,
+                  fillColor: ColorManager.gray,
                 ),
-
-                ForgetPasswordButton(),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.045,
-                ),
-
-                // sign in
-                BlocConsumer<AuthCubit, AuthStates>(listener: (context, state) {
-                  if (state is UserLoginSuccessState) {
-                    context.replace(AppRouter.home);
-                  }
-                  if (state is UserLoginErrorState) {
-                    customToast(
-                        title: state.message, color: ColorManager.error);
-                  }
-                }, builder: (context, state) {
-                  var cubit = context.read<AuthCubit>();
-                  return
-                      //   state is UserLoginLoadingState?
-                      // const Center(child: CircularProgressIndicator(),):
-                      state is UserLoginLoadingState ? const CircularProgressIndicator(): DefaultButton(
-                          buttonText: AppLocalizations.of(context)!
-                              .translate('login')
-                              .toString(),
-                          onPressed: () {
-                            if (loginKey.currentState!.validate()) {
-                              cubit.login(
-                                  email: emailController.text,
-                                  context: context,
-                                  password: passController.text);
-                            }
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // Remember Me and Forget Password
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BlocBuilder<AuthCubit, AuthStates>(
+                      builder: (context, state) {
+                        return RememberMeButton(
+                          initialValue: UserDataFromStorage.rememberMe,
+                          onChanged: (value) {
+                            context.read<AuthCubit>().rememberMeFunction(
+                                emailController: widget.emailController.text,
+                                passController: widget.passController.text,
+                                value: value);
                           },
-                          buttonColor: ColorManager.primaryBlue);
-                }),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.03,
+                        );
+                      },
+                    ),
+                    const ForgetPasswordButton(),
+                  ],
                 ),
-
-                Text(AppLocalizations.of(context)!.translate('or').toString(),
-                    style: TextStyles.textStyle18Bold
-                        .copyWith(color: ColorManager.darkGrey)),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.03,
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // Login Button
+                BlocConsumer<AuthCubit, AuthStates>(
+                  listener: (context, state) {
+                    if (state is UserLoginSuccessState) {
+                      saveData(
+                          rememberMe: UserDataFromStorage.rememberMe,
+                          emailController: widget.emailController,
+                          passController: widget.passController
+                      );
+                      context.read<AuthCubit>().rememberMeFunction(
+                          emailController: widget.emailController.text,
+                          passController: widget.passController.text,
+                          value: UserDataFromStorage.rememberMe);
+                      context.replace(AppRouter.home);
+                    }
+                    if (state is UserLoginErrorState) {
+                      customToast(
+                        title: state.message,
+                        color: ColorManager.error,
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    var cubit = context.read<AuthCubit>();
+                    return state is UserLoginLoadingState
+                        ? const CircularProgressIndicator()
+                        : DefaultButton(
+                            buttonText: AppLocalizations.of(context)!
+                                .translate('login')
+                                .toString(),
+                            onPressed: () {
+                              if (loginKey.currentState!.validate()) {
+                                cubit.login(
+                                  email: widget.emailController.text,
+                                  password: widget.passController.text,
+                                  context: context,
+                                );
+                              }
+                            },
+                            buttonColor: ColorManager.primaryBlue,
+                          );
+                  },
                 ),
-
-                // login with social
-                LoginWithSocialButton(),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.035,
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                Text(
+                  AppLocalizations.of(context)!.translate('or').toString(),
+                  style: TextStyles.textStyle18Bold
+                      .copyWith(color: ColorManager.darkGrey),
                 ),
-
-                // don't have an account
-                DonotHaveAnAccount(),
-
-                SizedBox(
-                  height: MediaQuery.sizeOf(context).height * 0.035,
-                ),
-
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                const LoginWithSocialButton(),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+                const DonotHaveAnAccount(),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
                 DefaultButton(
-                    buttonText: AppLocalizations.of(context)!
-                        .translate('loginAsGuest')
-                        .toString(),
-                    onPressed: () {
-                      UserDataFromStorage.setUserIsGuest(true);
-                      context.go(AppRouter.visitors);
-                    },
-                    buttonColor: ColorManager.primaryBlue,
+                  buttonText: AppLocalizations.of(context)!
+                      .translate('loginAsGuest')
+                      .toString(),
+                  onPressed: () {
+                    UserDataFromStorage.setUserIsGuest(true);
+                    context.go(AppRouter.visitors);
+                  },
+                  buttonColor: ColorManager.primaryBlue,
                 ),
               ],
             ),
@@ -174,4 +196,21 @@ class LoginFormWidget extends StatelessWidget {
       ),
     );
   }
+}
+void saveData({
+  required bool rememberMe,
+  required TextEditingController emailController,
+  required TextEditingController passController,
+}){
+
+  if(UserDataFromStorage.rememberMe!=false){
+    rememberMe = UserDataFromStorage.rememberMe;
+    emailController.text = UserDataFromStorage.saveEmailFromStorage;
+    passController.text = UserDataFromStorage.passwordFromStorage;
+  }else{
+    rememberMe = false;
+    emailController.text = "";
+    passController.text = "";
+  }
+
 }

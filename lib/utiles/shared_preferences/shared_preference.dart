@@ -23,6 +23,9 @@ class UserDataFromStorage {
   static late String adminUidFromStorage;
   static late String adminNameFromStorage;
   static late String emailFromStorage;
+  static late String saveEmailFromStorage;
+  static late String passwordFromStorage;
+  static late bool rememberMe;
   static late String genderFromStorage;
   static late String brithDateFromStorage;
   static late String phoneNumberFromStorage;
@@ -144,6 +147,18 @@ class UserDataFromStorage {
 
   static setEmail(String value) {
     emailFromStorage = value;
+    _setData();
+  }
+  static setSavedEmail(String value) {
+    saveEmailFromStorage = value;
+    _setData();
+  }
+  static setPassword(String value) {
+    passwordFromStorage = value;
+    _setData();
+  }
+  static setRememberMe(bool value) {
+    rememberMe = value;
     _setData();
   }
 
@@ -296,7 +311,9 @@ class UserDataFromStorage {
       prefs.setString("languageNameFromStorage", languageNameFromStorage);
 
       prefs.setString("fullNameFromStorage", fullNameFromStorage);
-      prefs.setString("emailFromStorage", emailFromStorage);
+      prefs.setString("saveEmailFromStorage", saveEmailFromStorage);
+      prefs.setString("passwordFromStorage", passwordFromStorage);
+      prefs.setBool("rememberMe", rememberMe);
       prefs.setString("adminUidFromStorage", adminUidFromStorage);
       prefs.setString("adminNameFromStorage", adminNameFromStorage);
       prefs.setString("phoneNumberFromStorage", phoneNumberFromStorage);
@@ -370,7 +387,9 @@ class UserDataFromStorage {
           prefs.getString("userPhoneTypeFromStorage") ?? '';
 
       fullNameFromStorage = prefs.getString("fullNameFromStorage") ?? '';
-      emailFromStorage = prefs.getString("emailFromStorage") ?? '';
+      saveEmailFromStorage = prefs.getString("saveEmailFromStorage") ?? '';
+      passwordFromStorage = prefs.getString("passwordFromStorage") ?? '';
+      rememberMe = prefs.getBool("rememberMe") ?? false;
       adminUidFromStorage = prefs.getString("adminUidFromStorage") ?? '';
       adminNameFromStorage = prefs.getString("adminNameFromStorage") ?? '';
       phoneNumberFromStorage = prefs.getString("phoneNumberFromStorage") ?? '';

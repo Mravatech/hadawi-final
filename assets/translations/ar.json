@@ -304,5 +304,7 @@
   "occasionTypeHint": "أختر نوع المناسبة",
   "validateOccasionType": "نوع المناسبة مطلوب",
   "validateImage": "الصورة مطلوبة",
-  "validatePhone": "رقم الهاتف يجب أن يكون 10 أرقام"
+  "validatePhone": "رقم الهاتف يجب أن يكون 10 أرقام",
+  "rememberMe": "تذكرني",
+  "edit": "تعديل"
 }

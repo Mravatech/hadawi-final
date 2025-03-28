@@ -45,3 +45,12 @@ final class CreateOccasionLinkDetailsErrorState extends VisitorsState {}
 class GetAnalysisLoadingState extends VisitorsState{}
 class GetAnalysisSuccessState extends VisitorsState{}
 class GetAnalysisErrorState extends VisitorsState{}
+
+class EditOccasionLoadingState extends VisitorsState {}
+class EditOccasionSuccessState extends VisitorsState {
+
+}
+class EditOccasionErrorState extends VisitorsState {
+  final String error;
+  EditOccasionErrorState(this.error);
+}

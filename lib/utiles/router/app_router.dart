@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/view/my_occasions.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 
@@ -18,6 +19,7 @@ class AppRouter {
   static const String payment = '/payment';
   static const String privacyPolicies = '/privacy-policies';
   static const String summary = '/summary';
+  static const String myOccasions = '/my-occasions';
 
 
   // Generate route based on settings
@@ -49,6 +51,9 @@ class AppRouter {
       case home:
         return MaterialPageRoute(
           builder: (_) => const HomeLayout(),
+        );  case myOccasions:
+        return MaterialPageRoute(
+          builder: (_) => const MyOccasions(),
         );
       case occasionDetails:
       // Handle the occasion details route with parameter

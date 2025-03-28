@@ -1,3 +1,5 @@
+import '../../../occasions/data/models/occasion_model.dart';
+
 abstract class OccasionsListStates {}
 
 class InitialOccasionsListState extends OccasionsListStates {}

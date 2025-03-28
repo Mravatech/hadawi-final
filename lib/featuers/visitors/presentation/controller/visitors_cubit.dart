@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
@@ -21,6 +22,10 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   List<OccasionEntity> activeOccasions = [];
   List<OccasionEntity> doneOccasions = [];
+
+  TextEditingController editOccasionNameController = TextEditingController();
+  TextEditingController editGiftNameController = TextEditingController();
+  TextEditingController editPersonNameController = TextEditingController();
   final searchKey = GlobalKey();
 
 
@@ -189,6 +194,34 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       emit(GetAnalysisErrorState());
     });
 
+  }
+  List<OccasionModel> myOccasionsList = [];
+
+  Future<void> editOccasion({
+    required String occasionId,
+    String? occasionName,
+    String? personName,
+    String? giftName,
+  }) async {
+    emit(EditOccasionLoadingState());
+    try {
+      await FirebaseFirestore.instance
+          .collection('Occasions')
+          .doc(occasionId)
+          .update({
+        'occasionName': occasionName,
+        'personName': personName,
+        'giftName': giftName,
+      });
+
+        emit(EditOccasionSuccessState());
+
+    } catch (e) {
+      debugPrint("error when edit occasion: ${e.toString()}");
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
   }
 
 
