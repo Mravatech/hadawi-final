@@ -122,25 +122,34 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
 
 
 
-                DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: context.read<AuthCubit>().dropdownCity.isEmpty ? null : context.read<AuthCubit>().dropdownCity,
-                    hint: Text(AppLocalizations.of(context)!.translate('enterYourCity').toString()),
-                    icon: const Icon(Icons.keyboard_arrow_down),
-                    elevation: 16,
-                    style: const TextStyle(color: Colors.deepPurple),
-                    isExpanded: true, // This is important to fill the container width
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        context.read<AuthCubit>().dropdownCity = newValue!;
-                      });
-                    },
-                    items: context.read<AuthCubit>().saudiCities.map<DropdownMenuItem<String>>((dynamic value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value, style: TextStyle(color: ColorManager.black),),
-                      );
-                    }).toList(),
+                Container(
+                  height: SizeConfig.height * 0.06,
+                  width: SizeConfig.width,
+                  decoration: BoxDecoration(
+                    color: ColorManager.gray,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: context.read<AuthCubit>().dropdownCity.isEmpty ? null : context.read<AuthCubit>().dropdownCity,
+                      hint: Text(AppLocalizations.of(context)!.translate('enterYourCity').toString()),
+                      icon: const Icon(Icons.keyboard_arrow_down),
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.deepPurple),
+                      isExpanded: true, // This is important to fill the container width
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          context.read<AuthCubit>().dropdownCity = newValue!;
+                        });
+                      },
+                      items: context.read<AuthCubit>().saudiCities.map<DropdownMenuItem<String>>((dynamic value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: TextStyle(color: ColorManager.black),),
+                        );
+                      }).toList(),
+                    ),
                   ),
                 ),
 
