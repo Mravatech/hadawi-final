@@ -18,9 +18,11 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../../../utiles/router/app_router.dart';
 
 class OccasionSummary extends StatelessWidget {
-  const OccasionSummary({
+  OccasionSummary({
     super.key,
   });
+
+  final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -657,7 +659,7 @@ class OccasionSummary extends StatelessWidget {
                           ),
                           SizedBox(height: mediaQuery.height * 0.01),
                           Form(
-                            key: cubit.discountCardKey,
+                            key: discountCardKey,
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -684,7 +686,7 @@ class OccasionSummary extends StatelessWidget {
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    if (cubit.discountCardKey.currentState!
+                                    if (discountCardKey.currentState!
                                         .validate()) {
                                       cubit.getDiscountCode();
                                     }

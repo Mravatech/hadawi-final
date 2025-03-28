@@ -42,6 +42,10 @@
 	</array>
 	<key>ASAuthorizationAppleIDProvider</key>
     <true/>
+    <key>FirebaseDynamicLinksCustomDomains</key>
+    <array>
+        <string>https://hadawiapp.page.link</string>
+    </array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>FLTEnableImpeller</key>

@@ -31,7 +31,6 @@ class OccasionCubit extends Cubit<OccasionState> {
   bool giftContainsNameValue = false;
   double giftPrice = 0;
   String giftType = 'هدية';
-  GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> moneyFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> deliveryFormKey = GlobalKey<FormState>();

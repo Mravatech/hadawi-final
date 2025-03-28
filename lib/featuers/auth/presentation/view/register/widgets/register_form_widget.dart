@@ -18,7 +18,7 @@ import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
-class RegisterFormWidget extends StatelessWidget {
+class RegisterFormWidget extends StatefulWidget {
    RegisterFormWidget({super.key,
     required this.nameController,
     required this.phoneController,
@@ -33,6 +33,11 @@ class RegisterFormWidget extends StatelessWidget {
   final TextEditingController cityController ;
   final TextEditingController passController ;
 
+  @override
+  State<RegisterFormWidget> createState() => _RegisterFormWidgetState();
+}
+
+class _RegisterFormWidgetState extends State<RegisterFormWidget> {
   GlobalKey<FormState> registerKey = GlobalKey<FormState>();
 
   @override
@@ -63,7 +68,7 @@ class RegisterFormWidget extends StatelessWidget {
 
                 // name
                 DefaultTextField(
-                    controller: nameController,
+                    controller: widget.nameController,
                     hintText: AppLocalizations.of(context)!.translate('fullNameHint').toString(),
                     validator: (value) {
                       if(value.isEmpty){
@@ -81,7 +86,7 @@ class RegisterFormWidget extends StatelessWidget {
                 // phone number
                 DefaultTextField(
                     prefix:CountryCodeWidget(color: ColorManager.gray,),
-                    controller: phoneController,
+                    controller: widget.phoneController,
                     hintText: AppLocalizations.of(context)!.translate('loginPhoneHint').toString(),
                     validator: (value) {
                       if(value.isEmpty){
@@ -100,7 +105,7 @@ class RegisterFormWidget extends StatelessWidget {
 
                 // email
                 DefaultTextField(
-                    controller: emailController,
+                    controller: widget.emailController,
                     hintText: AppLocalizations.of(context)!.translate('emailHint').toString(),
                     validator: (value) {
                       if(value.isEmpty){
@@ -115,20 +120,44 @@ class RegisterFormWidget extends StatelessWidget {
 
                 SizedBox( height:  MediaQuery.sizeOf(context).height*0.03,),
 
-                // city
-                DefaultTextField(
-                    controller: cityController,
-                    hintText: AppLocalizations.of(context)!.translate('enterYourCity').toString(),
-                    validator: (value) {
-                      if(value.isEmpty){
-                        return AppLocalizations.of(context)!.translate('validateYourCity').toString();
-                      }
-                      return null;
+
+
+                DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    value: context.read<AuthCubit>().dropdownCity.isEmpty ? null : context.read<AuthCubit>().dropdownCity,
+                    hint: Text(AppLocalizations.of(context)!.translate('enterYourCity').toString()),
+                    icon: const Icon(Icons.keyboard_arrow_down),
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    isExpanded: true, // This is important to fill the container width
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        context.read<AuthCubit>().dropdownCity = newValue!;
+                      });
                     },
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
-                    fillColor: ColorManager.gray
+                    items: context.read<AuthCubit>().saudiCities.map<DropdownMenuItem<String>>((dynamic value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value, style: TextStyle(color: ColorManager.black),),
+                      );
+                    }).toList(),
+                  ),
                 ),
+
+                // // city
+                // DefaultTextField(
+                //     controller: widget.cityController,
+                //     hintText: AppLocalizations.of(context)!.translate('enterYourCity').toString(),
+                //     validator: (value) {
+                //       if(value.isEmpty){
+                //         return AppLocalizations.of(context)!.translate('validateYourCity').toString();
+                //       }
+                //       return null;
+                //     },
+                //     keyboardType: TextInputType.text,
+                //     textInputAction: TextInputAction.done,
+                //     fillColor: ColorManager.gray
+                // ),
 
 
                 SizedBox( height:  MediaQuery.sizeOf(context).height*0.035,),
@@ -136,7 +165,7 @@ class RegisterFormWidget extends StatelessWidget {
                 DefaultTextField(
                     isPassword: true,
                     withSuffix: true,
-                    controller: passController,
+                    controller: widget.passController,
                     hintText: AppLocalizations.of(context)!.translate('loginPasswordHint').toString(),
                     validator: (value) {
                       if(value.isEmpty){
@@ -209,16 +238,20 @@ class RegisterFormWidget extends StatelessWidget {
                         buttonText: AppLocalizations.of(context)!.translate('signUp').toString(),
                         onPressed: (){
                           if(registerKey.currentState!.validate()){
-                            cubit.register(
-                                email: emailController.text,
-                                password: passController.text,
-                                phone: phoneController.text,
-                                name: nameController.text,
-                                brithDate: cubit.brithDateController.text,
-                                gender: cubit.genderValue,
-                                context: context,
-                                city: cityController.text
-                            );
+                            if(cubit.dropdownCity.isNotEmpty){
+                              cubit.register(
+                                  email: widget.emailController.text,
+                                  password: widget.passController.text,
+                                  phone: widget.phoneController.text,
+                                  name: widget.nameController.text,
+                                  brithDate: cubit.brithDateController.text,
+                                  gender: cubit.genderValue,
+                                  context: context,
+                                  city: cubit.dropdownCity
+                              );
+                            }else{
+                              customToast(title: AppLocalizations.of(context)!.translate('validateYourCity').toString(), color: ColorManager.red);
+                            }
                           }
                         },
                         buttonColor: ColorManager.primaryBlue

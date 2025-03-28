@@ -27,6 +27,7 @@ class ForMeBody extends StatefulWidget {
 }
 
 class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
+  GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
   @override
   void initState() {
     // TODO: implement initState
@@ -46,7 +47,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
         return Form(
-          key: cubit.forMeFormKey,
+          key: forMeFormKey,
           child: Column(
             crossAxisAlignment: CashHelper.languageKey == 'ar'
                 ? CrossAxisAlignment.end
@@ -1131,7 +1132,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
               Center(
                 child: GestureDetector(
                   onTap: () {
-                    if (cubit.forMeFormKey.currentState!.validate() && cubit.dropdownOccasionType.isNotEmpty){
+                    if (forMeFormKey.currentState!.validate() && cubit.dropdownOccasionType.isNotEmpty){
                       if((cubit.image != null && cubit.isPresent)  || !cubit.isPresent){
                         customPushNavigator(context, OccasionSummary());
                       }else{
