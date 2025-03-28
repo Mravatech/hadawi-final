@@ -11,6 +11,7 @@ class UserModel extends UserEntities{
     required super.brithDate,
     required super.gender,
     required super.city,
+    required super.token,
     required super.date,
     required super.block
   });
@@ -24,6 +25,7 @@ class UserModel extends UserEntities{
       brithDate: json['brithDate'],
       gender: json['gender'],
       city: json['city'],
+      token: json['token'],
       date: json['date'],
       block: json['block'],
     );
@@ -38,6 +40,7 @@ class UserModel extends UserEntities{
       'gender':gender,
       'city':city,
       'date':date,
+      'token':token,
       'brithDate':brithDate,
       'block':block
     };

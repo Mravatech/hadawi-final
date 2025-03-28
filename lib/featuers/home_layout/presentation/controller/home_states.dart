@@ -14,5 +14,7 @@ class GetAppPrivacyPoliciesLoadingState extends HomeStates{}
 class GetAppPrivacyPoliciesSuccessState extends HomeStates{}
 class GetAppPrivacyPoliciesErrorState extends HomeStates{}
 
+class GetTokenSuccessState extends HomeStates{}
+
 
 

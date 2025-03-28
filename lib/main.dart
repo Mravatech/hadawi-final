@@ -26,6 +26,7 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
 import 'package:hadawi_app/utiles/services/dio_helper.dart';
+import 'package:hadawi_app/utiles/services/notification_service.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -89,6 +90,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  NotificationService().initRemoteNotification();
+  // NotificationService().getAccessToken();
 
   debugPrint("current date is ${DateTime.now()}");
 
