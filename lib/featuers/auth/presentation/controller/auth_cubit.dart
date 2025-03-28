@@ -302,16 +302,20 @@ class AuthCubit extends Cubit<AuthStates> {
         ],
       );
 
-      print("User ID: ${credential.userIdentifier}");
-      print("Email: ${credential.email}");
-      print("Name: ${credential.givenName} ${credential.familyName}");
+      final oauthCredential = OAuthProvider("apple.com").credential(
+        idToken: credential.identityToken,
+        accessToken: credential.authorizationCode,
+      );
+
+      final userCredential =
+      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
       UserModel userModel = UserModel(
-          email: credential.email.toString(),
+          email: userCredential.user!.email.toString(),
           date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
           phone: "",
           name: "${credential.givenName} ${credential.familyName}",
-          uId: credential.userIdentifier.toString(),
+          uId: userCredential.user!.uid.toString(),
           brithDate: "",
           gender: "",
           city: "",
@@ -320,9 +324,9 @@ class AuthCubit extends Cubit<AuthStates> {
       try {
         await FirebaseFirestore.instance
             .collection('users')
-            .doc(credential.userIdentifier.toString())
+            .doc(userCredential.user!.uid.toString())
             .set(userModel.toMap());
-        UserDataFromStorage.setUid(credential.userIdentifier.toString());
+        UserDataFromStorage.setUid(userCredential.user!.uid.toString());
         UserDataFromStorage.setUserName(
             "${credential.givenName} ${credential.familyName}");
         UserDataFromStorage.setEmail(credential.email.toString());
