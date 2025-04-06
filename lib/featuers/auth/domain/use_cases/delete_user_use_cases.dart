@@ -9,7 +9,7 @@ class DeleteUserUseCases{
 
   DeleteUserUseCases({required this.authBaseRepository});
 
-  Future<Either<Faliure,void>> deleteUser({
+  Future<Either<Faliure,bool>> deleteUser({
     required String uId,
   })async {
     return await authBaseRepository.deleteUser(uId:uId);

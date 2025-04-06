@@ -116,7 +116,7 @@ class AuthCubit extends Cubit<AuthStates> {
         emit(UserLoginSuccessState());
       });
     } catch (e) {
-      emit(UserLoginErrorState(message: 'تم حذف الحساب من قبل اداره التطبيق'));
+      emit(UserLoginErrorState(message: 'تم حذف الحساب'));
     }
   }
 
@@ -181,9 +181,10 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
-  Future<void> deleteUser({required String uId}) async {
+  Future<void> deleteUser() async {
     emit(DeleteUserLoadingState());
-    final result = await deleteUserUseCases.deleteUser(uId: uId);
+    final result = await deleteUserUseCases.deleteUser(
+        uId: UserDataFromStorage.uIdFromStorage);
     result.fold((l) {
       emit(DeleteUserErrorState(message: l.message));
     }, (r) {
@@ -357,19 +358,19 @@ class AuthCubit extends Cubit<AuthStates> {
       );
 
       final userCredential =
-      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
       UserModel userModel = UserModel(
-          email: userCredential.user!.email.toString(),
-          date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-          phone: "",
-          name: "${credential.givenName} ${credential.familyName}",
-          uId: userCredential.user!.uid.toString(),
-          brithDate: "",
-          gender: "",
-          city: "",
-          block: false,
-          token: '',
+        email: userCredential.user!.email.toString(),
+        date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        phone: "",
+        name: "${credential.givenName} ${credential.familyName}",
+        uId: userCredential.user!.uid.toString(),
+        brithDate: "",
+        gender: "",
+        city: "",
+        block: false,
+        token: '',
       );
 
       try {
@@ -399,7 +400,9 @@ class AuthCubit extends Cubit<AuthStates> {
   bool rememberMe = false;
 
   void rememberMeFunction(
-      {value,required String emailController,required String passController}) {
+      {value,
+      required String emailController,
+      required String passController}) {
     emit(RememberMeLoadingState());
     if (value != null) {
       rememberMe = value;

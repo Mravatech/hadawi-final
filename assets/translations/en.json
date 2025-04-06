@@ -25,7 +25,7 @@
   "errorOccurred": "Error occurred",
   "deleteMessage": "The account has been deleted by the administration.",
   "blockOccurred": "Block occurred",
-  "blockMessage": "The account has been banned by the administration. Check the notifications.",
+  "blockMessage": "The account has been banned by the administration",
   "haveAccount": "I Have an account ?",
   "loginMessageError": "Incorrect phone number or password",
   "verifyPhoneNumber": "Verify your phone number",

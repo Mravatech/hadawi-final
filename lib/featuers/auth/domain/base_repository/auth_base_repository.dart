@@ -57,6 +57,6 @@ abstract class AuthBaseRepository {
     required context
   });
 
-  Future<Either<Faliure, void>>deleteUser ({required String uId});
+  Future<Either<Faliure, bool>>deleteUser ({required String uId});
 
 }
