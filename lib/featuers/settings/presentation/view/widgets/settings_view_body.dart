@@ -175,7 +175,7 @@ class SettingViewBody extends StatelessWidget {
                                   ),
                                   TextButton(
                                     onPressed: () {
-                                      cubit.deleteUser(uId: UserDataFromStorage.uIdFromStorage);
+                                      cubit.deleteUser();
                                     },
                                     child: Text("حذف"),
                                   ),

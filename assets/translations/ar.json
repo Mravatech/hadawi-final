@@ -19,7 +19,7 @@
   "errorOccurred": "حدث خطا",
   "deleteMessage": "تم حذف الحساب من قبل الاداره",
   "blockOccurred": "حظر المستخدم",
-  "blockMessage": "تم حظر الحساب من طرف الاداره راجع الاشعارات",
+  "blockMessage": "تم حظر الحساب من طرف الاداره",
   "don'tHaveAccount": "ليس لديك حساب؟",
   "validEmail": "يرجى إدخال بريد إلكتروني صالح",
   "validPassword": "يجب أن تكون كلمة المرور على الأقل 8 أحرف",

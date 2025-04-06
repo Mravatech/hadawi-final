@@ -324,34 +324,68 @@ class OccasionCubit extends Cubit<OccasionState> {
   bool showDiscountValue = false;
 
   Future<void> getDiscountCode() async {
-    emit(GetOccasionDiscountLoadingState());
-    
-    FirebaseFirestore.instance.collection("PromoCodes").get().then((value){
-      value.docs.forEach((element) {
-        if(discountCodeController.text.trim() == element.data()['code']){
-          if(element.data()['maxUsage']> element.data()['used'] && DateTime.parse(element.data()['expiryDate']).isAfter(DateTime.now())){
-            discountValue = giftPrice * element.data()['discount'];
-            giftPrice = giftPrice - discountValue;
-            customToast(title: "تم تطبيق الخصم", color: ColorManager.primaryBlue);
-            showDiscountValue = true;
-            emit(GetOccasionDiscountSuccessState());
-          }else{
-            showDiscountValue = false;
-            customToast(title: "كود الخصم غير صالح", color: ColorManager.primaryBlue);
-            emit(GetOccasionDiscountSuccessState());
-          }
-        }else{
-          showDiscountValue = false;
-          customToast(title: "كود الخصم غير صحيح, اعد كتابته مره اخرى", color: ColorManager.red);
-          emit(GetOccasionDiscountSuccessState());
-        }
-      });
-    }).catchError((error){
-      showDiscountValue = false;
-      debugPrint('error when get discount code: $error');
-      emit(GetOccasionDiscountErrorState());
-    });
+    try {
+      emit(GetOccasionDiscountLoadingState());
+      final String inputCode = discountCodeController.text.trim();
+      if (inputCode.isEmpty) {
+        _showErrorToast("يرجى إدخال كود الخصم");
+        emit(GetOccasionDiscountSuccessState());
+        return;
+      }
+      final QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection("PromoCodes")
+          .where('code', isEqualTo: inputCode)
+          .limit(1)
+          .get(const GetOptions(source: Source.serverAndCache));
+      if (snapshot.docs.isEmpty) {
+        _showErrorToast("كود الخصم غير صحيح, أعد كتابته مرة أخرى");
+        emit(GetOccasionDiscountSuccessState());
+        return;
+      }
+      final DocumentSnapshot doc = snapshot.docs.first;
+      final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      final DateTime expiryDate = DateTime.parse(data['expiryDate'] as String);
+      final int maxUsage = data['maxUsage'] as int;
+      final int used = data['used'] as int;
+      final double discount = (data['discount'] as num).toDouble();
 
+      if (maxUsage <= used || expiryDate.isBefore(DateTime.now())) {
+        _showErrorToast("كود الخصم غير صالح");
+        emit(GetOccasionDiscountSuccessState());
+        return;
+      }
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final freshDoc = await transaction.get(doc.reference);
+        final freshData = freshDoc.data() as Map<String, dynamic>;
+        if (freshData['used'] >= freshData['maxUsage']) {
+          throw Exception('Discount code usage limit reached');
+        }
+        discountValue = giftPrice * discount;
+        giftPrice -= discountValue;
+        transaction.update(doc.reference, {
+          'used': FieldValue.increment(1),
+        });
+      });
+
+      showDiscountValue = true;
+      customToast(
+        title: "تم تطبيق الخصم",
+        color: ColorManager.primaryBlue,
+      );
+      emit(GetOccasionDiscountSuccessState());
+    } catch (error) {
+      showDiscountValue = false;
+      debugPrint('Error applying discount code: $error');
+      _showErrorToast("حدث خطأ أثناء تطبيق الخصم");
+      emit(GetOccasionDiscountErrorState());
+    }
+  }
+
+  void _showErrorToast(String message) {
+    customToast(
+      title: message,
+      color: ColorManager.red,
+    );
   }
 
   String occasionLink = '';
