@@ -93,7 +93,10 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(ResetDataSuccessState());
   }
 
-  void switchGiftWithPackageType(int value) {
+  String selectedPackageImage = '';
+
+  void switchGiftWithPackageType(int value, String image) {
+    selectedPackageImage = image;
     giftWithPackageType = value;
     emit(SwitchGiftWithPackageTypeSuccess());
   }
@@ -262,7 +265,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
 
-  Future<void> captureAndShareQr({required String occasionName}) async {
+  Future<void> captureAndShareQr({required String occasionName , required String personName}) async {
     try {
       RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
@@ -276,7 +279,7 @@ class OccasionCubit extends Cubit<OccasionState> {
 
       await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'Check out this occasion QR code!, to pay for ($occasionName)',
+        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية  ',
       );
       emit(CaptureAndShareQrSuccessState());
     } catch (e) {

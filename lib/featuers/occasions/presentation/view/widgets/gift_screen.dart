@@ -316,7 +316,7 @@ class GiftScreen extends StatelessWidget {
                               children: [
                                 InkWell(
                                   onTap: (){
-                                    cubit.switchGiftWithPackageType(50);
+                                    // cubit.switchGiftWithPackageType(50);
                                   },
                                   child: SizedBox(
                                     height: mediaQuery.height * 0.1,
@@ -362,7 +362,7 @@ class GiftScreen extends StatelessWidget {
                                 ),
                                 InkWell(
                                   onTap: (){
-                                    cubit.switchGiftWithPackageType(100);
+                                    // cubit.switchGiftWithPackageType(100);
                                   },
                                   child: SizedBox(
                                     height: mediaQuery.height * 0.1,

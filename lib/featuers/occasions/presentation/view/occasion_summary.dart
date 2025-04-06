@@ -306,7 +306,26 @@ class OccasionSummary extends StatelessWidget {
                                 .toString(),
                             style: TextStyles.textStyle12Regular
                                 .copyWith(color: ColorManager.primaryBlue),
-                          )
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: BoxDecoration(
+                              color: ColorManager.gray,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                              child: Image.network(
+                                cubit.selectedPackageImage.toString(),
+                                fit: BoxFit.fill,
+                                height: mediaQuery.height * 0.05,
+                                width: mediaQuery.height * 0.05,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -459,21 +478,21 @@ class OccasionSummary extends StatelessWidget {
                     SizedBox(height: mediaQuery.height * 0.01),
 
                     /// date of receive
-                    Row(
-                      children: [
-                        Text(
-                          "${AppLocalizations.of(context)!.translate('receivingTime').toString()} : ",
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        Text(
-                          cubit.moneyReceiveDateController.text,
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.primaryBlue),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.01),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       "${AppLocalizations.of(context)!.translate('receivingTime').toString()} : ",
+                    //       style: TextStyles.textStyle12Bold
+                    //           .copyWith(color: ColorManager.black),
+                    //     ),
+                    //     Text(
+                    //       cubit.moneyReceiveDateController.text,
+                    //       style: TextStyles.textStyle12Bold
+                    //           .copyWith(color: ColorManager.primaryBlue),
+                    //     ),
+                    //   ],
+                    // ),
+                    // SizedBox(height: mediaQuery.height * 0.01),
                     cubit.giftContainsNameValue == true
                         ? Text(
                             "${AppLocalizations.of(context)!.translate('containsNames').toString()} ",
@@ -534,31 +553,31 @@ class OccasionSummary extends StatelessWidget {
                     ),
                     SizedBox(height: mediaQuery.height * 0.01),
 
-                    Row(
-                      children: [
-                        Text(
-                          "${AppLocalizations.of(context)!.translate('appCommission').toString()} : ",
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        Text(
-                          cubit.getAppCommission().toString(),
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.primaryBlue),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('rsa')
-                              .toString(),
-                          style: TextStyles.textStyle12Regular
-                              .copyWith(color: ColorManager.primaryBlue),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: mediaQuery.height * 0.01),
+                    // Row(
+                    //   children: [
+                    //     Text(
+                    //       "${AppLocalizations.of(context)!.translate('appCommission').toString()} : ",
+                    //       style: TextStyles.textStyle12Bold
+                    //           .copyWith(color: ColorManager.black),
+                    //     ),
+                    //     Text(
+                    //       cubit.getAppCommission().toString(),
+                    //       style: TextStyles.textStyle12Bold
+                    //           .copyWith(color: ColorManager.primaryBlue),
+                    //     ),
+                    //     SizedBox(
+                    //       width: 10,
+                    //     ),
+                    //     Text(
+                    //       AppLocalizations.of(context)!
+                    //           .translate('rsa')
+                    //           .toString(),
+                    //       style: TextStyles.textStyle12Regular
+                    //           .copyWith(color: ColorManager.primaryBlue),
+                    //     )
+                    //   ],
+                    // ),
+                    // SizedBox(height: mediaQuery.height * 0.01),
 
                     Row(
                       children: [
@@ -567,20 +586,14 @@ class OccasionSummary extends StatelessWidget {
                           style: TextStyles.textStyle12Bold
                               .copyWith(color: ColorManager.black),
                         ),
-                        Text(
-                          cubit.deliveryTax.toString(),
-                          style: TextStyles.textStyle12Bold
-                              .copyWith(color: ColorManager.primaryBlue),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('rsa')
-                              .toString(),
-                          style: TextStyles.textStyle12Regular
-                              .copyWith(color: ColorManager.primaryBlue),
+                        SizedBox(width: mediaQuery.height * 0.01,),
+                        Expanded(
+                          child: Text(
+                            "${cubit.deliveryTax.toString()} ${AppLocalizations.of(context)!
+                                .translate('rsa')} المطلوب مبلغ مالي بدون تغليف وسيتم التحويل البنكي",
+                            style: TextStyles.textStyle12Regular
+                                .copyWith(color: ColorManager.primaryBlue),
+                          ),
                         )
                       ],
                     ),

@@ -175,12 +175,12 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
               ),
               SizedBox(height: mediaQuery.height * 0.01),
               /// service fees text
-              Text(
-                AppLocalizations.of(context)!.translate('feesNote').toString(),
-                style: TextStyles.textStyle12Bold
-                    .copyWith(color: ColorManager.black.withOpacity(.5)),
-              ),
-              SizedBox(height: mediaQuery.height * 0.01),
+              // Text(
+              //   AppLocalizations.of(context)!.translate('feesNote').toString(),
+              //   style: TextStyles.textStyle12Bold
+              //       .copyWith(color: ColorManager.black.withOpacity(.5)),
+              // ),
+              // SizedBox(height: mediaQuery.height * 0.01),
 
               /// date of occasion
               // Text(
@@ -554,7 +554,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             children: [
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[0].toString()));
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[0].toString()), cubit.packageListImage[0].toString());
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
@@ -600,7 +600,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               ),
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[1].toString()));
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[1].toString()), cubit.packageListImage[1].toString());
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
@@ -799,9 +799,10 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                                } else {
-                                  return null;
+                                } if (value.length<9 || value.length>9){
+                                  return AppLocalizations.of(context)!.translate('validatePhone').toString();
                                 }
+                                return null;
                               },
                               keyboardType: TextInputType.phone,
                               textInputAction: TextInputAction.next,
@@ -1007,9 +1008,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         validator: (value) {
                           if (value!.isEmpty) {
                             return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                          } else {
-                            return null;
+                          }if (value.length<9 || value.length>9){
+                            return AppLocalizations.of(context)!.translate('validatePhone').toString();
                           }
+                          return null;
+
                         },
                         keyboardType: TextInputType.phone,
                         textInputAction: TextInputAction.next,

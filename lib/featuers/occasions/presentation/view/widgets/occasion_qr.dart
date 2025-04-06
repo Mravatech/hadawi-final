@@ -11,6 +11,7 @@ import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -117,7 +118,8 @@ class _OccasionQrState extends State<OccasionQr> {
                     child: GestureDetector(
                       onTap: () async {
                         await cubit.captureAndShareQr(
-                            occasionName: widget.occasionName);
+                            occasionName: widget.occasionName,
+                            personName: UserDataFromStorage.userNameFromStorage);
                       },
                       child: Container(
                         height: mediaQuery.height * .055,

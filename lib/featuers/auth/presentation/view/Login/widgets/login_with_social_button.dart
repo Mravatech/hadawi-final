@@ -29,7 +29,6 @@ class LoginWithSocialButton extends StatelessWidget {
         const CircularProgressIndicator():
         Row(
           children: [
-            Platform.isAndroid?
             Expanded(
               child: DefaultButtonWithImage(
                 image:AssetsManager.googleIcon ,
@@ -38,14 +37,17 @@ class LoginWithSocialButton extends StatelessWidget {
                   cubit.signInWithGoogle(brithDate: '', gender:'', city: '');
                 },
               ),
-            ):
-            Expanded(
-              child: DefaultButtonWithImage(
-                image:AssetsManager.appleIcon ,
-                buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
-                onTap: ()async{
-                  await cubit.signInWithApple();
-                },
+            ),
+            Visibility(
+              visible:  Platform.isAndroid? false : true,
+              child: Expanded(
+                child: DefaultButtonWithImage(
+                  image:AssetsManager.appleIcon ,
+                  buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
+                  onTap: ()async{
+                    await cubit.signInWithApple();
+                  },
+                ),
               ),
             ),
           ],

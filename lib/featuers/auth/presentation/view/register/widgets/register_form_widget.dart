@@ -92,7 +92,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                     validator: (value) {
                       if(value.isEmpty){
                         return AppLocalizations.of(context)!.translate('loginMessage').toString();
-                      }if (value.length<10){
+                      }if (value.length<9 || value.length>9){
                         return AppLocalizations.of(context)!.translate('validatePhone').toString();
                       }
                       return null;

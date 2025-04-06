@@ -329,23 +329,70 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         SizedBox(
                             height: MediaQuery.sizeOf(context).height * 0.01),
 
-                        Center(
-                          child: RepaintBoundary(
-                            key: context.read<OccasionCubit>().qrKey,
-                            child: QrImageView(
-                              data: context.read<OccasionCubit>().occasionLink,
-                              version: QrVersions.auto,
-                              size: SizeConfig.height * 0.3,
-                              backgroundColor: Colors.white,
-                              embeddedImage: AssetImage(
-                                  AssetsManager.logoWithoutBackground),
-                              // Your logo
-                              embeddedImageStyle: QrEmbeddedImageStyle(
-                                size: Size(100, 100), // Adjust size as needed
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            RepaintBoundary(
+                              key: context.read<OccasionCubit>().qrKey,
+                              child: QrImageView(
+                                data: context.read<OccasionCubit>().occasionLink,
+                                version: QrVersions.auto,
+                                size: SizeConfig.height * 0.3,
+                                backgroundColor: Colors.white,
+                                embeddedImage: AssetImage(
+                                    AssetsManager.logoWithoutBackground),
+                                // Your logo
+                                embeddedImageStyle: QrEmbeddedImageStyle(
+                                  size: Size(100, 100), // Adjust size as needed
+                                ),
                               ),
                             ),
-                          ),
+                            GestureDetector(
+                              onTap: () async {
+                                context
+                                    .read<OccasionCubit>()
+                                    .captureAndShareQr(
+                                    occasionName: cubit.occasionModel!.occasionName,
+                                    personName: UserDataFromStorage.userNameFromStorage);
+                              },
+                              child: state is CreateOccasionLinkLoadingState
+                                  ? LoadingAnimationWidget()
+                                  : Container(
+                                height:
+                                MediaQuery.sizeOf(context).height *
+                                    .055,
+                                width: MediaQuery.sizeOf(context).width *
+                                    .25,
+                                decoration: BoxDecoration(
+                                  color: ColorManager.primaryBlue,
+                                  borderRadius: BorderRadius.circular(
+                                      MediaQuery.sizeOf(context).height *
+                                          0.05),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('share')
+                                            .toString(),
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(
+                                            color:
+                                            ColorManager.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+
                         SizedBox(
                             height: MediaQuery.sizeOf(context).height * 0.05),
 

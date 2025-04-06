@@ -118,7 +118,7 @@
   "language": "اللغة",
   "notification": "التنبيهات",
   "home": "الرئيسية",
-  "pfile": "البروفيل",
+  "pfile": "الحساب",
   "materialType": "نوع المادة",
   "status": "الحالة",
   "dateTime": "التاريخ والوقت",
@@ -308,7 +308,7 @@
   "occasionTypeHint": "أختر نوع المناسبة",
   "validateOccasionType": "نوع المناسبة مطلوب",
   "validateImage": "الصورة مطلوبة",
-  "validatePhone": "رقم الهاتف يجب أن يكون 10 أرقام",
+  "validatePhone": "رقم الهاتف يجب أن يكون 9 أرقام",
   "rememberMe": "تذكرني",
   "edit": "تعديل"
 }
