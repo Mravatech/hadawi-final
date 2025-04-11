@@ -396,7 +396,7 @@ class OccasionSummary extends StatelessWidget {
                                 .copyWith(color: ColorManager.black),
                           ),
                           Text(
-                            cubit.giftDeliveryCityController.text,
+                            cubit.dropdownCity,
                             style: TextStyles.textStyle12Bold
                                 .copyWith(color: ColorManager.primaryBlue),
                           ),
@@ -560,6 +560,7 @@ class OccasionSummary extends StatelessWidget {
                     ),
                     SizedBox(height: mediaQuery.height * 0.01),
 
+                    if(cubit.giftType != 'مبلغ مالي' && cubit.giftWithPackage != false)
                     Row(
                       children: [
                         Text(
@@ -584,6 +585,7 @@ class OccasionSummary extends StatelessWidget {
                         )
                       ],
                     ),
+
                     SizedBox(height: mediaQuery.height * 0.01),
 
                     Visibility(

@@ -356,7 +356,19 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   @override
   Future<void> deleteUser({required String uId})async {
     try {
-      await FirebaseAuth.instance.currentUser!.delete();
+      print('Uid $uId');
+      final user = FirebaseAuth.instance.currentUser!;
+
+      // أعد تسجيل الدخول
+      AuthCredential credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password:UserDataFromStorage.macAddressFromStorage  ,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+
+      // احذف الحساب بعد التوثيق
+      await user.delete();
       await FirebaseFirestore.instance.collection('users').doc(uId).delete();
       await UserDataFromStorage.removeAllDataFromStorage();
     } on FirebaseException catch (error) {

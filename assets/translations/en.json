@@ -13,6 +13,7 @@
   "loginPhoneHint": "Enter your phone number",
   "emailMessage": "Please enter your email",
   "brithHint": "Brith date",
+  "vaildLink": "Please enter valid link",
   "brithMessage": "Please enter your brith date",
   "loginPasswordHint": "Enter your password",
   "createAccount": "Create Account",
