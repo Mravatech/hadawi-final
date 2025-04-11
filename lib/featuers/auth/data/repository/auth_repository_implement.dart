@@ -93,12 +93,14 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
       {
         required String brithDate,
         required String gender,
+        required  context,
         required String city
       }) async{
     try{
       return Right(await baseAuthDataSource.loginWithGoogle(
           brithDate: brithDate,
           gender: gender,
+          context: context,
           city: city
       )
       );

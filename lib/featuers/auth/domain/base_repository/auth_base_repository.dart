@@ -45,6 +45,7 @@ abstract class AuthBaseRepository {
   Future<Either<Faliure,void>> loginWithGoogle({
     required String brithDate,
     required String gender,
+    required context,
     required String city
   });
 

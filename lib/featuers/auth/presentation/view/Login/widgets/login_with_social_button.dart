@@ -1,12 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/widgets/default_button_with_image.dart';
 
 class LoginWithSocialButton extends StatelessWidget {
@@ -20,7 +22,7 @@ class LoginWithSocialButton extends StatelessWidget {
           // customToast(title: state.message, color: ColorManager.primaryBlue);
         }
         if(state is SignInWithSocialMediaSuccessState){
-          customPushAndRemoveUntil(context, HomeLayout());
+          context.replace(AppRouter.home);
         }
       },
       builder: (context, state) {
@@ -34,7 +36,7 @@ class LoginWithSocialButton extends StatelessWidget {
                 image:AssetsManager.googleIcon ,
                 buttonText: AppLocalizations.of(context)!.translate('continueWith').toString(),
                 onTap: (){
-                  cubit.signInWithGoogle(brithDate: '', gender:'', city: '');
+                  cubit.signInWithGoogle(brithDate: '', gender:'', city: '',context:  context);
                 },
               ),
             ),

@@ -26,6 +26,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+
         Expanded(
             flex: 1,
             child: LogoWidget()

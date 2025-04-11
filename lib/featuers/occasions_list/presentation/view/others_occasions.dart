@@ -82,8 +82,7 @@ class _OthersOccasionsState extends State<OthersOccasions> {
                                 },
                                 child: GridView.builder(
                                   physics: BouncingScrollPhysics(),
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2, // Number of columns
                                     crossAxisSpacing: 10.0,
                                     mainAxisSpacing: 10.0,
@@ -94,8 +93,7 @@ class _OthersOccasionsState extends State<OthersOccasions> {
                                       .length,
                                   itemBuilder: (context, index) {
                                     final occasionItem =
-                                        OccasionsListCubit.get(context)
-                                            .othersOccasionsList[index];
+                                    OccasionsListCubit.get(context).othersOccasionsList[index];
                                     return OccasionCard(
                                         onTap: () {
                                           customPushNavigator(context, OccasionDetails(

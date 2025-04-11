@@ -214,6 +214,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         'giftName': giftName,
       });
 
+      await getOccasions();
+
         emit(EditOccasionSuccessState());
 
     } catch (e) {
