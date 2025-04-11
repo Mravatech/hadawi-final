@@ -32,7 +32,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
 
-          if(element["isForMe"]== false){
+          if(element["isForMe"]== false && element['personId'] == UserDataFromStorage.uIdFromStorage){
             othersOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }
@@ -51,7 +51,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element["isForMe"]== true && element['personId'] == UserDataFromStorage.uIdFromStorage){
+          if(element['personId'] == UserDataFromStorage.uIdFromStorage){
             myOccasionsList.add(OccasionModel.fromMap(element.data()));
           }
         }

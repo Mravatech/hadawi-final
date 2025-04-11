@@ -213,6 +213,7 @@
   "link": "الرابط",
   "linkHint": "أدخل الرابط",
   "validateLink": "الرابط مطلوب",
+  "vaildLink": "رجاء ادخل رابط صحيح",
   "gifPicture": "صورة الهدية",
   "giftAmount": "قيمة الهدية",
   "validateGiftScreen": "يرجى إدخال جميع البيانات",

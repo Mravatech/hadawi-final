@@ -15,6 +15,7 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -249,6 +250,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                         onPressed: (){
                           if(registerKey.currentState!.validate()){
                             if(cubit.dropdownCity.isNotEmpty){
+                              UserDataFromStorage.setMacAddress(widget.passController.text);
                               cubit.register(
                                   email: widget.emailController.text,
                                   password: widget.passController.text,

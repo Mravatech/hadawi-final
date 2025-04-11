@@ -89,6 +89,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     moneyGiftMessageController.clear();
     giftDeliveryNoteController.clear();
     giftDeliveryCityController.clear();
+    dropdownCity='';
     giftDeliveryStreetController.clear();
     emit(ResetDataSuccessState());
   }
@@ -149,9 +150,12 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SetMoneyReceiveDateState());
   }
 
+  double totalPriceCalculate=0;
   double getAppCommission() {
+     print('moneyAmountController.text ${moneyAmountController.text}');
     double giftPriceNumber = double.parse(moneyAmountController.text);
     double appCommission = giftPriceNumber * serviceTax;
+     totalPriceCalculate= appCommission;
     emit(GetTotalGiftPriceSuccessState());
     return appCommission;
   }
@@ -160,7 +164,11 @@ class OccasionCubit extends Cubit<OccasionState> {
      double giftPriceNumber = double.parse(moneyAmountController.text);
      double packagePriceNumber = double.parse(giftWithPackageType.toString());
      double appCommission = giftPriceNumber * serviceTax;
-     giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
+     if(giftType == 'مبلغ مالي' && giftWithPackage == false){
+       giftPrice = (giftPriceNumber + packagePriceNumber + appCommission) - discountValue;
+     }else{
+       giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
+     }
      emit(GetTotalGiftPriceSuccessState());
      return giftPrice;
   }
@@ -232,7 +240,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         receiverPhone: giftReceiverNumberController.text,
         bankName: bankNameController.text,
         note: giftDeliveryNoteController.text,
-        city: giftDeliveryCityController.text,
+        city: dropdownCity,
         district: giftDeliveryStreetController.text,
         ibanNumber: ibanNumberController.text,
         receivingDate: moneyReceiveDateController.text,
@@ -240,7 +248,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         isContainName: giftContainsNameValue,
         isPrivate: isPublicValue,
         discount: discountValue,
-        appCommission: getAppCommission(),
+        appCommission: totalPriceCalculate,
         deliveryPrice: deliveryTax,
         type: dropdownOccasionType??'',
       );
@@ -414,6 +422,56 @@ class OccasionCubit extends Cubit<OccasionState> {
 
 
   AnalysisModel ?analysisModel;
+
+  String dropdownCity = "";
+  List<String> saudiCities = [
+    // منطقة الرياض
+    "الرياض", "الدرعية", "الخرج", "الدوادمي", "المجمعة", "الزلفي", "شقراء",
+    "وادي الدواسر", "الأفلاج", "عفيف", "حوطة بني تميم", "السليل", "ثادق",
+    "حريملاء", "رماح", "المزاحمية", "ضرماء", "مرات",
+
+    // منطقة مكة المكرمة
+    "مكة المكرمة", "جدة", "الطائف", "رابغ", "الليث", "القنفذة", "الخرمة",
+    "الكامل", "خليص", "الجموم", "رنية", "تربة",
+
+    // منطقة المدينة المنورة
+    "المدينة المنورة", "ينبع", "العلا", "بدر", "الحناكية", "خيبر", "المهد",
+
+    // المنطقة الشرقية
+    "الدمام", "الخبر", "الظهران", "الجبيل", "القطيف", "الأحساء", "رأس تنورة",
+    "الخفجي", "النعيرية", "حفر الباطن", "قرية العليا", "بقيق",
+
+    // منطقة القصيم
+    "بريدة", "عنيزة", "الرس", "المذنب", "البكيرية", "البدائع", "الأسياح",
+    "النبهانية", "عيون الجواء", "رياض الخبراء", "الشماسية",
+
+    // منطقة عسير
+    "أبها", "خميس مشيط", "بيشة", "محايل عسير", "النماص", "رجال ألمع",
+    "سراة عبيدة", "ظهران الجنوب", "تثليث", "أحد رفيدة", "المجاردة", "البرك",
+
+    // منطقة حائل
+    "حائل", "بقعاء", "الشنان", "الغزالة", "الحائط", "السليمي", "سميراء",
+
+    // منطقة تبوك
+    "تبوك", "الوجه", "ضباء", "أملج", "حقل", "البدع",
+
+    // منطقة نجران
+    "نجران", "شرورة", "حبونا", "يدمة", "بدر الجنوب", "ثار", "خباش",
+
+    // منطقة جازان
+    "جازان", "صبيا", "أبو عريش", "صامطة", "فرسان", "العارضة", "الداير بني مالك",
+    "أحد المسارحة", "بيش", "العيدابي", "الدرب", "الحرث",
+
+    // منطقة الباحة
+    "الباحة", "بلجرشي", "المندق", "المخواة", "العقيق", "قلوة",
+
+    // منطقة الجوف
+    "سكاكا", "القريات", "دومة الجندل",
+
+    // منطقة الحدود الشمالية
+    "عرعر", "رفحاء", "طريف"
+  ];
+
 
 
 }
