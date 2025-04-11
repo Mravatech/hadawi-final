@@ -199,14 +199,14 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                                 controller: phoneController,
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
-                                                    return AppLocalizations.of(context)!.translate('phoneNumberHint').toString();
+                                                    return AppLocalizations.of(context)!.translate('loginPhoneHint').toString();
                                                   }
                                                   return null;
                                                 },
                                                 keyboardType:TextInputType.phone ,
                                                 textInputAction: TextInputAction.done,
                                                 fillColor: ColorManager.white,
-                                                hintText: AppLocalizations.of(context)!.translate('phoneNumberHint').toString(),
+                                                hintText: AppLocalizations.of(context)!.translate('loginPhoneHint').toString(),
                                               ),
                                             ),
 

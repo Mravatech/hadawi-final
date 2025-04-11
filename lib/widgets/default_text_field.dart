@@ -72,7 +72,6 @@ class _DefaultTextFieldState extends State<DefaultTextField> {
             color: ColorManager.error,
           ),
           hintText: widget.hintText,
-          hintTextDirection: TextDirection.rtl,
           hintStyle: TextStyle(
             fontSize: MediaQuery.sizeOf(context).height * 0.016,
             color: ColorManager.black,

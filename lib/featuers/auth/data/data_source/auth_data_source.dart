@@ -44,7 +44,7 @@ abstract class BaseAuthDataSource {
 
   Future<void> logout();
 
-  Future<void> loginWithGoogle({required String brithDate, required String gender,required String city});
+  Future<void> loginWithGoogle({required String brithDate, required String gender,required String city,required context});
 
   Future<void> loginWithPhoneNumber({
     required String phone,
@@ -189,7 +189,13 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       }
       UserDataFromStorage.setUserName(userModel.name);
       UserDataFromStorage.setEmail(userModel.email);
-      UserDataFromStorage.setPhoneNumber(userModel.phone);
+      print('Phone is : ${userModel.phone}');
+      if(userModel.phone==''){
+        UserDataFromStorage.setPhoneNumber('');
+      }else{
+        UserDataFromStorage.setPhoneNumber(userModel.phone);
+      }
+      UserDataFromStorage.setPhoneNumber(userModel.phone==''?'':userModel.phone);
       UserDataFromStorage.setUid(userModel.uId);
       UserDataFromStorage.setGender(userModel.gender);
       UserDataFromStorage.setCity(userModel.city);
@@ -209,7 +215,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
 
   @override
   Future<void> loginWithGoogle(
-      {required String brithDate, required String gender, required String city}) async {
+      {required String brithDate, required String gender, required String city,required context}) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -220,7 +226,10 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         idToken: googleAuth?.idToken,
       );
 
+      print('--------------');
       final user = await firebaseAuth.signInWithCredential(credential);
+      print('${ user.user!.email!} , ${user.user!.displayName!} , ${user.user!.uid}');
+      print('--------------');
       saveUserData(
           email: user.user!.email!,
           phone: '',
@@ -229,6 +238,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           brithDate: brithDate,
           city: city,
           gender: gender);
+      await getUserData(uId:  user.user!.uid,context: context);
     } on FirebaseAuthException catch (firebaseAuthException) {
       throw FirebaseExceptions(firebaseAuthException: firebaseAuthException);
     }

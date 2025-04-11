@@ -200,11 +200,12 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> signInWithGoogle(
       {required String brithDate,
       required String gender,
+      required BuildContext context,
       required String city}) async {
     emit(SignInWithSocialMediaLoadingState());
     try {
       final result = await googleAuthUseCases.loginWithGoogle(
-          brithDate: brithDate, gender: gender, city: city);
+          brithDate: brithDate, gender: gender, city: city,context: context);
       result.fold((l) {
         emit(SignInWithSocialMediaErrorState(message: l.message));
       }, (r) {
