@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_states.dart';
 import 'package:hadawi_app/featuers/settings/data/models/notification_model.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:hadawi_app/widgets/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeCubit extends Cubit<HomeStates> {
 
@@ -76,6 +79,29 @@ class HomeCubit extends Cubit<HomeStates> {
     FirebaseFirestore.instance.collection('users').doc(uId).update({'token': token});
     emit(GetTokenSuccessState());
   }
+
+
+  Future<void> launchWhatsAppSupport() async {
+    final phoneNumber = '+966564940300';
+    final message = 'مرحبًا، أحتاج إلى مساعدة من فريق الدعم الفني. من فضلكم تواصلوا معي.';
+
+    // Android intent URL
+    final whatsappUrl = Uri.parse('whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}');
+
+    // Fallback web URL
+    final webUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl);
+    } else if (await canLaunchUrl(webUrl)) {
+      await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+    } else {
+      customToast(title: "تعذر فتح واتساب تأكد من وجود التطبيق على الجوال", color: ColorManager.red);
+      throw 'تعذر فتح WhatsApp';
+    }
+  }
+
+
 
 
 }

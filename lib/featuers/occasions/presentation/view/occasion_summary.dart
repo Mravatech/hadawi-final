@@ -47,6 +47,7 @@ class OccasionSummary extends StatelessWidget {
         final mediaQuery = MediaQuery.sizeOf(context);
         return ModalProgressHUD(
           inAsyncCall: state is AddOccasionLoadingState ? true : false,
+          progressIndicator: LoadingAnimationWidget(),
           child: Scaffold(
             backgroundColor: ColorManager.white,
             appBar: AppBar(
