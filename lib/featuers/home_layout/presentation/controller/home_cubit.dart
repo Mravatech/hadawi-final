@@ -81,24 +81,14 @@ class HomeCubit extends Cubit<HomeStates> {
   }
 
 
-  Future<void> launchWhatsAppSupport() async {
+  Future<void> launchWhatsApp()
+  async {
     final phoneNumber = '+966564940300';
     final message = 'مرحبًا، أحتاج إلى مساعدة من فريق الدعم الفني. من فضلكم تواصلوا معي.';
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
 
-    // Android intent URL
-    final whatsappUrl = Uri.parse('whatsapp://send?phone=$phoneNumber&text=${Uri.encodeComponent(message)}');
-
-    // Fallback web URL
-    final webUrl = Uri.parse('https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}');
-
-    if (await canLaunchUrl(whatsappUrl)) {
-      await launchUrl(whatsappUrl);
-    } else if (await canLaunchUrl(webUrl)) {
-      await launchUrl(webUrl, mode: LaunchMode.externalApplication);
-    } else {
-      customToast(title: "تعذر فتح واتساب تأكد من وجود التطبيق على الجوال", color: ColorManager.red);
-      throw 'تعذر فتح WhatsApp';
-    }
+    await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
   }
 
 

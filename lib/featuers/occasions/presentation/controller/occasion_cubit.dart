@@ -161,16 +161,20 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   double getTotalGiftPrice() {
-     double giftPriceNumber = double.parse(moneyAmountController.text);
-     double packagePriceNumber = double.parse(giftWithPackageType.toString());
-     double appCommission = giftPriceNumber * serviceTax;
-     if(giftType == 'مبلغ مالي' && giftWithPackage == false){
-       giftPrice = (giftPriceNumber + packagePriceNumber + appCommission) - discountValue;
-     }else{
-       giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
-     }
-     emit(GetTotalGiftPriceSuccessState());
-     return giftPrice;
+    final text = moneyAmountController.text.trim();
+    double giftPriceNumber = double.tryParse(text) ?? 0.0;
+    double packagePriceNumber = double.tryParse(giftWithPackageType.toString()) ?? 0.0;
+
+    double appCommission = giftPriceNumber * serviceTax;
+
+    if (giftType == 'مبلغ مالي' && giftWithPackage == false) {
+      giftPrice = (giftPriceNumber + packagePriceNumber + appCommission) - discountValue;
+    } else {
+      giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
+    }
+
+    emit(GetTotalGiftPriceSuccessState());
+    return giftPrice;
   }
 
   var picker = ImagePicker();

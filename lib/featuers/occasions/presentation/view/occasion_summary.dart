@@ -45,38 +45,38 @@ class OccasionSummary extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
-        return ModalProgressHUD(
-          inAsyncCall: state is AddOccasionLoadingState ? true : false,
-          progressIndicator: LoadingAnimationWidget(),
-          child: Scaffold(
-            backgroundColor: ColorManager.white,
-            appBar: AppBar(
-                backgroundColor: ColorManager.gray,
-                leading: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
+        return Scaffold(
+          backgroundColor: ColorManager.white,
+          appBar: AppBar(
+              backgroundColor: ColorManager.gray,
+              leading: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_back)),
+              title: Text(
+                AppLocalizations.of(context)!
+                    .translate('occasionSummary')
+                    .toString(),
+                style: TextStyles.textStyle18Bold
+                    .copyWith(color: ColorManager.black),
+              ),
+              actions: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: InkWell(
+                    onTap: () {
+                      context.replace(AppRouter.home);
                     },
-                    icon: Icon(Icons.arrow_back)),
-                title: Text(
-                  AppLocalizations.of(context)!
-                      .translate('occasionSummary')
-                      .toString(),
-                  style: TextStyles.textStyle18Bold
-                      .copyWith(color: ColorManager.black),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: InkWell(
-                      onTap: () {
-                        context.replace(AppRouter.home);
-                      },
-                      child: Image(
-                          image: AssetImage(AssetsManager.logoWithoutBackground)),
-                    ),
+                    child: Image(
+                        image: AssetImage(AssetsManager.logoWithoutBackground)),
                   ),
-                ]),
-            body: SingleChildScrollView(
+                ),
+              ]),
+          body: ModalProgressHUD(
+            inAsyncCall: state is AddOccasionLoadingState? true : false,
+            progressIndicator: LoadingAnimationWidget(),
+            child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.all(15.0),

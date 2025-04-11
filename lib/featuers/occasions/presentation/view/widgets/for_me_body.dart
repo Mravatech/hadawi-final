@@ -543,11 +543,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                       visible: cubit.giftWithPackage== true? true : false,
                       child: Column(
                         children: [
-                          Text(
-                            AppLocalizations.of(context)!.translate('giftNotePackage').toString(),
-                            style: TextStyles.textStyle18Bold
-                                .copyWith(color: ColorManager.black.withOpacity(.5)),
-                          ),
                           SizedBox(height: mediaQuery.height * 0.02),
                           state is GetOccasionTaxesLoadingState? LoadingAnimationWidget() :Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

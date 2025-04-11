@@ -142,7 +142,7 @@ class SettingViewBody extends StatelessWidget {
                     // تواصل معنا
                     GestureDetector(
                         onTap: (){
-                          context.read<HomeCubit>().launchWhatsAppSupport();
+                          context.read<HomeCubit>().launchWhatsApp();
                         },
                         child: RowDataWidget(
                             image:AssetsManager.supportAccount,
