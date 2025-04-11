@@ -67,14 +67,14 @@ class AppRouter {
       default:
       // 404 page
         return MaterialPageRoute(
-          builder: (_) => const NotFoundScreen(),
+          builder: (_) => const LoginScreen(),
         );
     }
   }
 }
 
 class NotFoundScreen extends StatelessWidget {
-  const NotFoundScreen({Key? key}) : super(key: key);
+  const NotFoundScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

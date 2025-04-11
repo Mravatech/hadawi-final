@@ -776,7 +776,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             children: [
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[0].toString()));
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[0].toString()), cubit.packageListImage[0].toString());
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
@@ -822,7 +822,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               ),
                               InkWell(
                                 onTap: (){
-                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[1].toString()));
+                                  cubit.switchGiftWithPackageType(int.parse(cubit.packageListPrice[1].toString()), cubit.packageListImage[1].toString());
                                 },
                                 child: SizedBox(
                                   height: mediaQuery.height * 0.1,
