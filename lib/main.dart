@@ -130,6 +130,7 @@ class _MyAppState extends State<MyApp> {
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
+        context.go('/');
       },
     );
 
@@ -137,8 +138,11 @@ class _MyAppState extends State<MyApp> {
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
         _handleDeepLink(Uri.parse(initialLink.toString()));
+      }else{
+        context.go('/');
       }
     } catch (e) {
+      context.go('/');
       debugPrint('Error getting initial deep link: $e');
     }
   }

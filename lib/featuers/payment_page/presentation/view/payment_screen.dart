@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_web_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/counter_widget.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
@@ -47,9 +48,12 @@ class PaymentScreen extends StatelessWidget {
       body: BlocBuilder<PaymentCubit, PaymentStates>(
         builder: (context, state) {
           return ModalProgressHUD(
-            inAsyncCall: (state is PaymentHyperPayLoadingState) || ( state is PaymentAddLoadingState) || (state is ApplyPaymentLoadingState) ? true : false,
+            inAsyncCall: (state is PaymentHyperPayLoadingState) ||
+                    (state is PaymentAddLoadingState) ||
+                    (state is ApplyPaymentLoadingState)
+                ? true
+                : false,
             progressIndicator: LoadingAnimationWidget(),
-
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
               child: Padding(
@@ -64,7 +68,8 @@ class PaymentScreen extends StatelessWidget {
                       ProgressIndicatorWidget(
                           value: (double.parse(
                                   occasionEntity.moneyGiftAmount.toString()) /
-                              double.parse(occasionEntity.giftPrice.toString()))),
+                              double.parse(
+                                  occasionEntity.giftPrice.toString()))),
                       SizedBox(height: SizeConfig.height * 0.04),
 
                       Row(
@@ -126,7 +131,8 @@ class PaymentScreen extends StatelessWidget {
                           Expanded(
                             flex: 4,
                             child: DefaultTextField(
-                              controller: PaymentCubit.get(context).paymentPayerNameController,
+                              controller: PaymentCubit.get(context)
+                                  .paymentPayerNameController,
                               hintText: '',
                               validator: (value) {
                                 if (value.isEmpty) {
@@ -149,7 +155,33 @@ class PaymentScreen extends StatelessWidget {
                       /// payment with apple
                       DefaultButtonWithImage(
                         onTap: () async {
-                          await PaymentCubit.get(context).startApplePay(context: context);
+                          if (PaymentCubit.get(context)
+                              .paymentFormKey
+                              .currentState!
+                              .validate()) {
+                            String merchantTransactionId =
+                                "ORDER-${DateTime.now().millisecondsSinceEpoch}";
+                            final checkoutData = await PaymentCubit.get(context)
+                                .getCheckoutId(
+                                    email: UserDataFromStorage.emailFromStorage,
+                                    givenName:
+                                        UserDataFromStorage.userNameFromStorage,
+                                    surname:
+                                        UserDataFromStorage.userNameFromStorage,
+                                    street: "street",
+                                    city: "city",
+                                    state: "state",
+                                    postcode: "12345",
+                                    merchantTransactionId:
+                                        merchantTransactionId);
+
+                            customPushNavigator(
+                              context,
+                              ApplePayWebView(
+                              checkoutId: checkoutData["checkoutId"],
+                                  amount: PaymentCubit.get(context).paymentAmountController.text,)
+                            );
+                          }
                         },
                         buttonText: "Apple Pay",
                         image: AssetsManager.appleIcon,
@@ -162,19 +194,25 @@ class PaymentScreen extends StatelessWidget {
                             .translate('payment')
                             .toString(),
                         onPressed: () async {
-                          if(PaymentCubit.get(context).paymentFormKey.currentState!.validate()){
-
-                            String merchantTransactionId = "ORDER-${DateTime.now().millisecondsSinceEpoch}";
-                            final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                                email: UserDataFromStorage.emailFromStorage,
-                                givenName: UserDataFromStorage.userNameFromStorage,
-                                surname: UserDataFromStorage.userNameFromStorage,
-                                street: "street",
-                                city: "city",
-                                state: "state",
-                                postcode: "12345",
-                                merchantTransactionId: merchantTransactionId
-                            );
+                          if (PaymentCubit.get(context)
+                              .paymentFormKey
+                              .currentState!
+                              .validate()) {
+                            String merchantTransactionId =
+                                "ORDER-${DateTime.now().millisecondsSinceEpoch}";
+                            final checkoutData = await PaymentCubit.get(context)
+                                .getCheckoutId(
+                                    email: UserDataFromStorage.emailFromStorage,
+                                    givenName:
+                                        UserDataFromStorage.userNameFromStorage,
+                                    surname:
+                                        UserDataFromStorage.userNameFromStorage,
+                                    street: "street",
+                                    city: "city",
+                                    state: "state",
+                                    postcode: "12345",
+                                    merchantTransactionId:
+                                        merchantTransactionId);
                             // await PaymentCubit.get(context).checkPaymentStatus(checkoutData["checkoutId"],context);
                             customPushNavigator(
                                 context,
@@ -185,12 +223,13 @@ class PaymentScreen extends StatelessWidget {
                                   occasionName: occasionEntity.occasionName,
                                   transactionId: merchantTransactionId,
                                   remainingPrice: double.parse(
-                                      occasionEntity.giftPrice.toString()) -
-                                      double.parse(
-                                          occasionEntity.moneyGiftAmount.toString()),
-                                  paymentAmount: double.parse(
-                                      occasionEntity.moneyGiftAmount.toString()),
-
+                                          occasionEntity.giftPrice.toString()) -
+                                      double.parse(occasionEntity
+                                          .moneyGiftAmount
+                                          .toString()),
+                                  paymentAmount: double.parse(occasionEntity
+                                      .moneyGiftAmount
+                                      .toString()),
                                 ));
                           }
                         },

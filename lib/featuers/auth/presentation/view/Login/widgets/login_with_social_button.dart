@@ -41,6 +41,9 @@ class LoginWithSocialButton extends StatelessWidget {
               ),
             ),
             Visibility(
+                visible:  Platform.isIOS? true : false,
+                child: SizedBox(width: MediaQuery.sizeOf(context).height*0.02,)),
+            Visibility(
               visible:  Platform.isAndroid? false : true,
               child: Expanded(
                 child: DefaultButtonWithImage(
