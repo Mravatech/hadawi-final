@@ -14,6 +14,8 @@ import 'package:hadawi_app/widgets/toast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../view/apply_payment.dart';
+
 class PaymentCubit extends Cubit<PaymentStates> {
 
   PaymentCubit() : super(PaymentInitialState());
@@ -205,35 +207,64 @@ class PaymentCubit extends Cubit<PaymentStates> {
     if(resultCode != "200.300.404"){
       paymentStatusList.add(data);
     }
-    // if(resultCode == "200.300.404" && ){
-    //   Navigator.pop(context);
-    // }
-    // else if (resultCode.startsWith('000.000.') ||
-    //     resultCode.startsWith('000.100.') ||
-    //     resultCode.startsWith('000.200.')) {
-    //   customToast(title: "Payment Successful", color: ColorManager.success);
-    //   if(UserDataFromStorage.userIsGuest){
-    //     context.replace(AppRouter.visitors);
-    //     emit(PaymentHyperPaySuccessState());
-    //   }else{
-    //     context.replace(AppRouter.home);
-    //     emit(PaymentHyperPaySuccessState());
-    //   }
-    //   debugPrint("✅ Payment Successful");
-    // }
-    // // Pending codes typically start with 000.200.
-    // else if (resultCode.startsWith('000.200.')) {
-    //   debugPrint("⏳ Payment Pending");
-    // }
-    // // Failure codes can vary
-    // else {
-    //   debugPrint("❌ Payment Failed");
-    // }
     emit(PaymentHyperPaySuccessState());
     debugPrint("Payment Status Response: ${data.toString()}");
 
     return data;
   }
+
+
+  Future<void> startApplePay({required BuildContext context}) async {
+    final amount = paymentAmountController.text.trim();
+
+    if (amount.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('من فضلك ادخل المبلغ')),
+      );
+      return;
+    }
+
+    emit(ApplyPaymentLoadingState());
+
+    final url = Uri.parse('https://eu-test.oppwa.com/v1/checkouts');
+    final headers = {
+      'Authorization':
+      'Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==',
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    final body = {
+      'entityId': '8a8294174d0595bb014d05d829cb01cd',
+      'amount': amount,
+      'currency': 'SAR',
+      'paymentType': 'DB',
+      'integrity': 'true',
+    };
+
+    try {
+      final response = await http.post(url, headers: headers, body: body);
+      final data = json.decode(response.body);
+      final checkoutId = data['id'];
+
+      emit(ApplyPaymentSuccessState());
+
+      if (checkoutId != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ApplePayWebView(checkoutId: checkoutId, amount: amount),
+          ),
+        );
+      } else {
+        throw Exception('فشل إنشاء checkoutId');
+      }
+    } catch (e) {
+      emit(ApplyPaymentErrorState());
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('حصل خطأ: $e')),
+      );
+    }
+  }
+
 
 
 }

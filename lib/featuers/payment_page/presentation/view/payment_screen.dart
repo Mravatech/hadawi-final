@@ -47,7 +47,7 @@ class PaymentScreen extends StatelessWidget {
       body: BlocBuilder<PaymentCubit, PaymentStates>(
         builder: (context, state) {
           return ModalProgressHUD(
-            inAsyncCall: state is PaymentHyperPayLoadingState || state is PaymentAddLoadingState ? true : false,
+            inAsyncCall: (state is PaymentHyperPayLoadingState) || ( state is PaymentAddLoadingState) || (state is ApplyPaymentLoadingState) ? true : false,
             progressIndicator: LoadingAnimationWidget(),
 
             child: SingleChildScrollView(
@@ -146,11 +146,16 @@ class PaymentScreen extends StatelessWidget {
 
                       SizedBox(height: SizeConfig.height * 0.08),
 
-                      // /// payment with apple
-                      // DefaultButtonWithImage(
-                      //   buttonText: "Apple Pay",
-                      //   image: AssetsManager.appleIcon,
-                      // ),
+                      /// payment with apple
+                      DefaultButtonWithImage(
+                        onTap: () async {
+                          await PaymentCubit.get(context).startApplePay(context: context);
+                        },
+                        buttonText: "Apple Pay",
+                        image: AssetsManager.appleIcon,
+                      ),
+
+                      SizedBox(height: SizeConfig.height * 0.01),
 
                       DefaultButton(
                         buttonText: AppLocalizations.of(context)!

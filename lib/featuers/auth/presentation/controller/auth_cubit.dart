@@ -359,14 +359,26 @@ class AuthCubit extends Cubit<AuthStates> {
       );
 
       final userCredential =
-          await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+      await FirebaseAuth.instance.signInWithCredential(oauthCredential);
+
+      // Handle null or empty name from Apple
+      String userName = "Apple User"; // Default name
+      if (credential.givenName != null && credential.familyName != null) {
+        userName = "${credential.givenName} ${credential.familyName}";
+      } else if (userCredential.user?.displayName != null &&
+          userCredential.user!.displayName!.isNotEmpty) {
+        userName = userCredential.user!.displayName!;
+      }
+
+      // Handle potentially null email
+      String userEmail = credential.email ?? userCredential.user?.email ?? "";
 
       UserModel userModel = UserModel(
-        email: userCredential.user!.email.toString(),
+        email: userEmail,
         date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
         phone: "",
-        name: "${credential.givenName} ${credential.familyName}",
-        uId: userCredential.user!.uid.toString(),
+        name: userName,
+        uId: userCredential.user!.uid,
         brithDate: "",
         gender: "",
         city: "",
@@ -375,26 +387,37 @@ class AuthCubit extends Cubit<AuthStates> {
       );
 
       try {
-        await FirebaseFirestore.instance
+        // Check if user document already exists
+        final userDoc = await FirebaseFirestore.instance
             .collection('users')
-            .doc(userCredential.user!.uid.toString())
-            .set(userModel.toMap());
-        UserDataFromStorage.setUid(userCredential.user!.uid.toString());
-        UserDataFromStorage.setUserName(
-            "${credential.givenName} ${credential.familyName}");
-        UserDataFromStorage.setEmail(credential.email.toString());
+            .doc(userCredential.user!.uid)
+            .get();
+
+        if (!userDoc.exists) {
+          // Create new user document if it doesn't exist
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userCredential.user!.uid)
+              .set(userModel.toMap());
+        }
+
+        // Save user data to local storage
+        UserDataFromStorage.setUid(userCredential.user!.uid);
+        UserDataFromStorage.setUserName(userName);
+        UserDataFromStorage.setEmail(userEmail);
         UserDataFromStorage.setPhoneNumber('');
         UserDataFromStorage.setGender('');
         UserDataFromStorage.setBrithDate('');
         UserDataFromStorage.setUserIsGuest(false);
+
         emit(SignInWithSocialMediaSuccessState());
-      } on FireStoreException catch (e) {
+      } on FirebaseException catch (e) {
         emit(SignInWithSocialMediaErrorState(message: e.toString()));
-        throw FireStoreException(firebaseException: e.firebaseException);
+        throw FireStoreException(firebaseException: e);
       }
     } catch (e) {
       emit(SignInWithSocialMediaErrorState(message: e.toString()));
-      debugPrint("خطأ في تسجيل الدخول: $e");
+      debugPrint("Error signing in with Apple: $e");
     }
   }
 
