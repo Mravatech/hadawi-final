@@ -247,7 +247,6 @@ class OccasionCubit extends Cubit<OccasionState> {
         city: dropdownCity,
         district: giftDeliveryStreetController.text,
         ibanNumber: ibanNumberController.text,
-        receivingDate: moneyReceiveDateController.text,
         giftCard: moneyGiftMessageController.text,
         isContainName: giftContainsNameValue,
         isPrivate: isPublicValue,

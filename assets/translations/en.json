@@ -311,5 +311,9 @@
   "validateImage": "Image is required",
   "validatePhone": "Phone number must be at least 9 numbers",
   "rememberMe": "Remember me",
-  "edit": "Edit"
+  "edit": "Edit",
+  "financialDetails": "Financial Details",
+  "deliveryDetails": "Delivery Details",
+  "pricing": "Pricing",
+  "giftDetails": "Gift Details"
 }

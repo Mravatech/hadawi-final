@@ -33,9 +33,29 @@ class OccasionQr extends StatefulWidget {
 class _OccasionQrState extends State<OccasionQr> {
   @override
   void initState() {
-    // TODO: implement initState
-    context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
     super.initState();
+    // Call createDynamicLink once when the widget initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  // Cache the image provider to prevent multiple loads
+  final ImageProvider _logoProvider = AssetImage(AssetsManager.logoWithoutBackground);
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Precache the image to prevent repeated loading
+    precacheImage(_logoProvider, context);
   }
 
   @override
@@ -68,8 +88,7 @@ class _OccasionQrState extends State<OccasionQr> {
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Image(
-                        image: AssetImage(AssetsManager.logoWithoutBackground)),
+                    child: Image(image: _logoProvider),
                   ),
                 ),
               ]),
@@ -94,21 +113,28 @@ class _OccasionQrState extends State<OccasionQr> {
                   ),
                   state is CreateOccasionLinkLoadingState
                       ? LoadingAnimationWidget()
-                      : RepaintBoundary(
-                          key: cubit.qrKey,
-                          child: QrImageView(
-                            data: cubit.occasionLink,
-                            version: QrVersions.auto,
-                            size: SizeConfig.height * 0.3,
-                            backgroundColor: Colors.white,
-                            embeddedImage:
-                                AssetImage(AssetsManager.logoWithoutBackground),
-                            // Your logo
-                            embeddedImageStyle: QrEmbeddedImageStyle(
-                              size: Size(100, 100), // Adjust size as needed
-                            ),
-                          ),
-                        ),
+                      : cubit.occasionLink.isNotEmpty
+                      ? RepaintBoundary(
+                    key: context.read<OccasionCubit>().qrKey,
+                    child: QrImageView(
+                      data: cubit.occasionLink,
+                      version: QrVersions.auto,
+                      size: SizeConfig.height * 0.3,
+                      backgroundColor: Colors.white,
+                      embeddedImage: _logoProvider,
+                      embeddedImageStyle: QrEmbeddedImageStyle(
+                        size: Size(100, 100),
+                      ),
+                    ),
+                  )
+                      : SizedBox(
+                    height: SizeConfig.height * 0.3,
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: ColorManager.primaryBlue,
+                      ),
+                    ),
+                  ),
 
                   SizedBox(height: mediaQuery.height * 0.05),
 
@@ -117,9 +143,11 @@ class _OccasionQrState extends State<OccasionQr> {
                     alignment: Alignment.center,
                     child: GestureDetector(
                       onTap: () async {
-                        await cubit.captureAndShareQr(
-                            occasionName: widget.occasionName,
-                            personName: UserDataFromStorage.userNameFromStorage);
+                        if (cubit.occasionLink.isNotEmpty) {
+                          await cubit.captureAndShareQr(
+                              occasionName: widget.occasionName,
+                              personName: UserDataFromStorage.userNameFromStorage);
+                        }
                       },
                       child: Container(
                         height: mediaQuery.height * .055,
@@ -127,7 +155,7 @@ class _OccasionQrState extends State<OccasionQr> {
                         decoration: BoxDecoration(
                           color: ColorManager.primaryBlue,
                           borderRadius:
-                              BorderRadius.circular(mediaQuery.height * 0.05),
+                          BorderRadius.circular(mediaQuery.height * 0.05),
                         ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),

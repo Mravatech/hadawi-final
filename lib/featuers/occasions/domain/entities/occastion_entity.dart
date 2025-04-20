@@ -19,7 +19,6 @@ class OccasionEntity {
   final String receiverPhone;
   final String bankName;
   final String ibanNumber;
-  final String receivingDate;
   final bool isContainName;
   final String giftCard;
   final String city;
@@ -53,7 +52,6 @@ class OccasionEntity {
     required this.receiverPhone,
     required this.bankName,
     required this.ibanNumber,
-    required this.receivingDate,
     required this.isContainName,
     required this.giftCard,
     required this.city,

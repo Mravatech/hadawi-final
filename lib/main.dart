@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.da
 import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/controller/bloc_observer.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
@@ -22,6 +23,7 @@ import 'package:hadawi_app/firebase_options.dart';
 import 'package:hadawi_app/styles/theme_manger/theme_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
@@ -88,6 +90,8 @@ void main() async {
   SharedPreferences.getInstance();
   CashHelper.init();
   DioHelper.dioInit();
+  Bloc.observer = MyBlocObserver();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -131,7 +135,7 @@ class _MyAppState extends State<MyApp> {
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        context.go('/login');
+        customPushReplacement(context, LoginScreen());
       },
     );
 
@@ -140,10 +144,10 @@ class _MyAppState extends State<MyApp> {
       if (initialLink != null) {
         _handleDeepLink(Uri.parse(initialLink.toString()));
       }else{
-        context.go('/login');
+        customPushReplacement(context, LoginScreen());
       }
     } catch (e) {
-      context.go('/login');
+      customPushReplacement(context, LoginScreen());
       debugPrint('Error getting initial deep link: $e');
     }
   }

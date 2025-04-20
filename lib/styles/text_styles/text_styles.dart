@@ -49,6 +49,28 @@ class TextStyles {
       fontWeight: FontWeight.w400
   );
 
+
+  static TextStyle textStyle16Bold= TextStyle(
+      fontSize: SizeConfig.height * 0.016,
+      color: ColorManager.black,
+      fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
+      fontWeight: FontWeight.bold
+  );
+
+  static TextStyle textStyle16Medium= TextStyle(
+      fontSize: SizeConfig.height * 0.016,
+      color: ColorManager.black,
+      fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
+      fontWeight: FontWeight.w600
+  );
+
+  static TextStyle textStyle16Regular= TextStyle(
+      fontSize: SizeConfig.height * 0.016,
+      color: ColorManager.black,
+      fontFamily: CashHelper.getData(key: CashHelper.languageKey).toString() =='en'? 'NanumGothic' : 'Cairo',
+      fontWeight: FontWeight.w400
+  );
+
   /// normal text style
   static TextStyle textStyle18Bold= TextStyle(
     fontSize: SizeConfig.height * 0.017,

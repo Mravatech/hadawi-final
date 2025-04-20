@@ -26,7 +26,6 @@ abstract class OccasionRepo {
       required String receiverPhone,
       required String bankName,
       required String ibanNumber,
-      required String receivingDate,
       required bool isContainName,
       required String giftCard,
       required String city,

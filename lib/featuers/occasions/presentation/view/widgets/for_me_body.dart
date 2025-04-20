@@ -14,7 +14,6 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../../utiles/cashe_helper/cashe_helper.dart';
 import 'money_screen.dart';
@@ -1145,47 +1144,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         fillColor: ColorManager.gray),
                     SizedBox(height: mediaQuery.height * 0.01),
 
-
-                    /// date of receive
-                    Text(
-                      AppLocalizations.of(context)!
-                          .translate('receivingTime')
-                          .toString(),
-                      style: TextStyles.textStyle18Bold
-                          .copyWith(color: ColorManager.black),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        showDatePicker(
-                          helpText: AppLocalizations.of(context)!
-                              .translate('receivingTime')
-                              .toString(),
-                          context: context,
-                          firstDate: DateTime(1920),
-                          lastDate: DateTime.now().add(const Duration(days: 365)),
-                        ).then(
-                                (value) => cubit.setMoneyReceiveDate(brithDateValue: value!));
-                      },
-                      child: DefaultTextField(
-                          controller: cubit.moneyReceiveDateController,
-                          hintText: cubit.moneyReceiveDateController.text.isEmpty
-                              ? AppLocalizations.of(context)!
-                              .translate('receivingTimeHint')
-                              .toString()
-                              : cubit.occasionDateController.text,
-                          validator: (value) {
-                            if (value!.trim().isNotEmpty) return null;
-                            return AppLocalizations.of(context)!
-                                .translate('validateReceivingTime')
-                                .toString();
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          enable: false,
-                          fillColor: ColorManager.gray),
-                    ),
-
-                    SizedBox(height: mediaQuery.height * 0.01),
                     Row(
                       mainAxisAlignment: CashHelper.languageKey == 'ar'
                           ? MainAxisAlignment.end

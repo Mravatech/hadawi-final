@@ -311,5 +311,9 @@
   "validateImage": "الصورة مطلوبة",
   "validatePhone": "رقم الهاتف يجب أن يكون 9 أرقام",
   "rememberMe": "تذكرني",
-  "edit": "تعديل"
+  "edit": "تعديل",
+  "financialDetails": "تفاصيل المالية",
+  "deliveryDetails": "تفاصيل التوصيل",
+  "pricing": "السعر",
+  "giftDetails": "تفاصيل الهدية"
 }

@@ -16,9 +16,10 @@ class PaymentWebScreen extends StatefulWidget {
   final String transactionId;
   final double paymentAmount;
   final double remainingPrice;
+  final String paymentMethod;
 
 
-  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount, required this.transactionId, required this.remainingPrice});
+  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount, required this.transactionId, required this.remainingPrice, required this.paymentMethod});
 
   @override
   _PaymentWebScreenState createState() => _PaymentWebScreenState();
@@ -265,7 +266,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
     </script>
 
     <!-- Payment Form with MADA first -->
-    <form class="paymentWidgets" data-brands="MADA VISA MASTER"></form>
+    <form class="paymentWidgets" data-brands=${widget.paymentMethod}></form>
     
     <!-- Secure payment badge -->
     <div class="secure-badge">
