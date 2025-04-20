@@ -36,6 +36,7 @@ import 'featuers/visitors/presentation/view/widgets/occasion_details.dart';
 
 final GoRouter _router = GoRouter(
   initialLocation: '/',
+  errorBuilder: (context, state) => const LoginScreen(),
   routes: [
     GoRoute(
       path: '/',
@@ -130,7 +131,7 @@ class _MyAppState extends State<MyApp> {
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        context.go('/');
+        context.go('/login');
       },
     );
 
@@ -139,10 +140,10 @@ class _MyAppState extends State<MyApp> {
       if (initialLink != null) {
         _handleDeepLink(Uri.parse(initialLink.toString()));
       }else{
-        context.go('/');
+        context.go('/login');
       }
     } catch (e) {
-      context.go('/');
+      context.go('/login');
       debugPrint('Error getting initial deep link: $e');
     }
   }
