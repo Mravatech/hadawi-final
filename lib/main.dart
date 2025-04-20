@@ -41,6 +41,11 @@ final GoRouter _router = GoRouter(
       path: '/',
       builder: (context, state) => SplashScreen(),
     ),
+    // Add route for handling the problematic deep link format
+    GoRoute(
+      path: '/google/link',
+      redirect: (context, state) => '/home',
+    ),
     GoRoute(
       path: '/occasion-details/:id',
       builder: (context, state) {
@@ -79,6 +84,22 @@ final GoRouter _router = GoRouter(
     ),
     GoRoute(path: '/sign-up', builder: (context, state) => const RegisterScreen()),
   ],
+  // Add error handler for routes not found
+  errorBuilder: (context, state) => Scaffold(
+    body: Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Route not found: ${state.uri}'),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => context.go('/home'),
+            child: const Text('Go Home'),
+          ),
+        ],
+      ),
+    ),
+  ),
 );
 
 void main() async {
@@ -130,7 +151,10 @@ class _MyAppState extends State<MyApp> {
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        context.go('/');
+        // Navigate to a safe route when there's an error
+        if (mounted) {
+          context.go('/home');
+        }
       },
     );
 
@@ -138,23 +162,47 @@ class _MyAppState extends State<MyApp> {
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
         _handleDeepLink(Uri.parse(initialLink.toString()));
-      }else{
-        context.go('/');
+      } else {
+        // Always provide a fallback route
+        if (mounted) {
+          context.go('/');
+        }
       }
     } catch (e) {
-      context.go('/');
       debugPrint('Error getting initial deep link: $e');
+      // Navigate to a safe route when there's an exception
+      if (mounted) {
+        context.go('/');
+      }
     }
   }
 
   void _handleDeepLink(Uri uri) {
     debugPrint('Received deep link: ${uri.toString()}');
 
+    if (!mounted) return;
+
+    // Handle Firebase Dynamic Links or custom scheme URLs
+    if (uri.toString().contains('com.app.hadawiapp://google/link')) {
+      // Extract parameters if needed
+      // For now, just redirect to home
+      context.go('/home');
+      return;
+    }
+
+    // Handle standard path-based routing
     if (uri.pathSegments.isNotEmpty) {
-      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
+      // Fix the casing issue - ensure we check for lowercase path segments
+      if (uri.pathSegments.first.toLowerCase() == 'occasion-details' && uri.pathSegments.length > 1) {
         final occasionId = uri.pathSegments[1];
-        context.go('/Occasion-details/$occasionId');
+        context.go('/occasion-details/$occasionId');
+      } else {
+        // Fallback for unknown paths
+        context.go('/home');
       }
+    } else {
+      // No path segments, go to default route
+      context.go('/');
     }
   }
 

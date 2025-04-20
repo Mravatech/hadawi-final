@@ -1,162 +1,133 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:webview_flutter/webview_flutter.dart';
+import '../../service/hyper_pay_service.dart';
+import 'hyper_pay_web_view.dart';
 
-class ApplePayWebView extends StatefulWidget {
-  final String checkoutId;
+class ApplePaymentView extends StatefulWidget {
   final String amount;
 
-  const ApplePayWebView({super.key, required this.checkoutId, required this.amount});
+  const ApplePaymentView({
+    Key? key,
+    required this.amount,
+  }) : super(key: key);
 
   @override
-  State<ApplePayWebView> createState() => _ApplePayWebViewState();
+  State<ApplePaymentView> createState() => _ApplePaymentViewState();
 }
 
-class _ApplePayWebViewState extends State<ApplePayWebView> {
-  late final WebViewController _controller;
-  bool _isLoading = true;
+class _ApplePaymentViewState extends State<ApplePaymentView> {
+  final HyperPayService _hyperPayService = HyperPayService();
+  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
+  Future<void> _initiatePayment() async {
+    setState(() {
+      _isLoading = true;
+    });
 
-    final String htmlContent = '''
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
-      <script>
-        var wpwlOptions = {
-          applePay: {
-            displayName: "Test App",
-            countryCode: "SA",
-            currencyCode: "SAR",
-            totalAmount: "${widget.amount}"
-          },
-          style: "card"
-        };
-      </script>
-      <style>
-        body {
-          margin: 0;
-          padding: 20px;
-          font-family: Arial, sans-serif;
-        }
-        .loader {
-          text-align: center;
-          padding: 20px;
-        }
-      </style>
-    </head>
-    <body>
-      <form action="payment-result" class="paymentWidgets" data-brands="APPLEPAY"></form>
-    </body>
-    </html>
-    ''';
+    try {
+      // Generate a nonce for CSP
+      final String nonce = _hyperPayService.generateNonce();
 
-    _controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadHtmlString(htmlContent)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageFinished: (url) {
-            setState(() {
-              _isLoading = false;
-            });
-          },
-          onNavigationRequest: (request) {
-            final uri = Uri.parse(request.url);
+      // Create checkout session
+      final checkoutResult = await _hyperPayService.createCheckout(
+        amount: widget.amount, // 'DB' for debit
+      );
 
-            // Handle the payment result and prevent actual navigation
-            if (uri.path.contains("payment-result") && uri.queryParameters.containsKey('resourcePath')) {
-              _handlePaymentResult(uri.queryParameters['resourcePath']!);
-              return NavigationDecision.prevent;
-            }
+      final String checkoutId = checkoutResult['id'];
 
-            // Allow other navigation within the payment process
-            return NavigationDecision.navigate;
-          },
+      // Get the integrity value for this checkout
+      final String? integrityValue = await _hyperPayService.getIntegrityValue(checkoutId);
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (!mounted) return;
+
+      // Navigate to payment webview
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HyperPayWebViewScreen(
+            checkoutId: checkoutId,
+            integrityValue: integrityValue,
+            nonce: nonce,
+            onPaymentCompleted: (result) {
+              _handlePaymentResult(result);
+            },
+          ),
         ),
       );
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment initialization failed: ${e.toString()}')),
+      );
+    }
   }
 
-  Future<void> _handlePaymentResult(String resourcePath) async {
-    try {
-      // Access payment status via API
-      final url = 'https://eu-test.oppwa.com$resourcePath?entityId=8a8294174d0595bb014d05d829cb01cd';
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==',
-        },
-      );
+  void _handlePaymentResult(Map<String, dynamic> result) {
+    if (!mounted) return;
 
-      final data = json.decode(response.body);
-      final resultCode = data['result']['code'];
-      final resultMessage = data['result']['description'];
-      final isSuccess = resultCode.startsWith("000");
+    Navigator.of(context).pop(); // Close the payment screen
 
-      if (context.mounted) {
-        // Show payment result dialog
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (_) => AlertDialog(
-            title: Text(isSuccess ? "✅ الدفع ناجح" : "❌ الدفع فشل"),
-            content: Text(resultMessage ?? "لا يوجد رسالة"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context); // Close dialog
-                  if (isSuccess) {
-                    Navigator.pop(context, {'success': true, 'data': data}); // Return to previous screen with result
-                  }
-                },
-                child: const Text("تم"),
-              )
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: const Text("❌ خطأ في المعالجة"),
-            content: Text("حدث خطأ أثناء معالجة الدفع: $e"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("تم"),
-              )
-            ],
-          ),
-        );
-      }
+    if (result['status'] == 'success') {
+      _showResultDialog('Payment Successful', 'Your payment was processed successfully.');
+    } else if (result['status'] == 'failure') {
+      _showResultDialog('Payment Failed', 'There was an issue processing your payment. Please try again.');
+    } else {
+      _showResultDialog('Payment Cancelled', 'The payment process was cancelled.');
     }
+  }
+
+  Future<void> _showResultDialog(String title, String message) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Apple Pay'),
-        leading: IconButton(
-          icon: const Icon(Icons.close),
-          onPressed: () => Navigator.pop(context),
-        ),
+        title: const Text('Checkout'),
       ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
+      body: Center(
+        child: _isLoading
+            ? const CircularProgressIndicator()
+            : Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Total: ${widget.amount} SAR',
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-        ],
+            const SizedBox(height: 30),
+            ElevatedButton(
+              onPressed: _initiatePayment,
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+              ),
+              child: const Text('Pay Now'),
+            ),
+          ],
+        ),
       ),
     );
   }
