@@ -251,7 +251,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ApplePaymentView(amount: amount),
+            builder: (_) => ApplePayWebView(checkoutId: checkoutId, amount: amount),
           ),
         );
       } else {

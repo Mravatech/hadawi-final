@@ -177,7 +177,9 @@ class PaymentScreen extends StatelessWidget {
 
                             customPushNavigator(
                               context,
-                              ApplePaymentView(amount: PaymentCubit.get(context).paymentAmountController.text,)
+                              ApplePayWebView(
+                              checkoutId: checkoutData["checkoutId"],
+                                  amount: PaymentCubit.get(context).paymentAmountController.text,)
                             );
                           }
                         },
