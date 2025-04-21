@@ -315,5 +315,10 @@
   "financialDetails": "تفاصيل المالية",
   "deliveryDetails": "تفاصيل التوصيل",
   "pricing": "السعر",
-  "giftDetails": "تفاصيل الهدية"
+  "giftDetails": "تفاصيل الهدية",
+  "downloadQr": "تحميل الكود QR",
+  "qr_saved_success": "تم حفظ الكود QR بنجاح.",
+  "qr_saved_error": "حدث خطأ في حفظ الكود QR.",
+  "storage_permission_required": "إذن التخزين مطلوب",
+  "storage_permission_settings": "لحفظ رموز QR، يحتاج هذا التطبيق إلى إذن التخزين. يرجى الانتقال إلى إعدادات التطبيق وتمكين إذن التخزين."
 }

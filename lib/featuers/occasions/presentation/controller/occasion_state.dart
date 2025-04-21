@@ -31,8 +31,13 @@ final class SetMoneyReceiveDateState extends OccasionState {}
 final class SwitchGiftContainsNameSuccess extends OccasionState {}
 final class ResetDataSuccessState extends OccasionState {}
 final class GetTotalGiftPriceSuccessState extends OccasionState {}
+final class CaptureAndShareQrLoadingState extends OccasionState {}
 final class CaptureAndShareQrSuccessState extends OccasionState {}
 final class CaptureAndShareQrErrorState extends OccasionState {}
+
+class SaveQrLoadingState extends OccasionState {}
+class SaveQrSuccessState extends OccasionState {}
+class SaveQrErrorState extends OccasionState {}
 
 final class GetOccasionTaxesLoadingState extends OccasionState {}
 final class GetOccasionTaxesSuccessState extends OccasionState {}

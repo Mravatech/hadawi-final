@@ -315,5 +315,10 @@
   "financialDetails": "Financial Details",
   "deliveryDetails": "Delivery Details",
   "pricing": "Pricing",
-  "giftDetails": "Gift Details"
+  "giftDetails": "Gift Details",
+  "downloadQr": "Download QR",
+  "qr_saved_success": "QR code saved successfully to your device's gallery.",
+  "qr_saved_error": "Failed to save QR code to your device's gallery.",
+  "storage_permission_required": "Storage Permission Required",
+  "storage_permission_settings": "To save QR codes, this app needs storage permission. Please go to app settings and enable storage permission."
 }

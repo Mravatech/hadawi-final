@@ -30,21 +30,22 @@ class OccasionQr extends StatefulWidget {
   State<OccasionQr> createState() => _OccasionQrState();
 }
 
-class _OccasionQrState extends State<OccasionQr> {
+class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
   @override
   void initState() {
-    super.initState();
-    // Call createDynamicLink once when the widget initializes
+    WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
       }
     });
+    super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 

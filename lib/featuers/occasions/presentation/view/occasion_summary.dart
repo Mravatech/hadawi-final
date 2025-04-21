@@ -75,7 +75,7 @@ class OccasionSummary extends StatelessWidget {
             ],
           ),
           body: ModalProgressHUD(
-            inAsyncCall: state is AddOccasionLoadingState || state is GetTotalGiftPriceSuccessState,
+            inAsyncCall: state is AddOccasionLoadingState,
             progressIndicator: LoadingAnimationWidget(),
             child: Stack(
               children: [
@@ -359,7 +359,7 @@ class OccasionSummary extends StatelessWidget {
                             _buildInfoRow(
                               context,
                               label: AppLocalizations.of(context)!.translate('totalAmount').toString(),
-                              value: "${context.read<OccasionCubit>().getTotalGiftPrice()} ${AppLocalizations.of(context)!.translate('rsa')}",
+                              value: "${context.read<OccasionCubit>().giftPrice} ${AppLocalizations.of(context)!.translate('rsa')}",
                               valueColor: ColorManager.primaryBlue,
                               isTotal: true,
                             ),

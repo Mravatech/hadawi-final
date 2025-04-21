@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +18,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
 part 'occasion_state.dart';
@@ -276,10 +279,15 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
 
-  Future<void> captureAndShareQr({required String occasionName , required String personName}) async {
+  Future<void> captureAndShareQr({
+    required String occasionName,
+    required String personName,
+  }) async {
     try {
-      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      // Start by emitting a loading state (if needed)
+      emit(CaptureAndShareQrLoadingState());
 
+      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
@@ -288,11 +296,24 @@ class OccasionCubit extends Cubit<OccasionState> {
       final file = await File('${tempDir.path}/occasion_qr.png').create();
       await file.writeAsBytes(pngBytes);
 
-      await Share.shareXFiles(
+      final shareResult = await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية  ',
+        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
-      emit(CaptureAndShareQrSuccessState());
+
+      // Check if sharing completed or was canceled
+      if (shareResult.status == ShareResultStatus.success ||
+          shareResult.status == ShareResultStatus.dismissed) {
+        emit(CaptureAndShareQrSuccessState());
+      } else {
+        emit(CaptureAndShareQrErrorState());
+      }
+
+      // Cleanup temporary file
+      if (await file.exists()) {
+        await file.delete();
+      }
+
     } catch (e) {
       print('Error sharing QR code: $e');
       emit(CaptureAndShareQrErrorState());

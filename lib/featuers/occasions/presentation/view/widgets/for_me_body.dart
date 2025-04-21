@@ -31,8 +31,20 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
-    context.read<OccasionCubit>().getOccasionTaxes();
+    WidgetsBinding.instance.addPostFrameCallback((_)async{
+      if(mounted){
+        context.read<OccasionCubit>().getOccasionTaxes();
+      }
+    });
     super.initState();
+  }
+
+
+@override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
 
@@ -1222,6 +1234,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                     if (forMeFormKey.currentState!.validate() ){
                       if(cubit.dropdownOccasionType.isNotEmpty){
                         if((cubit.image != null && cubit.isPresent)  || !cubit.isPresent){
+                          context.read<OccasionCubit>().getTotalGiftPrice();
                           customPushNavigator(context, OccasionSummary());
                         }else{
                           customToast(title: AppLocalizations.of(context)!.translate('validateImage').toString(), color: Colors.red);
