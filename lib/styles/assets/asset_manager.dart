@@ -16,5 +16,8 @@ class AssetsManager{
   static const String supportAccount = "assets/images/support.png";
   static const String privacyPolices = "assets/images/privacy.png";
   static const String logoutAccount = "assets/images/logout.png";
+  static const String moneyAccount = "assets/images/money_1.png";
+  static const String requestAccount = "assets/images/quote-request.png";
+  static const String giftAccount = "assets/images/giftbox.png";
 
 }

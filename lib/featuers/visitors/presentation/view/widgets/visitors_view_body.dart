@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +8,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/active_occasion_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_bar_widget.dart';
@@ -40,184 +43,14 @@ class VisitorsViewBody extends StatefulWidget {
 }
 
 class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBindingObserver{
-  TutorialCoachMark? tutorialCoachMark;
-  List<TargetFocus> targets = [];
-  final activeOrdersKey = GlobalKey();
-  final completeOrdersKey = GlobalKey();
-  final searchKey = GlobalKey();
-  final languageKey = GlobalKey();
-  final logoutKey = GlobalKey();
-
-
-  void initTargetsUserGuest() {
-    targets = [
-      TargetFocus(identify: "languageKey-Key", keyTarget: languageKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('languageKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "logoutKey-Key", keyTarget: logoutKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('logoutKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "activeOrdersKey-Key", keyTarget: activeOrdersKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('activeOrdersKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "completeOrdersKey-Key", keyTarget: completeOrdersKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('completeOrdersKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "searchKey-Key", keyTarget: searchKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('searchKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-    ];
-  }
-
-  void initTargets() {
-    targets = [
-      TargetFocus(identify: "activeOrdersKey-Key", keyTarget: activeOrdersKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('activeOrdersKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "completeOrdersKey-Key", keyTarget: completeOrdersKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('completeOrdersKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-      TargetFocus(identify: "searchKey-Key", keyTarget: searchKey, shape: ShapeLightFocus.RRect,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller) {
-                  return TutorialCoachWidget(
-                      text: AppLocalizations.of(context)!.translate('searchKey').toString(),
-                      onNext: () {
-                        controller.next();
-                      },
-                      onSkip: () {
-                        controller.skip();
-                        UserDataFromStorage.userGuideFromStorage = true;
-                      });
-                }),
-          ]),
-    ];
-  }
-
-  void showTutorialCoachMark() {
-    UserDataFromStorage.userIsGuest == true ? initTargetsUserGuest() : initTargets();
-    tutorialCoachMark = TutorialCoachMark(
-      targets: targets,
-      pulseEnable: true,
-      colorShadow: const Color(0xFF055062),
-      showSkipInLastTarget: false,
-      onFinish: () {
-        UserDataFromStorage.userGuideFromStorage = true;
-      },
-      onClickTarget: (target) {
-        print("onClickTarget: " + target.identify.toString());
-      },
-      hideSkip: true,
-    )..show(context: context);
-  }
 
 
   @override
   void initState() {
-    // TODO: implement initState
-    WidgetsBinding.instance.addObserver(this);
-    context.read<VisitorsCubit>().getBannerData();
-    if(!UserDataFromStorage.userGuideFromStorage){
-      Future.delayed(const Duration(seconds: 1), () {
-        showTutorialCoachMark();
-      });
-    }
     super.initState();
-
+    context.read<VisitorsCubit>().getBannerData();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<VisitorsCubit, VisitorsState>(
@@ -225,14 +58,12 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
         final mediaQuery = MediaQuery.sizeOf(context);
         final cubit = context.read<VisitorsCubit>();
         return ModalProgressHUD(
-          inAsyncCall: state is GetOccasionsLoadingState? true : false,
-          progressIndicator: VisitorsHomeShimmer(),
+          inAsyncCall: state is GetOccasionsLoadingState,
+          progressIndicator: CupertinoActivityIndicator(),
           child: Stack(
             children: [
               Column(
                 children: [
-
-                  /// app bar and tab bar to switch between active and completed orders
                   Container(
                     height: mediaQuery.height * 0.2,
                     width: double.infinity,
@@ -302,7 +133,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                                 context.read<LocalizationCubit>().changeLanguage(code: 'en');
                                               },
                                               child: Container(
-                                                key: languageKey,
                                                   padding:EdgeInsets.symmetric(
                                                     horizontal: MediaQuery.sizeOf(context).width*0.04,
                                                     vertical: MediaQuery.sizeOf(context).width*0.01,
@@ -325,7 +155,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                           } ,
                                         ),
                                         IconButton(
-                                          key: logoutKey,
                                           onPressed: (){
                                             context.go(AppRouter.login);
                                           },
@@ -345,56 +174,44 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               width: SizeConfig.width,
                               decoration: BoxDecoration(
                                 color: ColorManager.gray,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20)),
-                              ),
-
-
-
-                              /// tab bar to switch between active and completed orders
-
+                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () async {
                                       if(UserDataFromStorage.userIsGuest==false){
-                                          await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-                                          if(UserDataFromStorage.uIdFromStorage=='') {
-                                              toastificationWidget(context: context,
-                                                  title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                                  body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
-                                                  type: ToastificationType.error);
-                                              context.go(AppRouter.login);
+                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
+                                        if(UserDataFromStorage.uIdFromStorage=='') {
+                                          toastificationWidget(context: context,
+                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                              type: ToastificationType.error);
+                                          context.go(AppRouter.login);
 
+                                        }else{
+                                          if(UserDataFromStorage.isUserBlocked==true){
+                                            AuthCubit.get(context).logout();
+                                            context.go(AppRouter.login);
+                                            toastificationWidget(context: context,
+                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                                type: ToastificationType.error);
                                           }else{
-                                            if(UserDataFromStorage.isUserBlocked==true){
-                                              AuthCubit.get(context).logout();
-                                              context.go(AppRouter.login);
-                                              toastificationWidget(context: context,
-                                                  title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                                  body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
-                                                  type: ToastificationType.error);
-                                            }else{
-                                              cubit.changeActiveOrders(true);
-                                            }
+                                            cubit.changeActiveOrders(true);
                                           }
-
+                                        }
                                       }else{
                                         cubit.changeActiveOrders(true);
                                       }
-
-
                                     },
                                     child: Container(
-                                      key: activeOrdersKey,
                                       height: SizeConfig.height * 0.06,
                                       width: SizeConfig.width*0.5,
                                       decoration: BoxDecoration(
                                         color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
                                         borderRadius: CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?BorderRadius.only(
-                                      topLeft: Radius.circular(20),
+                                          topLeft: Radius.circular(20),
                                         ):BorderRadius.only( topRight: Radius.circular(20)),
                                       ),
                                       child: Center(
@@ -432,9 +249,8 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                         cubit.changeActiveOrders(false);
                                       }
 
-                                      },
+                                    },
                                     child: Container(
-                                      key: completeOrdersKey,
                                       height: SizeConfig.height * 0.06,
                                       width: SizeConfig.width*0.5,
                                       decoration: BoxDecoration(
@@ -475,22 +291,34 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                 items: cubit.banners.map((image) {
                                   return Builder(
                                     builder: (BuildContext context) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                                        child: Container(
-                                          width: MediaQuery.of(context).size.width*0.9,
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[300],
-                                            borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
-                                          ),
-                                          child: ClipRRect(
-                                            borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
-                                            child: Image.network(
-                                              image.image,
-                                              fit: BoxFit.fill,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return const Icon(Icons.error, size: 50);
-                                              },
+                                      return GestureDetector(
+                                        onTap: ()async{
+                                          cubit.lanuchToUrl(image.url);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width*0.9,
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[300],
+                                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                            ),
+                                            child: ClipRRect(
+                                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                              child: CachedNetworkImage(
+                                                imageUrl: image.image,
+                                                fit: BoxFit.fill,
+                                                placeholder: (context, url) => const Center(
+                                                  child: CupertinoActivityIndicator(),
+                                                ),
+                                                errorWidget: (context, url, error) => Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                                  ),
+                                                  child: const Icon(Icons.error),
+                                                ),
+                                              )
                                             ),
                                           ),
                                         ),
@@ -512,7 +340,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                             Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: SearchBarWidget(
-                                key: searchKey,
                                 onChanged: (value)async {
                                   if(UserDataFromStorage.userIsGuest==false){
                                     await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
@@ -548,11 +375,11 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(15),
                               gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                      mainAxisSpacing: 15,
-                                      crossAxisSpacing: 15,
-                                      crossAxisCount: 2,
-                                      childAspectRatio: 1 / 1.1),
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                  mainAxisSpacing: 15,
+                                  crossAxisSpacing: 15,
+                                  crossAxisCount: 2,
+                                  childAspectRatio: 1 / 1.1),
                               itemBuilder: (context, index) {
                                 return InkWell(
                                     onTap: () async {
@@ -594,12 +421,9 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                             ),
                                           ),
                                         );
-
                                       }
-
-
                                     },
-                                    child: OccasionCard(
+                                    child: ActiveOccasionCard(
                                       occasionEntity: cubit.activeOccasions[index],
                                     ));
                               },
@@ -617,15 +441,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               itemBuilder: (context, index) {
                                 return InkWell(
                                     onTap: () {
-                                      customPushNavigator(
-                                        context,
-                                        BlocProvider(
-                                          create: (context) => VisitorsCubit(getIt()),
-                                          child: OccasionDetails(
-                                            occasionId: cubit.doneOccasions[index].occasionId,
-                                          ),
-                                        ),
-                                      );
                                     },
                                     child: OccasionCard(
                                       occasionEntity: cubit.doneOccasions[index],
@@ -640,14 +455,15 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                   )
                 ],
               ),
-             cubit.searchOccasionsList.isEmpty || cubit.searchController.text.trim().isEmpty? SizedBox(): Positioned(
-              top: mediaQuery.height * 0.22,
-              left:  mediaQuery.width * 0.05,
-              right:  mediaQuery.width * 0.05,
-              child: SearchResultContainer(key: searchKey,),
-             )
+                cubit.searchOccasionsList.isEmpty || cubit.searchController.text.trim().isEmpty? SizedBox(): Positioned(
+                  top: mediaQuery.height * 0.22,
+                  left:  mediaQuery.width * 0.05,
+                  right:  mediaQuery.width * 0.05,
+                  child: SearchResultContainer(),
+                )
             ],
           ),
+
         );
       },
     );

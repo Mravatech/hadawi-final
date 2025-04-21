@@ -5,10 +5,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/complete_occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
+import 'package:hadawi_app/featuers/payment_page/date/models/payment_model.dart';
 import 'package:hadawi_app/featuers/visitors/data/models/banner_model.dart';
 import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
@@ -21,7 +24,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
 
   List<OccasionEntity> activeOccasions = [];
-  List<OccasionEntity> doneOccasions = [];
+  List<CompleteOccasionModel> doneOccasions = [];
 
   TextEditingController editOccasionNameController = TextEditingController();
   TextEditingController editGiftNameController = TextEditingController();
@@ -58,7 +61,11 @@ class VisitorsCubit extends Cubit<VisitorsState> {
           if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
             activeOccasions.add(element);
           } else {
-            doneOccasions.add(element);
+            print('this occasion is done ${element.occasionId}');
+            var res = await FirebaseFirestore.instance.collection('Occasions').doc(element.occasionId).collection('receivedOccasions').get();
+            if(res.docs.isNotEmpty){
+              doneOccasions.add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+            }
           }
         }
       }
@@ -69,7 +76,6 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       print('All close $closeCount open $openCount ');
 
       activeOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
-      doneOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate).compareTo(convertStringToDateTime(a.occasionDate)));
       emit(GetOccasionsSuccessState(activeOccasions: activeOccasions, doneOccasions: doneOccasions));
     });
   }
@@ -225,6 +231,37 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       }
     }
   }
+
+
+    Future<void> lanuchToUrl(String url) async {
+      final Uri uri = Uri.parse(url);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    }
+
+  List<PaymentModel> myPaymentsList = [];
+  Future<void> getMyPayments() async {
+    emit(GetMyPaymentLoadingState());
+    try {
+      var res = await FirebaseFirestore.instance
+          .collection('payments')
+          .get();
+
+      res.docs.forEach((element) {
+        if(element.data()['personId']==UserDataFromStorage.uIdFromStorage){
+          myPaymentsList.add(PaymentModel.fromMap(element.data()));
+        }
+      });
+
+      emit(GetMyPaymentSuccessState());
+
+    } catch (e) {
+      debugPrint("error when edit occasion: ${e.toString()}");
+      if (kDebugMode) {
+        print(e.toString());
+      }
+    }
+  }
+
 
 
 }

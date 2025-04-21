@@ -90,6 +90,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FlutterError.onError = (FlutterErrorDetails details) {
+    if (details.exception.toString().contains('HttpException') &&
+        details.exception.toString().contains('Invalid statusCode: 404')) {
+      return;
+    }
+    FlutterError.presentError(details);
+  };
   NotificationService().initRemoteNotification();
   // NotificationService().getAccessToken();
 
@@ -161,7 +168,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => AuthCubit(
             getIt(), getIt(), getIt(), getIt(),
             getIt(), getIt(), getIt(),
-            getIt(), getIt(), getIt())),
+            getIt(), getIt(), getIt())..getAllCity()),
         BlocProvider(create: (context) => PaymentCubit()),
         BlocProvider(create: (context) => HomeCubit()..getUserNotifications()..getPrivacyPolices()),
         BlocProvider(create: (context) => OccasionCubit()),

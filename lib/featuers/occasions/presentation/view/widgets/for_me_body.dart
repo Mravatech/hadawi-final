@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/gift_screen.dart';
@@ -1089,7 +1090,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               context.read<OccasionCubit>().dropdownCity = newValue!;
                             });
                           },
-                          items: context.read<OccasionCubit>().saudiCities.map<DropdownMenuItem<String>>((dynamic value) {
+                          items: context.read<AuthCubit>().allCity.map<DropdownMenuItem<String>>((dynamic value) {
                             return DropdownMenuItem<String>(
                               value: value,
                               child: Text(value, style: TextStyle(color: ColorManager.black),),

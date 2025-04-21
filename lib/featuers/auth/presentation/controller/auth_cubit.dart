@@ -23,6 +23,7 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:intl/intl.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AuthCubit extends Cubit<AuthStates> {
   AuthCubit(
@@ -154,6 +155,7 @@ class AuthCubit extends Cubit<AuthStates> {
       required String name,
       required String brithDate,
       required String gender,
+      required String password,
       required String city}) async {
     emit(UserSaveDataLoadingState());
     final result = await saveDataUseCases.saveUserData(
@@ -162,6 +164,7 @@ class AuthCubit extends Cubit<AuthStates> {
         phone: phone,
         name: name,
         brithDate: brithDate,
+        password: password,
         gender: gender,
         city: city);
     result.fold((l) {
@@ -370,6 +373,8 @@ class AuthCubit extends Cubit<AuthStates> {
         brithDate: "",
         gender: "",
         city: "",
+        password: '',
+        private: false,
         block: false,
         token: '',
       );
@@ -415,4 +420,32 @@ class AuthCubit extends Cubit<AuthStates> {
     }
     emit(RememberMeSuccessState());
   }
+
+  List<String> allCity = [];
+
+  Future<void> getAllCity()async{
+
+    emit(GetAllCityLoadingState());
+    try{
+      var response = await FirebaseFirestore.instance.collection('city').get();
+      response.docs.forEach((element) {
+        allCity.add(element.data()['name']);
+      });
+
+      emit(GetAllCitySuccessState());
+    }catch(e){
+      debugPrint('error in get all city $e');
+      emit(GetAllCityErrorState());
+    }
+
+  }
+
+  Future<void> launchWhatsApp({required String phoneNumber, required String message})
+  async {
+    final Uri whatsappUri = Uri.parse(
+        "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
+
+      await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+  }
+
 }

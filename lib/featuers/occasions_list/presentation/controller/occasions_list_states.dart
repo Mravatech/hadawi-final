@@ -21,3 +21,5 @@ class GetClosedOccasionListLoadingState extends OccasionsListStates {}
 class GetClosedOccasionListSuccessState extends OccasionsListStates {}
 class GetClosedOccasionListErrorState extends OccasionsListStates {}
 
+class ChangePrivateAccountState extends OccasionsListStates {}
+

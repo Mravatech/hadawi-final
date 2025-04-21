@@ -34,12 +34,12 @@ class FriendsDataSourceImplement implements FriendsDataSource {
 
     try{
       await FirebaseFirestore.instance.collection('users')
-          .doc(followerId).collection('following').doc(userId)
+          .doc(followerId).collection('followers').doc(userId)
           .update({'follow': true,}).then((value) {
       });
 
       await FirebaseFirestore.instance.collection('users')
-          .doc(userId).collection('followers').doc(followerId)
+          .doc(userId).collection('following').doc(followerId)
           .update({'follow': true,}).then((value) {
       });
 

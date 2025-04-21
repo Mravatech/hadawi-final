@@ -71,6 +71,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
     required String uId,
     required String brithDate,
     required String gender,
+    required String password,
     required String city
   })async {
     try{
@@ -81,6 +82,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           uId: uId,
           brithDate: brithDate,
           gender: gender,
+          password: password,
           city: city
           ));
     }on FireStoreException catch(e){
@@ -164,6 +166,7 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           verificationId: verificationId,
           verifyOtpPinPut: verifyOtpPinPut,
           gender: gender,
+          password: '',
           city: city
     ));
     }on FirebaseExceptions catch(e){

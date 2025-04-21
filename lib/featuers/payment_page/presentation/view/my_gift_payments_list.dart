@@ -7,11 +7,13 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:intl/intl.dart';
 
 class MyGiftPaymentsList extends StatefulWidget {
   final String occasionId;
-  const MyGiftPaymentsList({super.key, required this.occasionId});
+  final String occasionName;
+  const MyGiftPaymentsList({super.key, required this.occasionId, required this.occasionName});
 
   @override
   State<MyGiftPaymentsList> createState() => _MyGiftPaymentsListState();
@@ -57,7 +59,23 @@ class _MyGiftPaymentsListState extends State<MyGiftPaymentsList> {
             child: Padding(
               padding: EdgeInsets.all(SizeConfig.height * 0.01),
               child: Column(
+                crossAxisAlignment:  CrossAxisAlignment.end,
                 children: [
+                  Container(
+                    width: SizeConfig.height * 0.2,
+                    height:  SizeConfig.height * 0.05,
+                    child: DefaultButton(
+                        buttonText: AppLocalizations.of(context)!
+                            .translate("shareNames")
+                            .toString(),
+                        onPressed: (){
+                          PaymentCubit.get(context).shareNames(
+                              occasionName: widget.occasionName ,
+                              names: PaymentCubit.get(context).occasionPaymentsList.map((e) => e.personName).toList());
+                        },
+                        buttonColor: ColorManager.primaryBlue
+                    ),
+                  ),
                   SizedBox(
                     height: SizeConfig.height * 0.02,
                   ),

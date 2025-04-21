@@ -100,7 +100,7 @@ class _MyOccasionsListState extends State<MyOccasionsList> {
                                             .myOccasionsList[index];
                                     return OccasionCard(
                                       onTap: () {
-                                        customPushNavigator(context, MyGiftPaymentsList(occasionId: occasionItem.occasionId,));
+                                        customPushNavigator(context, MyGiftPaymentsList(occasionId: occasionItem.occasionId,occasionName:  occasionItem.occasionName,));
                                       },
                                       forOthers: false,
                                       occasionName: occasionItem.occasionName,

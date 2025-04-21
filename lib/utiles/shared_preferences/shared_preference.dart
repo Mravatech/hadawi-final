@@ -52,6 +52,7 @@ class UserDataFromStorage {
   static late String giftAmount;
   static late bool isForMe;
   static late bool isUserBlocked;
+  static late bool isPrivateAccount;
 
   static setFirstTimeApp(bool value) {
     firstTime = value;
@@ -86,6 +87,11 @@ class UserDataFromStorage {
 
   static setThemeIsDarkMode(bool darkMode) {
     themeIsDarkMode = darkMode;
+    _setData();
+  }
+
+  static setPrivateAccount(bool privateAccount) {
+    isPrivateAccount = privateAccount;
     _setData();
   }
 
@@ -307,6 +313,7 @@ class UserDataFromStorage {
       prefs.setBool("attendenceAdminFromStorage", attendenceAdminFromStorage);
       prefs.setBool("gradeAdminFromStorage", gradeAdminFromStorage);
       prefs.setBool("isUserBlocked", isUserBlocked);
+      prefs.setBool("isPrivateAccount", isPrivateAccount);
       prefs.setString("languageCodeFromStorage", languageCodeFromStorage);
       prefs.setString("languageNameFromStorage", languageNameFromStorage);
 
@@ -375,6 +382,7 @@ class UserDataFromStorage {
       themeIsDarkMode = prefs.getBool("themeIsDarkMode") ?? false;
       onBoardingIsOpen = prefs.getBool("onBoardingIsOpen") ?? false;
       emailNotFound = prefs.getBool("emailNotFound") ?? false;
+      isPrivateAccount = prefs.getBool("isPrivateAccount") ?? false;
       isUserBlocked = prefs.getBool("isUserBlocked") ?? false;
       attendenceAdminFromStorage =
           prefs.getBool("attendenceAdminFromStorage") ?? false;

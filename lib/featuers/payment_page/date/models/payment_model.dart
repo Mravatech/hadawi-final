@@ -24,7 +24,7 @@ class PaymentModel {
   });
 
   factory PaymentModel.fromMap(Map<String, dynamic> json) => PaymentModel(
-    paymentAmount: json["paymentAmount"]??0,
+    paymentAmount: json["paymentAmount"].runtimeType==double? json["paymentAmount"].toInt():json["paymentAmount"]??0,
     paymentDate: json["paymentDate"]??"",
     paymentId: json["paymentId"]??"",
     paymentStatus: json["paymentStatus"]??"",
