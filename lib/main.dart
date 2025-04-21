@@ -36,6 +36,8 @@ import 'package:app_links/app_links.dart';
 import 'dart:async';
 import 'featuers/visitors/presentation/view/widgets/occasion_details.dart';
 
+
+
 final GoRouter _router = GoRouter(
   initialLocation: '/',
   errorBuilder: (context, state) => const LoginScreen(),
