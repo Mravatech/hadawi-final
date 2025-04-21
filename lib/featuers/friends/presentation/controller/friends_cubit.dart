@@ -5,6 +5,7 @@ import 'package:hadawi_app/featuers/friends/domain/use_cases/get_followers_use_c
 import 'package:hadawi_app/featuers/friends/domain/use_cases/get_following_use_cases.dart';
 import 'package:hadawi_app/featuers/friends/domain/use_cases/reject_follow_request_use_cases.dart';
 import 'package:hadawi_app/featuers/friends/presentation/controller/firends_states.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
 class FriendsCubit extends Cubit<FriendsStates> {
   FriendsCubit(
@@ -37,7 +38,10 @@ class FriendsCubit extends Cubit<FriendsStates> {
             (l){
               emit(AcceptFollowRequestErrorState(message: l.message));
             },
-            (r)=>emit(AcceptFollowRequestSuccessState())
+            (r){
+
+              emit(AcceptFollowRequestSuccessState());
+            }
     );
 
   }
@@ -56,7 +60,10 @@ class FriendsCubit extends Cubit<FriendsStates> {
 
     response.fold(
             (l)=>emit(RejectFollowRequestErrorState(message: l.message)),
-            (r)=>emit(RejectFollowRequestSuccessState())
+            (r){
+              getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+              emit(RejectFollowRequestSuccessState());
+            }
     );
 
   }

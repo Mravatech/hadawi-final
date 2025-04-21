@@ -19,12 +19,24 @@ class FollowingRequestScreen extends StatefulWidget {
   State<FollowingRequestScreen> createState() => _FollowingRequestScreenState();
 }
 
-class _FollowingRequestScreenState extends State<FollowingRequestScreen> {
+class _FollowingRequestScreenState extends State<FollowingRequestScreen> with WidgetsBindingObserver{
 
   @override
   void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_)async{
+      if(mounted){
+        context.read<FriendsCubit>().getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+      }
+    });
     super.initState();
-    context.read<FriendsCubit>().getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -46,7 +58,7 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> {
           return ModalProgressHUD(
             inAsyncCall: state is AcceptFollowRequestLoadingState || state is RejectFollowRequestLoadingState,
             child: SingleChildScrollView(
-              child: ListView.separated(
+              child: state is GetFollowingLoadingState? const Center(child: CircularProgressIndicator()): ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: cubit.followersRequest.length,
@@ -91,7 +103,7 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> {
                                   Expanded(
                                     child: DefaultButton(
                                       buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
-                                      onPressed: (){
+                                      onPressed: () async {
                                         cubit.acceptFollowRequest(
                                             userId: UserDataFromStorage.uIdFromStorage,
                                             followerId: cubit.followersRequest[index].userId
@@ -104,7 +116,7 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> {
                                   Expanded(
                                     child: DefaultButton(
                                       buttonText: AppLocalizations.of(context)!.translate('decline').toString(),
-                                      onPressed: (){
+                                      onPressed: () async {
                                         cubit.rejectFollowRequest(
                                             userId: UserDataFromStorage.uIdFromStorage,
                                             followerId: cubit.followersRequest[index].userId

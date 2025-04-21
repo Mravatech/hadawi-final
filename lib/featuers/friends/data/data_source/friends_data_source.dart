@@ -32,14 +32,17 @@ class FriendsDataSourceImplement implements FriendsDataSource {
     required String followerId,
   })async {
 
+    print('followerId $followerId');
+    print('my id $userId');
+
     try{
       await FirebaseFirestore.instance.collection('users')
-          .doc(followerId).collection('following').doc(userId)
+          .doc(followerId).collection('followers').doc(userId)
           .update({'follow': true,}).then((value) {
       });
 
       await FirebaseFirestore.instance.collection('users')
-          .doc(userId).collection('followers').doc(followerId)
+          .doc(userId).collection('following').doc(followerId)
           .update({'follow': true,}).then((value) {
       });
 
@@ -47,6 +50,7 @@ class FriendsDataSourceImplement implements FriendsDataSource {
      await getMyFollowing(userId: followerId);
 
     }on FirebaseException catch(e){
+      print('error in accept follow request $e');
       throw FireStoreException(firebaseException: e);
     }on Exception catch(e){
       throw Exception(e.toString());
@@ -104,11 +108,11 @@ class FriendsDataSourceImplement implements FriendsDataSource {
     try{
 
       await FirebaseFirestore.instance.collection('users')
-          .doc(followerId).collection('following').doc(userId)
+          .doc(followerId).collection('followers').doc(userId)
           .update({'follow': true,});
 
       await FirebaseFirestore.instance.collection('users')
-          .doc(userId).collection('followers').doc(followerId)
+          .doc(userId).collection('following').doc(followerId)
           .update({'follow': true,});
 
       await getMyFollowers(userId: followerId);
