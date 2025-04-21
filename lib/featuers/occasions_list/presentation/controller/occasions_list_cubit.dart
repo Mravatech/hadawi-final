@@ -103,6 +103,17 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     }
   }
 
+  bool privateAccount= UserDataFromStorage.isPrivateAccount;
+
+  void changePrivateAccount(){
+    privateAccount = !privateAccount;
+    FirebaseFirestore.instance.collection('users').doc(UserDataFromStorage.uIdFromStorage).update({
+      'private': privateAccount,
+    }).then((value) {
+      UserDataFromStorage.setPrivateAccount(privateAccount);
+    });
+    emit(ChangePrivateAccountState());
+  }
 
 
 

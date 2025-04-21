@@ -7,7 +7,7 @@ final class VisitorsInitial extends VisitorsState {}
 final class GetOccasionsLoadingState extends VisitorsState {}
 final class GetOccasionsSuccessState extends VisitorsState {
   final List<OccasionEntity> activeOccasions;
-  final List<OccasionEntity> doneOccasions;
+  final List<CompleteOccasionModel> doneOccasions;
   GetOccasionsSuccessState({required this.activeOccasions, required this.doneOccasions});
 }
 final class GetOccasionsErrorState extends VisitorsState {
@@ -45,6 +45,9 @@ final class CreateOccasionLinkDetailsErrorState extends VisitorsState {}
 class GetAnalysisLoadingState extends VisitorsState{}
 class GetAnalysisSuccessState extends VisitorsState{}
 class GetAnalysisErrorState extends VisitorsState{}
+
+class GetMyPaymentSuccessState extends VisitorsState{}
+class GetMyPaymentLoadingState extends VisitorsState{}
 
 class EditOccasionLoadingState extends VisitorsState {}
 class EditOccasionSuccessState extends VisitorsState {

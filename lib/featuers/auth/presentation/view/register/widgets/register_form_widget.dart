@@ -145,7 +145,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                           context.read<AuthCubit>().dropdownCity = newValue!;
                         });
                       },
-                      items: context.read<AuthCubit>().saudiCities.map<DropdownMenuItem<String>>((dynamic value) {
+                      items: context.read<AuthCubit>().allCity.map<DropdownMenuItem<String>>((dynamic value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value, style: TextStyle(color: ColorManager.black),),

@@ -13,6 +13,7 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:share_plus/share_plus.dart';
 
 import '../view/apply_payment.dart';
 
@@ -91,6 +92,11 @@ class PaymentCubit extends Cubit<PaymentStates> {
   }
 
 
+
+  void shareNames({ required String occasionName,required List<String> names}) {
+    String formattedNames = names.map((name) => "• $name").join('\n');
+    Share.share(" قائمة الأسماء المشاركين ف هديتي $occasionName \n\n$formattedNames");
+  }
 
   List<PaymentModel> occasionPaymentsList = [];
 

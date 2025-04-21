@@ -39,6 +39,7 @@ abstract class BaseAuthDataSource {
       required String brithDate,
       required String gender,
       required String city,
+      required String password,
       });
 
 
@@ -64,6 +65,7 @@ abstract class BaseAuthDataSource {
         required String phone,
         required String name,
         required String brithDate,
+        required String password,
         required bool isLogin,
         required String verificationId,
         required String verifyOtpPinPut,
@@ -130,6 +132,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           email: email,
           phone: phone,
           name: name,
+          password: password,
           uId: user.user!.uid,
           brithDate: brithDate,
           city: city,
@@ -150,6 +153,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String uId,
       required String brithDate,
       required String gender,
+      required String password,
       required String city
       }) async {
     UserModel userModel = UserModel(
@@ -162,7 +166,9 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         brithDate: brithDate,
         gender: gender,
         city: city,
-        block: false
+        password: password,
+        block: false,
+        private: false,
     );
 
     try {
@@ -189,7 +195,6 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       }
       UserDataFromStorage.setUserName(userModel.name);
       UserDataFromStorage.setEmail(userModel.email);
-      print('Phone is : ${userModel.phone}');
       if(userModel.phone==''){
         UserDataFromStorage.setPhoneNumber('');
       }else{
@@ -201,6 +206,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       UserDataFromStorage.setCity(userModel.city);
       UserDataFromStorage.setBrithDate(userModel.brithDate);
       UserDataFromStorage.setUserIsGuest(false);
+      UserDataFromStorage.setPrivateAccount(userModel.private);
       print('Uid ${UserDataFromStorage.uIdFromStorage}');
       return userModel;
     } on FireStoreException catch (e) {
@@ -215,7 +221,10 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
 
   @override
   Future<void> loginWithGoogle(
-      {required String brithDate, required String gender, required String city,required context}) async {
+      {required String brithDate,
+        required String gender,
+        required String city,required context
+      }) async {
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -237,6 +246,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           uId: user.user!.uid,
           brithDate: brithDate,
           city: city,
+          password: '',
           gender: gender);
       await getUserData(uId:  user.user!.uid,context: context);
     } on FirebaseAuthException catch (firebaseAuthException) {
@@ -316,6 +326,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String phone,
       required String name,
       required String brithDate,
+      required String password,
       required String gender,
       required bool isLogin,
       required String verificationId,
@@ -336,6 +347,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
                     email: email,
                     phone: phone,
                     name: name,
+                    password: password,
                     uId: value.user!.uid,
                     brithDate: brithDate,
                     gender: gender,

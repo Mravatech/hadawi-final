@@ -139,3 +139,7 @@ class RememberMeEnabled extends AuthStates {
 
 class RememberMeLoadingState extends AuthStates {}
 class RememberMeSuccessState extends AuthStates {}
+
+class GetAllCityLoadingState extends AuthStates {}
+class GetAllCitySuccessState extends AuthStates {}
+class GetAllCityErrorState extends AuthStates {}

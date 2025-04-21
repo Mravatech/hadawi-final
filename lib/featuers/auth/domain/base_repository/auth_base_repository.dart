@@ -18,7 +18,10 @@ abstract class AuthBaseRepository {
     required String brithDate,
     required String gender
   });
-  Future<Either<Faliure,void>> saveUserData({required String email, required String phone, required String name, required String uId,required String brithDate,required String gender, required String city});
+  Future<Either<Faliure,void>> saveUserData({
+    required String email, required String phone,
+    required String password,
+    required String name, required String uId,required String brithDate,required String gender, required String city});
   Future<Either<Faliure,void>> logout();
   Future<Either<Faliure,void>> loginWithPhoneNumber({
     required String phone,

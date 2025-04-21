@@ -107,6 +107,7 @@ class FriendsCubit extends Cubit<FriendsStates> {
             (l)=>emit(GetFollowingErrorState(message: l.message)),
             (r){
             for(var element in r) {
+              print('Elemnet flow ${element.follow}');
               if (element.follow == true){
                 following.add(element);
               }else{

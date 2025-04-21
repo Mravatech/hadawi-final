@@ -189,6 +189,31 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                   },
                   buttonColor: ColorManager.primaryBlue,
                 ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+                GestureDetector(
+                  onTap: () {
+                    context.read<AuthCubit>().launchWhatsApp(
+                        phoneNumber: "+966564940300",
+                        message: AppLocalizations.of(context)!.translate('whatsapp').toString());
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.translate('support').toString(),
+                        style: TextStyles.textStyle18Bold.copyWith(
+                          fontSize: 11
+                        ),
+                      ),
+                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.015),
+                      Image(
+                        image: const AssetImage("assets/images/whatsapp.png"),
+                        width: MediaQuery.sizeOf(context).width * 0.08,
+                        height: MediaQuery.sizeOf(context).height * 0.05,
+                      )
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
