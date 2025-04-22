@@ -226,33 +226,56 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         required String city,required context
       }) async {
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      // Initialize GoogleSignIn with proper configuration
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: ['email', 'profile'],
+      );
+
+      // Clear previous sign-in state to avoid conflicts
+      await googleSignIn.signOut();
+
+      // Start the sign-in flow
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      // Handle case where user cancels the sign-in
+      if (googleUser == null) {
+        throw Exception('Sign in cancelled by user');
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       print('--------------');
       final user = await firebaseAuth.signInWithCredential(credential);
-      print('${ user.user!.email!} , ${user.user!.displayName!} , ${user.user!.uid}');
+      print('${user.user?.email ?? "No email"} , ${user.user?.displayName ?? "No name"} , ${user.user?.uid}');
       print('--------------');
-      saveUserData(
-          email: user.user!.email!,
-          phone: '',
-          name: user.user!.displayName!,
-          uId: user.user!.uid,
-          brithDate: brithDate,
-          city: city,
-          password: '',
-          gender: gender);
-      await getUserData(uId:  user.user!.uid,context: context);
+
+      // Only proceed if we have a user
+      if (user.user != null) {
+        saveUserData(
+            email: user.user!.email ?? '',  // Handle potential null email
+            phone: '',
+            name: user.user!.displayName ?? '',  // Handle potential null name
+            uId: user.user!.uid,
+            city: city,
+            password: '',
+            gender: gender,
+            brithDate: brithDate
+        );
+        await getUserData(uId: user.user!.uid, context: context);
+      }
     } on FirebaseAuthException catch (firebaseAuthException) {
       throw FirebaseExceptions(firebaseAuthException: firebaseAuthException);
+    } catch (e) {
+      // Added general exception handler for other potential errors
+      throw Exception('Failed to sign in with Google: ${e.toString()}');
     }
   }
+
 
   @override
   Future<void> loginWithPhoneNumber({
