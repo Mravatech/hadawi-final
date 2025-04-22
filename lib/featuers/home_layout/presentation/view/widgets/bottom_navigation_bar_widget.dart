@@ -30,34 +30,8 @@ class BottomNavigationBarWidget extends StatelessWidget {
           backgroundColor: ColorManager.gray.withOpacity(0.5),
           currentIndex: cubit.currentIndex,
           onTap: (index)async{
-            if(UserDataFromStorage.userIsGuest==false){
-              await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-              if(UserDataFromStorage.uIdFromStorage==''){
-                context.go(AppRouter.login);
-                toastificationWidget(
-                    context: context,
-                    title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                    body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
-                    type: ToastificationType.error);
-              }else{
-                if(UserDataFromStorage.isUserBlocked==true){
-                  context.go(AppRouter.login);
-                  toastificationWidget(context: context,
-                      title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                      body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
-                      type: ToastificationType.error);
-                }else{
-                  cubit.changeIndex(index: index);
-                  context.read<OccasionCubit>().resetData();
-                }
-
-              }
-            }else{
-              cubit.changeIndex(index: index);
-              context.read<OccasionCubit>().resetData();
-            }
-
-
+            cubit.changeIndex(index: index);
+            context.read<OccasionCubit>().resetData();
           },
           items: [
 

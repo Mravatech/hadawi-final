@@ -120,47 +120,45 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                     ],
                                   ),
 
+                                  Spacer(),
+                                  BlocBuilder<LocalizationCubit,LocalizationStates>(
+                                    builder: (context,state){
+                                      return GestureDetector(
+                                        onTap: (){
+                                          CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                          context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
+                                          context.read<LocalizationCubit>().changeLanguage(code: 'en');
+                                        },
+                                        child: Container(
+                                            padding:EdgeInsets.symmetric(
+                                              horizontal: MediaQuery.sizeOf(context).width*0.04,
+                                              vertical: MediaQuery.sizeOf(context).width*0.01,
+                                            ),
+                                            decoration:BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ) ,
+                                            child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
+                                            Text('English',style: TextStyles.textStyle18Bold.copyWith(
+                                                color: ColorManager.black,
+                                                fontSize:MediaQuery.sizeOf(context).height*0.018
+                                            ),):
+                                            Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
+                                                color: ColorManager.black,
+                                                fontSize:MediaQuery.sizeOf(context).height*0.018
+                                            ))
+                                        ),
+                                      );
+                                    } ,
+                                  ),
+
                                   Visibility(
                                     visible: UserDataFromStorage.userIsGuest == true? true:false,
-                                    child: Row(
-                                      children: [
-                                        BlocBuilder<LocalizationCubit,LocalizationStates>(
-                                          builder: (context,state){
-                                            return GestureDetector(
-                                              onTap: (){
-                                                CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                                context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
-                                                context.read<LocalizationCubit>().changeLanguage(code: 'en');
-                                              },
-                                              child: Container(
-                                                  padding:EdgeInsets.symmetric(
-                                                    horizontal: MediaQuery.sizeOf(context).width*0.04,
-                                                    vertical: MediaQuery.sizeOf(context).width*0.01,
-                                                  ),
-                                                  decoration:BoxDecoration(
-                                                    color: Colors.transparent,
-                                                    borderRadius: BorderRadius.circular(10),
-                                                  ) ,
-                                                  child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                                  Text('English',style: TextStyles.textStyle18Bold.copyWith(
-                                                      color: ColorManager.black,
-                                                      fontSize:MediaQuery.sizeOf(context).height*0.018
-                                                  ),):
-                                                  Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
-                                                      color: ColorManager.black,
-                                                      fontSize:MediaQuery.sizeOf(context).height*0.018
-                                                  ))
-                                              ),
-                                            );
-                                          } ,
-                                        ),
-                                        IconButton(
-                                          onPressed: (){
-                                            context.go(AppRouter.login);
-                                          },
-                                          icon: const Icon(Icons.login_outlined),color: ColorManager.black,
-                                        ),
-                                      ],
+                                    child: IconButton(
+                                      onPressed: (){
+                                        context.go(AppRouter.login);
+                                      },
+                                      icon: const Icon(Icons.login_outlined),color: ColorManager.black,
                                     ),
                                   ),
                                 ],

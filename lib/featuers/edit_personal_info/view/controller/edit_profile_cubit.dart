@@ -9,9 +9,9 @@ class EditProfileCubit extends Cubit<EditProfileStates>{
   EditProfileUseCases editProfileUseCases;
 
 
-  Future<void> editProfile({required String name, required String phone,required context})async{
+  Future<void> editProfile({required String name, required String phone,required context,required String gender})async{
     emit(EditProfileLoadingState());
-    var result = await editProfileUseCases.editProfile(name: name, phone: phone,context: context);
+    var result = await editProfileUseCases.editProfile(name: name, phone: phone,context: context,gender: gender);
     result.fold((l) {
       emit(EditProfileErrorState(message: l.message));
     }, (r) {

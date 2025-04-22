@@ -9,6 +9,7 @@ abstract class EditProfileDataSource{
   Future<void> editProfileData({
     required String name,
     required String phone,
+    required String gender,
     required context
   });
 
@@ -21,14 +22,15 @@ class EditProfileDataSourceImplement extends EditProfileDataSource{
   EditProfileDataSourceImplement({required this.baseAuthDataSource});
 
   @override
-  Future<void> editProfileData({required String name, required String phone, required context}) async{
+  Future<void> editProfileData({required String name, required String phone, required context, required String gender}) async{
     try{
       await FirebaseFirestore.instance.collection('users')
           .doc(UserDataFromStorage.uIdFromStorage)
           .update(
           {
             'name': name,
-            'phone': phone
+            'phone': phone,
+            'gender': gender
           });
       baseAuthDataSource.getUserData(uId: UserDataFromStorage.uIdFromStorage,context: context);
     }on FirebaseException catch(error){

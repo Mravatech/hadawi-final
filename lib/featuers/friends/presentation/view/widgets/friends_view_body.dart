@@ -30,7 +30,7 @@ class FriendsViewBody extends StatelessWidget {
           GestureDetector(
               onTap: ()=>customPushNavigator(context,
                   BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),),
-                      child: FollowersScreen())),
+                      child: FollowingScreen())),
               child: ProfileRowWidget(image: '',
                   title: AppLocalizations.of(context)!.translate('friendsIFollow').toString())
           ),
@@ -41,7 +41,7 @@ class FriendsViewBody extends StatelessWidget {
           GestureDetector(
               onTap: ()=>customPushNavigator(context,
                   BlocProvider(create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt(),),
-                      child: FollowingScreen())),
+                      child: FollowersScreen())),
               child: ProfileRowWidget(image: '', title:  AppLocalizations.of(context)!.translate('friendsFollowMe').toString(),)
           ),
 
@@ -54,15 +54,6 @@ class FriendsViewBody extends StatelessWidget {
                   child: FollowingRequestScreen())),
               child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('followRequests').toString(),)
           ),
-
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
-
-          // الاصدقاء المشاركين بهديتي
-          InkWell(
-              onTap: (){
-                customPushNavigator(context, MyOccasionsList());
-              },
-              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),)),
 
           SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
 

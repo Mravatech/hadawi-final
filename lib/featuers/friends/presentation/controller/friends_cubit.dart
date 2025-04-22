@@ -39,7 +39,7 @@ class FriendsCubit extends Cubit<FriendsStates> {
               emit(AcceptFollowRequestErrorState(message: l.message));
             },
             (r){
-
+              getFollowing(userId: UserDataFromStorage.uIdFromStorage);
               emit(AcceptFollowRequestSuccessState());
             }
     );

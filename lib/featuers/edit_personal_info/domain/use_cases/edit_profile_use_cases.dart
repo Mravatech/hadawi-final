@@ -8,8 +8,8 @@ class EditProfileUseCases{
 
   EditProfileUseCases({required this.editProfileRepo});
 
-  Future<Either<Faliure,void>> editProfile({required String phone,required String name,required context})async{
-     return await editProfileRepo.editProfile(phone: phone, userName: name,context: context);
+  Future<Either<Faliure,void>> editProfile({required String phone,required String gender ,required String name,required context})async{
+     return await editProfileRepo.editProfile(phone: phone, userName: name,context: context,gender: gender);
   }
 
 }

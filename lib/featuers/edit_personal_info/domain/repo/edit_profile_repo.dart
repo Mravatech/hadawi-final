@@ -4,6 +4,11 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
 abstract class EditProfileRepo{
 
-  Future<Either<Faliure,void>> editProfile({required String userName,required String phone,required context});
+  Future<Either<Faliure,void>> editProfile({
+    required String userName,
+    required String phone,
+    required String gender,
+    required context
+  });
 
 }
