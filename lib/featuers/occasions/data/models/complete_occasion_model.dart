@@ -18,8 +18,8 @@ class CompleteOccasionModel {
     return CompleteOccasionModel(
       occasionId: json['occasionId'],
       imagesUrl: json['imagesUrl'] ,
-      status: json['status'] ,
-      title: json['title'] ,
+      status: json['status'] ??'',
+      title: json['title']??'' ,
       finalPrice: json['finalPrice'].runtimeType == int
           ? (json['finalPrice'] as int).toDouble()
           : json['finalPrice'] as double,

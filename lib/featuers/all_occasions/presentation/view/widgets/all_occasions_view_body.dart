@@ -4,6 +4,7 @@ import 'package:hadawi_app/featuers/occasions_list/presentation/view/closed_occa
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/my_occasions.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/others_occasions.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/past_occasions.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/my_occasions_list.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/profile_row_widget.dart';
 import 'package:hadawi_app/featuers/profile/presentation/view/widgets/row_data_widget.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -20,6 +21,17 @@ class AllOccasionsViewBody extends StatelessWidget {
         crossAxisAlignment:  CrossAxisAlignment.center,
         children: [
           SizedBox(height: MediaQuery.sizeOf(context).height*0.07,),
+
+
+          // الاصدقاء المشاركين بهديتي
+          InkWell(
+              onTap: (){
+                customPushNavigator(context, MyOccasionsList());
+              },
+              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),)),
+
+          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
+
 
           // المناسبات المسحله جديثا
           InkWell(

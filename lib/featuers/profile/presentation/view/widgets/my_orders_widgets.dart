@@ -58,13 +58,27 @@ class _MyOrdersWidgetsState extends State<MyOrdersWidgets> {
       ),
       body: Padding(
         padding: EdgeInsets.all(SizeConfig.height * 0.02),
-        child: Column(
-          children: [
-            BlocConsumer<VisitorsCubit, VisitorsState>(
+        child: BlocConsumer<VisitorsCubit, VisitorsState>(
               listener: (context, state) {},
               builder: (context, state) {
                 var cubit = context.read<VisitorsCubit>();
-                return  GridView.builder(
+                return cubit.myOrderOccasions.isEmpty?
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(AssetsManager.noData),
+                      Text(
+                        AppLocalizations.of(context)!
+                            .translate('noOccasions')
+                            .toString(),
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(
+                            color: ColorManager.primaryBlue),
+                      ),
+                    ],
+                  ),
+                 ) :  GridView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(15),
@@ -79,16 +93,14 @@ class _MyOrdersWidgetsState extends State<MyOrdersWidgets> {
                         onTap: () {
                         },
                         child: OccasionCard(
-                          occasionEntity: cubit.doneOccasions[index],
+                          occasionEntity: cubit.myOrderOccasions[index],
                           isOrders: true,
                         ));
                   },
-                  itemCount: cubit.doneOccasions.length,
+                  itemCount: cubit.myOrderOccasions.length,
                 );
               },
             ),
-          ],
-        ),
       ),
     );
   }

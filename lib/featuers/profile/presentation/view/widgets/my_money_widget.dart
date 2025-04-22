@@ -59,13 +59,28 @@ class _MyMoneyWidgetState extends State<MyMoneyWidget> {
       ),
       body: Padding(
         padding: EdgeInsets.all(SizeConfig.height * 0.02),
-        child: Column(
-          children: [
-            BlocConsumer<VisitorsCubit, VisitorsState>(
+        child: BlocConsumer<VisitorsCubit, VisitorsState>(
               listener: (context, state) {},
               builder: (context, state) {
                 var cubit = context.read<VisitorsCubit>();
-                return  ListView.separated(
+                return cubit.myPaymentsList.isEmpty?
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(AssetsManager.noData),
+                      Text(
+                        AppLocalizations.of(context)!
+                            .translate('noOccasions')
+                            .toString(),
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(
+                            color: ColorManager.primaryBlue),
+                      ),
+                    ],
+                  ),
+                ) :
+                ListView.separated(
                   separatorBuilder: (_,__)=> SizedBox(height: SizeConfig.height*0.02,),
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -123,8 +138,7 @@ class _MyMoneyWidgetState extends State<MyMoneyWidget> {
                 );
               },
             ),
-          ],
-        ),
+
       ),
     );
   }

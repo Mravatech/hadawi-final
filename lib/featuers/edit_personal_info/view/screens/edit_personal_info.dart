@@ -271,7 +271,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                               ),
 
                                               child: DefaultTextField(
-                                                enable: false,
                                                 controller: genderController,
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
@@ -304,7 +303,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                             context.read<EditProfileCubit>().editProfile(
                                                 name: nameController.text,
                                                 context: context,
-                                                phone: phoneController.text
+                                                gender: genderController.text,
+                                                phone: phoneController.text,
                                             );
                                           },
                                           buttonColor: ColorManager.primaryBlue,

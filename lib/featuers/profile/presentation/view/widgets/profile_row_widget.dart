@@ -34,7 +34,7 @@ class ProfileRowWidget extends StatelessWidget {
           Container(),
           Text(title,style: TextStyles.textStyle18Bold.copyWith(
               color: ColorManager.white,
-              fontSize:MediaQuery.sizeOf(context).height*0.022
+              fontSize:MediaQuery.sizeOf(context).height*0.020
           ),)
         ],
       ),

@@ -25,6 +25,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   List<OccasionEntity> activeOccasions = [];
   List<CompleteOccasionModel> doneOccasions = [];
+  List<CompleteOccasionModel> myOrderOccasions = [];
 
   TextEditingController editOccasionNameController = TextEditingController();
   TextEditingController editGiftNameController = TextEditingController();
@@ -50,6 +51,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     }, (occasion)async {
       activeOccasions.clear();
       doneOccasions.clear();
+      myOrderOccasions.clear();
 
       for (var element in occasion) {
         if((element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt()){
@@ -65,6 +67,9 @@ class VisitorsCubit extends Cubit<VisitorsState> {
             var res = await FirebaseFirestore.instance.collection('Occasions').doc(element.occasionId).collection('receivedOccasions').get();
             if(res.docs.isNotEmpty){
               doneOccasions.add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              if(res.docs[0].data()['personId'] == UserDataFromStorage.uIdFromStorage){
+                myOrderOccasions.add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              }
             }
           }
         }
