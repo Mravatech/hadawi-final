@@ -56,7 +56,7 @@ final GoRouter _router = GoRouter(
       }
 
       // Default redirect for dynamic links without specific parameters
-      return '/home';
+      return '/login';
     }
     return null; // Continue with normal routing
   },
