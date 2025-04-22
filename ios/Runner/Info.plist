@@ -54,6 +54,17 @@
         <string>fetch</string>
         <string>remote-notification</string>
     </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+      <dict>
+        <key>CFBundleTypeRole</key>
+        <string>Editor</string>
+        <key>CFBundleURLSchemes</key>
+        <array>
+          <string>com.googleusercontent.apps.1698335350-rn56pn1c22pc1gah4020je52u0oh6it2</string>
+        </array>
+      </dict>
+    </array>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
     <key>UIMainStoryboardFile</key>

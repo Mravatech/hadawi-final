@@ -51,6 +51,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
 
   // Cache the image provider to prevent multiple loads
   final ImageProvider _logoProvider = AssetImage(AssetsManager.logoWithoutBackground);
+  final GlobalKey qrKey = GlobalKey();
 
   @override
   void didChangeDependencies() {
@@ -116,7 +117,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                       ? LoadingAnimationWidget()
                       : cubit.occasionLink.isNotEmpty
                       ? RepaintBoundary(
-                    key: context.read<OccasionCubit>().qrKey,
+                    key: qrKey,
                     child: QrImageView(
                       data: cubit.occasionLink,
                       version: QrVersions.auto,
@@ -147,7 +148,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                         if (cubit.occasionLink.isNotEmpty) {
                           await cubit.captureAndShareQr(
                               occasionName: widget.occasionName,
-                              personName: UserDataFromStorage.userNameFromStorage);
+                              personName: UserDataFromStorage.userNameFromStorage, qrKey: qrKey);
                         }
                       },
                       child: Container(

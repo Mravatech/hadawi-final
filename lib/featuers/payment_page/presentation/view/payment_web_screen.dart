@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
@@ -32,6 +34,9 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
   @override
   void initState() {
     super.initState();
+
+    // Get the primary blue color from ColorManager as a hex string
+    final primaryBlueHex = ColorManager.primaryBlue.value.toRadixString(16).substring(2);
 
     String hyperpayHtml = """
 <!DOCTYPE html>
@@ -98,7 +103,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
             padding: 8px !important;
         }
         .wpwl-button {
-            background-color: #007bff;
+            background-color: #${primaryBlueHex};
             color: white;
             border: none;
             border-radius: 8px;
@@ -111,7 +116,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
             transition: background-color 0.2s;
         }
         .wpwl-button:hover {
-            background-color: #0069d9;
+            background-color: #${primaryBlueHex}DD;
         }
         .wpwl-group {
             margin-bottom: 15px;
@@ -174,6 +179,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
                 var submitButton = document.querySelector('.wpwl-button-pay');
                 if(submitButton) {
                     submitButton.textContent = "Pay Securely";
+                    submitButton.style.backgroundColor = "#${primaryBlueHex}";
                 }
                 
                 // Adjust padding for brand dropdown
@@ -261,6 +267,12 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
                 allInputs.forEach(function(input) {
                     input.style.padding = "8px";
                 });
+                
+                // Set button color to app primary color
+                var payButton = document.querySelector('.wpwl-button-pay');
+                if (payButton) {
+                    payButton.style.backgroundColor = "#${primaryBlueHex}";
+                }
             }, 500);
         });
     </script>
@@ -309,24 +321,9 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
 
             if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
 
-             Navigator.pop(context);
-             handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
+              Navigator.pop(context);
+              handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
             }
-
-            // Check for payment result URL
-            // if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
-            //   Uri uri = Uri.parse(change.url!);
-            //   String resourcePath = uri.queryParameters['resourcePath'] ?? '';
-            //
-            //   if (resourcePath.isNotEmpty) {
-            //     await verifyPayment(resourcePath);
-            //   } else {
-            //     String checkoutId = uri.queryParameters['id'] ?? '';
-            //     if (checkoutId.isNotEmpty) {
-            //       await verifyPayment("/v1/checkouts/$checkoutId/payment");
-            //     }
-            //   }
-            // }
           },
         ),
       )
@@ -457,10 +454,28 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.white,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.translate('completePayment').toString()),
+        backgroundColor: ColorManager.gray,
+        elevation: 0,
+        title: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            AppLocalizations.of(context)!.translate('completePayment').toString(),
+            style: TextStyle(
+                color: ColorManager.primaryBlue,
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+          ),
+        ],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back, color: ColorManager.primaryBlue),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -473,7 +488,9 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
             Container(
               color: Colors.white,
               child: Center(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  color: ColorManager.primaryBlue,
+                ),
               ),
             ),
         ],

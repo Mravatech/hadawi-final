@@ -197,16 +197,34 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
         // Mada Option
         buildPaymentMethodTile(
-          imagePath: 'assets/images/mada_pay.png', // Replace with actual path to Mada logo
+          imagePath: 'assets/images/mada_pay.png',
           title: 'Mada',
           subtitle: "Pay with Mada card",
           value: PaymentMethod.mada,
         ),
         SizedBox(height: 10),
 
+        // Visa Option
+        buildPaymentMethodTile(
+          imagePath: 'assets/images/visa_card.png',
+          title: 'Visa',
+          subtitle: "Pay with Visa card",
+          value: PaymentMethod.visa,
+        ),
+        SizedBox(height: 10),
+
+        // MasterCard Option
+        buildPaymentMethodTile(
+          imagePath: 'assets/images/mastercard.png',
+          title: 'MasterCard',
+          subtitle: "Pay with MasterCard",
+          value: PaymentMethod.masterCard,
+        ),
+        SizedBox(height: 10),
+
         // STC Pay Option
         buildPaymentMethodTile(
-          imagePath: 'assets/images/stc_pay.jpg', // Replace with actual path to STC Pay logo
+          imagePath: 'assets/images/stc_pay.jpg',
           title: 'STC Pay',
           subtitle: "Pay with STC Pay",
           value: PaymentMethod.stcPay,
@@ -314,29 +332,59 @@ class _PaymentScreenState extends State<PaymentScreen> {
           switch (selectedPaymentMethod) {
             case PaymentMethod.mada:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                  email: UserDataFromStorage.emailFromStorage,
-                  givenName: UserDataFromStorage.userNameFromStorage,
-                  surname: UserDataFromStorage.userNameFromStorage,
-                  street: "street",
-                  city: "city",
-                  state: "state",
-                  postcode: "12345",
-                  merchantTransactionId: merchantTransactionId,
+                email: UserDataFromStorage.emailFromStorage,
+                givenName: UserDataFromStorage.userNameFromStorage,
+                surname: UserDataFromStorage.userNameFromStorage,
+                street: "street",
+                city: "city",
+                state: "state",
+                postcode: "12345",
+                merchantTransactionId: merchantTransactionId,
               );
 
               processPayment(context, checkoutData, merchantTransactionId, "MADA");
               break;
 
+            case PaymentMethod.visa:
+              final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                email: UserDataFromStorage.emailFromStorage,
+                givenName: UserDataFromStorage.userNameFromStorage,
+                surname: UserDataFromStorage.userNameFromStorage,
+                street: "street",
+                city: "city",
+                state: "state",
+                postcode: "12345",
+                merchantTransactionId: merchantTransactionId,
+              );
+
+              processPayment(context, checkoutData, merchantTransactionId, "VISA");
+              break;
+
+            case PaymentMethod.masterCard:
+              final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                email: UserDataFromStorage.emailFromStorage,
+                givenName: UserDataFromStorage.userNameFromStorage,
+                surname: UserDataFromStorage.userNameFromStorage,
+                street: "street",
+                city: "city",
+                state: "state",
+                postcode: "12345",
+                merchantTransactionId: merchantTransactionId,
+              );
+
+              processPayment(context, checkoutData, merchantTransactionId, "MASTER");
+              break;
+
             case PaymentMethod.stcPay:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                  email: UserDataFromStorage.emailFromStorage,
-                  givenName: UserDataFromStorage.userNameFromStorage,
-                  surname: UserDataFromStorage.userNameFromStorage,
-                  street: "street",
-                  city: "city",
-                  state: "state",
-                  postcode: "12345",
-                  merchantTransactionId: merchantTransactionId,
+                email: UserDataFromStorage.emailFromStorage,
+                givenName: UserDataFromStorage.userNameFromStorage,
+                surname: UserDataFromStorage.userNameFromStorage,
+                street: "street",
+                city: "city",
+                state: "state",
+                postcode: "12345",
+                merchantTransactionId: merchantTransactionId,
               );
 
               processPayment(context, checkoutData, merchantTransactionId, "STC_PAY");
@@ -390,6 +438,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 // Enum for payment methods
 enum PaymentMethod {
   mada,
+  visa,
+  masterCard,
   stcPay,
   applePay,
 }

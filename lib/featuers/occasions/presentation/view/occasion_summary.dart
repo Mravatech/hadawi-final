@@ -75,7 +75,7 @@ class OccasionSummary extends StatelessWidget {
             ],
           ),
           body: ModalProgressHUD(
-            inAsyncCall: state is AddOccasionLoadingState,
+            inAsyncCall: state is AddOccasionLoadingState || state is UploadImageLoadingState,
             progressIndicator: LoadingAnimationWidget(),
             child: Stack(
               children: [
@@ -340,7 +340,7 @@ class OccasionSummary extends StatelessWidget {
                           context,
                           title: AppLocalizations.of(context)!.translate('pricing').toString(),
                           children: [
-                            if (cubit.giftType != 'مبلغ مالي' && cubit.giftWithPackage != false)
+                            if (cubit.isPresent == false && cubit.giftWithPackage != false)
                               _buildInfoRow(
                                 context,
                                 label: AppLocalizations.of(context)!.translate('deliveryPrice').toString(),

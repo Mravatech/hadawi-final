@@ -32,9 +32,9 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addObserver(this);
+    context.read<OccasionCubit>().getOccasionTaxes();
     WidgetsBinding.instance.addPostFrameCallback((_)async{
       if(mounted){
-        context.read<OccasionCubit>().getOccasionTaxes();
       }
     });
     super.initState();
@@ -376,7 +376,10 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                             return AppLocalizations.of(context)!.translate('validateLink').toString();
                           }
                           final uri = Uri.tryParse(value);
-                          if (uri == null || !uri.hasAbsolutePath || (!uri.isScheme('www') && !uri.isScheme('http') && !uri.isScheme('https'))) {
+                          if (uri == null ||
+                              !(uri.isScheme('http') || uri.isScheme('https')) ||
+                              uri.host.isEmpty ||
+                              !uri.host.contains('.')) {
                             return AppLocalizations.of(context)!.translate('vaildLink').toString();
                           }
                           return null;
@@ -917,8 +920,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                                } if (value.length<9 || value.length>9){
-                                  return AppLocalizations.of(context)!.translate('validatePhone').toString();
+                                } if (value.length<10 || value.length>10){
+                                  return AppLocalizations.of(context)!.translate('validatePhone2').toString();
                                 }
                                 return null;
                               },
@@ -1146,8 +1149,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
                         validator: (value) {
                           if (value!.isEmpty) {
                             return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                          }if (value.length<9 || value.length>9){
-                            return AppLocalizations.of(context)!.translate('validatePhone').toString();
+                          }if (value.length<10 || value.length>10){
+                            return AppLocalizations.of(context)!.translate('validatePhone2').toString();
                           }
                           return null;
 
@@ -1179,48 +1182,89 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
 
 
                     /// message
-                    Text(
-                      AppLocalizations.of(context)!.translate('giftCard').toString(),
-                      style: TextStyles.textStyle18Bold
-                          .copyWith(color: ColorManager.black),
+                    InkWell(
+                      onTap: () {
+                        cubit.switchShowGiftCard();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: ColorManager.white,
+                          border: Border.all(color: ColorManager.primaryBlue),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('giftCard').toString(),
+                          style: TextStyles.textStyle18Bold
+                              .copyWith(color: ColorManager.primaryBlue),
+                        ),
+                      ),
                     ),
-                    DefaultTextField(
-                        controller: cubit.moneyGiftMessageController,
-                        maxLines: 3,
-                        hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
-                        validator: (value) {
-                          // if (value!.isEmpty) {
-                          //   return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
-                          // } else {
-                          //   return null;
-                          // }
-                        },
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.newline,
-                        fillColor: ColorManager.gray),
+                    Visibility(
+                      visible: cubit.showGiftCard,
+                      child: Column(
+                        children: [
+                          SizedBox(height: mediaQuery.height * 0.01),
+                          DefaultTextField(
+                              controller: cubit.moneyGiftMessageController,
+                              maxLines: 3,
+                              hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
+                              validator: (value) {
+                                // if (value!.isEmpty) {
+                                //   return AppLocalizations.of(context)!.translate('validateGiftCard').toString();
+                                // } else {
+                                //   return null;
+                                // }
+                              },
+                              keyboardType: TextInputType.multiline,
+                              textInputAction: TextInputAction.newline,
+                              fillColor: ColorManager.gray),
+                        ],
+                      ),
+                    ),
 
                     SizedBox(height: mediaQuery.height * 0.01),
 
                     /// note
-                    Text(
-                      AppLocalizations.of(context)!.translate('note').toString(),
-                      style: TextStyles.textStyle18Bold
-                          .copyWith(color: ColorManager.black),
+                    InkWell(
+                      onTap: () {
+                        cubit.switchShowNote();
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: ColorManager.white,
+                          border: Border.all(color: ColorManager.primaryBlue),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.translate('note').toString(),
+                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),
+                        ),
+                      ),
                     ),
-                    DefaultTextField(
-                        controller: cubit.giftDeliveryNoteController,
-                        maxLines: 3,
-                        hintText: AppLocalizations.of(context)!.translate('noteHint').toString(),
-                        validator: (value) {
-                          // if (value!.isEmpty) {
-                          //   return AppLocalizations.of(context)!.translate('validateNote').toString();
-                          // } else {
-                          //   return null;
-                          // }
-                        },
-                        keyboardType: TextInputType.multiline,
-                        textInputAction: TextInputAction.newline,
-                        fillColor: ColorManager.gray),
+                    Visibility(
+                      visible: cubit.showNote,
+                      child: Column(
+                        children: [
+                          SizedBox(height: mediaQuery.height * 0.01),
+                          DefaultTextField(
+                              controller: cubit.giftDeliveryNoteController,
+                              maxLines: 3,
+                              hintText: AppLocalizations.of(context)!.translate('noteHint').toString(),
+                              validator: (value) {
+                                // if (value!.isEmpty) {
+                                //   return AppLocalizations.of(context)!.translate('validateNote').toString();
+                                // } else {
+                                //   return null;
+                                // }
+                              },
+                              keyboardType: TextInputType.multiline,
+                              textInputAction: TextInputAction.newline,
+                              fillColor: ColorManager.gray),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -1231,7 +1275,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver{
               ///  continue button
               Center(
                 child: GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (forMeFormKey.currentState!.validate() ){
                       if(cubit.dropdownOccasionType.isNotEmpty){
                         if((cubit.image != null && cubit.isPresent)  || !cubit.isPresent){

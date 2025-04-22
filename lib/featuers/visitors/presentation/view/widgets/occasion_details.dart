@@ -46,6 +46,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
     super.initState();
   }
 
+  final GlobalKey qrKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -330,7 +332,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             RepaintBoundary(
-                              key: context.read<OccasionCubit>().qrKey,
+                              key: qrKey,
                               child: QrImageView(
                                 data: context.read<OccasionCubit>().occasionLink,
                                 version: QrVersions.auto,
@@ -349,6 +351,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 context
                                     .read<OccasionCubit>()
                                     .captureAndShareQr(
+                                  qrKey: qrKey,
                                     occasionName: cubit.occasionModel!.occasionName,
                                     personName: UserDataFromStorage.userNameFromStorage);
                               },

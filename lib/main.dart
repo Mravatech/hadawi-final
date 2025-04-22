@@ -36,11 +36,30 @@ import 'package:app_links/app_links.dart';
 import 'dart:async';
 import 'featuers/visitors/presentation/view/widgets/occasion_details.dart';
 
-
-
 final GoRouter _router = GoRouter(
   initialLocation: '/',
+  debugLogDiagnostics: true,
   errorBuilder: (context, state) => const LoginScreen(),
+  // Add redirect to handle dynamic links
+  redirect: (context, state) {
+    final uri = Uri.parse(state.uri.toString());
+
+    // Handle dynamic links with app scheme
+    if (uri.scheme == 'com.app.hadawiapp' && uri.host == 'google') {
+      // Process any parameters from the dynamic link if needed
+      debugPrint('Handling dynamic link in redirect: ${uri.toString()}');
+
+      // Check if there's any occasion ID to extract from query parameters
+      if (uri.queryParameters.containsKey('occasion_id')) {
+        final occasionId = uri.queryParameters['occasion_id'];
+        return '/occasion-details/$occasionId';
+      }
+
+      // Default redirect for dynamic links without specific parameters
+      return '/home';
+    }
+    return null; // Continue with normal routing
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -82,7 +101,15 @@ final GoRouter _router = GoRouter(
       path: '/my-occasions',
       builder: (context, state) => MyOccasions(),
     ),
-    GoRoute(path: '/sign-up', builder: (context, state) => const RegisterScreen()),
+    GoRoute(
+        path: '/sign-up',
+        builder: (context, state) => const RegisterScreen()
+    ),
+    // Add catch-all route for handling unknown paths
+    GoRoute(
+      path: '/:path(.*)',
+      builder: (context, state) => const LoginScreen(),
+    ),
   ],
 );
 
@@ -97,6 +124,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   FlutterError.onError = (FlutterErrorDetails details) {
     if (details.exception.toString().contains('HttpException') &&
         details.exception.toString().contains('Invalid statusCode: 404')) {
@@ -104,6 +132,7 @@ void main() async {
     }
     FlutterError.presentError(details);
   };
+
   NotificationService().initRemoteNotification();
   // NotificationService().getAccessToken();
 
@@ -140,35 +169,72 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initDeepLinkHandling() async {
+    // Listen for incoming links while app is running
     _linkSubscription = _appLinks.uriLinkStream.listen(
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        customPushReplacement(context, LoginScreen());
+        // Log error details for debugging
+        if (error.toString().contains('no routes for location')) {
+          debugPrint('Router could not match a route for the incoming link');
+        }
+        if (mounted) {
+          customPushReplacement(context, LoginScreen());
+        }
       },
     );
 
     try {
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
-        _handleDeepLink(Uri.parse(initialLink.toString()));
-      }else{
-        customPushReplacement(context, LoginScreen());
+        debugPrint('Initial deep link: ${initialLink.toString()}');
+        _handleDeepLink(initialLink);
+      } else {
+        if (mounted) {
+          customPushReplacement(context, LoginScreen());
+        }
       }
     } catch (e) {
-      customPushReplacement(context, LoginScreen());
       debugPrint('Error getting initial deep link: $e');
+      if (mounted) {
+        customPushReplacement(context, LoginScreen());
+      }
     }
   }
 
   void _handleDeepLink(Uri uri) {
     debugPrint('Received deep link: ${uri.toString()}');
 
+    // Handle Firebase dynamic links with app scheme
+    if (uri.scheme == 'com.app.hadawiapp' && uri.host == 'google') {
+      debugPrint('Handling app scheme dynamic link');
+
+      // Extract any information from query parameters
+      final queryParams = uri.queryParameters;
+      debugPrint('Link parameters: $queryParams');
+
+      // Navigate based on parameters
+      if (queryParams.containsKey('occasion_id')) {
+        final occasionId = queryParams['occasion_id'];
+        context.go('/occasion-details/$occasionId');
+      } else {
+        // Default navigation for dynamic links without specific parameters
+        context.go('/home');
+      }
+      return;
+    }
+
+    // Handle regular path-based deep links
     if (uri.pathSegments.isNotEmpty) {
       if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
         final occasionId = uri.pathSegments[1];
-        context.go('/Occasion-details/$occasionId');
+        context.go('/occasion-details/$occasionId');
+      } else if (uri.pathSegments.first == 'login') {
+        context.go('/login');
+      } else if (uri.pathSegments.first == 'home') {
+        context.go('/home');
       }
+      // Add other path cases as needed
     }
   }
 

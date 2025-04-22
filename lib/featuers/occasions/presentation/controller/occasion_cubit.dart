@@ -60,7 +60,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   // List of items in our dropdown menu
   List occasionTypeItems = [];
 
-  final GlobalKey qrKey = GlobalKey();
+
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
   bool giftWithPackage = true;
@@ -108,6 +108,21 @@ class OccasionCubit extends Cubit<OccasionState> {
   void switchGiftWithPackage(bool value) {
     giftWithPackage = value;
     emit(SwitchGiftWithPackageSuccess());
+  }
+
+
+  bool showGiftCard = false;
+  bool showNote = false;
+
+
+  void switchShowGiftCard() {
+    showGiftCard = !showGiftCard;
+    emit(SwitchShowGiftCardSuccess());
+  }
+
+  void switchShowNote() {
+    showNote = !showNote;
+    emit(SwitchShowNoteSuccess());
   }
 
   void switchForWhomOccasion() {
@@ -282,6 +297,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   Future<void> captureAndShareQr({
     required String occasionName,
     required String personName,
+    required GlobalKey qrKey
   }) async {
     try {
       // Start by emitting a loading state (if needed)
