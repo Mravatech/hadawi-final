@@ -12,13 +12,13 @@ class LoginViewBody extends StatefulWidget {
 
 class _LoginViewBodyState extends State<LoginViewBody> {
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
 
   @override
   void dispose() {
     passController.dispose();
-    emailController.dispose();
+    phoneController.dispose();
     super.dispose();
   }
 
@@ -36,7 +36,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
           flex: 4,
           child: LoginFormWidget(
             passController: passController,
-            emailController: emailController,
+            phoneController: phoneController,
           ),
         ),
 

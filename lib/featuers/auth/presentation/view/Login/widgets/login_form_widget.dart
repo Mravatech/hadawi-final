@@ -16,13 +16,17 @@ import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 
+import '../../../../../../utiles/helper/material_navigation.dart';
+import '../../register/widgets/country_code_widget.dart';
+import '../../verifiy_otp_code/verifiy_otp_code_screen.dart';
+
 class LoginFormWidget extends StatefulWidget {
-  final TextEditingController emailController ;
+  final TextEditingController phoneController ;
   final TextEditingController passController ;
 
   const LoginFormWidget({
     super.key,
-    required this.emailController,
+    required this.phoneController,
     required this.passController,
   });
 
@@ -33,15 +37,6 @@ class LoginFormWidget extends StatefulWidget {
 class _LoginFormWidgetState extends State<LoginFormWidget> {
   final GlobalKey<FormState> loginKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    super.initState();
-    saveData(
-        rememberMe: context.read<AuthCubit>().rememberMe,
-        emailController: widget.emailController,
-        passController: widget.passController
-    );
-  }
     @override
   Widget build(BuildContext context) {
 
@@ -66,89 +61,55 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
                 // Email field
                 DefaultTextField(
-                  controller: widget.emailController,
-                  hintText: AppLocalizations.of(context)!
-                      .translate('emailHint')
-                      .toString(),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .translate('emailMessage')
-                          .toString();
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  fillColor: ColorManager.gray,
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                // Password field
-                DefaultTextField(
-                  isPassword: true,
-                  withSuffix: true,
-                  controller: widget.passController,
-                  hintText: AppLocalizations.of(context)!
-                      .translate('loginPasswordHint')
-                      .toString(),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .translate('validPassword')
-                          .toString();
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  fillColor: ColorManager.gray,
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                // Remember Me and Forget Password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    BlocBuilder<AuthCubit, AuthStates>(
-                      builder: (context, state) {
-                        return RememberMeButton(
-                          initialValue: UserDataFromStorage.rememberMe,
-                          onChanged: (value) {
-                            context.read<AuthCubit>().rememberMeFunction(
-                                emailController: widget.emailController.text,
-                                passController: widget.passController.text,
-                                value: value);
-                          },
-                        );
-                      },
+                    prefix: CountryCodeWidget(
+                      color: ColorManager.gray,
                     ),
-                    const ForgetPasswordButton(),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                    controller: widget.phoneController,
+                    hintText: AppLocalizations.of(context)!
+                        .translate('loginPhoneHint')
+                        .toString(),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .translate('loginMessage')
+                            .toString();
+                      }
+                      if (value.length < 9 || value.length > 9) {
+                        return AppLocalizations.of(context)!
+                            .translate('validatePhone')
+                            .toString();
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    fillColor: ColorManager.gray),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+
                 // Login Button
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
-                    if (state is UserLoginSuccessState) {
-                      saveData(
-                          rememberMe: UserDataFromStorage.rememberMe,
-                          emailController: widget.emailController,
-                          passController: widget.passController
-                      );
-                      context.read<AuthCubit>().rememberMeFunction(
-                          emailController: widget.emailController.text,
-                          passController: widget.passController.text,
-                          value: UserDataFromStorage.rememberMe);
-                      context.replace(AppRouter.home);
+                    var cubit = context.read<AuthCubit>();
+
+                    if (state is GenerateCodeSuccessState) {
+                      context
+                          .read<AuthCubit>()
+                          .sendOtp(phone: '+966${widget.phoneController.text}');
                     }
-                    if (state is UserLoginErrorState) {
+                    if (state is SendOtpErrorState) {
+                      debugPrint('error: ${state.message}');
                       customToast(
-                        title: state.message,
-                        color: ColorManager.error,
-                      );
+                          title: state.message, color: ColorManager.error);
+                    }
+                    if (state is SendOtpSuccessState) {
+                      customPushNavigator(
+                          context,
+                          VerifyPhoneScreen(
+                              verificationOtp:cubit.otpCode,
+                              ));
                     }
                   },
                   builder: (context, state) {
-                    var cubit = context.read<AuthCubit>();
                     return state is UserLoginLoadingState
                         ? const CircularProgressIndicator()
                         : DefaultButton(
@@ -157,11 +118,8 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                                 .toString(),
                             onPressed: () {
                               if (loginKey.currentState!.validate()) {
-                                cubit.login(
-                                  email: widget.emailController.text,
-                                  password: widget.passController.text,
-                                  context: context,
-                                );
+                                context.read<AuthCubit>().generateRandomCode();
+
                               }
                             },
                             buttonColor: ColorManager.primaryBlue,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/verifiy_otp_code_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/my_occasions.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/screen/splash_screen.dart';
@@ -9,6 +10,7 @@ class AppRouter {
   static const String splash = '/';
   static const String login = '/login';
   static const String signUp = '/sign-up';
+  static const String otpScreen = '/otpScreen';
   static const String home = '/home';
   static const String profile = '/profile';
   static const String occasionsList = '/occasions-list';
@@ -47,6 +49,13 @@ class AppRouter {
       case login:
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
+        );
+        case otpScreen:
+          String? verificationOtp = parameter ??
+              (args is String ? args :
+              (args is Map<String, dynamic> ? args['verificationOtp']?.toString() : ''));
+        return MaterialPageRoute(
+          builder: (_) => VerifyPhoneScreen(verificationOtp: verificationOtp),
         );
       case home:
         return MaterialPageRoute(

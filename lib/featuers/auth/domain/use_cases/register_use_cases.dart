@@ -30,5 +30,10 @@ class RegisterUseCases{
         city: city
     );
   }
-
+  Future<Either<Faliure,void>> sendOtp({
+    required String phone,
+    required int otp
+  })async {
+    return await authBaseRepository.sendOtp(phone: phone, otp: otp);
+  }
 }

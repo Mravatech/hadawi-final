@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -148,6 +149,54 @@ class AuthCubit extends Cubit<AuthStates> {
     });
   }
 
+  String otpCode = '';
+  String generateRandomCode({int length = 6}) {
+    const String chars =
+        '0123456789';
+    final Random random = Random();
+    final String code =
+    List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
+    otpCode = code;
+    debugPrint("Generated Code: $code");
+    emit(GenerateCodeSuccessState());
+    return code;
+  }
+
+  Future<void> sendOtp({required String phone}) async {
+    emit(SendOtpLoadingState());
+    try {
+      if (phone.isEmpty) {
+        emit(SendOtpErrorState(message: 'Phone number is required'));
+        return;
+      }
+      if (otpCode.isEmpty || !RegExp(r'^\d+$').hasMatch(otpCode)) {
+        emit(SendOtpErrorState(message: 'Invalid OTP code'));
+        return;
+      }
+
+      final parsedOtp = int.parse(otpCode);
+      final result = await registerUseCases.sendOtp(phone: phone, otp: parsedOtp);
+
+      result.fold((l) {
+        emit(SendOtpErrorState(message: l.message));
+      }, (r) {
+        customToast(title: 'تم ارسال كود التحقق', color: ColorManager.primaryBlue);
+        emit(SendOtpSuccessState());
+      });
+    } catch (e) {
+      debugPrint('Unexpected error in sendOtp: $e');
+      emit(SendOtpErrorState(message: 'Unexpected error: $e'));
+    }
+  }
+  void verifyOtp({required int otp}) {
+    emit(VerifiyOtpCodeLoadingState());
+    if (otp == int.parse(otpCode)) {
+      emit(VerifiyOtpCodeSuccessState());
+    } else {
+      emit(VerifiyOtpCodeErrorState(message: 'Invalid OTP code'));
+    }
+  }
   Future<void> saveUserData(
       {required String uId,
       required String email,
