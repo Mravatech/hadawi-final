@@ -6,6 +6,7 @@ import FirebaseAuth
 import cloud_firestore
 import UserNotifications
 import FirebaseMessaging
+import GoogleSignIn
 
 @main
 @objc class AppDelegate: FlutterAppDelegate , MessagingDelegate{
