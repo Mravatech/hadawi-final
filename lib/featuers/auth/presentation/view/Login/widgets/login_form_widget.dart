@@ -42,7 +42,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
         passController: widget.passController
     );
   }
-    @override
+  @override
   Widget build(BuildContext context) {
 
     return GestureDetector(
@@ -152,20 +152,20 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     return state is UserLoginLoadingState
                         ? const CircularProgressIndicator()
                         : DefaultButton(
-                            buttonText: AppLocalizations.of(context)!
-                                .translate('login')
-                                .toString(),
-                            onPressed: () {
-                              if (loginKey.currentState!.validate()) {
-                                cubit.login(
-                                  email: widget.emailController.text,
-                                  password: widget.passController.text,
-                                  context: context,
-                                );
-                              }
-                            },
-                            buttonColor: ColorManager.primaryBlue,
+                      buttonText: AppLocalizations.of(context)!
+                          .translate('login')
+                          .toString(),
+                      onPressed: () {
+                        if (loginKey.currentState!.validate()) {
+                          cubit.login(
+                            email: widget.emailController.text,
+                            password: widget.passController.text,
+                            context: context,
                           );
+                        }
+                      },
+                      buttonColor: ColorManager.primaryBlue,
+                    );
                   },
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
@@ -202,7 +202,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       Text(
                         AppLocalizations.of(context)!.translate('support').toString(),
                         style: TextStyles.textStyle18Bold.copyWith(
-                          fontSize: 11
+                            fontSize: 11
                         ),
                       ),
                       SizedBox(width: MediaQuery.sizeOf(context).width * 0.015),

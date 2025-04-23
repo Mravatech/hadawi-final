@@ -18,9 +18,11 @@ class AllOccasionsViewBody extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: Column(
-        crossAxisAlignment:  CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.07,),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.07,
+          ),
 
 
           // الاصدقاء المشاركين بهديتي
@@ -35,31 +37,56 @@ class AllOccasionsViewBody extends StatelessWidget {
 
           // المناسبات المسحله جديثا
           InkWell(
-            onTap: ()=>customPushNavigator(context, MyOccasions()),
-              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('newEvents').toString(),)
-          ),
+              onTap: () => customPushNavigator(context, MyOccasions()),
+              child: ProfileRowWidget(
+                image: '',
+                title: AppLocalizations.of(context)!
+                    .translate('newEvents')
+                    .toString(),
+              )),
 
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.045,
+          ),
 
           // المناسبات المسحله لاخر
           InkWell(
-            onTap: ()=>customPushNavigator(context, OthersOccasions()),
-            child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('lastEvents').toString(),),
+            onTap: () => customPushNavigator(context, OthersOccasions()),
+            child: ProfileRowWidget(
+              image: '',
+              title: AppLocalizations.of(context)!
+                  .translate('lastEvents')
+                  .toString(),
+            ),
           ),
 
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.045,
+          ),
 
           // المناسبات المسحله سابقا
           InkWell(
-            onTap: ()=>customPushNavigator(context, PastOccasions()),
-              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('previousEvents').toString(),)),
+              onTap: () => customPushNavigator(context, PastOccasions()),
+              child: ProfileRowWidget(
+                image: '',
+                title: AppLocalizations.of(context)!
+                    .translate('previousEvents')
+                    .toString(),
+              )),
 
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
+          SizedBox(
+            height: MediaQuery.sizeOf(context).height * 0.045,
+          ),
 
           // المناسبات المغلقه
           InkWell(
-              onTap: ()=>customPushNavigator(context, ClosedOccasions()),
-              child: ProfileRowWidget(image: '', title:  AppLocalizations.of(context)!.translate('closedEvents').toString(),)),
+              onTap: () => customPushNavigator(context, ClosedOccasions()),
+              child: ProfileRowWidget(
+                image: '',
+                title: AppLocalizations.of(context)!
+                    .translate('closedEvents')
+                    .toString(),
+              )),
         ],
       ),
     );

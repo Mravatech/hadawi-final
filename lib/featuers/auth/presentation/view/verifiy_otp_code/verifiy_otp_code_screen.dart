@@ -6,24 +6,24 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 
 class VerifyPhoneScreen extends StatelessWidget {
-  final String verificationId;
+  final String verificationOtp;
   final String gender;
   final String name;
   final String phone;
   final String city;
   final String brithDate;
   final String email;
-  final bool isLogin;
+  final String password;
 
   const VerifyPhoneScreen({super.key,
-    required this.verificationId,
-    required this.gender,
-    required this.name,
-    required this.phone,
-    required this.city,
-    required this.brithDate,
-    required this.email,
-    required this.isLogin,
+   required  this.verificationOtp,
+   required  this.gender,
+   required  this.name,
+   required  this.phone,
+   required  this.city,
+   required  this.brithDate,
+   required  this.email,
+   required  this.password,
   });
 
   @override
@@ -46,14 +46,14 @@ class VerifyPhoneScreen extends StatelessWidget {
           return Future.value(true);
         },
         child: VerfiyCodeViewBody(
-          verificationId: verificationId,
+          verificationId: verificationOtp,
           gender: gender,
           name: name,
           phone: phone,
           city: city,
           brithDate: brithDate,
           email: email,
-          isLogin: isLogin,
+          password: password,
         ),
       ),
     );

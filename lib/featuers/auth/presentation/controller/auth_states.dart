@@ -15,6 +15,7 @@ class UserLoginErrorState extends AuthStates {
 class UserRegisterLoadingState extends AuthStates {}
 
 class UserRegisterSuccessState extends AuthStates {}
+class GenerateCodeSuccessState extends AuthStates {}
 
 class UserRegisterErrorState extends AuthStates {
   String message;
@@ -143,3 +144,11 @@ class RememberMeSuccessState extends AuthStates {}
 class GetAllCityLoadingState extends AuthStates {}
 class GetAllCitySuccessState extends AuthStates {}
 class GetAllCityErrorState extends AuthStates {}
+
+class SendOtpLoadingState extends AuthStates {}
+class SendOtpSuccessState extends AuthStates {}
+class SendOtpErrorState extends AuthStates {
+  String message;
+
+  SendOtpErrorState({required this.message});
+}

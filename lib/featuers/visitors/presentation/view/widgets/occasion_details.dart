@@ -49,6 +49,14 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   final GlobalKey qrKey = GlobalKey();
 
   @override
+  void dispose() {
+    context.read<VisitorsCubit>().editOccasionNameController.dispose();
+    context.read<VisitorsCubit>().editGiftNameController.dispose();
+    context.read<VisitorsCubit>().editPersonNameController.dispose();
+    context.read<OccasionCubit>().qrKey.currentState?.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
@@ -76,14 +84,15 @@ class _OccasionDetailsState extends State<OccasionDetails> {
               customToast(title: state.message, color: ColorManager.error);
             }
             if (state is EditOccasionSuccessState) {
-              context.read<VisitorsCubit>().getOccasions();
+                context.read<OccasionsListCubit>()
+                  .getMyOccasionsList();
               Navigator.pop(context);
             }
           },
           builder: (context, state) {
             final cubit = context.read<VisitorsCubit>();
             return state is GetOccasionDataLoadingState
-                ? LoadingAnimationWidget()
+                ? Center(child: LoadingAnimationWidget())
                 : Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -103,8 +112,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         ),
                         DefaultTextField(
                           controller: cubit.editOccasionNameController,
-                          hintText: cubit.occasionModel!.occasionName,
-                          initialValue: cubit.occasionModel!.occasionName,
+                          hintText: cubit.occasionModel?.occasionName??'',
+                          initialValue: cubit.occasionModel?.occasionName??'',
                           validator: (value) {
                             return null;
                           },
@@ -346,23 +355,23 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
+                            state is CreateOccasionLinkLoadingState
+                                ? LoadingAnimationWidget()
+                                : GestureDetector(
                               onTap: () async {
                                 context
                                     .read<OccasionCubit>()
                                     .captureAndShareQr(
-                                  qrKey: qrKey,
+                                     qrKey: qrKey,
                                     occasionName: cubit.occasionModel!.occasionName,
                                     personName: UserDataFromStorage.userNameFromStorage);
                               },
-                              child: state is CreateOccasionLinkLoadingState
-                                  ? LoadingAnimationWidget()
-                                  : Container(
+                              child: Container(
                                 height:
                                 MediaQuery.sizeOf(context).height *
                                     .055,
                                 width: MediaQuery.sizeOf(context).width *
-                                    .25,
+                                    .3,
                                 decoration: BoxDecoration(
                                   color: ColorManager.primaryBlue,
                                   borderRadius: BorderRadius.circular(
@@ -371,20 +380,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('share')
-                                            .toString(),
-                                        style: TextStyles.textStyle18Bold
-                                            .copyWith(
-                                            color:
-                                            ColorManager.white),
-                                      ),
-                                    ],
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('shareQr')
+                                          .toString(),
+                                      style: TextStyles.textStyle12Bold
+                                          .copyWith(
+                                          color:
+                                          ColorManager.white),
+                                    ),
                                   ),
                                 ),
                               ),

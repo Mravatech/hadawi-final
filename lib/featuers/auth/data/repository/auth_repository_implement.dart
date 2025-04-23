@@ -8,34 +8,35 @@ import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
- class AuthRepositoryImplement extends AuthBaseRepository {
-
+class AuthRepositoryImplement extends AuthBaseRepository {
   BaseAuthDataSource baseAuthDataSource;
 
   AuthRepositoryImplement({required this.baseAuthDataSource});
 
   @override
-  Future<Either<Faliure,void>> login({required String email, required String password,required context}) async{
-    try{
-      return Right(await baseAuthDataSource.login(email: email, password: password,context:context));
-    }on FirebaseExceptions catch(e){
+  Future<Either<Faliure, void>> login(
+      {required String email,
+      required String password,
+      required context}) async {
+    try {
+      return Right(await baseAuthDataSource.login(
+          email: email, password: password, context: context));
+    } on FirebaseExceptions catch (e) {
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 
-
   @override
-  Future<Either<Faliure,void>> register({
-    required String email,
-    required String password,
-    required String phone,
-    required String name,
-    required String brithDate,
-    required String gender,
-    required context,
-    required String city
-  })async {
-    try{
+  Future<Either<Faliure, void>> register(
+      {required String email,
+      required String password,
+      required String phone,
+      required String name,
+      required String brithDate,
+      required String gender,
+      required context,
+      required String city}) async {
+    try {
       return Right(await baseAuthDataSource.register(
           email: email,
           password: password,
@@ -44,37 +45,35 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           name: name,
           context: context,
           phone: phone,
-        city: city
-      ));
-    }on FirebaseExceptions catch(e){
-    return Left(FirebaseFaliure.fromMessage(e));
-    }catch (e) {
+          city: city));
+    } on FirebaseExceptions catch (e) {
+      return Left(FirebaseFaliure.fromMessage(e));
+    } catch (e) {
       print('error in register $e');
       return Left(FirebaseFaliure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Faliure, void>> logout()async {
-    try{
+  Future<Either<Faliure, void>> logout() async {
+    try {
       return Right(await baseAuthDataSource.logout());
-    }on FirebaseExceptions catch(e){
+    } on FirebaseExceptions catch (e) {
       return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 
   @override
-  Future<Either<Faliure, void>> saveUserData({
-    required String email,
-    required String phone,
-    required String name,
-    required String uId,
-    required String brithDate,
-    required String gender,
-    required String password,
-    required String city
-  })async {
-    try{
+  Future<Either<Faliure, void>> saveUserData(
+      {required String email,
+      required String phone,
+      required String name,
+      required String uId,
+      required String brithDate,
+      required String gender,
+      required String password,
+      required String city}) async {
+    try {
       return Right(await baseAuthDataSource.saveUserData(
           email: email,
           phone: phone,
@@ -83,80 +82,67 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           brithDate: brithDate,
           gender: gender,
           password: password,
-          city: city
-          ));
-    }on FireStoreException catch(e){
-    return Left(FirebaseFaliure(message: e.firebaseException.message!));
+          city: city));
+    } on FireStoreException catch (e) {
+      return Left(FirebaseFaliure(message: e.firebaseException.message!));
     }
   }
 
   @override
   Future<Either<Faliure, void>> loginWithGoogle(
-      {
-        required String brithDate,
-        required String gender,
-        required  context,
-        required String city
-      }) async{
-    try{
+      {required String brithDate,
+      required String gender,
+      required context,
+      required String city}) async {
+    try {
       return Right(await baseAuthDataSource.loginWithGoogle(
-          brithDate: brithDate,
-          gender: gender,
-          context: context,
-          city: city
-      )
-      );
-    }on FirebaseExceptions catch(e){
+          brithDate: brithDate, gender: gender, context: context, city: city));
+    } on FirebaseExceptions catch (e) {
       return Left(GoogleAuthFaliure.fromMessage(e));
     }
-
-
   }
 
   @override
-  Future<Either<Faliure, void>> loginWithPhoneNumber({
-    required String phone,
-    required BuildContext context,
-    required String email,
-    required String name,
-    required bool resendCode,
-    required String brithDate,
-    required bool isLogin,
-    required String gender,
-    required String city
-  }) async{
-    try{
-       return Right(await baseAuthDataSource.loginWithPhoneNumber(
-           email: email,
-           name: name,
-           brithDate: brithDate,
-           gender: gender,
-           phone: phone,
-           isLogin: isLogin,
-           city: city,
-           resendCode: resendCode,
-           context: context
-       ));
-    }on FirebaseExceptions catch(e){
-       return Left(FirebaseFaliure.fromMessage(e));
-    }on Exception catch(e){
+  Future<Either<Faliure, void>> loginWithPhoneNumber(
+      {required String phone,
+      required BuildContext context,
+      required String email,
+      required String name,
+      required bool resendCode,
+      required String brithDate,
+      required bool isLogin,
+      required String gender,
+      required String city}) async {
+    try {
+      return Right(await baseAuthDataSource.loginWithPhoneNumber(
+          email: email,
+          name: name,
+          brithDate: brithDate,
+          gender: gender,
+          phone: phone,
+          isLogin: isLogin,
+          city: city,
+          resendCode: resendCode,
+          context: context));
+    } on FirebaseExceptions catch (e) {
+      return Left(FirebaseFaliure.fromMessage(e));
+    } on Exception catch (e) {
       return Left(FirebaseFaliure(message: e.toString()));
     }
   }
 
   @override
-  Future<Either<Faliure, void>> verifiyPhoneNumber({
-    required String email,
-    required String phone,
-    required String name,
-    required bool isLogin,
-    required String brithDate,
-    required String verificationId,
-    required String verifyOtpPinPut,
-    required String gender,
-    required String city
-  })async {
-    try{
+  Future<Either<Faliure, void>> verifiyPhoneNumber(
+      {required String email,
+      required String phone,
+      required String name,
+      required bool isLogin,
+      required String brithDate,
+      required String verificationId,
+      required String verifyOtpPinPut,
+      required String gender,
+      required String city}) async {
+    try {
       return Right(await baseAuthDataSource.verifiyPhoneNumber(
           email: email,
           phone: phone,
@@ -167,39 +153,52 @@ import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
           verifyOtpPinPut: verifyOtpPinPut,
           gender: gender,
           password: '',
-          city: city
-    ));
-    }on FirebaseExceptions catch(e){
-    return Left(FirebaseFaliure.fromMessage(e));
+          city: city));
+    } on FirebaseExceptions catch (e) {
+      return Left(FirebaseFaliure.fromMessage(e));
     }
   }
 
   @override
-  Future<Either<Faliure, bool>> checkUserLogin({required String phoneNumber})async {
-     try{
-       return Right(await baseAuthDataSource.checkUserLogin(phoneNumber: phoneNumber));
-     }on FireStoreException catch(e){
-       return Left(FireStoreFaliure.fromMessage(e));
-     }
-  }
-
-  @override
-  Future<Either<Faliure, UserEntities>> getUserInfo({required String uId,required context}) async{
-    try{
-      return Right(await baseAuthDataSource.getUserData(uId: uId,context: context));
-    }on FireStoreException catch(e){
+  Future<Either<Faliure, bool>> checkUserLogin(
+      {required String phoneNumber}) async {
+    try {
+      return Right(
+          await baseAuthDataSource.checkUserLogin(phoneNumber: phoneNumber));
+    } on FireStoreException catch (e) {
       return Left(FireStoreFaliure.fromMessage(e));
     }
   }
 
   @override
-  Future<Either<Faliure, bool>> deleteUser({required String uId}) async{
-    try{
-      await baseAuthDataSource.deleteUser(uId: uId);
-      return  Right(true);
-    }on FireStoreException catch(e){
-      return  Left(FireStoreFaliure.fromMessage(e));
+  Future<Either<Faliure, UserEntities>> getUserInfo(
+      {required String uId, required context}) async {
+    try {
+      return Right(
+          await baseAuthDataSource.getUserData(uId: uId, context: context));
+    } on FireStoreException catch (e) {
+      return Left(FireStoreFaliure.fromMessage(e));
     }
   }
 
+  @override
+  Future<Either<Faliure, bool>> deleteUser({required String uId}) async {
+    try {
+      await baseAuthDataSource.deleteUser(uId: uId);
+      return Right(true);
+    } on FireStoreException catch (e) {
+      return Left(FireStoreFaliure.fromMessage(e));
+    }
+  }
+
+  @override
+  Future<Either<Faliure, void>> sendOtp(
+      {required String phone, required int otp,}) async {
+    try {
+      final response = await baseAuthDataSource.sendOtp(phone: phone, otp: otp,);
+      return Right(response);
+    } catch (e) {
+      return Left(Faliure(message: e.toString()));
+    }
+  }
 }

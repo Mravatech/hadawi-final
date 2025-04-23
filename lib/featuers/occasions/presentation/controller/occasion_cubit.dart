@@ -60,7 +60,6 @@ class OccasionCubit extends Cubit<OccasionState> {
   // List of items in our dropdown menu
   List occasionTypeItems = [];
 
-
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
   bool giftWithPackage = true;

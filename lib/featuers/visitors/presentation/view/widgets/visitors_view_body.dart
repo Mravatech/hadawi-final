@@ -74,7 +74,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                         ),
                         height: mediaQuery.height * 0.2,
                         width: double.infinity,
-
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -400,8 +399,8 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                           }else{
                                             customPushNavigator(
                                               context,
-                                              BlocProvider(
-                                                create: (context) => VisitorsCubit(getIt()),
+                                              BlocProvider.value(
+                                                value:   cubit,
                                                 child: OccasionDetails(
                                                   occasionId: cubit.activeOccasions[index].occasionId,
                                                 ),
@@ -412,8 +411,8 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                       }else{
                                         customPushNavigator(
                                           context,
-                                          BlocProvider(
-                                            create: (context) => VisitorsCubit(getIt()),
+                                          BlocProvider.value(
+                                            value:  cubit,
                                             child: OccasionDetails(
                                               occasionId: cubit.activeOccasions[index].occasionId,
                                             ),

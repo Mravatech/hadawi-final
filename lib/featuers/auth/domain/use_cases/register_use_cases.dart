@@ -1,5 +1,6 @@
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/domain/base_repository/auth_base_repository.dart';
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
@@ -30,5 +31,10 @@ class RegisterUseCases{
         city: city
     );
   }
-
+  Future<Either<Faliure,void>> sendOtp({
+    required String phone,
+    required int otp,
+  })async {
+    return await authBaseRepository.sendOtp(phone: phone, otp: otp,);
+  }
 }

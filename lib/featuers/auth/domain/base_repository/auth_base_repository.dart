@@ -18,6 +18,8 @@ abstract class AuthBaseRepository {
     required String brithDate,
     required String gender
   });
+  Future<Either<Faliure,void>>sendOtp({required String phone,required int otp,});
+
   Future<Either<Faliure,void>> saveUserData({
     required String email, required String phone,
     required String password,
