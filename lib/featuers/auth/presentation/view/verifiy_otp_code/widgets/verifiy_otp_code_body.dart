@@ -27,6 +27,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
     required this.phone,
     required this.brithDate,
     required this.email,
+    required this.password,
     required this.isLogin,
   });
 
@@ -37,6 +38,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
   final String phone;
   final String brithDate;
   final String email;
+  final String password;
   final bool isLogin;
 
   @override
@@ -154,8 +156,17 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
                     if (state is VerifiyOtpCodeSuccessState) {
+                      context.read<AuthCubit>().register(
+                          email: widget.email,
+                          password: widget.password,
+                          phone: widget.phone,
+                          name: widget.name,
+                          context: context,
+                          brithDate: widget.brithDate,
+                          gender: widget.gender,
+                          city: widget.city);
 
-                        context.replace(AppRouter.home);
+                      context.replace(AppRouter.home);
                     }
                     if (state is VerifiyOtpCodeErrorState) {
                       customToast(

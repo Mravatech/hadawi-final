@@ -37,7 +37,7 @@ abstract class BaseAuthDataSource {
 
   Future<void> sendOtp({
     required String phone,
-    required int otp
+    required int otp,
   });
 
   Future<void> saveUserData({
@@ -413,7 +413,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   }
 
   @override
-  Future<Either<Failure, Unit>> sendOtp({required String phone, required int otp}) async {
+  Future<Either<Failure, Unit>> sendOtp({required String phone, required int otp,}) async {
     try {
       String formattedPhone = phone.startsWith('+') ? phone : '+966$phone';
       print('Sending OTP to: $formattedPhone, OTP: $otp');
@@ -435,16 +435,6 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
 
       if (response.statusCode == 200) {
         print('OTP sent successfully');
-        // await saveUserData(
-        //   email: UserDataFromStorage,
-        //   phone: phone,
-        //   name: name,
-        //   password: password,
-        //   uId: user.user!.uid,
-        //   brithDate: brithDate,
-        //   city: city,
-        //   gender: gender,
-        // );
         return const Right(unit);
       } else {
         print('Unexpected status code: ${response.statusCode}, Data: ${response.data}');

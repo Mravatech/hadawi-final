@@ -207,6 +207,7 @@
   "validatePersonName": "Person name is required",
   "continue": "Continue",
   "share": "Share",
+  "shareQr": "Share Qr Code",
   "shareNames": "Share Names",
   "moneyAmount": "Money Amount",
   "rsa": "RSA",

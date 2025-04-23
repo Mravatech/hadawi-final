@@ -193,9 +193,9 @@ class AuthRepositoryImplement extends AuthBaseRepository {
 
   @override
   Future<Either<Faliure, void>> sendOtp(
-      {required String phone, required int otp}) async {
+      {required String phone, required int otp,}) async {
     try {
-      final response = await baseAuthDataSource.sendOtp(phone: phone, otp: otp);
+      final response = await baseAuthDataSource.sendOtp(phone: phone, otp: otp,);
       return Right(response);
     } catch (e) {
       return Left(Faliure(message: e.toString()));

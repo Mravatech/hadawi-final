@@ -15,6 +15,7 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController nameController = TextEditingController();
+  TextEditingController passController = TextEditingController();
   TextEditingController cityController = TextEditingController();
 
   @override
@@ -22,6 +23,7 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
     emailController.dispose();
     phoneController.dispose();
     nameController.dispose();
+    passController.dispose();
     cityController.dispose();
     super.dispose();
   }
@@ -51,6 +53,7 @@ class _RegisterViewBodyState extends State<RegisterViewBody> {
             phoneController:  phoneController,
             emailController:  emailController,
             nameController:   nameController,
+            passController:   passController,
             cityController: cityController,
           ),
         ),

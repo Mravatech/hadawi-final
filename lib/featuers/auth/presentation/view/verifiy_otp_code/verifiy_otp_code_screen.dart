@@ -13,6 +13,7 @@ class VerifyPhoneScreen extends StatelessWidget {
   final String? city;
   final String? brithDate;
   final String? email;
+  final String? password;
   final bool? isLogin;
 
   const VerifyPhoneScreen({super.key,
@@ -23,6 +24,7 @@ class VerifyPhoneScreen extends StatelessWidget {
      this.city,
      this.brithDate,
      this.email,
+     this.password,
      this.isLogin,
   });
 
@@ -53,6 +55,7 @@ class VerifyPhoneScreen extends StatelessWidget {
           city: city??'',
           brithDate: brithDate??'',
           email: email??'',
+          password: password??'',
           isLogin: isLogin??false,
         ),
       ),

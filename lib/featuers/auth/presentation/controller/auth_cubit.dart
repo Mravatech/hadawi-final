@@ -163,7 +163,7 @@ class AuthCubit extends Cubit<AuthStates> {
     return code;
   }
 
-  Future<void> sendOtp({required String phone}) async {
+  Future<void> sendOtp({required String phone,}) async {
     emit(SendOtpLoadingState());
     try {
       if (phone.isEmpty) {
@@ -176,7 +176,7 @@ class AuthCubit extends Cubit<AuthStates> {
       }
 
       final parsedOtp = int.parse(otpCode);
-      final result = await registerUseCases.sendOtp(phone: phone, otp: parsedOtp);
+      final result = await registerUseCases.sendOtp(phone: phone, otp: parsedOtp, );
 
       result.fold((l) {
         emit(SendOtpErrorState(message: l.message));

@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
@@ -47,6 +49,14 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
 
   @override
+  void dispose() {
+    context.read<VisitorsCubit>().editOccasionNameController.dispose();
+    context.read<VisitorsCubit>().editGiftNameController.dispose();
+    context.read<VisitorsCubit>().editPersonNameController.dispose();
+    context.read<OccasionCubit>().qrKey.currentState?.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
@@ -74,14 +84,15 @@ class _OccasionDetailsState extends State<OccasionDetails> {
               customToast(title: state.message, color: ColorManager.error);
             }
             if (state is EditOccasionSuccessState) {
-              context.read<VisitorsCubit>().getOccasions();
+                context.read<OccasionsListCubit>()
+                  .getMyOccasionsList();
               Navigator.pop(context);
             }
           },
           builder: (context, state) {
             final cubit = context.read<VisitorsCubit>();
             return state is GetOccasionDataLoadingState
-                ? LoadingAnimationWidget()
+                ? Center(child: LoadingAnimationWidget())
                 : Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Column(
@@ -101,7 +112,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         ),
                         DefaultTextField(
                           controller: cubit.editOccasionNameController,
-                          hintText: cubit.occasionModel!.occasionName,
+                          hintText: cubit.occasionModel?.occasionName??'',
                           initialValue: cubit.occasionModel!.occasionName,
                           validator: (value) {
                             return null;
@@ -344,7 +355,9 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ),
                               ),
                             ),
-                            GestureDetector(
+                            state is CreateOccasionLinkLoadingState
+                                ? LoadingAnimationWidget()
+                                : GestureDetector(
                               onTap: () async {
                                 context
                                     .read<OccasionCubit>()
@@ -352,9 +365,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                     occasionName: cubit.occasionModel!.occasionName,
                                     personName: UserDataFromStorage.userNameFromStorage);
                               },
-                              child: state is CreateOccasionLinkLoadingState
-                                  ? LoadingAnimationWidget()
-                                  : Container(
+                              child: Container(
                                 height:
                                 MediaQuery.sizeOf(context).height *
                                     .055,
@@ -368,20 +379,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('share')
-                                            .toString(),
-                                        style: TextStyles.textStyle18Bold
-                                            .copyWith(
-                                            color:
-                                            ColorManager.white),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('shareQr')
+                                        .toString(),
+                                    maxLines: 2,
+                                    textAlign:  TextAlign.center,
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(
+                                        color:
+                                        ColorManager.white),
                                   ),
                                 ),
                               ),
