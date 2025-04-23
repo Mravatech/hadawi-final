@@ -50,13 +50,13 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const LoginScreen(),
         );
-        case otpScreen:
-          String? verificationOtp = parameter ??
-              (args is String ? args :
-              (args is Map<String, dynamic> ? args['verificationOtp']?.toString() : ''));
-        return MaterialPageRoute(
-          builder: (_) => VerifyPhoneScreen(verificationOtp: verificationOtp),
-        );
+        // case otpScreen:
+        //   String? verificationOtp = parameter ??
+        //       (args is String ? args :
+        //       (args is Map<String, dynamic> ? args['verificationOtp']?.toString() : ''));
+        // return MaterialPageRoute(
+        //   builder: (_) => VerifyPhoneScreen(verificationOtp: verificationOtp),
+        // );
       case home:
         return MaterialPageRoute(
           builder: (_) => const HomeLayout(),

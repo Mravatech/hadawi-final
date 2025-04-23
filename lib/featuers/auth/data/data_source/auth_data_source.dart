@@ -291,18 +291,17 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         },
         codeSent: (String verificationId, int? forceResendingToken) {
           if (resendCode == false) {
-            customPushNavigator(
-                context,
-                VerifyPhoneScreen(
-                  email: email,
-                  phone: phone,
-                  name: name,
-                  isLogin: isLogin,
-                  city: city,
-                  brithDate: brithDate,
-                  gender: gender,
-                  verificationOtp: verificationId,
-                ));
+            // customPushNavigator(
+            //     context,
+            //     VerifyPhoneScreen(
+            //       email: email,
+            //       phone: phone,
+            //       name: name,
+            //       city: city,
+            //       brithDate: brithDate,
+            //       gender: gender,
+            //       verificationOtp: verificationId,
+            //     ));
           }
         },
         verificationFailed: (FirebaseAuthException exception) async {

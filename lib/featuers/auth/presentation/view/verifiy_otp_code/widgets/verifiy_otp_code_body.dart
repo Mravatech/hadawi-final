@@ -28,7 +28,6 @@ class VerfiyCodeViewBody extends StatefulWidget {
     required this.brithDate,
     required this.email,
     required this.password,
-    required this.isLogin,
   });
 
   final String verificationId;
@@ -39,7 +38,6 @@ class VerfiyCodeViewBody extends StatefulWidget {
   final String brithDate;
   final String email;
   final String password;
-  final bool isLogin;
 
   @override
   State<VerfiyCodeViewBody> createState() => _VerfiyCodeViewBodyState();
@@ -165,12 +163,17 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                           brithDate: widget.brithDate,
                           gender: widget.gender,
                           city: widget.city);
-
-                      context.replace(AppRouter.home);
                     }
                     if (state is VerifiyOtpCodeErrorState) {
                       customToast(
                           title: state.message, color: ColorManager.error);
+                    }
+                    if(state is UserRegisterErrorState){
+                      customToast(
+                          title: state.message, color: ColorManager.error);
+                    }
+                    if(state is UserRegisterSuccessState){
+                      context.replace(AppRouter.home);
                     }
                   },
                   builder: (context, state) {

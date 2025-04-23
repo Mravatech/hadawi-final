@@ -143,8 +143,10 @@ class AuthCubit extends Cubit<AuthStates> {
         phone: phone,
         city: city);
     result.fold((l) {
+      debugPrint('Register Error**********${l.message}');
       emit(UserRegisterErrorState(message: l.message));
     }, (r) {
+      debugPrint('Register Success**********');
       emit(UserRegisterSuccessState());
     });
   }

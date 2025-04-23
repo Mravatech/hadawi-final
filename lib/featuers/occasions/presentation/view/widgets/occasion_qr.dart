@@ -146,6 +146,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                       onTap: () async {
                         if (cubit.occasionLink.isNotEmpty) {
                           await cubit.captureAndShareQr(
+                            qrKey: cubit.qrKey,
                               occasionName: widget.occasionName,
                               personName: UserDataFromStorage.userNameFromStorage);
                         }

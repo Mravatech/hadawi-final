@@ -282,38 +282,47 @@ class OccasionCubit extends Cubit<OccasionState> {
   Future<void> captureAndShareQr({
     required String occasionName,
     required String personName,
+    required GlobalKey qrKey, // Ensure qrKey is passed or accessible
   }) async {
     try {
-      // Start by emitting a loading state (if needed)
+      // Start by emitting a loading state
       emit(CaptureAndShareQrLoadingState());
 
-      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      // Wait for the frame to be fully rendered
+      await Future.delayed(Duration.zero); // Optional: Ensure context is ready
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+          ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+          Uint8List pngBytes = byteData!.buffer.asUint8List();
 
-      final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/occasion_qr.png').create();
-      await file.writeAsBytes(pngBytes);
+          final tempDir = await getTemporaryDirectory();
+          final file = await File('${tempDir.path}/occasion_qr.png').create();
+          await file.writeAsBytes(pngBytes);
 
-      final shareResult = await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
-      );
+          final shareResult = await Share.shareXFiles(
+            [XFile(file.path)],
+            text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+          );
 
-      // Check if sharing completed or was canceled
-      if (shareResult.status == ShareResultStatus.success ||
-          shareResult.status == ShareResultStatus.dismissed) {
-        emit(CaptureAndShareQrSuccessState());
-      } else {
-        emit(CaptureAndShareQrErrorState());
-      }
+          // Check if sharing completed or was canceled
+          if (shareResult.status == ShareResultStatus.success ||
+              shareResult.status == ShareResultStatus.dismissed) {
+            emit(CaptureAndShareQrSuccessState());
+          } else {
+            emit(CaptureAndShareQrErrorState());
+          }
 
-      // Cleanup temporary file
-      if (await file.exists()) {
-        await file.delete();
-      }
-
+          // Cleanup temporary file
+          if (await file.exists()) {
+            await file.delete();
+          }
+        } catch (e) {
+          print('Error sharing QR code: $e');
+          emit(CaptureAndShareQrErrorState());
+        }
+      });
     } catch (e) {
       print('Error sharing QR code: $e');
       emit(CaptureAndShareQrErrorState());

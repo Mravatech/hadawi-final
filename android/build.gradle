@@ -1,9 +1,23 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.google.gms:google-services:4.4.2' // Required for Firebase
+        // Add other classpaths if needed, e.g., for Android or Kotlin
+        classpath 'com.android.tools.build:gradle:8.1.0' // Example, adjust version as needed
+        // If using Kotlin, uncomment the following line:
+        // classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0'
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://oppwa.com/maven' } // 🔹 Add this line
+        maven { url 'https://oppwa.com/maven' } // 🔹 Already present
     }
 }
 

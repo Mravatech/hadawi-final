@@ -113,7 +113,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         DefaultTextField(
                           controller: cubit.editOccasionNameController,
                           hintText: cubit.occasionModel?.occasionName??'',
-                          initialValue: cubit.occasionModel!.occasionName,
+                          initialValue: cubit.occasionModel?.occasionName??'',
                           validator: (value) {
                             return null;
                           },
@@ -362,15 +362,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 context
                                     .read<OccasionCubit>()
                                     .captureAndShareQr(
-                                    occasionName: cubit.occasionModel!.occasionName,
-                                    personName: UserDataFromStorage.userNameFromStorage);
+                                    occasionName: cubit.occasionModel?.occasionName??'',
+                                    personName: UserDataFromStorage.userNameFromStorage,
+                                    qrKey: context.read<OccasionCubit>().qrKey);
                               },
                               child: Container(
                                 height:
                                 MediaQuery.sizeOf(context).height *
                                     .055,
                                 width: MediaQuery.sizeOf(context).width *
-                                    .25,
+                                    .3,
                                 decoration: BoxDecoration(
                                   color: ColorManager.primaryBlue,
                                   borderRadius: BorderRadius.circular(
@@ -379,16 +380,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('shareQr')
-                                        .toString(),
-                                    maxLines: 2,
-                                    textAlign:  TextAlign.center,
-                                    style: TextStyles.textStyle12Bold
-                                        .copyWith(
-                                        color:
-                                        ColorManager.white),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('shareQr')
+                                          .toString(),
+                                      style: TextStyles.textStyle12Bold
+                                          .copyWith(
+                                          color:
+                                          ColorManager.white),
+                                    ),
                                   ),
                                 ),
                               ),
