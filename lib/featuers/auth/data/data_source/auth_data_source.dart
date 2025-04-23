@@ -236,57 +236,95 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   @override
   Future<void> loginWithGoogle(
       {required String brithDate,
-      required String gender,
-      required String city,
-      required context}) async {
+        required String gender,
+        required String city,
+        required context}) async {
     try {
       // Initialize GoogleSignIn with proper configuration
       final GoogleSignIn googleSignIn = GoogleSignIn(
         scopes: ['email', 'profile'],
+        // Add this line to explicitly specify client ID for iOS
+        clientId: '1698335350-rn56pn1c22pc1gah4020je52u0oh6it2.apps.googleusercontent.com',
       );
 
       // Clear previous sign-in state to avoid conflicts
       await googleSignIn.signOut();
 
-      // Start the sign-in flow
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      // Start the sign-in flow with error handling
+      final GoogleSignInAccount? googleUser;
+      try {
+        googleUser = await googleSignIn.signIn();
+      } catch (signInError) {
+        print('Google Sign-In error: $signInError');
+        throw Exception('Failed to initiate Google Sign-In: $signInError');
+      }
 
       // Handle case where user cancels the sign-in
       if (googleUser == null) {
-        throw Exception('Sign in cancelled by user');
+        print('Sign-in cancelled by user');
+        return; // Return without error - user simply cancelled
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      // Get authentication details
+      final GoogleSignInAuthentication googleAuth;
+      try {
+        googleAuth = await googleUser.authentication;
+      } catch (authError) {
+        print('Google Auth error: $authError');
+        throw Exception('Failed to authenticate with Google: $authError');
+      }
 
+      // Create Firebase credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
       print('--------------');
-      final user = await firebaseAuth.signInWithCredential(credential);
-      print('${user.user?.email ?? "No email"} , ${user.user?.displayName ?? "No name"} , ${user.user?.uid}');
+      print('Signing in to Firebase with Google credential...');
+
+      // Sign in to Firebase with credential
+      final UserCredential userCredential;
+      try {
+        userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      } catch (firebaseError) {
+        print('Firebase sign-in error: $firebaseError');
+        throw Exception('Failed to sign in to Firebase: $firebaseError');
+      }
+
+      final user = userCredential.user;
+      print('${user?.email ?? "No email"}, ${user?.displayName ?? "No name"}, ${user?.uid}');
       print('--------------');
 
       // Only proceed if we have a user
-      if (user.user != null) {
-        saveUserData(
-            email: user.user!.email ?? '',  // Handle potential null email
-            phone: '',
-            name: user.user!.displayName ?? '',  // Handle potential null name
-            uId: user.user!.uid,
-            city: city,
-            password: '',
-            gender: gender,
-            brithDate: brithDate
-        );
-        await getUserData(uId: user.user!.uid, context: context);
+      if (user != null) {
+        try {
+          await saveUserData(
+              email: user.email ?? '',
+              phone: '',
+              name: user.displayName ?? '',
+              uId: user.uid,
+              city: city,
+              password: '',
+              gender: gender,
+              brithDate: brithDate
+          );
+
+          await getUserData(uId: user.uid, context: context);
+        } catch (dataError) {
+          print('Error saving user data: $dataError');
+          // Consider if you want to throw here or just log the error
+          throw Exception('Failed to save user data: $dataError');
+        }
+      } else {
+        throw Exception('Failed to get user information after authentication');
       }
     } on FirebaseAuthException catch (firebaseAuthException) {
+      print('FirebaseAuthException: ${firebaseAuthException.message}');
       throw FirebaseExceptions(firebaseAuthException: firebaseAuthException);
     } catch (e) {
-      // Added general exception handler for other potential errors
-      throw Exception('Failed to sign in with Google: ${e.toString()}');
+      print('General exception: $e');
+      throw Exception('Authentication failed: ${e.toString()}');
     }
   }
 

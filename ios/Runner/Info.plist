@@ -56,14 +56,24 @@
     </array>
     <key>CFBundleURLTypes</key>
     <array>
-      <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-          <string>com.googleusercontent.apps.1698335350-rn56pn1c22pc1gah4020je52u0oh6it2</string>
-        </array>
-      </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.1698335350-rn56pn1c22pc1gah4020je52u0oh6it2</string>
+            </array>
+        </dict>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>com.app.hadawiapp</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>hadawi</string>
+            </array>
+        </dict>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>
@@ -79,19 +89,6 @@
         <string>UIInterfaceOrientationPortraitUpsideDown</string>
         <string>UIInterfaceOrientationLandscapeLeft</string>
         <string>UIInterfaceOrientationLandscapeRight</string>
-    </array>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>com.app.hadawiapp</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>hadawi</string>
-            </array>
-        </dict>
     </array>
     <key>FirebaseDynamicLinksCustomDomains</key>
     <array>
