@@ -40,7 +40,6 @@ final GoRouter _router = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: true,
   errorBuilder: (context, state) => const LoginScreen(),
-  // Add redirect to handle dynamic links
   redirect: (context, state) {
     final uri = Uri.parse(state.uri.toString());
 

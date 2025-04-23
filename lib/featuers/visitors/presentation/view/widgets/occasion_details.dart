@@ -24,6 +24,8 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../occasions_list/presentation/controller/occasions_list_cubit.dart';
+
 class OccasionDetails extends StatefulWidget {
   final String occasionId;
 
@@ -53,7 +55,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
     context.read<VisitorsCubit>().editOccasionNameController.dispose();
     context.read<VisitorsCubit>().editGiftNameController.dispose();
     context.read<VisitorsCubit>().editPersonNameController.dispose();
-    context.read<OccasionCubit>().qrKey.currentState?.dispose();
+    qrKey.currentState!.dispose();
     super.dispose();
   }
   @override
