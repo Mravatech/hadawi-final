@@ -136,7 +136,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel!.giftImage,
+                                  imageUrl: cubit.occasionModel?.giftImage??'',
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
@@ -165,7 +165,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             Spacer(),
                             (UserDataFromStorage.userIsGuest == true) ||
                                     (UserDataFromStorage.uIdFromStorage ==
-                                        cubit.occasionModel!.personId)
+                                        cubit.occasionModel?.personId)
                                 ? Container()
                                 : SizedBox(
                                     width:
@@ -203,8 +203,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         ),
                         DefaultTextField(
                           controller: cubit.editPersonNameController,
-                          hintText: cubit.occasionModel!.personName,
-                          initialValue: cubit.occasionModel!.personName,
+                          hintText: cubit.occasionModel?.personName??'',
+                          initialValue: cubit.occasionModel?.personName??'',
                           validator: (value) {
                             return null;
                           },
@@ -229,10 +229,10 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         ),
                         DefaultTextField(
                           controller: cubit.editGiftNameController,
-                          initialValue: cubit.occasionModel!.giftName,
+                          initialValue: cubit.occasionModel?.giftName,
                           hintText: cubit.occasionModel!.giftName.isEmpty
-                              ? '${cubit.occasionModel!.giftPrice} ريال'
-                              : cubit.occasionModel!.giftName,
+                              ? '${cubit.occasionModel?.giftPrice??"0"} ريال'
+                              : cubit.occasionModel?.giftName??'',
                           validator: (value) {
                             return null;
                           },
@@ -261,10 +261,10 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             ],
                           ),
                           child: cubit.occasionModel!.giftImage.isEmpty &&
-                                  cubit.occasionModel!.giftType == 'مبلغ مالي'
+                                  cubit.occasionModel?.giftType == 'مبلغ مالي'
                               ? SizedBox()
                               : CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel!.giftImage,
+                                  imageUrl: cubit.occasionModel?.giftImage??"",
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
@@ -298,11 +298,11 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             Expanded(
                               child: ProgressIndicatorWidget(
                                   value: (double.parse(cubit
-                                          .occasionModel!.moneyGiftAmount
-                                          .toString()) /
+                                          .occasionModel?.moneyGiftAmount
+                                          .toString()??"") /
                                       double.parse(cubit
-                                          .occasionModel!.giftPrice
-                                          .toString()))),
+                                          .occasionModel?.giftPrice
+                                          .toString()??""))),
                             ),
                           ],
                         ),
@@ -410,7 +410,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 String link = await cubit
                                     .createDynamicLink(widget.occasionId);
                                 Share.share(
-                                    'قام صديقك ${cubit.occasionModel!.personName} بدعوتك للمشاركة في مناسبة ${cubit.occasionModel!.occasionName} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                                    'قام صديقك ${cubit.occasionModel?.personName??""} بدعوتك للمشاركة في مناسبة ${cubit.occasionModel?.occasionName} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
                               },
                               child: state is CreateOccasionLinkLoadingState
                                   ? LoadingAnimationWidget()
