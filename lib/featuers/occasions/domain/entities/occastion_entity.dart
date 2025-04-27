@@ -12,7 +12,7 @@ class OccasionEntity {
   final String giftName;
   final String giftLink;
   final dynamic giftPrice;
-  final String giftImage;
+  final List<String> giftImage;
   final String giftType;
   final bool isSharing;
   final String receiverName;

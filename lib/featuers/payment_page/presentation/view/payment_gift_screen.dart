@@ -27,7 +27,7 @@ class PaymentGiftScreen extends StatelessWidget {
             title: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Text(
-                "${AppLocalizations.of(context)!.translate("payment").toString()} ${occasionEntity.occasionName} (${occasionEntity.personName})",
+                "${AppLocalizations.of(context)!.translate("payment").toString()} ${occasionEntity.occasionType} (${occasionEntity.personName})",
                 style: TextStyles.textStyle18Bold
                     .copyWith(color: ColorManager.primaryBlue),
               ),

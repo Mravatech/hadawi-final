@@ -33,7 +33,7 @@ class OccasionSummary extends StatelessWidget {
             context,
             OccasionQr(
               occasionId: state.occasion.occasionId,
-              occasionName: state.occasion.occasionName,
+              occasionName: state.occasion.occasionType,
             ),
           );
         } else if (state is AddOccasionErrorState) {
@@ -130,7 +130,7 @@ class OccasionSummary extends StatelessWidget {
                                   value: cubit.linkController.text,
                                   isLink: true,
                                 ),
-                              if (cubit.image != null)
+                              if (cubit.images.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 12.0),
                                   child: Column(
@@ -144,7 +144,7 @@ class OccasionSummary extends StatelessWidget {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.file(
-                                          cubit.image!,
+                                          cubit.images[0],
                                           fit: BoxFit.cover,
                                           height: mediaQuery.height * 0.2,
                                           width: double.infinity,

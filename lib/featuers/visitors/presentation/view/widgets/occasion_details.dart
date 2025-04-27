@@ -138,7 +138,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel?.giftImage??'',
+                                  imageUrl: cubit.occasionModel?.giftImage[0]??"",
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),
@@ -187,7 +187,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                               userName: cubit
                                                   .occasionModel!.personName,
                                               image: cubit
-                                                  .occasionModel!.giftImage,
+                                                  .occasionModel!.giftImage[0],
                                             )
                                             .then((value) {
                                           customToast(
@@ -266,7 +266,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                   cubit.occasionModel?.giftType == 'مبلغ مالي'
                               ? SizedBox()
                               : CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel?.giftImage??"",
+                                  imageUrl: cubit.occasionModel?.giftImage[0]??"",
                                   placeholder: (context, url) => const Center(
                                     child: CircularProgressIndicator(),
                                   ),

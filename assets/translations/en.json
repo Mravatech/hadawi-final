@@ -330,5 +330,6 @@
   "qr_saved_error": "Failed to save QR code to your device's gallery.",
   "storage_permission_required": "Storage Permission Required",
   "storage_permission_settings": "To save QR codes, this app needs storage permission. Please go to app settings and enable storage permission.",
-  "noFollowRequests": "No Follow Requests"
+  "noFollowRequests": "No Follow Requests",
+  "receivingData": "Add Delivery Data"
 }

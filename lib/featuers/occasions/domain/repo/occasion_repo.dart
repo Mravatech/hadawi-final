@@ -16,7 +16,7 @@ abstract class OccasionRepo {
       required String personName,
       required String personPhone,
       required String personEmail,
-      required String giftImage,
+      required List<String> giftImage,
       required String giftName,
       required String giftLink,
       required double giftPrice,

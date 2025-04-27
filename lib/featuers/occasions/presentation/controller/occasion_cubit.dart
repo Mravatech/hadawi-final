@@ -109,6 +109,13 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchGiftWithPackageSuccess());
   }
 
+  bool showDeliveryData = false;
+
+  void switchShowDeliveryData() {
+    showDeliveryData = !showDeliveryData;
+    emit(SwitchShowDeliveryDataSuccess());
+  }
+
 
   bool showGiftCard = false;
   bool showNote = false;
@@ -194,42 +201,52 @@ class OccasionCubit extends Cubit<OccasionState> {
     return giftPrice;
   }
 
-  var picker = ImagePicker();
-
-  File? image;
+  final ImagePicker picker = ImagePicker();
+  List<File> images = [];
 
   Future<void> pickGiftImage() async {
     emit(PickImageLoadingState());
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      image = File(pickedImage.path);
-      emit(PickImageSuccessState());
-    } else {
+    try {
+      final List<XFile> pickedImages = await picker.pickMultiImage();
+      if (pickedImages != null && pickedImages.isNotEmpty) {
+        images = pickedImages.map((xFile) => File(xFile.path)).toList();
+        emit(PickImageSuccessState());
+      } else {
+        emit(PickImageErrorState());
+      }
+    } catch (e) {
       emit(PickImageErrorState());
     }
-    emit(PickImageErrorState());
   }
 
-  void removeImage() {
-    image = null;
-    emit(RemovePickedImageSuccessState());
+  void removeImage(int index) {
+    if (index >= 0 && index < images.length) {
+      images.removeAt(index);
+      emit(RemovePickedImageSuccessState());
+    }
   }
 
-  Future<String> uploadImage() async {
+  List<String> imageUrls = [];
+
+  Future<List<String>> uploadImages() async {
     emit(UploadImageLoadingState());
     try {
-      final uploadTask = await firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('giftImages/${Uri.file(image!.path).pathSegments.last}')
-          .putFile(image!);
+      List<String> downloadUrls = [];
+      for (File image in images) {
+        final uploadTask = await firebase_storage.FirebaseStorage.instance
+            .ref()
+            .child('giftImages/${Uri.file(image.path).pathSegments.last}')
+            .putFile(image);
 
-      final downloadUrl = await uploadTask.ref.getDownloadURL();
-
+        final downloadUrl = await uploadTask.ref.getDownloadURL();
+        downloadUrls.add(downloadUrl);
+      }
+      imageUrls = downloadUrls;
       emit(UploadImageSuccessState());
-      return downloadUrl;
+      return downloadUrls;
     } catch (error) {
       emit(UploadImageErrorState());
-      throw Exception("Failed to upload image: $error");
+      throw Exception("Failed to upload images: $error");
     }
   }
 
@@ -237,13 +254,13 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(AddOccasionLoadingState());
 
     try {
-      final String? imageUrl = isPresent
-          ? await uploadImage()
-          : null;
+      final List<String>? imageUrl = isPresent
+          ? await uploadImages()
+          : [];
       debugPrint('imageUrl: $imageUrl');
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
-        occasionName: occasionNameController.text,
+        occasionName: "",
         occasionDate: DateTime.now().toString(),
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
@@ -251,7 +268,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         personName: UserDataFromStorage.userNameFromStorage,
         personPhone: UserDataFromStorage.phoneNumberFromStorage,
         personEmail: UserDataFromStorage.emailFromStorage,
-        giftImage: imageUrl ?? '',
+        giftImage: imageUrl ?? [],
         giftName: giftNameController.text,
         giftLink: linkController.text,
         giftPrice: giftPrice,
@@ -351,6 +368,8 @@ class OccasionCubit extends Cubit<OccasionState> {
       occasionTypeItems = value.docs[0]['occasionType'];
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
+      selectedPackageImage = packageListImage[0].toString();
+      giftWithPackageType = int.parse(packageListPrice[0].toString());
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');

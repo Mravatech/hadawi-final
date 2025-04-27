@@ -151,7 +151,7 @@ class GiftScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                                 color: ColorManager.gray,
                                 borderRadius: BorderRadius.circular(10)),
-                            child: cubit.image == null
+                            child: cubit.images.isEmpty
                                 ? Center(
                                     child: Container(),
                                   )
@@ -161,7 +161,7 @@ class GiftScreen extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Image.file(
-                                      cubit.image!,
+                                      cubit.images[0]!,
                                       fit: BoxFit.fill,
                                       height: mediaQuery.height * 0.2,
                                       width: mediaQuery.width * 0.5,

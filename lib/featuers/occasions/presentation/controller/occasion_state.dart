@@ -56,6 +56,7 @@ final class CreateOccasionLinkErrorState extends OccasionState {}
 
 final class SwitchShowNoteSuccess extends OccasionState {}
 final class SwitchShowGiftCardSuccess extends OccasionState {}
+final class SwitchShowDeliveryDataSuccess extends OccasionState {}
 
 
 

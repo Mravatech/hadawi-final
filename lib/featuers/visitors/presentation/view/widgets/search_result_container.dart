@@ -59,7 +59,7 @@ class SearchResultContainer extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: CachedNetworkImage(
-                            imageUrl: occasion.giftImage,
+                            imageUrl: occasion.giftImage[0],
                             height: MediaQuery.sizeOf(context).width * 0.15,
                             width: MediaQuery.sizeOf(context).width * 0.22,
                             fit: BoxFit.cover,

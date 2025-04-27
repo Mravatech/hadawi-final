@@ -37,7 +37,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            "Payment ${widget.occasionEntity.occasionName} (${widget.occasionEntity.personName})",
+            "Payment ${widget.occasionEntity.occasionType} (${widget.occasionEntity.personName})",
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),
@@ -425,7 +425,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           integrity: checkoutData["integrity"],
           paymentMethod: paymentMethod,
           occasionId: widget.occasionEntity.occasionId,
-          occasionName: widget.occasionEntity.occasionName,
+          occasionName: widget.occasionEntity.occasionType,
           transactionId: merchantTransactionId,
           remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
               double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
