@@ -331,5 +331,8 @@
   "storage_permission_required": "إذن التخزين مطلوب",
   "storage_permission_settings": "لحفظ رموز QR، يحتاج هذا التطبيق إلى إذن التخزين. يرجى الانتقال إلى إعدادات التطبيق وتمكين إذن التخزين.",
   "noFollowRequests": "لا يوجد طلبات المتابعة",
-  "receivingData": "أضافة بيانات الأستلام"
+  "receivingData": "أضافة بيانات الأستلام",
+  "noFriends": "لا يوجد أصدقاء تتابعهم",
+  "noFriendsFollowMe": "لا يوجد أصدقاء يتابعونك",
+  "editOccasion": "تعديل المناسبة"
 }

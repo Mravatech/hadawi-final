@@ -105,7 +105,7 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                                         forOthers: true,
                                         occasionName: occasionItem.occasionName,
                                         personName: occasionItem.personName,
-                                        imageUrl: occasionItem.occasionImage,);
+                                        imageUrl: occasionItem.occasionImage[index],);
                                   },
                                 ),
                               )

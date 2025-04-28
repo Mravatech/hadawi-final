@@ -48,7 +48,7 @@ class ActiveOccasionCard extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    occasionEntity.occasionName.toString(),
+                    occasionEntity.type.toString(),
                     style: TextStyles.textStyle18Regular
                         .copyWith(color: ColorManager.white),
                   ),

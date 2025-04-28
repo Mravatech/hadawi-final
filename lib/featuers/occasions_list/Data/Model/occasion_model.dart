@@ -8,7 +8,7 @@ class OccasionModel {
   final dynamic moneyGiftAmount;
   final String occasionDate;
   final String occasionId;
-  final String occasionImage;
+  final List<dynamic> occasionImage;
   final String occasionName;
   final String occasionType;
   final String personEmail;

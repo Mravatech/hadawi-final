@@ -6,6 +6,7 @@ import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_c
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/edit_occasion.dart';
 import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -103,30 +104,30 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           : CrossAxisAlignment.start,
                       children: [
                         /// occasion name
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('occasionName')
-                              .toString(),
-                          style: TextStyles.textStyle18Bold.copyWith(),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.01,
-                        ),
-                        DefaultTextField(
-                          controller: cubit.editOccasionNameController,
-                          hintText: cubit.occasionModel?.occasionName??'',
-                          initialValue: cubit.occasionModel?.occasionName??'',
-                          validator: (value) {
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray,
-                          enable: true,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
-                        ),
+                        // Text(
+                        //   AppLocalizations.of(context)!
+                        //       .translate('occasionName')
+                        //       .toString(),
+                        //   style: TextStyles.textStyle18Bold.copyWith(),
+                        // ),
+                        // SizedBox(
+                        //   height: MediaQuery.sizeOf(context).height * 0.01,
+                        // ),
+                        // DefaultTextField(
+                        //   controller: cubit.editOccasionNameController,
+                        //   hintText: cubit.occasionModel?.occasionName??'',
+                        //   initialValue: cubit.occasionModel?.occasionName??'',
+                        //   validator: (value) {
+                        //     return null;
+                        //   },
+                        //   keyboardType: TextInputType.text,
+                        //   textInputAction: TextInputAction.next,
+                        //   fillColor: ColorManager.gray,
+                        //   enable: true,
+                        // ),
+                        // SizedBox(
+                        //   height: MediaQuery.sizeOf(context).height * 0.02,
+                        // ),
 
                         /// person name
                         Row(
@@ -493,15 +494,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ? LoadingAnimationWidget()
                                 : GestureDetector(
                                     onTap: () {
-                                      cubit.editOccasion(
-                                        occasionId: widget.occasionId,
-                                        giftName:
-                                            cubit.editGiftNameController.text,
-                                        occasionName: cubit
-                                            .editOccasionNameController.text,
-                                        personName:
-                                            cubit.editPersonNameController.text,
-                                      );
+                                      customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel!,),);
+                                      // cubit.editOccasion(
+                                      //   occasionId: widget.occasionId,
+                                      //   giftName:
+                                      //       cubit.editGiftNameController.text,
+                                      //   occasionName: cubit
+                                      //       .editOccasionNameController.text,
+                                      //   personName:
+                                      //       cubit.editPersonNameController.text,
+                                      // );
                                     },
                                     child: Container(
                                       height:

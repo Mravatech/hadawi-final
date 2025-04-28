@@ -331,5 +331,8 @@
   "storage_permission_required": "Storage Permission Required",
   "storage_permission_settings": "To save QR codes, this app needs storage permission. Please go to app settings and enable storage permission.",
   "noFollowRequests": "No Follow Requests",
-  "receivingData": "Add Delivery Data"
+  "receivingData": "Add Delivery Data",
+  "noFriends": "You don't have friends",
+  "noFriendsFollowMe": "You don't have friends following you",
+  "editOccasion": "Edit Occasion"
 }

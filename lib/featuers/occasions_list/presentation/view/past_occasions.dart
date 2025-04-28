@@ -103,7 +103,7 @@ class _PastOccasionsState extends State<PastOccasions> {
                                         forOthers: true,
                                         occasionName: occasionItem.occasionName,
                                         personName: occasionItem.personName,
-                                        imageUrl: occasionItem.occasionImage);
+                                        imageUrl: occasionItem.occasionImage[index]);
                                   },
                                 ),
                               )

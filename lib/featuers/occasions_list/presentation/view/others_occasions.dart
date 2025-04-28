@@ -104,7 +104,7 @@ class _OthersOccasionsState extends State<OthersOccasions> {
                                         occasionName:
                                             occasionItem.occasionName,
                                         personName: occasionItem.personName,
-                                        imageUrl: occasionItem.occasionImage);
+                                        imageUrl: occasionItem.occasionImage[index]);
                                   },
                                 ),
                               )

@@ -110,7 +110,7 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                           forOthers: false,
                           occasionName: occasionItem.occasionName,
                           personName: "",
-                          imageUrl: occasionItem.occasionImage,
+                          imageUrl: occasionItem.occasionImage[index],
                         );
                       },
                     ),

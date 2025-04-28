@@ -210,6 +210,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       final List<XFile> pickedImages = await picker.pickMultiImage();
       if (pickedImages != null && pickedImages.isNotEmpty) {
         images = pickedImages.map((xFile) => File(xFile.path)).toList();
+        debugPrint('pickedImages: $images');
         emit(PickImageSuccessState());
       } else {
         emit(PickImageErrorState());
@@ -242,6 +243,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         downloadUrls.add(downloadUrl);
       }
       imageUrls = downloadUrls;
+      debugPrint('downloadUrls: $downloadUrls');
       emit(UploadImageSuccessState());
       return downloadUrls;
     } catch (error) {

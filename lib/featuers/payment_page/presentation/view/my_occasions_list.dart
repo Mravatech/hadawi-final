@@ -105,7 +105,7 @@ class _MyOccasionsListState extends State<MyOccasionsList> {
                                       forOthers: false,
                                       occasionName: occasionItem.occasionName,
                                       personName: "",
-                                      imageUrl: occasionItem.occasionImage,
+                                      imageUrl: occasionItem.occasionImage[index],
                                     );
                                   },
                                 ),
