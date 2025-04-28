@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
@@ -15,15 +18,14 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:share_plus/share_plus.dart';
 
 class OccasionQr extends StatefulWidget {
-  final String occasionId;
-  final String occasionName;
+  final OccasionEntity occasionModel;
 
   const OccasionQr({
     super.key,
-    required this.occasionId,
-    required this.occasionName,
+    required this.occasionModel
   });
 
   @override
@@ -36,7 +38,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
+        context.read<OccasionCubit>().createDynamicLink(widget.occasionModel.occasionId);
       }
     });
     super.initState();
@@ -105,7 +107,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                     height: mediaQuery.height * 0.02,
                   ),
                   Text(
-                    widget.occasionName.toString(),
+                    widget.occasionModel.occasionType.toString(),
                     style: TextStyles.textStyle12Bold
                         .copyWith(color: ColorManager.black),
                   ),
@@ -141,39 +143,119 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                   SizedBox(height: mediaQuery.height * 0.05),
 
                   /// share and save
-                  Align(
-                    alignment: Alignment.center,
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (cubit.occasionLink.isNotEmpty) {
-                          await cubit.captureAndShareQr(
-                            qrKey: qrKey,
-                              occasionName: widget.occasionName,
-                              personName: UserDataFromStorage.userNameFromStorage);
-                        }
-                      },
-                      child: Container(
-                        height: mediaQuery.height * .055,
-                        width: mediaQuery.width * .4,
-                        decoration: BoxDecoration(
-                          color: ColorManager.primaryBlue,
-                          borderRadius:
-                          BorderRadius.circular(mediaQuery.height * 0.05),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(
-                              AppLocalizations.of(context)!
-                                  .translate('share')
-                                  .toString(),
-                              style: TextStyles.textStyle12Bold
-                                  .copyWith(color: ColorManager.white),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      /// share
+                      GestureDetector(
+                        onTap: () async {
+                          String link = await cubit
+                              .createDynamicLink(widget.occasionModel.occasionId);
+                          Share.share(
+                              'قام صديقك ${widget.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة ${widget.occasionModel.occasionType} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                        },
+                        child: state is CreateOccasionLinkLoadingState
+                            ? LoadingAnimationWidget()
+                            : Container(
+                          height:
+                          MediaQuery.sizeOf(context).height *
+                              .055,
+                          width: MediaQuery.sizeOf(context).width *
+                              .25,
+                          decoration: BoxDecoration(
+                            color: ColorManager.primaryBlue,
+                            borderRadius: BorderRadius.circular(
+                                MediaQuery.sizeOf(context).height *
+                                    0.05),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('share')
+                                      .toString(),
+                                  style: TextStyles.textStyle18Bold
+                                      .copyWith(
+                                      color:
+                                      ColorManager.white),
+                                ),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                    ),
+                      /// pay
+                      GestureDetector(
+                        onTap: () => customPushNavigator(
+                            context,
+                            PaymentScreen(
+                              occasionEntity: widget.occasionModel,
+                            )),
+                        child: Container(
+                          height:
+                          MediaQuery.sizeOf(context).height * .055,
+                          width: MediaQuery.sizeOf(context).width * .25,
+                          decoration: BoxDecoration(
+                            color: ColorManager.primaryBlue,
+                            borderRadius: BorderRadius.circular(
+                                MediaQuery.sizeOf(context).height * 0.05),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!
+                                      .translate('payNow')
+                                      .toString(),
+                                  style: TextStyles.textStyle18Bold
+                                      .copyWith(
+                                      color: ColorManager.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      /// share qr
+                      GestureDetector(
+                        onTap: () async {
+                          if (cubit.occasionLink.isNotEmpty) {
+                            await cubit.captureAndShareQr(
+                              qrKey: qrKey,
+                                occasionName: widget.occasionModel.occasionType.toString(),
+                                personName: UserDataFromStorage.userNameFromStorage);
+                          }
+                        },
+                        child: Container(
+                          height: mediaQuery.height * .055,
+                          width: mediaQuery.width * .4,
+                          decoration: BoxDecoration(
+                            color: ColorManager.primaryBlue,
+                            borderRadius:
+                            BorderRadius.circular(mediaQuery.height * 0.05),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!
+                                    .translate('shareQr')
+                                    .toString(),
+                                style: TextStyles.textStyle12Bold
+                                    .copyWith(color: ColorManager.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: mediaQuery.height * 0.05),
                 ],

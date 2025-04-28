@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/occasion_qr.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -32,8 +30,7 @@ class OccasionSummary extends StatelessWidget {
           customPushNavigator(
             context,
             OccasionQr(
-              occasionId: state.occasion.occasionId,
-              occasionName: state.occasion.occasionType,
+              occasionModel: state.occasion,
             ),
           );
         } else if (state is AddOccasionErrorState) {
@@ -141,13 +138,25 @@ class OccasionSummary extends StatelessWidget {
                                         style: TextStyles.textStyle12Bold.copyWith(color: ColorManager.black),
                                       ),
                                       SizedBox(height: 8),
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.file(
-                                          cubit.images[0],
-                                          fit: BoxFit.cover,
-                                          height: mediaQuery.height * 0.2,
-                                          width: double.infinity,
+                                      SizedBox(
+                                        height: mediaQuery.height * 0.2,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          itemCount: cubit.images.length,
+                                          itemBuilder: (context, index) {
+                                            return Padding(
+                                              padding: EdgeInsets.only(right: isRTL ? 0 : 8.0, left: isRTL ? 8.0 : 0),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(10),
+                                                child: Image.file(
+                                                  cubit.images[index],
+                                                  fit: BoxFit.cover,
+                                                  height: mediaQuery.height * 0.2,
+                                                  width: mediaQuery.width * 0.3,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
                                     ],
