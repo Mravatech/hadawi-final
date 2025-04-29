@@ -58,5 +58,9 @@ final class SwitchShowNoteSuccess extends OccasionState {}
 final class SwitchShowGiftCardSuccess extends OccasionState {}
 final class SwitchShowDeliveryDataSuccess extends OccasionState {}
 
+final class DisableOccasionLoadingState extends OccasionState {}
+final class DisableOccasionSuccessState extends OccasionState {}
+final class DisableOccasionErrorState extends OccasionState {}
+
 
 

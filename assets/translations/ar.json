@@ -334,5 +334,12 @@
   "receivingData": "أضافة بيانات الأستلام",
   "noFriends": "لا يوجد أصدقاء تتابعهم",
   "noFriendsFollowMe": "لا يوجد أصدقاء يتابعونك",
-  "editOccasion": "تعديل المناسبة"
+  "editOccasion": "تعديل المناسبة",
+  "closeOccasion": "اغلاق المناسبة",
+  "closeOccasionMessage": "هل انت متاكد انك تريد اغلاق هذه المناسبة؟",
+  "yes": "نعم",
+  "no": "لا",
+  "occasionClosed": "المناسبة مغلقة",
+  "occasionClosedMessage": "تم اغلاق هذه المناسبة.",
+  "occasionsListEmpty": "قائمة المناسبات فارغة , قم بأنشاء اول مناسبة لك"
 }

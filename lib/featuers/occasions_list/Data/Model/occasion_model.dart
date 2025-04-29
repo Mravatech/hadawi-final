@@ -5,10 +5,11 @@ class OccasionModel {
   final String giftType;
   final bool isForMe;
   final bool isSharing;
+  final bool isActive;
   final dynamic moneyGiftAmount;
   final String occasionDate;
   final String occasionId;
-  final List<dynamic> occasionImage;
+  final List<String> occasionImage;
   final String occasionName;
   final String occasionType;
   final String personEmail;
@@ -37,6 +38,7 @@ class OccasionModel {
     required this.giftType,
     required this.isForMe,
     required this.isSharing,
+    required this.isActive,
     required this.moneyGiftAmount,
     required this.occasionDate,
     required this.occasionId,
@@ -72,6 +74,7 @@ class OccasionModel {
     isSharing: json["isSharing"]??false,
     moneyGiftAmount: json["moneyGiftAmount"]??'',
     occasionDate: json["occasionDate"]??'',
+    isActive: json["isActive"]??false,
     occasionId: json["occasionId"]??'',
     occasionImage: json["occasionImage"]??'',
     occasionName: json["occasionName"]??'',
@@ -102,6 +105,7 @@ class OccasionModel {
     "giftPrice": giftPrice,
     "giftType": giftType,
     "isForMe": isForMe,
+    "isActive": isActive,
     "isSharing": isSharing,
     "moneyGiftAmount": moneyGiftAmount,
     "occasionDate": occasionDate,

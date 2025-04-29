@@ -21,6 +21,7 @@ class OccasionDataSource {
 
   Future<OccasionModel> addOccasion({
     required bool isForMe,
+    required bool isActive,
     required String occasionName,
     required String occasionDate,
     required String occasionType,
@@ -55,6 +56,7 @@ class OccasionDataSource {
 
     OccasionModel occasionModel = OccasionModel(
       isForMe: isForMe,
+      isActive: isActive,
       occasionName: occasionName,
       occasionDate: occasionDate,
       occasionId: occasionId,

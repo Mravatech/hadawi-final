@@ -367,7 +367,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               ),
                             ),
 
-                            cubit.isActiveOrders? GridView.builder(
+                            cubit.isActiveOrders? cubit.activeOccasions.isNotEmpty? GridView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(15),
@@ -425,7 +425,15 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                     ));
                               },
                               itemCount: cubit.activeOccasions.length,
-                            ):  GridView.builder(
+                            ) :SizedBox(
+                              height: SizeConfig.height*0.25,
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.translate("occasionsListEmpty").toString(),
+                                  style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue),
+                                ),
+                              ),
+                            ) : cubit.doneOccasions.isNotEmpty? GridView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               padding: const EdgeInsets.all(15),
@@ -444,6 +452,14 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                     ));
                               },
                               itemCount: cubit.doneOccasions.length,
+                            ): SizedBox(
+                              height: SizeConfig.height*0.25,
+                              child: Center(
+                                child: Text(
+                                  AppLocalizations.of(context)!.translate("occasionsListEmpty").toString(),
+                                  style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue),
+                                ),
+                              ),
                             ),
                           ],
                         ),

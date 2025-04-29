@@ -334,5 +334,12 @@
   "receivingData": "Add Delivery Data",
   "noFriends": "You don't have friends",
   "noFriendsFollowMe": "You don't have friends following you",
-  "editOccasion": "Edit Occasion"
+  "editOccasion": "Edit Occasion",
+  "closeOccasion": "Close Occasion",
+  "closeOccasionMessage": "Are you sure you want to close this occasion?",
+  "yes": "Yes",
+  "no": "No",
+  "occasionClosed": "Occasion Closed",
+  "occasionClosedMessage": "This occasion has been closed.",
+  "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion"
 }

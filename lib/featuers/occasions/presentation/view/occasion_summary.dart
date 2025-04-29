@@ -90,11 +90,6 @@ class OccasionSummary extends StatelessWidget {
                           children: [
                             _buildInfoRow(
                               context,
-                              label: AppLocalizations.of(context)!.translate('occasionName').toString(),
-                              value: cubit.occasionNameController.text,
-                            ),
-                            _buildInfoRow(
-                              context,
                               label: AppLocalizations.of(context)!.translate('occasionType').toString(),
                               value: cubit.dropdownOccasionType,
                             ),

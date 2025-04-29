@@ -25,6 +25,7 @@ class OccasionEntity {
   final String district;
   final String note;
   final bool isPrivate;
+  final bool isActive;
   final double discount;
   final double appCommission;
   final double deliveryPrice;
@@ -34,6 +35,7 @@ class OccasionEntity {
   {
     required this.isForMe,
     required this.occasionName,
+    required this.isActive,
     required this.occasionDate,
     required this.occasionId,
     required this.occasionType,

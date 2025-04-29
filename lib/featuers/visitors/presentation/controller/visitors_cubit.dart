@@ -59,8 +59,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         }else{
           openCount =openCount + 1;
         }
-        if(element.isPrivate == false){
-          if (double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
+        if(element.isPrivate == false ){
+          if (element.isActive==true && double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
             activeOccasions.add(element);
           } else {
             print('this occasion is done ${element.occasionId}');
@@ -245,6 +245,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   List<PaymentModel> myPaymentsList = [];
   Future<void> getMyPayments() async {
+    myPaymentsList.clear();
     emit(GetMyPaymentLoadingState());
     try {
       var res = await FirebaseFirestore.instance

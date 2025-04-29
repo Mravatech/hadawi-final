@@ -9,6 +9,7 @@ class OccasionRepoImp extends OccasionRepo {
   Future<Either<Faliure, OccasionEntity>> addOccasions(
       {
       required bool isForMe,
+        required bool isActive,
       required String occasionName,
       required String occasionDate,
       required String occasionType,
@@ -40,6 +41,7 @@ class OccasionRepoImp extends OccasionRepo {
       }) async {
     final result = await OccasionDataSource().addOccasion(
         isForMe: isForMe,
+        isActive: isActive,
         occasionName: occasionName,
         occasionDate: occasionDate,
         occasionType: occasionType,

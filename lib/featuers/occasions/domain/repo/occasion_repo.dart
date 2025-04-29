@@ -8,6 +8,7 @@ abstract class OccasionRepo {
   Future<Either<Faliure, OccasionEntity>> addOccasions(
       {
       required bool isForMe,
+          required bool isActive,
       required String occasionName,
       required String occasionDate,
       required String occasionType,

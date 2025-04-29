@@ -262,6 +262,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       debugPrint('imageUrl: $imageUrl');
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
+        isActive: true,
         occasionName: "",
         occasionDate: DateTime.now().toString(),
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
@@ -478,6 +479,20 @@ class OccasionCubit extends Cubit<OccasionState> {
     occasionLink = shortLink.shortUrl.toString();
     emit(CreateOccasionLinkSuccessState());
     return shortLink.shortUrl.toString();
+  }
+
+  Future<void> disableOccasion({required String occasionId}) async {
+    emit(DisableOccasionLoadingState());
+    try{
+      await FirebaseFirestore.instance
+          .collection('Occasions')
+          .doc(occasionId)
+          .update({'isActive': false});
+      emit(DisableOccasionSuccessState());
+    }catch(error){
+      debugPrint('error when disable occasion: $error');
+      emit(DisableOccasionErrorState());
+    }
   }
 
 

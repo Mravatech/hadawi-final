@@ -161,8 +161,6 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                           height:
                           MediaQuery.sizeOf(context).height *
                               .055,
-                          width: MediaQuery.sizeOf(context).width *
-                              .25,
                           decoration: BoxDecoration(
                             color: ColorManager.primaryBlue,
                             borderRadius: BorderRadius.circular(
@@ -170,7 +168,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                                     0.05),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                             child: Row(
                               mainAxisAlignment:
                               MainAxisAlignment.center,
@@ -189,6 +187,8 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                           ),
                         ),
                       ),
+
+
                       /// pay
                       GestureDetector(
                         onTap: () => customPushNavigator(
@@ -199,14 +199,13 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                         child: Container(
                           height:
                           MediaQuery.sizeOf(context).height * .055,
-                          width: MediaQuery.sizeOf(context).width * .25,
                           decoration: BoxDecoration(
                             color: ColorManager.primaryBlue,
                             borderRadius: BorderRadius.circular(
                                 MediaQuery.sizeOf(context).height * 0.05),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -223,6 +222,8 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                           ),
                         ),
                       ),
+
+
                       /// share qr
                       GestureDetector(
                         onTap: () async {
@@ -235,14 +236,13 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                         },
                         child: Container(
                           height: mediaQuery.height * .055,
-                          width: mediaQuery.width * .4,
                           decoration: BoxDecoration(
                             color: ColorManager.primaryBlue,
                             borderRadius:
                             BorderRadius.circular(mediaQuery.height * 0.05),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
                             child: Center(
                               child: Text(
                                 AppLocalizations.of(context)!

@@ -6,6 +6,7 @@ class OccasionModel extends OccasionEntity {
       required super.isForMe,
       required super.occasionName,
       required super.occasionDate,
+        required super.isActive,
       required super.occasionId,
       required super.occasionType,
       required super.moneyGiftAmount,
@@ -37,6 +38,7 @@ class OccasionModel extends OccasionEntity {
 
   factory OccasionModel.fromJson(Map<String, dynamic> json) => OccasionModel(
         isForMe: json['isForMe']??'',
+        isActive: json['isActive']??false,
         occasionName: json['occasionName']??'',
         occasionDate: json['occasionDate']??'',
         occasionId: json['occasionId']??'',
@@ -70,6 +72,7 @@ class OccasionModel extends OccasionEntity {
 
   Map<String, dynamic> toJson() => {
         'isForMe': isForMe,
+        'isActive': isActive,
         'occasionName': occasionName,
         'occasionDate': occasionDate,
         'occasionId': occasionId,
