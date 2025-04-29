@@ -54,7 +54,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       myOrderOccasions.clear();
 
       for (var element in occasion) {
-        if((element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt()){
+        if(element.isActive==false && (element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt()){
           closeCount =closeCount + 1;
         }else{
           openCount =openCount + 1;
