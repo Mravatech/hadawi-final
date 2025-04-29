@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
+import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
@@ -50,6 +52,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
 
   final GlobalKey qrKey = GlobalKey();
+  int _currentIndex = 0;
 
   @override
   void dispose() {
@@ -266,30 +269,82 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           child: cubit.occasionModel!.giftImage.isEmpty &&
                                   cubit.occasionModel?.giftType == 'مبلغ مالي'
                               ? SizedBox()
-                              : CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel?.giftImage[0]??"",
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  errorWidget: (context, url, error) {
-                                    return cubit.occasionModel!.giftImage
-                                                .isEmpty &&
-                                            cubit.occasionModel!.giftType ==
-                                                'مبلغ مالي'
-                                        ? Image.asset(
+                              : Stack(
+                                children: [
+                                  CarouselSlider(
+                                                              options: CarouselOptions(
+                                    padEnds: false,
+                                    viewportFraction: .99,
+                                    height: MediaQuery.sizeOf(context).height * 0.378,
+                                    aspectRatio: 16 / 6,
+                                    enlargeCenterPage: true,
+                                    enlargeFactor: 0.1,
+                                    enableInfiniteScroll: false,
+                                    initialPage: 0,
+                                    pageSnapping: false,
+                                    autoPlay: false,
+                                    disableCenter: true,
+                                    onPageChanged: (index, _) {
+                                      setState(() {
+                                        _currentIndex = index;
+                                      });
+                                    }),
+                                  items: [
+
+                                    ...cubit.occasionModel!.giftImage.map((item) => Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                      Radius.circular(15)
+                                          )),
+                                      child: CachedNetworkImage(
+                                        imageUrl: item,
+                                        placeholder: (context, url) => const Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                        errorWidget: (context, url, error) {
+                                          return cubit.occasionModel!.giftImage
+                                              .isEmpty &&
+                                              cubit.occasionModel!.giftType ==
+                                                  'مبلغ مالي'
+                                              ? Image.asset(
                                             'assets/images/money_bag.png',
                                             fit: BoxFit.contain,
                                           )
-                                        : const Icon(
+                                              : const Icon(
                                             Icons.error,
                                             color: Colors.red,
                                           );
-                                  },
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.3,
-                                  width: double.infinity,
-                                  fit: BoxFit.fill,
-                                ),
+                                        },
+                                        height:
+                                        MediaQuery.sizeOf(context).height * 0.3,
+                                        width: double.infinity,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ))
+                                  ]
+                                  ),
+                                  Positioned(
+                                    bottom: 23,
+                                    left: 0,
+                                    right: 0,
+                                    child: DotsIndicator(
+                                      dotsCount: cubit.occasionModel!.giftImage.length ,
+                                      position: _currentIndex.toDouble(),
+                                      decorator: DotsDecorator(
+                                        spacing: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                                        color: Colors.white,
+                                        size: Size(8, 8),
+                                        activeSize: Size(24, 6),
+                                        activeShape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        activeColor: ColorManager.primaryBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                         ),
                         SizedBox(
                           height: MediaQuery.sizeOf(context).height * 0.02,
