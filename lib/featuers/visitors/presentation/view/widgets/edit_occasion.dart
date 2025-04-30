@@ -298,8 +298,7 @@ class _EditOccasionState extends State<EditOccasion> {
                               title: AppLocalizations.of(context)!
                                   .translate('money')
                                   .toString(),
-                              isActive:
-                                  widget.occasionModel.giftType == 'مبلغ مالي',
+                              isActive: widget.occasionModel.giftType != 'هدية',
                               onTap: () {
                                 // cubit.giftType = 'مبلغ مالي';
                                 // UserDataFromStorage.giftType = cubit.giftType;
@@ -311,275 +310,284 @@ class _EditOccasionState extends State<EditOccasion> {
                       ],
                     ),
                   ),
-
+                  SizedBox(height: SizeConfig.height * 0.01),
                   /// gift section
+                  widget.occasionModel.giftType == 'هدية' ?
+                  _buildSectionCard(context,
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!
+                            .translate('giftName')
+                            .toString(),
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(color: ColorManager.black),
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.01),
+                      DefaultTextField(
+                        controller: cubit.giftNameController,
+                        hintText: AppLocalizations.of(context)!
+                            .translate('giftNameHint')
+                            .toString(),
+                        validator: (value) => value!.trim().isEmpty
+                            ? AppLocalizations.of(context)!
+                            .translate('validateGiftName')
+                            .toString()
+                            : null,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        fillColor: ColorManager.gray.withOpacity(0.5),
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.02),
+
+                      Text(
+                        AppLocalizations.of(context)!
+                            .translate('link')
+                            .toString(),
+                        style: TextStyles.textStyle18Bold
+                            .copyWith(color: ColorManager.black),
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.01),
+                      DefaultTextField(
+                        controller: cubit.linkController,
+                        hintText: AppLocalizations.of(context)!
+                            .translate('linkHint')
+                            .toString(),
+                        validator: (value) {
+                          if (value!.trim().isEmpty) {
+                            return AppLocalizations.of(context)!
+                                .translate('validateLink')
+                                .toString();
+                          }
+                          final uri = Uri.tryParse(value);
+                          if (uri == null ||
+                              !(uri.isScheme('http') ||
+                                  uri.isScheme('https')) ||
+                              uri.host.isEmpty ||
+                              !uri.host.contains('.')) {
+                            return AppLocalizations.of(context)!
+                                .translate('vaildLink')
+                                .toString();
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        fillColor: ColorManager.gray.withOpacity(0.5),
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.02),
+
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('gifPicture').toString()} ",
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: cubit.pickGiftImage,
+                            icon: Icon(
+                              Icons.file_upload_outlined,
+                              size: mediaQuery.height * 0.04,
+                              color: ColorManager.primaryBlue,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.01),
+                      widget.occasionModel.giftImage.isNotEmpty
+                          ? SizedBox(
+                        height: mediaQuery.height * 0.12,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount:
+                          widget.occasionModel.giftImage.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  right: SizeConfig.width * 0.02),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.height * 0.1,
+                                    decoration: BoxDecoration(
+                                      color: ColorManager.gray
+                                          .withOpacity(0.5),
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black
+                                              .withOpacity(0.05),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                      child: CachedNetworkImage(
+                                        imageUrl: widget.occasionModel
+                                            .giftImage[index],
+                                        fit: BoxFit.cover,
+                                        height: mediaQuery.height * 0.1,
+                                        width: mediaQuery.height * 0.1,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          cubit.removeNetworkImage(
+                                              index,
+                                              widget.occasionModel
+                                                  .giftImage),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color:
+                                          ColorManager.primaryBlue,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.2),
+                                              blurRadius: 4,
+                                              offset:
+                                              const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          size:
+                                          mediaQuery.height * 0.02,
+                                          color: ColorManager.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                          : cubit.images.isEmpty
+                          ? Container(
+                        height: mediaQuery.height * 0.1,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: ColorManager.gray.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Center(
+                            child: Icon(Icons.image,
+                                color: ColorManager.primaryBlue)),
+                      )
+                          : SizedBox(
+                        height: mediaQuery.height * 0.12,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: cubit.images.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                  right: SizeConfig.width * 0.02),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    height: mediaQuery.height * 0.1,
+                                    width: mediaQuery.height * 0.1,
+                                    decoration: BoxDecoration(
+                                      color: ColorManager.gray
+                                          .withOpacity(0.5),
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black
+                                              .withOpacity(0.05),
+                                          blurRadius: 8,
+                                          offset:
+                                          const Offset(0, 2),
+                                        ),
+                                      ],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius:
+                                      BorderRadius.circular(12),
+                                      child: Image.file(
+                                        cubit.images[index],
+                                        fit: BoxFit.cover,
+                                        height:
+                                        mediaQuery.height * 0.1,
+                                        width:
+                                        mediaQuery.height * 0.1,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: GestureDetector(
+                                      onTap: () =>
+                                          cubit.removeImage(index),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: ColorManager
+                                              .primaryBlue,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black
+                                                  .withOpacity(0.2),
+                                              blurRadius: 4,
+                                              offset: const Offset(
+                                                  0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Icon(
+                                          Icons.close,
+                                          size: mediaQuery.height *
+                                              0.02,
+                                          color: ColorManager.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.height * 0.02),
+                    ],
+                  ),
+                      color: ColorManager.white):
+                  SizedBox(),
+                  ///  delivery
                   _buildSectionCard(
                     color: ColorManager.white,
                     context,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('giftName')
-                              .toString(),
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.01),
-                        DefaultTextField(
-                          controller: cubit.giftNameController,
-                          hintText: AppLocalizations.of(context)!
-                              .translate('giftNameHint')
-                              .toString(),
-                          validator: (value) => value!.trim().isEmpty
-                              ? AppLocalizations.of(context)!
-                                  .translate('validateGiftName')
-                                  .toString()
-                              : null,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray.withOpacity(0.5),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.02),
-
-                        Text(
-                          AppLocalizations.of(context)!
-                              .translate('link')
-                              .toString(),
-                          style: TextStyles.textStyle18Bold
-                              .copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.01),
-                        DefaultTextField(
-                          controller: cubit.linkController,
-                          hintText: AppLocalizations.of(context)!
-                              .translate('linkHint')
-                              .toString(),
-                          validator: (value) {
-                            if (value!.trim().isEmpty) {
-                              return AppLocalizations.of(context)!
-                                  .translate('validateLink')
-                                  .toString();
-                            }
-                            final uri = Uri.tryParse(value);
-                            if (uri == null ||
-                                !(uri.isScheme('http') ||
-                                    uri.isScheme('https')) ||
-                                uri.host.isEmpty ||
-                                !uri.host.contains('.')) {
-                              return AppLocalizations.of(context)!
-                                  .translate('vaildLink')
-                                  .toString();
-                            }
-                            return null;
-                          },
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          fillColor: ColorManager.gray.withOpacity(0.5),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.02),
-
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${AppLocalizations.of(context)!.translate('gifPicture').toString()} ",
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.black),
-                            ),
-                            const Spacer(),
-                            IconButton(
-                              onPressed: cubit.pickGiftImage,
-                              icon: Icon(
-                                Icons.file_upload_outlined,
-                                size: mediaQuery.height * 0.04,
-                                color: ColorManager.primaryBlue,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.01),
-                        widget.occasionModel.giftImage.isNotEmpty
-                            ? SizedBox(
-                                height: mediaQuery.height * 0.12,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount:
-                                      widget.occasionModel.giftImage.length,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(
-                                          right: SizeConfig.width * 0.02),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height: mediaQuery.height * 0.1,
-                                            width: mediaQuery.height * 0.1,
-                                            decoration: BoxDecoration(
-                                              color: ColorManager.gray
-                                                  .withOpacity(0.5),
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(0.05),
-                                                  blurRadius: 8,
-                                                  offset: const Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              child: CachedNetworkImage(
-                                                imageUrl: widget.occasionModel
-                                                    .giftImage[index],
-                                                fit: BoxFit.cover,
-                                                height: mediaQuery.height * 0.1,
-                                                width: mediaQuery.height * 0.1,
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 0,
-                                            right: 0,
-                                            child: GestureDetector(
-                                              onTap: () =>
-                                                  cubit.removeNetworkImage(
-                                                      index,
-                                                      widget.occasionModel
-                                                          .giftImage),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color:
-                                                      ColorManager.primaryBlue,
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.2),
-                                                      blurRadius: 4,
-                                                      offset:
-                                                          const Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Icon(
-                                                  Icons.close,
-                                                  size:
-                                                      mediaQuery.height * 0.02,
-                                                  color: ColorManager.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            : cubit.images.isEmpty
-                                ? Container(
-                                    height: mediaQuery.height * 0.1,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: ColorManager.gray.withOpacity(0.5),
-                                      borderRadius: BorderRadius.circular(12),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.05),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Center(
-                                        child: Icon(Icons.image,
-                                            color: ColorManager.primaryBlue)),
-                                  )
-                                : SizedBox(
-                                    height: mediaQuery.height * 0.12,
-                                    child: ListView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: cubit.images.length,
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                          padding: EdgeInsets.only(
-                                              right: SizeConfig.width * 0.02),
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                height: mediaQuery.height * 0.1,
-                                                width: mediaQuery.height * 0.1,
-                                                decoration: BoxDecoration(
-                                                  color: ColorManager.gray
-                                                      .withOpacity(0.5),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.black
-                                                          .withOpacity(0.05),
-                                                      blurRadius: 8,
-                                                      offset:
-                                                          const Offset(0, 2),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  child: Image.file(
-                                                    cubit.images[index],
-                                                    fit: BoxFit.cover,
-                                                    height:
-                                                        mediaQuery.height * 0.1,
-                                                    width:
-                                                        mediaQuery.height * 0.1,
-                                                  ),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                top: 0,
-                                                right: 0,
-                                                child: GestureDetector(
-                                                  onTap: () =>
-                                                      cubit.removeImage(index),
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      color: ColorManager
-                                                          .primaryBlue,
-                                                      shape: BoxShape.circle,
-                                                      boxShadow: [
-                                                        BoxShadow(
-                                                          color: Colors.black
-                                                              .withOpacity(0.2),
-                                                          blurRadius: 4,
-                                                          offset: const Offset(
-                                                              0, 2),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.close,
-                                                      size: mediaQuery.height *
-                                                          0.02,
-                                                      color: ColorManager.white,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                        SizedBox(height: SizeConfig.height * 0.02),
-
                         Text(
                           "${AppLocalizations.of(context)!.translate('giftAmount').toString()} ",
                           style: TextStyles.textStyle18Bold
