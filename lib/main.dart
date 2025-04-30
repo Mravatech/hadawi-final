@@ -68,7 +68,7 @@ final GoRouter _router = GoRouter(
       path: '/occasion-details/:id',
       builder: (context, state) {
         final occasionId = state.pathParameters['id'];
-        return OccasionDetails(occasionId: occasionId!);
+        return OccasionDetails(occasionId: occasionId!,fromHome: false,);
       },
     ),
     GoRoute(

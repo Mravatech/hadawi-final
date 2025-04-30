@@ -31,8 +31,9 @@ import '../../../../occasions_list/presentation/controller/occasions_list_cubit.
 
 class OccasionDetails extends StatefulWidget {
   final String occasionId;
+  final bool fromHome;
 
-  const OccasionDetails({super.key, required this.occasionId});
+  const OccasionDetails({super.key, required this.occasionId, required this.fromHome});
 
   @override
   State<OccasionDetails> createState() => _OccasionDetailsState();
@@ -549,7 +550,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 ? LoadingAnimationWidget()
                                 : GestureDetector(
                                     onTap: () {
-                                      customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel!,),);
+                                      customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel!, fromHome: widget.fromHome,),);
                                       // cubit.editOccasion(
                                       //   occasionId: widget.occasionId,
                                       //   giftName:

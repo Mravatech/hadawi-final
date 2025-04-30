@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
-import 'package:hadawi_app/utiles/helper/material_navigation.dart';
-import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../../../generated/assets.dart';
@@ -38,15 +35,22 @@ class _EditOccasionState extends State<EditOccasion> {
     context.read<OccasionCubit>().linkController.text =
         widget.occasionModel.giftLink;
     context.read<OccasionCubit>().moneyAmountController.text =
-        widget.occasionModel.giftPrice.toString();
+        widget.occasionModel.moneyGiftAmount.toString();
     context.read<OccasionCubit>().giftDeliveryStreetController.text =
         widget.occasionModel.district;
     context.read<OccasionCubit>().giftReceiverNumberController.text =
         widget.occasionModel.receiverPhone;
+    context.read<OccasionCubit>().giftReceiverNameController.text =
+        widget.occasionModel.receiverName;
     context.read<OccasionCubit>().moneyGiftMessageController.text =
         widget.occasionModel.giftCard;
     context.read<OccasionCubit>().giftDeliveryNoteController.text =
         widget.occasionModel.note;
+    context.read<OccasionCubit>().dropdownOccasionType =  widget.occasionModel.type;
+    context.read<OccasionCubit>().giftType=  widget.occasionModel.giftType;
+    context.read<OccasionCubit>().moneyAmountController.text =  widget.occasionModel.giftPrice.toString();
+    context.read<OccasionCubit>().dropdownCity = widget.occasionModel.city;
+    context.read<OccasionCubit>().urls= widget.occasionModel.giftImage;
     super.initState();
   }
   @override
@@ -71,12 +75,29 @@ class _EditOccasionState extends State<EditOccasion> {
         ],
       ),
       body: BlocConsumer<OccasionCubit, OccasionState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
-  builder: (context, state) {
-    final cubit = context.read<OccasionCubit>();
-    final mediaQuery = MediaQuery.sizeOf(context);
+        listener: (context, state) {
+          if(state is UpdateOccasionSuccessState ){
+            if (widget.fromHome==true) {
+              context.read<VisitorsCubit>().getOccasions().then(
+                (value) {
+                  customPushReplacement(context, HomeLayout());
+                },
+              );
+
+            } else {
+              context.read<OccasionsListCubit>().getClosedOccasionsList();
+              context.read<OccasionsListCubit>().getMyOccasionsList();
+              context.read<OccasionsListCubit>().getOthersOccasionsList();
+              context.read<OccasionsListCubit>().getPastOccasionsList();
+              customPushReplacement(context, AllOccasionsScreen());
+            }
+
+
+          }
+        },
+        builder: (context, state) {
+          final cubit = context.read<OccasionCubit>();
+          final mediaQuery = MediaQuery.sizeOf(context);
 
     return ModalProgressHUD(
       inAsyncCall: state is DisableOccasionLoadingState,
@@ -598,138 +619,52 @@ class _EditOccasionState extends State<EditOccasion> {
 
                             /// Continue Button
                             Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () async {
-                                      // if (forMeFormKey.currentState!.validate()) {
-                                      //   if (cubit.dropdownOccasionType.isNotEmpty) {
-                                      //     if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
-                                      //       cubit.getTotalGiftPrice();
-                                      //       customPushNavigator(context, OccasionSummary());
-                                      //     } else {
-                                      //       customToast(
-                                      //         title: AppLocalizations.of(context)!.translate('validateImage').toString(),
-                                      //         color: Colors.red,
-                                      //       );
-                                      //     }
-                                      //   } else {
-                                      //     customToast(
-                                      //       title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
-                                      //       color: Colors.red,
-                                      //     );
-                                      //   }
-                                      // }
-                                    },
-                                    child: Container(
-                                      height: mediaQuery.height * 0.06,
-                                      width: mediaQuery.width,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: ColorManager.primaryBlue.withOpacity(0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
+                              child: GestureDetector(
+                                onTap: () async {
+                                  // if (forMeFormKey.currentState!.validate()) {
+                                  //   if (cubit.dropdownOccasionType.isNotEmpty) {
+                                  //     if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
+                                  //       cubit.getTotalGiftPrice();
+                                  //       customPushNavigator(context, OccasionSummary());
+                                  //     } else {
+                                  //       customToast(
+                                  //         title: AppLocalizations.of(context)!.translate('validateImage').toString(),
+                                  //         color: Colors.red,
+                                  //       );
+                                  //     }
+                                  //   } else {
+                                  //     customToast(
+                                  //       title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
+                                  //       color: Colors.red,
+                                  //     );
+                                  //   }
+                                  // }
+                                },
+                                child: Container(
+                                  height: mediaQuery.height * 0.06,
+                                  width: mediaQuery.width * 0.5,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: ColorManager.primaryBlue.withOpacity(0.3),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 4),
                                       ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!.translate('edit').toString(),
-                                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.white),
-                                        ),
-                                      ),
+                                    ],
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!.translate('edit').toString(),
+                                      style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.white),
                                     ),
                                   ),
-                                  SizedBox(height: SizeConfig.height * 0.02),
-                                  InkWell(
-                                    onTap: () async {
-                                      FocusScope.of(context).unfocus(); // Dismiss the keyboard if open
-
-                                      await showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text(AppLocalizations.of(context)!
-                                                .translate('occasionClosed')
-                                                .toString()),
-                                            content: Text(AppLocalizations.of(context)!
-                                                .translate('closeOccasionMessage')
-                                                .toString()),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(context)!
-                                                    .translate('yes')
-                                                    .toString()),
-                                                onPressed: () async {
-                                                  Navigator.of(context).pop(); // Close the dialog first
-                                                  try {
-                                                    await cubit.disableOccasion(
-                                                        occasionId:
-                                                        widget.occasionModel.occasionId.toString());
-                                                    customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
-                                                    customPushReplacement(context, HomeLayout());
-                                                  } catch (e) {
-                                                    customToast(title: e.toString(), color: ColorManager.red);
-                                                    debugPrint(e.toString());
-                                                  }
-                                                },
-                                              ),
-                                              TextButton(
-                                                child: Text(AppLocalizations.of(context)!
-                                                    .translate('no')
-                                                    .toString()),
-                                                onPressed: () async {
-                                                  Navigator.of(context).pop(); // Close the dialog first
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    },
-                                    child: Container(
-                                      height: mediaQuery.height * 0.06,
-                                      width: mediaQuery.width,
-                                      decoration: BoxDecoration(
-                                        gradient: LinearGradient(
-                                          colors: [
-                                            ColorManager.primaryBlue,
-                                            ColorManager.primaryBlue.withOpacity(0.8)
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: ColorManager.primaryBlue.withOpacity(0.3),
-                                            blurRadius: 8,
-                                            offset: const Offset(0, 4),
-                                          ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('closeOccasion')
-                                              .toString(),
-                                          style: TextStyles.textStyle18Bold.copyWith(
-                                            color: ColorManager.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
+                                ),
                               ),
                             ),
                             SizedBox(height: SizeConfig.height * 0.03),
@@ -750,7 +685,9 @@ class _EditOccasionState extends State<EditOccasion> {
     );
   }
 }
-Widget _buildSectionCard(BuildContext context, {required Widget child, required Color color}) {
+
+Widget _buildSectionCard(BuildContext context,
+    {required Widget child, required Color color}) {
   return Card(
     elevation: 2,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -771,13 +708,14 @@ Widget _buildSectionCard(BuildContext context, {required Widget child, required 
     ),
   );
 }
+
 Widget _buildGiftTypeButton(
-    BuildContext context, {
-      required String title,
-      required bool isActive,
-      required VoidCallback onTap,
-      double? width,
-    }) {
+  BuildContext context, {
+  required String title,
+  required bool isActive,
+  required VoidCallback onTap,
+  double? width,
+}) {
   final mediaQuery = MediaQuery.sizeOf(context);
   return GestureDetector(
     onTap: onTap,
@@ -788,39 +726,46 @@ Widget _buildGiftTypeButton(
       decoration: BoxDecoration(
         gradient: isActive
             ? LinearGradient(
-          colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        )
+                colors: [
+                  ColorManager.primaryBlue,
+                  ColorManager.primaryBlue.withOpacity(0.8)
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
             : null,
-        color: isActive ? ColorManager.primaryBlue : ColorManager.gray.withOpacity(0.5),
+        color: isActive
+            ? ColorManager.primaryBlue
+            : ColorManager.gray.withOpacity(0.5),
         borderRadius: BorderRadius.circular(12),
         boxShadow: isActive
             ? [
-          BoxShadow(
-            color: ColorManager.primaryBlue.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ]
+                BoxShadow(
+                  color: ColorManager.primaryBlue.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ]
             : null,
       ),
       child: Center(
         child: Text(
           title,
-          style: TextStyles.textStyle16Bold.copyWith(color: isActive ? ColorManager.white : ColorManager.black),
+          style: TextStyles.textStyle16Bold.copyWith(
+              color: isActive ? ColorManager.white : ColorManager.black),
         ),
       ),
     ),
   );
 }
+
 Widget _buildPackageOption(
-    BuildContext context, {
-      required String price,
-      required String imageUrl,
-      required bool isSelected,
-      required VoidCallback onTap,
-    }) {
+  BuildContext context, {
+  required String price,
+  required String imageUrl,
+  required bool isSelected,
+  required VoidCallback onTap,
+}) {
   final mediaQuery = MediaQuery.sizeOf(context);
   return InkWell(
     onTap: onTap,
@@ -833,9 +778,13 @@ Widget _buildPackageOption(
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             decoration: BoxDecoration(
-              color: isSelected ? ColorManager.primaryBlue.withOpacity(0.2) : ColorManager.gray.withOpacity(0.5),
+              color: isSelected
+                  ? ColorManager.primaryBlue.withOpacity(0.2)
+                  : ColorManager.gray.withOpacity(0.5),
               borderRadius: BorderRadius.circular(12),
-              border: isSelected ? Border.all(color: ColorManager.primaryBlue, width: 2) : null,
+              border: isSelected
+                  ? Border.all(color: ColorManager.primaryBlue, width: 2)
+                  : null,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.05),

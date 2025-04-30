@@ -32,8 +32,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   TextEditingController editPersonNameController = TextEditingController();
   final searchKey = GlobalKey();
 
-
-  convertStringToDateTime(String dateString){
+  convertStringToDateTime(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
     return dateTime;
   }
@@ -64,11 +63,18 @@ class VisitorsCubit extends Cubit<VisitorsState> {
             activeOccasions.add(element);
           } else {
             print('this occasion is done ${element.occasionId}');
-            var res = await FirebaseFirestore.instance.collection('Occasions').doc(element.occasionId).collection('receivedOccasions').get();
-            if(res.docs.isNotEmpty){
-              doneOccasions.add(CompleteOccasionModel.fromJson(res.docs[0].data()));
-              if(res.docs[0].data()['personId'] == UserDataFromStorage.uIdFromStorage){
-                myOrderOccasions.add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+            var res = await FirebaseFirestore.instance
+                .collection('Occasions')
+                .doc(element.occasionId)
+                .collection('receivedOccasions')
+                .get();
+            if (res.docs.isNotEmpty) {
+              doneOccasions
+                  .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              if (res.docs[0].data()['personId'] ==
+                  UserDataFromStorage.uIdFromStorage) {
+                myOrderOccasions
+                    .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
               }
             }
           }
