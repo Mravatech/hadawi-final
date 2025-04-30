@@ -70,6 +70,7 @@ class OccasionCubit extends Cubit<OccasionState> {
 
    void resetData() {
     // isForMe = true;
+     images = [];
     isPresent = true;
     dropdownOccasionType = '';
     isMoney = false;

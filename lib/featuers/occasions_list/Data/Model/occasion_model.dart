@@ -9,7 +9,7 @@ class OccasionModel {
   final dynamic moneyGiftAmount;
   final String occasionDate;
   final String occasionId;
-  final List<String> occasionImage;
+  final List<dynamic> occasionImage;
   final String occasionName;
   final String occasionType;
   final String personEmail;
@@ -76,7 +76,7 @@ class OccasionModel {
     occasionDate: json["occasionDate"]??'',
     isActive: json["isActive"]??false,
     occasionId: json["occasionId"]??'',
-    occasionImage: json["occasionImage"]??'',
+    occasionImage: json["occasionImage"]??[],
     occasionName: json["occasionName"]??'',
     occasionType: json["occasionType"]??'',
     personEmail: json["personEmail"]??'',

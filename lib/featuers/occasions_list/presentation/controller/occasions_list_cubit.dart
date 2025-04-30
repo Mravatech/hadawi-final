@@ -1,8 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
-import 'package:hadawi_app/featuers/occasions_list/Data/Model/occasion_model.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
@@ -33,7 +32,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
         for (var element in value.docs) {
 
           if(element["isForMe"]== false && element['personId'] == UserDataFromStorage.uIdFromStorage){
-            othersOccasionsList.add(OccasionModel.fromMap(element.data()));
+            othersOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
       });
@@ -52,7 +51,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
           if(element['personId'] == UserDataFromStorage.uIdFromStorage){
-            myOccasionsList.add(OccasionModel.fromMap(element.data()));
+            myOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
       });
@@ -71,7 +70,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
           if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
-            pastOccasionsList.add(OccasionModel.fromMap(element.data()));
+            pastOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
       });
@@ -91,7 +90,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
           if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
-            closedOccasionsList.add(OccasionModel.fromMap(element.data()));
+            closedOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
       });

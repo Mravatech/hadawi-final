@@ -109,9 +109,9 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                                 ));
                           },
                           forOthers: false,
-                          occasionName: occasionItem.occasionName,
+                          occasionName: occasionItem.type,
                           personName: "",
-                          imageUrl: occasionItem.occasionImage[index],
+                          imageUrl: occasionItem.giftImage[index],
                         );
                       },
                     ),
