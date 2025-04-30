@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/all_occasions/presentation/view/all_occasions_screen.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
-import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-
 import '../../../../../generated/assets.dart';
 import '../../../../../styles/colors/color_manager.dart';
 import '../../../../../styles/size_config/app_size_config.dart';
 import '../../../../../styles/text_styles/text_styles.dart';
 import '../../../../../utiles/cashe_helper/cashe_helper.dart';
 import '../../../../../utiles/localiztion/app_localization.dart';
-import '../../../../../utiles/shared_preferences/shared_preference.dart';
 import '../../../../../widgets/default_text_field.dart';
 import '../../../../../widgets/loading_widget.dart';
 import '../../../../auth/presentation/controller/auth_cubit.dart';
 
 class EditOccasion extends StatefulWidget {
   final OccasionModel occasionModel;
+  final bool fromHome;
 
-  const EditOccasion({super.key, required this.occasionModel});
+  const EditOccasion({super.key, required this.occasionModel, required this.fromHome});
 
   @override
   State<EditOccasion> createState() => _EditOccasionState();
