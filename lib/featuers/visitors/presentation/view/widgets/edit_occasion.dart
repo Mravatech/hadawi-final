@@ -613,56 +613,6 @@ class _EditOccasionState extends State<EditOccasion> {
                           ],
                         ),
 
-                        // SizedBox(height: SizeConfig.height * 0.02),
-
-                        // /// Packaging Options
-                        // Row(
-                        //   children: [
-                        //     Text(
-                        //       "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
-                        //       style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                        //     ),
-                        //   ],
-                        // ),
-
-                        // /// Package Selection
-                        //  Column(
-                        //     children: [
-                        //       SizedBox(height: SizeConfig.height * 0.02),
-                        //       state is GetOccasionTaxesLoadingState
-                        //           ? const LoadingAnimationWidget()
-                        //           : Row(
-                        //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        //         children: [
-                        //           // _buildPackageOption(
-                        //           //   context,
-                        //           //   price: cubit.packageListPrice.toString(),
-                        //           //   imageUrl: cubit.packageListImage.toString(),
-                        //           //   isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[0].toString()),
-                        //           //   onTap: () {
-                        //           //     // cubit.switchGiftWithPackageType(
-                        //           //     //   int.parse(cubit.packageListPrice[0].toString()),
-                        //           //     //   cubit.packageListImage[0].toString(),
-                        //           //     // );
-                        //           //   },
-                        //           // ),
-                        //           // _buildPackageOption(
-                        //           //   context,
-                        //           //   price: cubit.packageListPrice[0].toString(),
-                        //           //   imageUrl: cubit.packageListImage[0].toString(),
-                        //           //   isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[0].toString()),
-                        //           //   onTap: () {
-                        //           //     // cubit.switchGiftWithPackageType(
-                        //           //     //   int.parse(cubit.packageListPrice[1].toString()),
-                        //           //     //   cubit.packageListImage[1].toString(),
-                        //           //     // );
-                        //           //   },
-                        //           // ),
-                        //         ],
-                        //       ),
-                        //     ],
-                        //   ),
-
                         SizedBox(height: SizeConfig.height * 0.02),
 
                         Text(
@@ -1012,6 +962,8 @@ Widget _buildPackageOption(
               ),
             ),
           ),
+
+
           AnimatedContainer(
             duration: const Duration(milliseconds: 300),
             height: mediaQuery.height * 0.04,

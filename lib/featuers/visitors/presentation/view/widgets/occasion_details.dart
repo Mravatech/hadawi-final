@@ -404,7 +404,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                               child: QrImageView(
                                 data: context.read<OccasionCubit>().occasionLink,
                                 version: QrVersions.auto,
-                                size: SizeConfig.height * 0.3,
+                                size: SizeConfig.height * 0.25,
                                 backgroundColor: Colors.white,
                                 embeddedImage: AssetImage(
                                     AssetsManager.logoWithoutBackground),
