@@ -13,6 +13,7 @@ final class PickImageLoadingState extends OccasionState {}
 final class PickImageSuccessState extends OccasionState {}
 final class PickImageErrorState extends OccasionState {}
 final class RemovePickedImageSuccessState extends OccasionState {}
+final class RemoveNetworkImageSuccessState extends OccasionState {}
 final class UploadImageLoadingState extends OccasionState {}
 final class UploadImageSuccessState extends OccasionState {}
 final class UploadImageErrorState extends OccasionState {}
@@ -57,6 +58,12 @@ final class CreateOccasionLinkErrorState extends OccasionState {}
 final class SwitchShowNoteSuccess extends OccasionState {}
 final class SwitchShowGiftCardSuccess extends OccasionState {}
 final class SwitchShowDeliveryDataSuccess extends OccasionState {}
+final class UpdateOccasionLoadingState extends OccasionState {}
+final class UpdateOccasionSuccessState extends OccasionState {}
+final class UpdateOccasionErrorState extends OccasionState {
+  final String error;
+  UpdateOccasionErrorState({required this.error});
+}
 
 
 

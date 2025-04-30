@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
@@ -55,6 +56,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryCityController = TextEditingController();
   TextEditingController giftDeliveryStreetController = TextEditingController();
   TextEditingController discountCodeController = TextEditingController();
+  TextEditingController giftPriceController = TextEditingController();
   String dropdownOccasionType = '';
 
   // List of items in our dropdown menu
@@ -224,6 +226,12 @@ class OccasionCubit extends Cubit<OccasionState> {
     if (index >= 0 && index < images.length) {
       images.removeAt(index);
       emit(RemovePickedImageSuccessState());
+    }
+  }
+  void removeNetworkImage(int index, List<dynamic> networkImages) {
+    if (index >= 0 && index < networkImages.length) {
+      networkImages.removeAt(index);
+      emit(RemoveNetworkImageSuccessState());
     }
   }
 
@@ -532,6 +540,42 @@ class OccasionCubit extends Cubit<OccasionState> {
     "عرعر", "رفحاء", "طريف"
   ];
 
+List<dynamic> urls=[];
+  Future<void> updateOccasion({
+    required String occasionId,
+  }) async {
+    emit(UpdateOccasionLoadingState());
+    try {
+      final List<String>? imageUrl = images.isNotEmpty ? await uploadImages():null;
+      await FirebaseFirestore.instance
+          .collection('Occasions')
+          .doc(occasionId)
+          .update({
+        'occasionName': occasionNameController.text,
+        'personName': nameController.text,
+        'personPhone': giftReceiverNumberController.text,
+        'giftName': giftNameController.text,
+        'giftLink': linkController.text,
+        'giftPrice': double.parse(moneyAmountController.text),
+        'giftType': giftType,
+        'city': dropdownCity,
+        'district': giftDeliveryStreetController.text,
+        'giftCard': moneyGiftMessageController.text,
+        'receiverName':  giftReceiverNameController.text ,
+        'receiverPhone': giftReceiverNumberController.text,
+        'occasionImage': imageUrl?? urls,
+        'note': giftDeliveryNoteController.text,
+        'type': dropdownOccasionType,
 
+      });
 
+      emit(UpdateOccasionSuccessState());
+    } catch (e) {
+      debugPrint("error when edit occasion: ${e.toString()}");
+      if (kDebugMode) {
+        print(e.toString());
+        emit(UpdateOccasionErrorState(error:  e.toString()));
+      }
+    }
+  }
 }
