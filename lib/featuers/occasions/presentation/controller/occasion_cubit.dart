@@ -481,6 +481,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     return shortLink.shortUrl.toString();
   }
 
+
   Future<void> disableOccasion({required String occasionId}) async {
     emit(DisableOccasionLoadingState());
     try{
