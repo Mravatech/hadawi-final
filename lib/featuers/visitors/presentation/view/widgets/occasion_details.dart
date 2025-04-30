@@ -142,23 +142,11 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                 ),
-                                child: CachedNetworkImage(
-                                  imageUrl: cubit.occasionModel?.giftImage[0]??"",
-                                  placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(
+                                child: const Icon(
                                     Icons.person,
                                     color: ColorManager.primaryBlue,
-                                  ),
-                                  height:
-                                      MediaQuery.sizeOf(context).height * 0.1,
-                                  width:
-                                      MediaQuery.sizeOf(context).height * 0.1,
-                                  fit: BoxFit.fill,
-                                ),
                               ),
+                            ),
                             ),
                             SizedBox(
                               width: MediaQuery.sizeOf(context).width * 0.02,
@@ -268,7 +256,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             ],
                           ),
                           child: cubit.occasionModel!.giftImage.isEmpty &&
-                                  cubit.occasionModel?.giftType == 'مبلغ مالي'
+                                  cubit.occasionModel?.giftType == 'مبلغ مالى'
                               ? SizedBox()
                               : Stack(
                                 children: [

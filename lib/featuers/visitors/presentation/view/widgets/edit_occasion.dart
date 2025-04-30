@@ -37,6 +37,7 @@ class EditOccasion extends StatefulWidget {
 class _EditOccasionState extends State<EditOccasion> {
   @override
   void initState() {
+    context.read<OccasionCubit>().getOccasionTaxes();
     context.read<OccasionCubit>().nameController.text =
         widget.occasionModel.personName;
     context.read<OccasionCubit>().giftNameController.text =
@@ -225,7 +226,7 @@ class _EditOccasionState extends State<EditOccasion> {
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
                                     value: widget.occasionModel.type.isEmpty?
-                                    cubit.dropdownOccasionType
+                                    cubit.occasionTypeItems[0]
                                         : widget.occasionModel.type,
                                     hint: Text(AppLocalizations.of(context)!
                                         .translate('occasionTypeHint')
@@ -654,13 +655,13 @@ class _EditOccasionState extends State<EditOccasion> {
                                     const EdgeInsets.symmetric(horizontal: 16),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<String>(
-                                    value: cubit.dropdownCity.isEmpty
+                                    value: widget.occasionModel.city != null
                                         ? widget.occasionModel.city
                                         : cubit.dropdownCity,
                                     hint: Text(AppLocalizations.of(context)!
                                         .translate('enterYourCity')
                                         .toString()),
-                                    icon: const Icon(Icons.keyboard_arrow_down,
+                            icon: const Icon(Icons.keyboard_arrow_down,
                                         color: ColorManager.primaryBlue),
                                     elevation: 16,
                                     style: TextStyles.textStyle16Regular
