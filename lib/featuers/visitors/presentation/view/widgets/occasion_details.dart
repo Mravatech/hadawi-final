@@ -460,7 +460,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                   String link = await cubit
                                       .createDynamicLink(widget.occasionId);
                                   Share.share(
-                                      'قام صديقك ${cubit.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة ${cubit.occasionModel.type} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                                      'قام صديقك ${cubit.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة له ${cubit.occasionModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
                                 },
                                 child: state is CreateOccasionLinkLoadingState
                                     ? LoadingAnimationWidget()

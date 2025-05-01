@@ -353,7 +353,7 @@ class OccasionCubit extends Cubit<OccasionState> {
 
       final shareResult = await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
       // Check if sharing completed or was canceled

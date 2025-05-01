@@ -54,6 +54,10 @@
         <string>fetch</string>
         <string>remote-notification</string>
     </array>
+    key>AssociatedDomains</key>
+    <array>
+      <string>applinks:hadawiapp.page.link</string>
+    </array>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
