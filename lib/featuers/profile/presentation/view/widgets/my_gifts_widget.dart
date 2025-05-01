@@ -105,13 +105,15 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                                 OccasionDetails(
                                   occasionId:
                                   occasionItem.occasionId,
+                                  occasionEntity: occasionItem,
                                   fromHome: false,
                                 ));
                           },
                           forOthers: false,
                           occasionName: occasionItem.type,
                           personName: "",
-                          imageUrl: occasionItem.giftImage[index],
+                          imageUrl: occasionItem.giftType== "مبلغ مالى"? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa":
+                          occasionItem.giftImage[0],
                         );
                       },
                     ),

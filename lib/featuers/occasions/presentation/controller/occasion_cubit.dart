@@ -161,6 +161,12 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchBySharingSuccess());
   }
 
+  bool switchUpdateIsPublic(bool value) {
+    value = !value;
+    emit(SwitchUpdatingPublicSuccess());
+    return value;
+  }
+
   void switchGiftContainsName() {
     giftContainsNameValue = !giftContainsNameValue;
     emit(SwitchGiftContainsNameSuccess());
@@ -583,7 +589,7 @@ List<dynamic> urls=[];
         'occasionImage': imageUrl?? urls,
         'note': giftDeliveryNoteController.text,
         'type': dropdownOccasionType,
-
+        'isPrivate': isPublicValue,
       });
 
       emit(UpdateOccasionSuccessState());

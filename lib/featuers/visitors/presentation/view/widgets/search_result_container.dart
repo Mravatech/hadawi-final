@@ -46,6 +46,7 @@ class SearchResultContainer extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => OccasionDetails(
                           occasionId: occasion.occasionId,
+                          occasionEntity: occasion,
                           fromHome: true,
                         ),
                       ),

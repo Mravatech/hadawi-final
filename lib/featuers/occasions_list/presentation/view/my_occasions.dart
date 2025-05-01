@@ -111,6 +111,7 @@ class _MyOccasionsState extends State<MyOccasions> {
                                             OccasionDetails(
                                               occasionId:
                                                   occasionItem.occasionId,
+                                              occasionEntity: occasionItem,
                                               fromHome: false,
                                             ));
                                       },

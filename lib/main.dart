@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.da
 import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/bloc_observer.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
@@ -68,7 +69,8 @@ final GoRouter _router = GoRouter(
       path: '/occasion-details/:id',
       builder: (context, state) {
         final occasionId = state.pathParameters['id'];
-        return OccasionDetails(occasionId: occasionId!,fromHome: false,);
+        final occasionEntity = state.extra as OccasionEntity?;
+        return OccasionDetails(occasionId: occasionId!,fromHome: false,occasionEntity: occasionEntity, );
       },
     ),
     GoRoute(

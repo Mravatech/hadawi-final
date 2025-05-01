@@ -98,6 +98,7 @@ class _PastOccasionsState extends State<PastOccasions> {
                                         onTap: () {
                                           customPushNavigator(context, OccasionDetails(
                                             occasionId: occasionItem.occasionId,
+                                            occasionEntity: occasionItem,
                                             fromHome: false,
                                           ));
                                         },

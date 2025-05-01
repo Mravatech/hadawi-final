@@ -1,9 +1,9 @@
-import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
@@ -31,9 +31,10 @@ import '../../../../occasions_list/presentation/controller/occasions_list_cubit.
 
 class OccasionDetails extends StatefulWidget {
   final String occasionId;
-  final bool fromHome;
+  final OccasionEntity? occasionEntity;
+    final bool fromHome;
 
-  const OccasionDetails({super.key, required this.occasionId, required this.fromHome});
+  const OccasionDetails({super.key, required this.occasionId, required this.fromHome, required this.occasionEntity});
 
   @override
   State<OccasionDetails> createState() => _OccasionDetailsState();
@@ -42,9 +43,17 @@ class OccasionDetails extends StatefulWidget {
 class _OccasionDetailsState extends State<OccasionDetails> {
   @override
   void initState() {
-    // TODO: implement initState
     SharedPreferences.getInstance();
     UserDataFromStorage.getData();
+context.read<VisitorsCubit>().editOccasionNameController.text =
+        widget.occasionEntity?.occasionName ?? "";
+    context.read<VisitorsCubit>().editGiftNameController.text =
+        widget.occasionEntity?.giftName ?? "";
+    context.read<VisitorsCubit>().editPersonNameController.text =
+        widget.occasionEntity?.personName ?? "";
+
+    context.read<VisitorsCubit>().remainingBalanceController.text =
+        (widget.occasionEntity?.giftPrice- widget.occasionEntity?.moneyGiftAmount).toString() ?? "";
     context
         .read<VisitorsCubit>()
         .getOccasionData(occasionId: widget.occasionId);
@@ -65,6 +74,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
   @override
   Widget build(BuildContext context) {
+    final cubit = context.read<VisitorsCubit>();
+    debugPrint("occasionEntity/*/*/*/*/*/* ${widget.occasionEntity?.giftType??""}");
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
@@ -97,499 +108,449 @@ class _OccasionDetailsState extends State<OccasionDetails> {
             }
           },
           builder: (context, state) {
-            final cubit = context.read<VisitorsCubit>();
-            return state is GetOccasionDataLoadingState
+
+            return state is GetOccasionDataLoadingState|| widget.occasionEntity==null
                 ? Center(child: LoadingAnimationWidget())
-                : ModalProgressHUD(
-                   inAsyncCall: state is GetOccasionDataLoadingState,
-                  progressIndicator: LoadingAnimationWidget(),
-                  child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        crossAxisAlignment: CashHelper.languageKey == 'ar'
-                            ? CrossAxisAlignment.end
-                            : CrossAxisAlignment.start,
-                        children: [
-                          /// occasion name
-                          // Text(
-                          //   AppLocalizations.of(context)!
-                          //       .translate('occasionName')
-                          //       .toString(),
-                          //   style: TextStyles.textStyle18Bold.copyWith(),
-                          // ),
-                          // SizedBox(
-                          //   height: MediaQuery.sizeOf(context).height * 0.01,
-                          // ),
-                          // DefaultTextField(
-                          //   controller: cubit.editOccasionNameController,
-                          //   hintText: cubit.occasionModel?.occasionName??'',
-                          //   initialValue: cubit.occasionModel?.occasionName??'',
-                          //   validator: (value) {
-                          //     return null;
-                          //   },
-                          //   keyboardType: TextInputType.text,
-                          //   textInputAction: TextInputAction.next,
-                          //   fillColor: ColorManager.gray,
-                          //   enable: true,
-                          // ),
-                          // SizedBox(
-                          //   height: MediaQuery.sizeOf(context).height * 0.02,
-                          // ),
-
-                          /// person name
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                child: Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(
-                                      Icons.person,
-                                      color: ColorManager.primaryBlue,
+                : Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Column(
+                      crossAxisAlignment: CashHelper.languageKey == 'ar'
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+                      children: [
+                        /// person name
+                        Row(
+                          children: [
+                            CircleAvatar(
+                              child: Container(
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
                                 ),
+                                child: const Icon(
+                                    Icons.person,
+                                    color: ColorManager.primaryBlue,
                               ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).width * 0.02,
-                              ),
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .translate('personName')
-                                    .toString(),
-                                style: TextStyles.textStyle18Bold.copyWith(),
-                              ),
-                              Spacer(),
-                              (UserDataFromStorage.userIsGuest == true) ||
-                                      (UserDataFromStorage.uIdFromStorage ==
-                                          cubit.occasionModel?.personId)
-                                  ? Container()
-                                  : SizedBox(
-                                      width:
-                                          MediaQuery.sizeOf(context).width * 0.3,
-                                      child: DefaultButton(
-                                        buttonText: AppLocalizations.of(context)!
-                                            .translate('follow')
-                                            .toString(),
-                                        onPressed: () {
-                                          context
-                                              .read<VisitorsCubit>()
-                                              .sendFollowRequest(
-                                                userId:
-                                                    cubit.occasionModel!.personId,
-                                                followerId: UserDataFromStorage
-                                                    .uIdFromStorage,
-                                                userName: cubit
-                                                    .occasionModel!.personName,
-                                                image: cubit
-                                                    .occasionModel!.giftImage[0],
-                                              )
-                                              .then((value) {
-                                            customToast(
-                                                title: 'تم الارسال',
-                                                color: ColorManager.primaryBlue);
-                                          });
-                                        },
-                                        buttonColor: ColorManager.primaryBlue,
-                                      ),
-                                    ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          DefaultTextField(
-                            controller: cubit.editPersonNameController,
-                            hintText: cubit.occasionModel?.personName??'',
-                            initialValue: cubit.occasionModel?.personName??'',
-                            validator: (value) {
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray,
-                            enable: true,
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.02,
-                          ),
-
-                          /// gift
-                          Text(
-                            AppLocalizations.of(context)!
-                                .translate('gift')
-                                .toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          DefaultTextField(
-                            controller: cubit.editGiftNameController,
-                            initialValue: cubit.occasionModel?.giftName,
-                            hintText: cubit.occasionModel!.giftName.isEmpty
-                                ? '${cubit.occasionModel?.giftPrice??"0"} ريال'
-                                : cubit.occasionModel?.giftName??'',
-                            validator: (value) {
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray,
-                            enable: true,
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.02,
-                          ),
-
-                          /// gift image
-                          Container(
-                            clipBehavior: Clip.antiAlias,
-                            decoration: BoxDecoration(
-                              color: ColorManager.white,
-                              borderRadius: BorderRadius.circular(15),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: ColorManager.gray.withOpacity(0.5),
-                                  spreadRadius: 2,
-                                  blurRadius: 5,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
                             ),
-                            child: cubit.occasionModel!.giftImage.isEmpty &&
-                                    cubit.occasionModel?.giftType == 'مبلغ مالى'
-                                ? SizedBox()
-                                : Stack(
-                                  children: [
-                                    CarouselSlider(
-                                                                options: CarouselOptions(
-                                      padEnds: false,
-                                      viewportFraction: .99,
-                                      height: MediaQuery.sizeOf(context).height * 0.378,
-                                      aspectRatio: 16 / 6,
-                                      enlargeCenterPage: true,
-                                      enlargeFactor: 0.1,
-                                      enableInfiniteScroll: false,
-                                      initialPage: 0,
-                                      pageSnapping: false,
-                                      autoPlay: false,
-                                      disableCenter: true,
-                                      onPageChanged: (index, _) {
-                                        setState(() {
-                                          _currentIndex = index;
-                                        });
-                                      }),
-                                    items: [
-
-                                      ...cubit.occasionModel!.giftImage.map((item) => Container(
-                                        clipBehavior: Clip.antiAlias,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.all(
-                                        Radius.circular(15)
-                                            )),
-                                        child: CachedNetworkImage(
-                                          imageUrl: item,
-                                          placeholder: (context, url) => const Center(
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                          errorWidget: (context, url, error) {
-                                            return cubit.occasionModel!.giftImage
-                                                .isEmpty &&
-                                                cubit.occasionModel!.giftType ==
-                                                    'مبلغ مالي'
-                                                ? Image.asset(
-                                              'assets/images/money_bag.png',
-                                              fit: BoxFit.contain,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.sizeOf(context).width * 0.02,
+                            ),
+                            Text(
+                              AppLocalizations.of(context)!
+                                  .translate('personName')
+                                  .toString(),
+                              style: TextStyles.textStyle18Bold.copyWith(),
+                            ),
+                            Spacer(),
+                            (UserDataFromStorage.userIsGuest == true) ||
+                                    (UserDataFromStorage.uIdFromStorage ==
+                                        cubit.occasionModel.personId)
+                                ? Container()
+                                : SizedBox(
+                                    width:
+                                        MediaQuery.sizeOf(context).width * 0.3,
+                                    child: DefaultButton(
+                                      buttonText: AppLocalizations.of(context)!
+                                          .translate('follow')
+                                          .toString(),
+                                      onPressed: () {
+                                        context.read<VisitorsCubit>()
+                                            .sendFollowRequest(
+                                              userId:
+                                              widget.occasionEntity?.personId??"",
+                                              followerId: UserDataFromStorage
+                                                  .uIdFromStorage,
+                                              userName: widget.occasionEntity?.personName??"",
+                                              image: widget.occasionEntity?.giftImage[0]??"",
                                             )
-                                                : const Icon(
-                                              Icons.error,
-                                              color: Colors.red,
-                                            );
-                                          },
-                                          height:
-                                          MediaQuery.sizeOf(context).height * 0.3,
-                                          width: double.infinity,
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ))
-                                    ]
-                                    ),
-                                    Positioned(
-                                      bottom: 23,
-                                      left: 0,
-                                      right: 0,
-                                      child: DotsIndicator(
-                                        dotsCount: cubit.occasionModel!.giftImage.length ,
-                                        position: _currentIndex.toDouble(),
-                                        decorator: DotsDecorator(
-                                          spacing: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-                                          color: Colors.white,
-                                          size: Size(8, 8),
-                                          activeSize: Size(24, 6),
-                                          activeShape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(15),
-                                          ),
-                                          activeColor: ColorManager.primaryBlue,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.02,
-                          ),
-
-                          /// gift link and progress indicator
-                          Row(
-                            children: [
-                              Expanded(
-                                child: ProgressIndicatorWidget(
-                                    value: (double.parse(cubit
-                                            .occasionModel?.moneyGiftAmount
-                                            .toString()??"") /
-                                        double.parse(cubit
-                                            .occasionModel?.giftPrice
-                                            .toString()??""))),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.02,
-                          ),
-
-                          /// remaining balance
-                          Text(
-                            AppLocalizations.of(context)!
-                                .translate('remainingBalance')
-                                .toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.sizeOf(context).height * 0.01,
-                          ),
-                          DefaultTextField(
-                            controller: TextEditingController(),
-                            hintText: (cubit.occasionModel!.giftPrice -
-                                    cubit.occasionModel!.moneyGiftAmount)
-                                .toString(),
-                            validator: (value) {
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray,
-                            enable: false,
-                          ),
-                          SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.01),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              RepaintBoundary(
-                                key: qrKey,
-                                child: QrImageView(
-                                  data: context.read<OccasionCubit>().occasionLink,
-                                  version: QrVersions.auto,
-                                  size: SizeConfig.height * 0.25,
-                                  backgroundColor: Colors.white,
-                                  embeddedImage: AssetImage(
-                                      AssetsManager.logoWithoutBackground),
-                                  // Your logo
-                                  embeddedImageStyle: QrEmbeddedImageStyle(
-                                    size: Size(100, 100), // Adjust size as needed
-                                  ),
-                                ),
-                              ),
-                              state is CreateOccasionLinkLoadingState
-                                  ? LoadingAnimationWidget()
-                                  : GestureDetector(
-                                onTap: () async {
-                                  context
-                                      .read<OccasionCubit>()
-                                      .captureAndShareQr(
-                                       qrKey: qrKey,
-                                      occasionName: cubit.occasionModel!.occasionName,
-                                      personName: UserDataFromStorage.userNameFromStorage);
-                                },
-                                child: Container(
-                                  height:
-                                  MediaQuery.sizeOf(context).height *
-                                      .055,
-                                  width: MediaQuery.sizeOf(context).width *
-                                      .3,
-                                  decoration: BoxDecoration(
-                                    color: ColorManager.primaryBlue,
-                                    borderRadius: BorderRadius.circular(
-                                        MediaQuery.sizeOf(context).height *
-                                            0.05),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Text(
-                                        AppLocalizations.of(context)!
-                                            .translate('shareQr')
-                                            .toString(),
-                                        style: TextStyles.textStyle12Bold
-                                            .copyWith(
-                                            color:
-                                            ColorManager.white),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.05),
-
-                          /// share and pay
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              /// share
-                              GestureDetector(
-                                onTap: () async {
-                                  String link = await cubit
-                                      .createDynamicLink(widget.occasionId);
-                                  Share.share(
-                                      'قام صديقك ${cubit.occasionModel?.personName??""} بدعوتك للمشاركة في مناسبة ${cubit.occasionModel?.occasionName} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
-                                },
-                                child: state is CreateOccasionLinkLoadingState
-                                    ? LoadingAnimationWidget()
-                                    : Container(
-                                        height:
-                                            MediaQuery.sizeOf(context).height *
-                                                .055,
-                                        width: MediaQuery.sizeOf(context).width *
-                                            .25,
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.primaryBlue,
-                                          borderRadius: BorderRadius.circular(
-                                              MediaQuery.sizeOf(context).height *
-                                                  0.05),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('share')
-                                                    .toString(),
-                                                style: TextStyles.textStyle18Bold
-                                                    .copyWith(
-                                                        color:
-                                                            ColorManager.white),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                              ),
-                              SizedBox(
-                                  width: MediaQuery.sizeOf(context).width * .05),
-
-                              /// pay
-                              GestureDetector(
-                                onTap: () => customPushNavigator(
-                                    context,
-                                    PaymentScreen(
-                                      occasionEntity: cubit.occasionModel!,
-                                    )),
-                                child: Container(
-                                  height:
-                                      MediaQuery.sizeOf(context).height * .055,
-                                  width: MediaQuery.sizeOf(context).width * .25,
-                                  decoration: BoxDecoration(
-                                    color: ColorManager.primaryBlue,
-                                    borderRadius: BorderRadius.circular(
-                                        MediaQuery.sizeOf(context).height * 0.05),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('payNow')
-                                              .toString(),
-                                          style: TextStyles.textStyle18Bold
-                                              .copyWith(
-                                                  color: ColorManager.white),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                  width: MediaQuery.sizeOf(context).width * .05),
-
-                              /// edit
-                              state is EditOccasionLoadingState
-                                  ? LoadingAnimationWidget()
-                                  : GestureDetector(
-                                      onTap: () {
-                                        customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel!, fromHome: widget.fromHome,),);
-                                        // cubit.editOccasion(
-                                        //   occasionId: widget.occasionId,
-                                        //   giftName:
-                                        //       cubit.editGiftNameController.text,
-                                        //   occasionName: cubit
-                                        //       .editOccasionNameController.text,
-                                        //   personName:
-                                        //       cubit.editPersonNameController.text,
-                                        // );
+                                            .then((value) {
+                                          customToast(
+                                              title: 'تم الارسال',
+                                              color: ColorManager.primaryBlue);
+                                        });
                                       },
-                                      child: Container(
-                                        height:
-                                            MediaQuery.sizeOf(context).height *
-                                                .055,
-                                        width: MediaQuery.sizeOf(context).width *
-                                            .25,
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.primaryBlue,
-                                          borderRadius: BorderRadius.circular(
-                                              MediaQuery.sizeOf(context).height *
-                                                  0.05),
+                                      buttonColor: ColorManager.primaryBlue,
+                                    ),
+                                  ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
+                        DefaultTextField(
+                          controller: cubit.editPersonNameController,
+                          hintText: '',
+                          validator: (value) {
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          fillColor: ColorManager.gray,
+                          enable: false,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+
+                        /// gift
+                        Text(
+                          AppLocalizations.of(context)!
+                              .translate('gift')
+                              .toString(),
+                          style: TextStyles.textStyle18Bold.copyWith(),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
+                        DefaultTextField(
+                          controller: cubit.editGiftNameController,
+                          hintText: '',
+                          validator: (value) {
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          fillColor: ColorManager.gray,
+                          enable: false,
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+
+                        /// gift image
+                        Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            color: ColorManager.white,
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: ColorManager.gray.withOpacity(0.5),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: widget.occasionEntity!.giftImage.isEmpty &&
+                              widget.occasionEntity?.giftType == 'مبلغ مالى'
+                              ? SizedBox()
+                              : Stack(
+                                children: [
+                                  CarouselSlider(
+                                      options: CarouselOptions(
+                                    padEnds: false,
+                                    viewportFraction: .99,
+                                    height: MediaQuery.sizeOf(context).height * 0.378,
+                                    aspectRatio: 16 / 6,
+                                    enlargeCenterPage: true,
+                                    enlargeFactor: 0.1,
+                                    enableInfiniteScroll: false,
+                                    initialPage: 0,
+                                    pageSnapping: false,
+                                    autoPlay: false,
+                                    disableCenter: true,
+                                    onPageChanged: (index, _) {
+                                      setState(() {
+                                        _currentIndex = index;
+                                      });
+                                    }),
+                                  items: [
+
+                                    ...widget.occasionEntity!.giftImage.map((item) => Container(
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(
+                                      Radius.circular(15)
+                                          )),
+                                      child: CachedNetworkImage(
+                                        imageUrl: item,
+                                        placeholder: (context, url) => const Center(
+                                          child: CircularProgressIndicator(),
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate('edit')
-                                                    .toString(),
-                                                style: TextStyles.textStyle18Bold
-                                                    .copyWith(
-                                                        color:
-                                                            ColorManager.white),
-                                              ),
-                                            ],
-                                          ),
+                                        errorWidget: (context, url, error) {
+                                          return widget.occasionEntity!.giftImage
+                                              .isEmpty &&
+                                              widget.occasionEntity?.giftType ==
+                                                  'مبلغ مالي'
+                                              ? Image.asset(
+                                            'assets/images/money_bag.png',
+                                            fit: BoxFit.contain,
+                                          )
+                                              : const Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                          );
+                                        },
+                                        height:
+                                        MediaQuery.sizeOf(context).height * 0.3,
+                                        width: double.infinity,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ))
+                                  ]
+                                  ),
+                                  Positioned(
+                                    bottom: 23,
+                                    left: 0,
+                                    right: 0,
+                                    child: DotsIndicator(
+                                      dotsCount: widget.occasionEntity!.giftImage.isEmpty?1:widget.occasionEntity!.giftImage.length,
+                                      position: _currentIndex.toDouble(),
+                                      decorator: DotsDecorator(
+                                        spacing: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
+                                        color: Colors.white,
+                                        size: Size(8, 8),
+                                        activeSize: Size(24, 6),
+                                        activeShape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
+                                        ),
+                                        activeColor: ColorManager.primaryBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+
+                        /// gift link and progress indicator
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ProgressIndicatorWidget(
+                                  value: (double.parse(widget.occasionEntity!.moneyGiftAmount
+                                          .toString()) /
+                                      double.parse(widget.occasionEntity!.giftPrice
+                                          .toString()))),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.02,
+                        ),
+
+                        /// remaining balance
+                        Text(
+                          AppLocalizations.of(context)!
+                              .translate('remainingBalance')
+                              .toString(),
+                          style: TextStyles.textStyle18Bold.copyWith(),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.sizeOf(context).height * 0.01,
+                        ),
+                        DefaultTextField(
+                          controller: cubit.remainingBalanceController,
+                          hintText: '',
+                          validator: (value) {
+                            return null;
+                          },
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
+                          fillColor: ColorManager.gray,
+                          enable: false,
+                        ),
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.01),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            RepaintBoundary(
+                              key: qrKey,
+                              child: QrImageView(
+                                data: context.read<OccasionCubit>().occasionLink,
+                                version: QrVersions.auto,
+                                size: SizeConfig.height * 0.25,
+                                backgroundColor: Colors.white,
+                                embeddedImage: AssetImage(
+                                    AssetsManager.logoWithoutBackground),
+                                // Your logo
+                                embeddedImageStyle: QrEmbeddedImageStyle(
+                                  size: Size(100, 100), // Adjust size as needed
+                                ),
+                              ),
+                            ),
+                            state is CreateOccasionLinkLoadingState
+                                ? LoadingAnimationWidget()
+                                : GestureDetector(
+                              onTap: () async {
+                                context
+                                    .read<OccasionCubit>()
+                                    .captureAndShareQr(
+                                     qrKey: qrKey,
+                                    occasionName: widget.occasionEntity!.occasionName,
+                                    personName: UserDataFromStorage.userNameFromStorage);
+                              },
+                              child: Container(
+                                height:
+                                MediaQuery.sizeOf(context).height *
+                                    .055,
+                                width: MediaQuery.sizeOf(context).width *
+                                    .3,
+                                decoration: BoxDecoration(
+                                  color: ColorManager.primaryBlue,
+                                  borderRadius: BorderRadius.circular(
+                                      MediaQuery.sizeOf(context).height *
+                                          0.05),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('shareQr')
+                                          .toString(),
+                                      style: TextStyles.textStyle12Bold
+                                          .copyWith(
+                                          color:
+                                          ColorManager.white),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(
+                            height: MediaQuery.sizeOf(context).height * 0.05),
+
+                        /// share and pay
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            /// share
+                            GestureDetector(
+                              onTap: () async {
+                                String link = await cubit
+                                    .createDynamicLink(widget.occasionEntity?.occasionId??"");
+                                Share.share(
+                                    'قام صديقك ${widget.occasionEntity?.personName} بدعوتك للمشاركة في مناسبة ${widget.occasionEntity?.occasionName} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                              },
+                              child: state is CreateOccasionLinkLoadingState
+                                  ? LoadingAnimationWidget()
+                                  : Container(
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              .055,
+                                      width: MediaQuery.sizeOf(context).width *
+                                          .25,
+                                      decoration: BoxDecoration(
+                                        color: ColorManager.primaryBlue,
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.sizeOf(context).height *
+                                                0.05),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('share')
+                                                  .toString(),
+                                              style: TextStyles.textStyle18Bold
+                                                  .copyWith(
+                                                      color:
+                                                          ColorManager.white),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                            ],
-                          ),
-                        ],
-                      ),
+                            ),
+                            SizedBox(
+                                width: MediaQuery.sizeOf(context).width * .05),
+
+                            /// pay
+                            GestureDetector(
+                              onTap: () => customPushNavigator(
+                                  context,
+                                  PaymentScreen(
+                                    occasionEntity: widget.occasionEntity!,
+                                  )),
+                              child: Container(
+                                height:
+                                    MediaQuery.sizeOf(context).height * .055,
+                                width: MediaQuery.sizeOf(context).width * .25,
+                                decoration: BoxDecoration(
+                                  color: ColorManager.primaryBlue,
+                                  borderRadius: BorderRadius.circular(
+                                      MediaQuery.sizeOf(context).height * 0.05),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        AppLocalizations.of(context)!
+                                            .translate('payNow')
+                                            .toString(),
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(
+                                                color: ColorManager.white),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                width: MediaQuery.sizeOf(context).width * .05),
+
+                            /// edit
+                            state is EditOccasionLoadingState
+                                ? LoadingAnimationWidget()
+                                : GestureDetector(
+                                    onTap: () {
+                                      customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel, fromHome: widget.fromHome,),);
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.sizeOf(context).height *
+                                              .055,
+                                      width: MediaQuery.sizeOf(context).width *
+                                          .25,
+                                      decoration: BoxDecoration(
+                                        color: ColorManager.primaryBlue,
+                                        borderRadius: BorderRadius.circular(
+                                            MediaQuery.sizeOf(context).height *
+                                                0.05),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!
+                                                  .translate('edit')
+                                                  .toString(),
+                                              style: TextStyles.textStyle18Bold
+                                                  .copyWith(
+                                                      color:
+                                                          ColorManager.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                          ],
+                        ),
+                      ],
                     ),
-                );
+                  );
           },
         ),
       ),
