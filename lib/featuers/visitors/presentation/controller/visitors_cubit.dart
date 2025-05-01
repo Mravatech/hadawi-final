@@ -163,7 +163,39 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   }
 
-  OccasionModel? occasionModel;
+  OccasionModel occasionModel = OccasionModel(
+    isForMe: false,
+    isActive: false,
+    occasionName: '',
+    occasionDate: '',
+    occasionId: '',
+    occasionType: '',
+    moneyGiftAmount: '',
+    personId: '',
+    personName: '',
+    personPhone: '',
+    personEmail: '',
+    giftImage: [],
+    giftName: '',
+    giftLink: '',
+    giftPrice: '',
+    giftType: '',
+    isSharing: false,
+    receiverName: '',
+    receiverPhone: '',
+    bankName: '',
+    ibanNumber: '',
+    isContainName: false,
+    giftCard: '',
+    city: '',
+    district: '',
+    note: '',
+    isPrivate: false,
+    discount: 0.0,
+    appCommission: 0.0,
+    deliveryPrice: 0.0,
+    type: '',
+  );
 
   Future<void> getOccasionData({required String occasionId})async{
     emit(GetOccasionDataLoadingState());
