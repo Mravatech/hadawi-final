@@ -772,6 +772,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                     child: GestureDetector(
                       onTap: () async {
                         if (forMeFormKey.currentState!.validate()) {
+
                           if (cubit.dropdownOccasionType.isNotEmpty) {
                             if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
                               cubit.getTotalGiftPrice();
@@ -788,6 +789,15 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               color: Colors.red,
                             );
                           }
+
+                          if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
+                            customToast(
+                              title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
+                              color: Colors.red,
+                            );
+                          }
+
+
                         }
                       },
                       child: Container(

@@ -335,11 +335,12 @@
   "noFriends": "لا يوجد أصدقاء تتابعهم",
   "noFriendsFollowMe": "لا يوجد أصدقاء يتابعونك",
   "editOccasion": "تعديل المناسبة",
-  "closeOccasion": "اغلاق المناسبة",
-  "closeOccasionMessage": "هل انت متاكد انك تريد اغلاق هذه المناسبة؟",
+  "closeOccasion": "إلغاء المناسبة",
+  "closeOccasionMessage": "هل انت متاكد انك تريد إلغاء هذه المناسبة؟",
   "yes": "نعم",
   "no": "لا",
-  "occasionClosed": "المناسبة مغلقة",
-  "occasionClosedMessage": "تم اغلاق هذه المناسبة.",
-  "occasionsListEmpty": "قائمة المناسبات فارغة , قم بأنشاء اول مناسبة لك"
+  "occasionClosed": "المناسبة إلغيت",
+  "occasionClosedMessage": "تم إلغاء هذه المناسبة.",
+  "occasionsListEmpty": "قائمة المناسبات فارغة , قم بأنشاء اول مناسبة لك",
+  "deliveryDataValidate": "يرجى ادخال جميع بيانات التوصيل (المدينة، الحي، رقم هاتف المستلم)"
 }

@@ -10,7 +10,6 @@ import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,7 +18,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 
 part 'occasion_state.dart';
@@ -177,6 +175,23 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SetMoneyReceiveDateState());
   }
 
+  String convertArabicToEnglishNumbers(String input) {
+    const arabicToEnglish = {
+      '٠': '0',
+      '١': '1',
+      '٢': '2',
+      '٣': '3',
+      '٤': '4',
+      '٥': '5',
+      '٦': '6',
+      '٧': '7',
+      '٨': '8',
+      '٩': '9',
+    };
+
+    return input.split('').map((char) => arabicToEnglish[char] ?? char).join();
+  }
+
   double totalPriceCalculate=0;
   double getAppCommission() {
      print('moneyAmountController.text ${moneyAmountController.text}');
@@ -188,17 +203,13 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   double getTotalGiftPrice() {
-    final text = moneyAmountController.text.trim();
+    final text = convertArabicToEnglishNumbers(moneyAmountController.text.trim());
     double giftPriceNumber = double.tryParse(text) ?? 0.0;
     double packagePriceNumber = double.tryParse(giftWithPackageType.toString()) ?? 0.0;
 
     double appCommission = giftPriceNumber * serviceTax;
 
-    if (giftType == 'مبلغ مالي' && giftWithPackage == false) {
-      giftPrice = (giftPriceNumber + packagePriceNumber + appCommission) - discountValue;
-    } else {
-      giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
-    }
+    giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
 
     emit(GetTotalGiftPriceSuccessState());
     return giftPrice;
@@ -501,6 +512,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       emit(DisableOccasionSuccessState());
     }catch(error){
       debugPrint('error when disable occasion: $error');
+      customToast(title: error.toString(), color: ColorManager.red);
       emit(DisableOccasionErrorState());
     }
   }

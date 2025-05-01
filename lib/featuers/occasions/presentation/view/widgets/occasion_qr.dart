@@ -153,7 +153,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                           String link = await cubit
                               .createDynamicLink(widget.occasionModel.occasionId);
                           Share.share(
-                              'قام صديقك ${widget.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة ${widget.occasionModel.occasionType} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                              'قام صديقك ${widget.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة ${widget.occasionModel.type} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
                         },
                         child: state is CreateOccasionLinkLoadingState
                             ? LoadingAnimationWidget()

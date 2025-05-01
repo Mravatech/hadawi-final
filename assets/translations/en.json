@@ -335,11 +335,12 @@
   "noFriends": "You don't have friends",
   "noFriendsFollowMe": "You don't have friends following you",
   "editOccasion": "Edit Occasion",
-  "closeOccasion": "Close Occasion",
+  "closeOccasion": "Cancel Occasion",
   "closeOccasionMessage": "Are you sure you want to close this occasion?",
   "yes": "Yes",
   "no": "No",
-  "occasionClosed": "Occasion Closed",
-  "occasionClosedMessage": "This occasion has been closed.",
-  "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion"
+  "occasionClosed": "Occasion Cancelled",
+  "occasionClosedMessage": "This occasion has been cancelled.",
+  "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion",
+  "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)"
 }
