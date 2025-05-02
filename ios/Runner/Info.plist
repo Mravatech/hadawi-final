@@ -54,7 +54,7 @@
         <string>fetch</string>
         <string>remote-notification</string>
     </array>
-    key>AssociatedDomains</key>
+    <key>AssociatedDomains</key>
     <array>
       <string>applinks:hadawiapp.page.link</string>
     </array>
