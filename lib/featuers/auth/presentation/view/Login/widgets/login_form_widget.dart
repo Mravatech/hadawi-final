@@ -126,6 +126,9 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                 // Login Button
+                const LoginWithSocialButton(),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
                     if (state is UserLoginSuccessState) {
@@ -168,14 +171,6 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     );
                   },
                 ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-                Text(
-                  AppLocalizations.of(context)!.translate('or').toString(),
-                  style: TextStyles.textStyle18Bold
-                      .copyWith(color: ColorManager.darkGrey),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
-                const LoginWithSocialButton(),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
                 const DonotHaveAnAccount(),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),

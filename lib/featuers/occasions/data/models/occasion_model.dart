@@ -48,7 +48,7 @@ class OccasionModel extends OccasionEntity {
         personName: json['personName']??'',
         personPhone: json['personPhone']??'',
         personEmail: json['personEmail']??'',
-        giftImage: json['occasionImage']??'',
+        giftImage: json['occasionImage']??['https://img.freepik.com/free-vector/3d-gift-box-wrapped-golden-ribbon_173207-1906.jpg?t=st=1746216356~exp=1746219956~hmac=545b22ab3fa80ae151b92be716931720ea29bab0aa3b397ab0f62f198045d6c1&w=826'],
         giftName: json['giftName']??'',
         giftLink: json['giftLink']??'',
         giftPrice: json['giftPrice']??'',

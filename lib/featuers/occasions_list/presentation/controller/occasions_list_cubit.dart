@@ -55,6 +55,9 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
           }
         }
       });
+      myOccasionsList.forEach((element) {
+        print('element.occasionDate ${element.giftImage}' );
+      });
       debugPrint("occasionsList: $myOccasionsList");
       emit(GetMyOccasionListSuccessState());
     } catch (e) {

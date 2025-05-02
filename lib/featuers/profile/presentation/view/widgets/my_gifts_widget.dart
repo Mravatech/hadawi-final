@@ -91,13 +91,9 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                         mainAxisSpacing: 10.0,
                         childAspectRatio: 0.96,
                       ),
-                      itemCount: OccasionsListCubit.get(context)
-                          .myOccasionsList
-                          .length,
+                      itemCount: OccasionsListCubit.get(context).myOccasionsList.length,
                       itemBuilder: (context, index) {
-                        final occasionItem =
-                        OccasionsListCubit.get(context)
-                            .myOccasionsList[index];
+                        final occasionItem = OccasionsListCubit.get(context).myOccasionsList[index];
                         return OccasionCard(
                           onTap: () {
                             customPushNavigator(
@@ -111,7 +107,8 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                           forOthers: false,
                           occasionName: occasionItem.type,
                           personName: "",
-                          imageUrl: occasionItem.giftImage[index],
+                            imageUrl: occasionItem.giftType== "مبلغ مالى"? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa":
+                                occasionItem.giftImage[0]
                         );
                       },
                     ),

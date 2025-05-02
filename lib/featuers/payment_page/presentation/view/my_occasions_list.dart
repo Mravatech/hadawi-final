@@ -38,7 +38,7 @@ class _MyOccasionsListState extends State<MyOccasionsList> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            AppLocalizations.of(context)!.translate("myOccasions").toString(),
+            AppLocalizations.of(context)!.translate("sharedGifts").toString(),
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),

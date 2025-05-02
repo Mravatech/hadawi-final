@@ -12,25 +12,15 @@ class DonotHaveAnAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(AppLocalizations.of(context)!.translate('don\'tHaveAccount').toString(),
-            style: TextStyles.textStyle18Bold.copyWith(
-            color: ColorManager.darkGrey,
-            fontSize: MediaQuery.sizeOf(context).height*0.018
-        )),
-        GestureDetector(
-          onTap: () {
-            customPushNavigator(context, RegisterScreen());
-          },
-          child: Text(AppLocalizations.of(context)!.translate('createAccount').toString(),
-              style: TextStyles.textStyle18Bold.copyWith(
-              color: ColorManager.primaryBlue,
-              fontSize: MediaQuery.sizeOf(context).height*0.02
-          )),
-        ),
-      ],
+    return  GestureDetector(
+      onTap: () {
+        customPushNavigator(context, RegisterScreen());
+      },
+      child: Text(AppLocalizations.of(context)!.translate('createAccount').toString(),
+          style: TextStyles.textStyle18Bold.copyWith(
+          color: ColorManager.primaryBlue,
+          fontSize: MediaQuery.sizeOf(context).height*0.02
+      )),
     );
   }
 }
