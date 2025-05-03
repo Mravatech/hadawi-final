@@ -10,7 +10,7 @@ import GoogleSignIn
 import UserNotifications
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
     private var dynamicLinksChannel: FlutterMethodChannel?
 
     override func application(
@@ -44,12 +44,13 @@ import UserNotifications
     }
 
     private func checkForInitialDynamicLink() {
-        DynamicLinks.dynamicLinks().resolveInitialLink(completion: { dynamicLink, error in
+        // Use DynamicLinks.dynamicLinks().getInitialLink instead of resolveInitialLink
+        DynamicLinks.dynamicLinks().getInitialLink { dynamicLink, error in
             if let url = dynamicLink?.url {
                 print("Initial dynamic link detected: \(url.absoluteString)")
                 self.handleIncomingDynamicLink(url, channel: self.dynamicLinksChannel)
             }
-        })
+        }
     }
 
     private func setupNotifications(_ application: UIApplication) {
@@ -167,12 +168,10 @@ import UserNotifications
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         Messaging.messaging().apnsToken = deviceToken
     }
-}
 
-// MARK: - UNUserNotificationCenterDelegate
-@available(iOS 10, *)
-extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    // MARK: - UNUserNotificationCenterDelegate
+    @available(iOS 10, *)
+    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         let userInfo = notification.request.content.userInfo
 
         if let urlString = userInfo["dynamic_link"] as? String, let linkUrl = URL(string: urlString) {
@@ -190,7 +189,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         completionHandler(presentationOptions)
     }
 
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    @available(iOS 10, *)
+    override func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         let userInfo = response.notification.request.content.userInfo
 
         if let urlString = userInfo["dynamic_link"] as? String, let linkUrl = URL(string: urlString) {
@@ -200,10 +200,8 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 
         completionHandler()
     }
-}
 
-// MARK: - MessagingDelegate
-extension AppDelegate: MessagingDelegate {
+    // MARK: - MessagingDelegate
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(fcmToken ?? "")")
     }
