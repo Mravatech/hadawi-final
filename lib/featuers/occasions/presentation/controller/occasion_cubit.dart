@@ -489,7 +489,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         minimumVersion: 1,
       ),
       iosParameters: const IOSParameters(
-        bundleId: 'com.app.hadawiApp',
+        bundleId: 'com.app.hadawiapp',
         minimumVersion: '1.0.0',
       ),
     );
