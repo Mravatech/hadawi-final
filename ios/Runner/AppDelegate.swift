@@ -10,7 +10,7 @@ import GoogleSignIn
 import UserNotifications
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
     private var dynamicLinksChannel: FlutterMethodChannel?
 
     override func application(
@@ -29,11 +29,9 @@ import UserNotifications
                 binaryMessenger: controller.binaryMessenger
             )
 
-            // Check for initial dynamic link
+            // Check for initial dynamic link via URL (if any)
             if let url = launchOptions?[.url] as? URL {
                 self.handleIncomingDynamicLink(url, channel: self.dynamicLinksChannel)
-            } else {
-                self.checkForInitialDynamicLink()
             }
         }
 
@@ -41,16 +39,6 @@ import UserNotifications
         self.setupNotifications(application)
 
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-    }
-
-    private func checkForInitialDynamicLink() {
-        // Use DynamicLinks.dynamicLinks().getInitialLink instead of resolveInitialLink
-        DynamicLinks.dynamicLinks().getInitialLink { dynamicLink, error in
-            if let url = dynamicLink?.url {
-                print("Initial dynamic link detected: \(url.absoluteString)")
-                self.handleIncomingDynamicLink(url, channel: self.dynamicLinksChannel)
-            }
-        }
     }
 
     private func setupNotifications(_ application: UIApplication) {
