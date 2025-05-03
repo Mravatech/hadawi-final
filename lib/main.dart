@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,7 +45,7 @@ final GoRouter _router = GoRouter(
     final uri = Uri.parse(state.uri.toString());
 
     // Handle dynamic links with app scheme
-    if (uri.scheme == 'com.app.hadawiapp' && uri.host == 'google') {
+    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') && uri.host == 'google') {
       // Process any parameters from the dynamic link if needed
       debugPrint('Handling dynamic link in redirect: ${uri.toString()}');
 
@@ -133,7 +134,6 @@ void main() async {
   };
 
   NotificationService().initRemoteNotification();
-  // NotificationService().getAccessToken();
 
   debugPrint("current date is ${DateTime.now()}");
 
@@ -168,12 +168,36 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initDeepLinkHandling() async {
-    // Listen for incoming links while app is running
+    // Check for initial Firebase Dynamic Link if app was opened from a link
+    try {
+      final PendingDynamicLinkData? initialDynamicLink =
+      await FirebaseDynamicLinks.instance.getInitialLink();
+
+      if (initialDynamicLink != null) {
+        debugPrint('Initial Firebase Dynamic Link: ${initialDynamicLink.link}');
+        _handleFirebaseDynamicLink(initialDynamicLink.link);
+        return;
+      }
+    } catch (e) {
+      debugPrint('Error getting initial Firebase Dynamic Link: $e');
+    }
+
+    // Listen for Firebase Dynamic Links while app is in foreground
+    FirebaseDynamicLinks.instance.onLink.listen(
+            (PendingDynamicLinkData dynamicLinkData) {
+          debugPrint('Received foreground Firebase Dynamic Link: ${dynamicLinkData.link}');
+          _handleFirebaseDynamicLink(dynamicLinkData.link);
+        },
+        onError: (error) {
+          debugPrint('Firebase Dynamic Link error: $error');
+        }
+    );
+
+    // Handle regular deep links with AppLinks
     _linkSubscription = _appLinks.uriLinkStream.listen(
-      _handleDeepLink,
+      _handleAppLink,
       onError: (error) {
-        debugPrint('Deep link error: $error');
-        // Log error details for debugging
+        debugPrint('AppLinks deep link error: $error');
         if (error.toString().contains('no routes for location')) {
           debugPrint('Router could not match a route for the incoming link');
         }
@@ -186,27 +210,62 @@ class _MyAppState extends State<MyApp> {
     try {
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
-        debugPrint('Initial deep link: ${initialLink.toString()}');
-        _handleDeepLink(initialLink);
+        debugPrint('Initial AppLinks deep link: ${initialLink.toString()}');
+        _handleAppLink(initialLink);
       } else {
-        if (mounted) {
-          customPushReplacement(context, LoginScreen());
-        }
+        // No initial link, continue with normal app flow
+        debugPrint('No initial deep link found');
       }
     } catch (e) {
-      debugPrint('Error getting initial deep link: $e');
+      debugPrint('Error getting initial AppLinks deep link: $e');
       if (mounted) {
         customPushReplacement(context, LoginScreen());
       }
     }
   }
 
-  void _handleDeepLink(Uri uri) {
-    debugPrint('Received deep link: ${uri.toString()}');
+  void _handleFirebaseDynamicLink(Uri uri) {
+    debugPrint('Handling Firebase Dynamic Link: ${uri.toString()}');
 
-    // Handle Firebase dynamic links with app scheme
-    if (uri.scheme == 'com.app.hadawiapp' && uri.host == 'google') {
-      debugPrint('Handling app scheme dynamic link');
+    // Extract any parameters from the dynamic link
+    final queryParams = uri.queryParameters;
+    debugPrint('Firebase Dynamic Link parameters: $queryParams');
+
+    // Navigate based on parameters
+    if (queryParams.containsKey('occasion_id')) {
+      final occasionId = queryParams['occasion_id'];
+      if (mounted) {
+        context.go('/occasion-details/$occasionId');
+      }
+    } else if (uri.pathSegments.isNotEmpty) {
+      // Check if there's a path-based parameter structure
+      if (uri.pathSegments.contains('occasion-details') &&
+          uri.pathSegments.length > uri.pathSegments.indexOf('occasion-details') + 1) {
+        final index = uri.pathSegments.indexOf('occasion-details');
+        final occasionId = uri.pathSegments[index + 1];
+        if (mounted) {
+          context.go('/occasion-details/$occasionId');
+        }
+      } else {
+        // Default navigation for dynamic links without specific parameters
+        if (mounted) {
+          context.go('/home');
+        }
+      }
+    } else {
+      // Default navigation for dynamic links without specific parameters
+      if (mounted) {
+        context.go('/home');
+      }
+    }
+  }
+
+  void _handleAppLink(Uri uri) {
+    debugPrint('Handling AppLinks deep link: ${uri.toString()}');
+
+    // Handle deep links with app scheme
+    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') && uri.host == 'google') {
+      debugPrint('Handling app scheme link');
 
       // Extract any information from query parameters
       final queryParams = uri.queryParameters;
@@ -217,7 +276,7 @@ class _MyAppState extends State<MyApp> {
         final occasionId = queryParams['occasion_id'];
         context.go('/occasion-details/$occasionId');
       } else {
-        // Default navigation for dynamic links without specific parameters
+        // Default navigation for links without specific parameters
         context.go('/home');
       }
       return;
@@ -225,7 +284,7 @@ class _MyAppState extends State<MyApp> {
 
     // Handle regular path-based deep links
     if (uri.pathSegments.isNotEmpty) {
-      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
+      if (uri.pathSegments.first == 'occasion-details' && uri.pathSegments.length > 1) {
         final occasionId = uri.pathSegments[1];
         context.go('/occasion-details/$occasionId');
       } else if (uri.pathSegments.first == 'login') {
@@ -234,6 +293,24 @@ class _MyAppState extends State<MyApp> {
         context.go('/home');
       }
       // Add other path cases as needed
+    }
+  }
+
+  // Debug method to validate dynamic links - can be called for testing
+  Future<void> _debugValidateDynamicLink(String linkUrl) async {
+    try {
+      debugPrint('Validating link: $linkUrl');
+      final Uri uri = Uri.parse(linkUrl);
+      final PendingDynamicLinkData? dynamicLinkData =
+      await FirebaseDynamicLinks.instance.getDynamicLink(uri);
+
+      if (dynamicLinkData != null) {
+        debugPrint('Link is valid: ${dynamicLinkData.link}');
+      } else {
+        debugPrint('Link validation returned null');
+      }
+    } catch (e) {
+      debugPrint('Error validating link: $e');
     }
   }
 

@@ -56,7 +56,7 @@
     </array>
     <key>AssociatedDomains</key>
     <array>
-      <string>applinks:hadawiapp.page.link</string>
+        <string>applinks:hadawiapp.page.link</string>
     </array>
     <key>CFBundleURLTypes</key>
     <array>
@@ -76,6 +76,20 @@
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>hadawi</string>
+                <!-- Add your bundle ID as URL scheme (assuming it's com.app.hadawiapp) -->
+                <string>com.app.hadawiapp</string>
+            </array>
+        </dict>
+        <!-- Add Firebase Dynamic Links specific URL type -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>firebase</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <!-- Replace with your actual Firebase Dynamic Links prefix -->
+                <string>hadawiapp</string>
             </array>
         </dict>
     </array>
