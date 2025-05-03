@@ -60,6 +60,7 @@
     </array>
     <key>CFBundleURLTypes</key>
     <array>
+        <!-- Google Sign-In -->
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
@@ -68,6 +69,8 @@
                 <string>com.googleusercontent.apps.1698335350-rn56pn1c22pc1gah4020je52u0oh6it2</string>
             </array>
         </dict>
+
+        <!-- App-specific custom URL schemes -->
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
@@ -76,11 +79,10 @@
             <key>CFBundleURLSchemes</key>
             <array>
                 <string>hadawi</string>
-                <!-- Add your bundle ID as URL scheme (assuming it's com.app.hadawiapp) -->
                 <string>com.app.hadawiapp</string>
             </array>
         </dict>
-        <!-- Add Firebase Dynamic Links specific URL type -->
+        <!-- Firebase Dynamic Links -->
         <dict>
             <key>CFBundleTypeRole</key>
             <string>Editor</string>
@@ -88,8 +90,7 @@
             <string>firebase</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <!-- Replace with your actual Firebase Dynamic Links prefix -->
-                <string>hadawiapp</string>
+                <string>hadawiapp.page.link</string>
             </array>
         </dict>
     </array>
