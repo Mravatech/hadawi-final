@@ -775,8 +775,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
 
                           if (cubit.dropdownOccasionType.isNotEmpty) {
                             if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
-                              cubit.getTotalGiftPrice();
-                              customPushNavigator(context, OccasionSummary());
+                              if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
+                                customToast(
+                                  title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
+                                  color: Colors.red,
+                                );
+                              }else{
+                                cubit.getTotalGiftPrice();
+                                customPushNavigator(context, OccasionSummary());
+                              }
+
                             } else {
                               customToast(
                                 title: AppLocalizations.of(context)!.translate('validateImage').toString(),
@@ -789,14 +797,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               color: Colors.red,
                             );
                           }
-
-                          if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
-                            customToast(
-                              title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
-                              color: Colors.red,
-                            );
-                          }
-
 
                         }
                       },
