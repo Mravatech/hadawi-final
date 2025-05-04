@@ -52,7 +52,7 @@ final GoRouter _router = GoRouter(
       // Check if there's any occasion ID to extract from query parameters
       if (uri.queryParameters.containsKey('occasion_id')) {
         final occasionId = uri.queryParameters['occasion_id'];
-        return '/occasion-details/$occasionId';
+        return '/occasion-details/$occasionId?false';
       }
 
       // Default redirect for dynamic links without specific parameters
@@ -235,7 +235,7 @@ class _MyAppState extends State<MyApp> {
     if (queryParams.containsKey('occasion_id')) {
       final occasionId = queryParams['occasion_id'];
       if (mounted) {
-        context.go('/occasion-details/$occasionId');
+        context.go('/occasion-details/$occasionId?false');
       }
     } else if (uri.pathSegments.isNotEmpty) {
       // Check if there's a path-based parameter structure
@@ -244,7 +244,7 @@ class _MyAppState extends State<MyApp> {
         final index = uri.pathSegments.indexOf('occasion-details');
         final occasionId = uri.pathSegments[index + 1];
         if (mounted) {
-          context.go('/occasion-details/$occasionId');
+          context.go('/occasion-details/$occasionId?false');
         }
       } else {
         // Default navigation for dynamic links without specific parameters
@@ -274,7 +274,7 @@ class _MyAppState extends State<MyApp> {
       // Navigate based on parameters
       if (queryParams.containsKey('occasion_id')) {
         final occasionId = queryParams['occasion_id'];
-        context.go('/occasion-details/$occasionId');
+        context.go('/occasion-details/$occasionId?false');
       } else {
         // Default navigation for links without specific parameters
         context.go('/home');
@@ -286,7 +286,7 @@ class _MyAppState extends State<MyApp> {
     if (uri.pathSegments.isNotEmpty) {
       if (uri.pathSegments.first == 'occasion-details' && uri.pathSegments.length > 1) {
         final occasionId = uri.pathSegments[1];
-        context.go('/occasion-details/$occasionId');
+        context.go('/occasion-details/$occasionId?false');
       } else if (uri.pathSegments.first == 'login') {
         context.go('/login');
       } else if (uri.pathSegments.first == 'home') {
