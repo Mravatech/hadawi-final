@@ -239,9 +239,9 @@ class _MyAppState extends State<MyApp> {
       }
     } else if (uri.pathSegments.isNotEmpty) {
       // Check if there's a path-based parameter structure
-      if (uri.pathSegments.contains('occasion-details') &&
-          uri.pathSegments.length > uri.pathSegments.indexOf('occasion-details') + 1) {
-        final index = uri.pathSegments.indexOf('occasion-details');
+      if (uri.pathSegments.contains('Occasion-details') &&
+          uri.pathSegments.length > uri.pathSegments.indexOf('Occasion-details') + 1) {
+        final index = uri.pathSegments.indexOf('Occasion-details');
         final occasionId = uri.pathSegments[index + 1];
         if (mounted) {
           context.go('/occasion-details/$occasionId?false');
@@ -284,9 +284,9 @@ class _MyAppState extends State<MyApp> {
 
     // Handle regular path-based deep links
     if (uri.pathSegments.isNotEmpty) {
-      if (uri.pathSegments.first == 'occasion-details' && uri.pathSegments.length > 1) {
+      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
         final occasionId = uri.pathSegments[1];
-        context.go('/occasion-details/$occasionId?false');
+        context.go('/Occasion-details/$occasionId?false');
       } else if (uri.pathSegments.first == 'login') {
         context.go('/login');
       } else if (uri.pathSegments.first == 'home') {

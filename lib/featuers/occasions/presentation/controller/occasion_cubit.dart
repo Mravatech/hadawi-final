@@ -483,7 +483,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(CreateOccasionLinkLoadingState());
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://hadawiapp.page.link',
-      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
+      link: Uri.parse('https://hadawiapp.page.link/Occasion-details?occasion_id=$occasionId'),
       androidParameters: const AndroidParameters(
         packageName: 'com.app.hadawi_app',
         minimumVersion: 1,
