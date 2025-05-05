@@ -38,7 +38,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
       </script>
     </head>
     <body>
-      <form action="https://your.fake.domain/payment-result" class="paymentWidgets" data-brands="APPLEPAY"></form>
+      <form action="https://hadawi.com/payment-result" class="paymentWidgets" data-brands="APPLEPAY"></form>
     </body>
     </html>
     ''';
@@ -52,7 +52,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
             final uri = Uri.parse(request.url);
             if (uri.path.contains("payment-result") && uri.queryParameters.containsKey('resourcePath')) {
               _handlePaymentResult(uri.queryParameters['resourcePath']!);
-              return NavigationDecision.prevent; // نمنع التحويل ونبقى داخل التطبيق
+              return NavigationDecision.prevent; // Prevent navigation and stay within the app
             }
             return NavigationDecision.navigate;
           },

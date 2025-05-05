@@ -233,14 +233,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
         ),
         SizedBox(height: 10),
 
-        // Apple Pay Option
-        // buildPaymentMethodTile(
-        //   imagePath: AssetsManager.appleIcon,
-        //   title: 'Apple Pay',
-        //   subtitle: "Pay with Apple Pay",
-        //   value: PaymentMethod.applePay,
-        //   iconColor: Colors.black,
-        // ),
+        //Apple Pay Option
+        buildPaymentMethodTile(
+          imagePath: AssetsManager.appleIcon,
+          title: 'Apple Pay',
+          subtitle: "Pay with Apple Pay",
+          value: PaymentMethod.applePay,
+          iconColor: Colors.black,
+        ),
       ],
     );
   }
@@ -393,7 +393,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
               break;
 
             case PaymentMethod.applePay:
-              final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+              final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
                   email: UserDataFromStorage.emailFromStorage,
                   givenName: UserDataFromStorage.userNameFromStorage,
                   surname: UserDataFromStorage.userNameFromStorage,

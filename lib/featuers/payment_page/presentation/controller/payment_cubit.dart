@@ -198,6 +198,89 @@ class PaymentCubit extends Cubit<PaymentStates> {
     }
   }
 
+
+  Future<Map<String, dynamic>> getCheckoutIdApplePay({
+    required String email,
+    required String givenName,
+    required String surname,
+    required String street,
+    required String city,
+    required String state,
+    required String postcode,
+    required String merchantTransactionId,
+  }) async {
+    emit(PaymentHyperPayLoadingState());
+
+    try {
+      // Format amount to ensure it has 2 decimal places
+      String formattedAmount = double.tryParse(paymentAmountController.text)?.toStringAsFixed(2) ?? "0.00";
+
+      final response = await http.post(
+        Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),
+        headers: {
+          "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: {
+          "entityId": "8ac7a4ca969f7e8d01969ff847030111",
+          "amount": formattedAmount,
+          "currency": "SAR",
+          "paymentType": "DB",
+          "customParameters[3DS2_enrolled]": "true",
+          "customParameters[3DS2.challengeIndicator]": "04",
+          "customParameters[3DS2.authenticationFlow]": "challenge",
+          "merchantTransactionId": merchantTransactionId,
+          "customer.email": email,
+          "customer.givenName": givenName,
+          "customer.surname": surname,
+          "billing.street1": street,
+          "billing.city": city,
+          "billing.state": state,
+          "billing.country": "SA",
+          "billing.postcode": postcode,
+          "shopperResultUrl": "https://hadawi.netlify.app/payment-result",
+        },
+      );
+
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        final data = jsonDecode(response.body);
+        debugPrint("Checkout ID response: ${data.toString()}");
+
+        // Check if the response contains the expected fields
+        if (data.containsKey("id")) {
+          final result = {
+            "checkoutId": data["id"],
+            "fullResponse": data
+          };
+
+          emit(PaymentHyperPaySuccessState());
+          return result;
+        } else {
+          debugPrint("Missing required fields in response: ${data.toString()}");
+          emit(PaymentHyperPayErrorState());
+          return {
+            "error": "Invalid response format",
+            "fullResponse": data
+          };
+        }
+      } else {
+        debugPrint("Error response: ${response.statusCode} - ${response.body}");
+        emit(PaymentHyperPayErrorState());
+        return {
+          "error": "HTTP Error ${response.statusCode}",
+          "message": response.body
+        };
+      }
+    } catch (e) {
+      debugPrint("Exception when getting HyperPay checkout ID: ${e.toString()}");
+      emit(PaymentHyperPayErrorState());
+      return {
+        "error": "Exception",
+        "message": e.toString()
+      };
+    }
+  }
+
   List<Map<String, dynamic>> paymentStatusList = [];
 
   Future<Map<String, dynamic>> checkPaymentStatus(String checkoutId, BuildContext context) async {

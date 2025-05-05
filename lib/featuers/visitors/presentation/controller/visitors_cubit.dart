@@ -213,7 +213,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     emit(CreateOccasionLinkDetailsLoadingState());
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://hadawiapp.page.link',
-      link: Uri.parse('https://hadawiapp.page.link/Occasion-details?occasion_id=$occasionId'),
+      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
       androidParameters: const AndroidParameters(
         packageName: 'com.app.hadawi_app',
         minimumVersion: 1,
