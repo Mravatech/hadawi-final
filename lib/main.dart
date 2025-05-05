@@ -72,7 +72,7 @@ final GoRouter _router = GoRouter(
         final occasionId = state.pathParameters['id'];
         final fromHome = state.pathParameters['fromHome'] == 'true';
         final occasionEntity = state.extra as OccasionEntity?;
-        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome, ,occasionEntity: occasionEntity);
+        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome,occasionEntity: occasionEntity);
       },
     ),
     GoRoute(

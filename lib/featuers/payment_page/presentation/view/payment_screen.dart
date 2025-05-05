@@ -234,13 +234,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
         SizedBox(height: 10),
 
         //Apple Pay Option
-        buildPaymentMethodTile(
-          imagePath: AssetsManager.appleIcon,
-          title: 'Apple Pay',
-          subtitle: "Pay with Apple Pay",
-          value: PaymentMethod.applePay,
-          iconColor: Colors.black,
-        ),
+        // buildPaymentMethodTile(
+        //   imagePath: AssetsManager.appleIcon,
+        //   title: 'Apple Pay',
+        //   subtitle: "Pay with Apple Pay",
+        //   value: PaymentMethod.applePay,
+        //   iconColor: Colors.black,
+        // ),
       ],
     );
   }
