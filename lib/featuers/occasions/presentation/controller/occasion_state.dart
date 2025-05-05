@@ -7,6 +7,7 @@ final class SwitchForWhomOccasionSuccess extends OccasionState {}
 final class SwitchGiftTypeSuccess extends OccasionState {}
 final class SwitchGiftKindSuccess extends OccasionState {}
 final class SwitchBySharingSuccess extends OccasionState {}
+final class SwitchUpdatingPublicSuccess extends OccasionState {}
 final class SetOccasionDateState extends OccasionState {}
 final class AddOccasionLoadingState extends OccasionState {}
 final class PickImageLoadingState extends OccasionState {}

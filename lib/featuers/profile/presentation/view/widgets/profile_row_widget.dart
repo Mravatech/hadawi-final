@@ -32,9 +32,9 @@ class ProfileRowWidget extends StatelessWidget {
           image !=''?
           SizedBox(width: MediaQuery.sizeOf(context).width*0.05,):
           Container(),
-          Text(title,style: TextStyles.textStyle18Bold.copyWith(
+          Text(title,style: TextStyles.textStyle16Bold.copyWith(
               color: ColorManager.white,
-              fontSize:MediaQuery.sizeOf(context).height*0.020
+              // fontSize:MediaQuery.sizeOf(context).height*0.018
           ),)
         ],
       ),

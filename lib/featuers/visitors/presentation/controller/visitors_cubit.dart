@@ -30,6 +30,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   TextEditingController editOccasionNameController = TextEditingController();
   TextEditingController editGiftNameController = TextEditingController();
   TextEditingController editPersonNameController = TextEditingController();
+  TextEditingController remainingBalanceController = TextEditingController();
   final searchKey = GlobalKey();
 
   convertStringToDateTime(String dateString) {

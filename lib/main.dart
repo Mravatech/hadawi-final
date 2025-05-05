@@ -9,6 +9,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.da
 import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/bloc_observer.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
@@ -70,7 +71,8 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         final occasionId = state.pathParameters['id'];
         final fromHome = state.pathParameters['fromHome'] == 'true';
-        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome,);
+        final occasionEntity = state.extra as OccasionEntity?;
+        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome, ,occasionEntity: occasionEntity);
       },
     ),
     GoRoute(
@@ -135,6 +137,7 @@ void main() async {
   };
 
   NotificationService().initRemoteNotification();
+  // NotificationService().getAccessToken();
 
   debugPrint("current date is ${DateTime.now()}");
 
