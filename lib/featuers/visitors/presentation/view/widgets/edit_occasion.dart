@@ -977,10 +977,9 @@ class _EditOccasionState extends State<EditOccasion> {
                                                 Navigator.of(context).pop(); // Close the dialog first
                                                 await cubit.disableOccasion(
                                                     occasionId:
-                                                    widget.occasionModel.occasionId.toString()).then((value){
-                                                    customPushAndRemoveUntil(context, HomeLayout());
-                                                    customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
-                                                });
+                                                    widget.occasionModel.occasionId.toString(),
+                                                  context: context,
+                                                );
                                               },
                                             ),
                                             TextButton(

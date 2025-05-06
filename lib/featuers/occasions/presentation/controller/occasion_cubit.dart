@@ -6,10 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -508,13 +511,16 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
 
-  Future<void> disableOccasion({required String occasionId}) async {
+  Future<void> disableOccasion({required String occasionId , required BuildContext context}) async {
     emit(DisableOccasionLoadingState());
     try{
       await FirebaseFirestore.instance
           .collection('Occasions')
           .doc(occasionId)
           .update({'isActive': false});
+
+      customPushAndRemoveUntil(context, HomeLayout());
+      customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
       emit(DisableOccasionSuccessState());
     }catch(error){
       debugPrint('error when disable occasion: $error');
