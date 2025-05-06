@@ -531,7 +531,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         if (paymentId.isNotEmpty) {
           await _processRefund(
             paymentId: paymentId,
-            amount: element.data()['paymentAmount'] ?? '0.00',
+            amount: element.data()['paymentAmount'].toString() ?? '0.00',
           );
         }
       }
