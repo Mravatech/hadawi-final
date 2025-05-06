@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/ho
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/main.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
@@ -22,7 +23,8 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 part 'occasion_state.dart';
 
 class OccasionCubit extends Cubit<OccasionState> {
@@ -511,20 +513,86 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
 
-  Future<void> disableOccasion({required String occasionId , required BuildContext context}) async {
+  Future<void> disableOccasion({required String occasionId, required BuildContext context}) async {
     emit(DisableOccasionLoadingState());
-    try{
+    try {
+      // Get all payments for this occasion
+      final paymentsSnapshot = await FirebaseFirestore.instance
+          .collection('Occasions')
+          .doc(occasionId)
+          .collection('payments')
+          .get();
+
+      // Process refunds for each payment
+      for (var element in paymentsSnapshot.docs) {
+        String paymentId = element.data()['transactionId'];
+
+        // If there's a transaction ID, process the refund
+        if (paymentId.isNotEmpty) {
+          await _processRefund(
+            paymentId: paymentId,
+            amount: element.data()['paymentAmount'] ?? '0.00',
+          );
+        }
+      }
+
+      // Update the occasion to inactive
       await FirebaseFirestore.instance
           .collection('Occasions')
           .doc(occasionId)
           .update({'isActive': false});
 
-      customPushAndRemoveUntil(context, HomeLayout());
       emit(DisableOccasionSuccessState());
-    }catch(error){
+    } catch (error) {
       debugPrint('error when disable occasion: $error');
       customToast(title: error.toString(), color: ColorManager.red);
       emit(DisableOccasionErrorState());
+    }
+  }
+
+  Future<bool> _processRefund({
+    required String paymentId,
+    required String amount,
+  }) async {
+    try {
+      // API details from your provided cURL command
+      const String baseUrl = 'https://eu-test.oppwa.com';
+      const String path = '/v1/payments';
+      const String entityId = '8a8294174d0595bb014d05d829cb01cd';
+      const String authToken = 'OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==';
+
+      // Prepare headers
+      final headers = {
+        'Authorization': 'Bearer $authToken',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      };
+
+      // Prepare body
+      final body = {
+        'entityId': entityId,
+        'amount': amount,
+        'paymentType': 'RF',
+        'currency': "SAR",
+      };
+
+      // Make the refund request
+      final response = await http.post(
+        Uri.parse('$baseUrl$path/$paymentId'),
+        headers: headers,
+        body: body,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final responseData = json.decode(response.body);
+        debugPrint('Refund processed successfully: ${responseData.toString()}');
+        return true;
+      } else {
+        debugPrint('Refund failed with status: ${response.statusCode}, body: ${response.body}');
+        return false;
+      }
+    } catch (error) {
+      debugPrint('Error processing refund: $error');
+      return false;
     }
   }
 

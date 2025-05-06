@@ -92,6 +92,15 @@ class _EditOccasionState extends State<EditOccasion> {
       ),
       body: BlocConsumer<OccasionCubit, OccasionState>(
         listener: (context, state) {
+          if(state is DisableOccasionSuccessState){
+            customToast(
+              title: AppLocalizations.of(context)!
+                  .translate('occasionClosedMessage')
+                  .toString(),
+              color: ColorManager.success,
+            );
+            customPushAndRemoveUntil(context, HomeLayout());
+          }
           if (state is UpdateOccasionSuccessState) {
             if (widget.fromHome == true) {
               context.read<VisitorsCubit>().getOccasions().then(
