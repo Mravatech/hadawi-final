@@ -520,7 +520,6 @@ class OccasionCubit extends Cubit<OccasionState> {
           .update({'isActive': false});
 
       customPushAndRemoveUntil(context, HomeLayout());
-      customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
       emit(DisableOccasionSuccessState());
     }catch(error){
       debugPrint('error when disable occasion: $error');
