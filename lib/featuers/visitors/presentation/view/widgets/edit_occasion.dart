@@ -978,8 +978,8 @@ class _EditOccasionState extends State<EditOccasion> {
                                                 await cubit.disableOccasion(
                                                     occasionId:
                                                     widget.occasionModel.occasionId.toString()).then((value){
-                                                  customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
-                                                  customPushAndRemoveUntil(context, HomeLayout());
+                                                    customPushAndRemoveUntil(context, HomeLayout());
+                                                    customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
                                                 });
                                               },
                                             ),
