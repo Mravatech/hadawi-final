@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
@@ -948,7 +949,8 @@ class _EditOccasionState extends State<EditOccasion> {
                                           )
                                     : SizedBox(),
                                 SizedBox(height: SizeConfig.height * 0.02),
-                                InkWell(
+                                UserDataFromStorage.uIdFromStorage ==
+                                    widget.occasionModel.personId? InkWell(
                                   onTap: () async {
                                     FocusScope.of(context)
                                         .unfocus(); // Dismiss the keyboard if open
@@ -975,9 +977,10 @@ class _EditOccasionState extends State<EditOccasion> {
                                                 Navigator.of(context).pop(); // Close the dialog first
                                                 await cubit.disableOccasion(
                                                     occasionId:
-                                                    widget.occasionModel.occasionId.toString());
-                                                customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
-                                                customPushReplacement(context, HomeLayout());
+                                                    widget.occasionModel.occasionId.toString()).then((value){
+                                                  customToast(title: AppLocalizations.of(context)!.translate('occasionClosedMessage').toString(), color: ColorManager.success);
+                                                  customPushAndRemoveUntil(context, HomeLayout());
+                                                });
                                               },
                                             ),
                                             TextButton(
@@ -1030,7 +1033,7 @@ class _EditOccasionState extends State<EditOccasion> {
                                       ),
                                     ),
                                   ),
-                                ),
+                                ) : SizedBox(),
                                 SizedBox(height: SizeConfig.height * 0.03),
                               ],
                             ),
