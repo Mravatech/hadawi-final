@@ -1,248 +1,443 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ApplePayWebView extends StatefulWidget {
   final String checkoutId;
-  final String amount;
+  final String occasionId;
+  final String occasionName;
+  final String transactionId;
+  final double paymentAmount;
+  final double remainingPrice;
+  final String paymentMethod;
 
-  const ApplePayWebView({super.key, required this.checkoutId, required this.amount});
+  const ApplePayWebView({
+    super.key,
+    required this.checkoutId,
+    required this.occasionId,
+    required this.occasionName,
+    required this.paymentAmount,
+    required this.transactionId,
+    required this.remainingPrice,
+    required this.paymentMethod, required integrity
+  });
 
   @override
-  State<ApplePayWebView> createState() => _ApplePayWebViewState();
+  _ApplePayWebViewState createState() => _ApplePayWebViewState();
 }
 
 class _ApplePayWebViewState extends State<ApplePayWebView> {
-  late final WebViewController _controller;
-  bool _isLoading = true;
-  String _errorMessage = '';
+  late WebViewController controller;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initWebView();
-  }
 
-  void _initWebView() {
-    final String htmlContent = '''
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <style>
-        body { margin: 0; padding: 16px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        .error { color: red; padding: 20px; text-align: center; }
-        .loading { text-align: center; padding: 20px; }
-      </style>
-    </head>
-    <body>
-      <div id="apple-pay-container">
-        <div id="loading-indicator" class="loading">Loading payment gateway...</div>
-      </div>
-      
-      <script src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
-      <script>
-        // Debug logging
-        console.log("Starting Apple Pay initialization");
-        
-        // Check if Apple Pay is available
-        function checkApplePayAvailability() {
-          if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-            console.log("Apple Pay is available");
-            return true;
-          } else {
-            console.log("Apple Pay is not available on this device");
-            document.getElementById('loading-indicator').innerHTML = 
-              '<div class="error">Apple Pay is not available on this device or browser</div>';
-            return false;
-          }
+    // Get the primary blue color from ColorManager as a hex string
+    final primaryBlueHex = ColorManager.primaryBlue.value.toRadixString(16).substring(2);
+
+    String hyperpayHtml = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple Pay</title>
+
+    <!-- Updated Content Security Policy (CSP) for Apple Pay -->
+    <meta http-equiv="Content-Security-Policy"
+          content="
+              default-src 'self';
+              script-src 'self' https://eu-test.oppwa.com https://applepay.cdn-apple.com 'unsafe-inline';
+              style-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
+              frame-src 'self' https://eu-test.oppwa.com;
+              connect-src 'self' wss://* https://p11.techlab-cdn.com https://*.apple.com;
+              img-src 'self' https://eu-test.oppwa.com data:;">
+              
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
         }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h3 {
+            color: #333;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+        }
+        .apple-pay-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .apple-pay-details {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .apple-pay-amount {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .apple-pay-description {
+            font-size: 14px;
+            color: #666;
+        }
+        .wpwl-button {
+            background-color: #${primaryBlueHex};
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.2s;
+        }
+        .wpwl-button:hover {
+            background-color: #${primaryBlueHex}DD;
+        }
+        .secure-badge {
+            text-align: center;
+            margin-top: 20px;
+            color: #6c757d;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .secure-badge svg {
+            margin-right: 5px;
+        }
+        .wpwl-terms {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 20px;
+        }
+        #apple-pay-not-available {
+            text-align: center;
+            padding: 30px 20px;
+        }
+        #apple-pay-not-available p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        #apple-pay-not-available .wpwl-button {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h3>Complete your payment with Apple Pay</h3>
+    </div>
+    
+    <!-- Load Hyperpay Payment Widget -->
+    <script src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
+    
+    <!-- Apple Pay Container -->
+    <div class="apple-pay-container">
+        <div id="apple-pay-not-available" style="display: none;">
+            <p>Apple Pay is not available on this device or browser.</p>
+            <p>Please try using a different device or payment method.</p>
+        </div>
+        
+        <div id="apple-pay-available">
+            <div class="apple-pay-details">
+                <div class="apple-pay-amount">${widget.paymentAmount} SAR</div>
+                <div class="apple-pay-description">${widget.occasionName}</div>
+            </div>
 
-        // Configure Apple Pay
-        var wpwlOptions = {
-          applePay: {
-            displayName: "Test App",
-            countryCode: "SA",
-            currencyCode: "SAR",
-            totalAmount: "${widget.amount}",
-            onError: function(error) {
-              console.error("Apple Pay error:", error);
-              document.getElementById('loading-indicator').innerHTML = 
-                '<div class="error">Error initializing Apple Pay: ' + error.message + '</div>';
-            }
-          },
-          onReady: function() {
-            console.log("Payment widget is ready");
-            document.getElementById('loading-indicator').style.display = 'none';
-          },
-          onError: function(error) {
-            console.error("Widget error:", error);
-            document.getElementById('loading-indicator').innerHTML = 
-              '<div class="error">Payment widget error: ' + error + '</div>';
-          }
-        };
-
-        // Initialize when page loads
-        window.addEventListener('load', function() {
-          console.log("Page loaded, checking Apple Pay...");
-          checkApplePayAvailability();
+            <script>
+                // Configure Apple Pay options
+                var wpwlOptions = {
+                    paymentTarget:"_top",
+                    applePay: {
+                        merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
+                        supportedNetworks: ['masterCard', 'visa', 'mada'],
+                        supportedCountries: ["SA"],
+                        currencyCode: 'SAR',
+                        buttonStyle: 'black',
+                        buttonType: 'buy',
+                        total: { 
+                            label: '${widget.occasionName}', 
+                            amount: '${widget.paymentAmount}' 
+                        }
+                    },
+                    
+                    onReady: function() {
+                        console.log("Payment widget is ready");
+                        
+                        // Check if Apple Pay is available
+                        if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                            document.getElementById('apple-pay-not-available').style.display = 'none';
+                            document.getElementById('apple-pay-button-container').style.display = 'block';
+                        } else {
+                            document.getElementById('apple-pay-not-available').style.display = 'block';
+                            document.getElementById('apple-pay-button-container').style.display = 'none';
+                        }
+                    }
+                };
+            </script>
+            
+            <div id="apple-pay-button-container">
+                <form class="paymentWidgets" data-brands="APPLEPAY"></form>
+            </div>
+        </div>
+        
+        <!-- Secure payment badge -->
+        <div class="secure-badge">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 0C5.8 0 4 1.8 4 4V6H3C2.4 6 2 6.4 2 7V15C2 15.6 2.4 16 3 16H13C13.6 16 14 15.6 14 15V7C14 6.4 13.6 6 13 6H12V4C12 1.8 10.2 0 8 0ZM8 2C9.1 2 10 2.9 10 4V6H6V4C6 2.9 6.9 2 8 2ZM8 9C8.6 9 9 9.4 9 10C9 10.6 8.6 11 8 11C7.4 11 7 10.6 7 10C7 9.4 7.4 9 8 9Z" fill="#6c757d"/>
+            </svg>
+            Secured by SSL encryption
+        </div>
+        
+        <div class="wpwl-terms">
+            By proceeding with the payment, you agree to our terms and conditions.
+        </div>
+    </div>
+    
+    <script>
+        // Check Apple Pay availability when the page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                    document.getElementById('apple-pay-not-available').style.display = 'none';
+                    document.getElementById('apple-pay-button-container').style.display = 'block';
+                } else {
+                    document.getElementById('apple-pay-not-available').style.display = 'block';
+                    document.getElementById('apple-pay-button-container').style.display = 'none';
+                }
+            }, 500);
         });
-      </script>
-      
-      <form action="https://hadawi.com/payment-result" class="paymentWidgets" data-brands="APPLEPAY"></form>
-    </body>
-    </html>
-    ''';
+    </script>
+</body>
+</html>
+""";
 
-    _controller = WebViewController()
+    controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
-            debugPrint('WebView page started loading: $url');
+            setState(() {
+              isLoading = true;
+            });
+            debugPrint("Page started loading: $url");
           },
           onPageFinished: (String url) {
-            debugPrint('WebView page finished loading: $url');
             setState(() {
-              _isLoading = false;
+              isLoading = false;
             });
-
-            // Add JavaScript console log listener
-            _controller.runJavaScript('''
-              console.log = function(message) {
-                window.flutter_inappwebview.callHandler('consoleLog', message);
-                console.info(message);
-              };
-              console.error = function(message) {
-                window.flutter_inappwebview.callHandler('consoleError', message);
-                console.info('ERROR: ' + message);
-              };
-            ''');
+            debugPrint("Page finished loading: $url");
           },
           onWebResourceError: (WebResourceError error) {
-            debugPrint('WebView error: ${error.description}');
-            setState(() {
-              _errorMessage = 'Error: ${error.description}';
-              _isLoading = false;
-            });
+            debugPrint("WebView error: ${error.description}");
           },
-          onNavigationRequest: (request) {
-            final uri = Uri.parse(request.url);
-            debugPrint('Navigation request to: ${request.url}');
+          onUrlChange: (UrlChange change) async {
+            debugPrint("URL changed to: ${change.url}");
 
-            if (uri.path.contains("payment-result")) {
-              debugPrint('Payment result detected');
-              if (uri.queryParameters.containsKey('resourcePath')) {
-                _handlePaymentResult(uri.queryParameters['resourcePath']!);
-                return NavigationDecision.prevent;
-              }
+            await context.read<PaymentCubit>().checkApplePaymentStatus(widget.checkoutId, context);
+
+            if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
+              Navigator.pop(context);
+              handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
             }
-            return NavigationDecision.navigate;
           },
         ),
       )
-      ..addJavaScriptChannel(
-        'Flutter',
-        onMessageReceived: (JavaScriptMessage message) {
-          debugPrint('JavaScript message: ${message.message}');
-        },
-      );
-
-    _controller.loadHtmlString(htmlContent);
+      ..setOnConsoleMessage((JavaScriptConsoleMessage message) {
+        debugPrint('Console message: ${message.message}');
+      })
+      ..loadRequest(Uri.dataFromString(
+        hyperpayHtml,
+        mimeType: 'text/html',
+        encoding: Encoding.getByName('utf-8'),
+      ));
   }
 
-  Future<void> _handlePaymentResult(String resourcePath) async {
-    try {
-      debugPrint('Handling payment result with resourcePath: $resourcePath');
-      final url = 'https://eu-test.oppwa.com$resourcePath?entityId=8ac7a4ca969f7e8d01969ff847030111';
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Authorization': 'Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=',
-        },
-      );
-
-      final data = json.decode(response.body);
-      debugPrint('Payment result data: $data');
-      final resultCode = data['result']['code'];
-      final resultMessage = data['result']['description'];
-
-      if (context.mounted) {
-        showDialog(
-          context: context,
-          builder: (_) => AlertDialog(
-            title: Text(resultCode.startsWith("000") ? "✅ الدفع ناجح" : "❌ الدفع فشل"),
-            content: Text(resultMessage ?? "لا يوجد رسالة"),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text("تم"),
-              )
-            ],
-          ),
-        );
-      }
-    } catch (e) {
-      debugPrint('Error handling payment result: $e');
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error processing payment: $e')),
-        );
-      }
+  void handlePaymentResult(String resultCode, String description, Map<String, dynamic> fullData){
+    // Success codes typically start with 000.000., 000.100., or 000.200.
+    if (resultCode.startsWith('000.000.') ||
+        resultCode.startsWith('000.100.') ||
+        resultCode.startsWith('000.200.')){
+      debugPrint("✅ Payment Successful");
+      showPaymentSuccess(description);
     }
+    // Pending codes typically start with 000.200.
+    else if (resultCode.startsWith('000.200.')) {
+      debugPrint("⏳ Payment Pending");
+      showPaymentPending(description);
+    }
+    // Failure codes can vary
+    else {
+      debugPrint("❌ Payment Failed: $resultCode - $description");
+      showPaymentFailure(resultCode, description);
+    }
+  }
+
+  void showPaymentSuccess(String description) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentSuccess').toString()),
+        content: Text(AppLocalizations.of(context)!.translate('paymentSuccessMessage').toString()),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                transactionId: widget.transactionId,
+                occasionId: widget.occasionId,
+                remainingPrince: widget.remainingPrice.toString(),
+                status: "success",
+                occasionName: widget.occasionName,
+                paymentAmount: widget.paymentAmount,
+              );
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentPending(String description) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentPending').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentPendingMessage').toString()}\n\n$description"),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                occasionId: widget.occasionId,
+                transactionId: widget.transactionId,
+                remainingPrince: widget.remainingPrice.toString(),
+                status: "success",
+                occasionName: widget.occasionName,
+                paymentAmount: widget.paymentAmount,
+              );
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentFailure(String resultCode, String description) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentFailed').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentFailedMessage').toString()}\n\n$description"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentError(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text("Payment Error"),
+        content: Text("An error occurred: $message"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.white,
       appBar: AppBar(
-        title: const Text('Apple Pay'),
+        backgroundColor: ColorManager.gray,
+        elevation: 0,
+        title: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Text(
+            AppLocalizations.of(context)!.translate('completePayment').toString(),
+            style: TextStyle(
+                color: ColorManager.primaryBlue,
+                fontWeight: FontWeight.bold,
+                fontSize: 18),
+          ),
+        ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () {
-              setState(() {
-                _isLoading = true;
-                _errorMessage = '';
-              });
-              _controller.reload();
-            },
+          Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
           ),
         ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: ColorManager.primaryBlue),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Stack(
         children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
-          if (_errorMessage.isNotEmpty)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      _errorMessage,
-                      style: const TextStyle(color: Colors.red),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _isLoading = true;
-                          _errorMessage = '';
-                        });
-                        _controller.reload();
-                      },
-                      child: const Text('Try Again'),
-                    ),
-                  ],
+          WebViewWidget(controller: controller),
+          if (isLoading)
+            Container(
+              color: Colors.white,
+              child: Center(
+                child: CircularProgressIndicator(
+                  color: ColorManager.primaryBlue,
                 ),
               ),
             ),

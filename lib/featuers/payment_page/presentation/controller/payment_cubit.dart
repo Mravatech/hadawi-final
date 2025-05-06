@@ -302,57 +302,25 @@ class PaymentCubit extends Cubit<PaymentStates> {
     return data;
   }
 
+  Future<Map<String, dynamic>> checkApplePaymentStatus(String checkoutId, BuildContext context) async {
+    final response = await http.get(
+      Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4ca969f7e8d01969ff847030111"),
+      headers: {
+        "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+      },
+    );
 
-  Future<void> startApplePay({required BuildContext context}) async {
-    final amount = paymentAmountController.text.trim();
-
-    if (amount.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('من فضلك ادخل المبلغ')),
-      );
-      return;
+    final data = jsonDecode(response.body);
+    final resultCode = data['result']['code'];
+    if(resultCode != "200.300.404"){
+      paymentStatusList.add(data);
     }
+    emit(PaymentHyperPaySuccessState());
+    debugPrint("Payment Status Response: ${data.toString()}");
 
-    emit(ApplyPaymentLoadingState());
-
-    final url = Uri.parse('https://eu-test.oppwa.com/v1/checkouts');
-    final headers = {
-      'Authorization':
-      'Bearer OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==',
-      'Content-Type': 'application/x-www-form-urlencoded',
-    };
-    final body = {
-      'entityId': '8a8294174d0595bb014d05d829cb01cd',
-      'amount': amount,
-      'currency': 'SAR',
-      'paymentType': 'DB',
-      'integrity': 'true',
-    };
-
-    try {
-      final response = await http.post(url, headers: headers, body: body);
-      final data = json.decode(response.body);
-      final checkoutId = data['id'];
-
-      emit(ApplyPaymentSuccessState());
-
-      if (checkoutId != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ApplePayWebView(checkoutId: checkoutId, amount: amount),
-          ),
-        );
-      } else {
-        throw Exception('فشل إنشاء checkoutId');
-      }
-    } catch (e) {
-      emit(ApplyPaymentErrorState());
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('حصل خطأ: $e')),
-      );
-    }
+    return data;
   }
+
 
 
 

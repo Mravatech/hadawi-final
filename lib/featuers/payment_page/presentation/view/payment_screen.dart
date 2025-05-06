@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
@@ -234,13 +236,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
         SizedBox(height: 10),
 
         //Apple Pay Option
-        buildPaymentMethodTile(
+        Platform.isIOS? buildPaymentMethodTile(
           imagePath: AssetsManager.appleIcon,
           title: 'Apple Pay',
           subtitle: "Pay with Apple Pay",
           value: PaymentMethod.applePay,
           iconColor: Colors.black,
-        ),
+        ):SizedBox(),
       ],
     );
   }
@@ -408,7 +410,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   context,
                   ApplePayWebView(
                     checkoutId: checkoutData["checkoutId"],
-                    amount: PaymentCubit.get(context).paymentAmountController.text,
+                    integrity: checkoutData["integrity"],
+                    paymentMethod: "APPLEPAY",
+                    occasionId: widget.occasionEntity.occasionId,
+                    occasionName: widget.occasionEntity.occasionType,
+                    transactionId: merchantTransactionId,
+                    remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
+                        double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+                    paymentAmount: double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
                   )
               );
               break;
