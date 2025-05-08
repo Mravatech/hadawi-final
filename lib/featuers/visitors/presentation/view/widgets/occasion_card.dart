@@ -40,8 +40,8 @@ class OccasionCard extends StatelessWidget {
                Expanded(
                 child: ClipRRect(
                   borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(15),
-                    bottomRight: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15),
                   ),
                   child: Stack(
                     children: [
@@ -123,13 +123,10 @@ class OccasionCard extends StatelessWidget {
                       ),
                       textAlign:  TextAlign.center,
                     ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.01,
-                    ),
                     Text(occasionEntity.des.toString(),
                       style: TextStyles.textStyle18Regular.copyWith(
                           color: ColorManager.white,
-                          fontSize: 12
+                          fontSize: 10
                       ),
                       textAlign:  TextAlign.center,
                       overflow: TextOverflow.ellipsis,
