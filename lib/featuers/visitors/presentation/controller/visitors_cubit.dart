@@ -112,8 +112,11 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   void search(String query) {
     searchOccasionsList.clear();
     emit(SearchLoadingState());
-    searchOccasionsList.addAll(activeOccasions.where((occasion) => occasion.occasionName.toLowerCase().contains(query.toLowerCase())));
-    debugPrint('searchOccasionsList ${searchOccasionsList[0].occasionName}');
+    print("search query: $query");
+    activeOccasions.forEach((element) {
+      print("occasion name: ${element.type}");
+    });
+    searchOccasionsList.addAll(activeOccasions.where((occasion) => occasion.type.toLowerCase().contains(query.toLowerCase())));
     emit(SearchSuccessState(occasions: searchOccasionsList));
 
 }

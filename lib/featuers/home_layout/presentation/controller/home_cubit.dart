@@ -75,6 +75,7 @@ class HomeCubit extends Cubit<HomeStates> {
     
     String? token = await FirebaseMessaging.instance.getToken();
     print('token: $token');
+    print('userId: $uId');
     UserDataFromStorage.setGradeAdmin(true);
     FirebaseFirestore.instance.collection('users').doc(uId).update({'token': token});
     emit(GetTokenSuccessState());

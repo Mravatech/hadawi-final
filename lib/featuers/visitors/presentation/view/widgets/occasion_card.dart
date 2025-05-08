@@ -5,14 +5,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/complete_occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/open_image.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 
 class OccasionCard extends StatelessWidget {
   final CompleteOccasionModel occasionEntity;
-   bool isOrders=false;
+   bool isOrders=true;
 
-   OccasionCard({super.key, required this.occasionEntity, this.isOrders=false});
+   OccasionCard({super.key, required this.occasionEntity, this.isOrders=true});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class OccasionCard extends StatelessWidget {
       builder: (context, state) {
         final cubit = context.read<VisitorsCubit>();
         return Container(
-          height: isOrders?MediaQuery.sizeOf(context).height * 0.35: MediaQuery.sizeOf(context).height * 0.25,
+          height: isOrders?MediaQuery.sizeOf(context).height * 0.4: MediaQuery.sizeOf(context).height * 0.35,
           decoration: BoxDecoration(
             color: ColorManager.white,
             borderRadius: BorderRadius.circular(15),
@@ -43,19 +45,30 @@ class OccasionCard extends StatelessWidget {
                   ),
                   child: Stack(
                     children: [
-                      CachedNetworkImage(
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        imageUrl: occasionEntity.imagesUrl,
-                        placeholder: (context, url) => const Center(
-                          child: CupertinoActivityIndicator(),
-                        ),
-                        errorWidget: (context, url, error) {
-                          return const Icon(
-                            Icons.error,
-                            color: Colors.red,
+                      PageView(
+                        children: List.generate(occasionEntity.imagesUrl2!=''?2:1, (index) {
+                          return GestureDetector(
+                            onTap: (){
+                              customPushNavigator(context, ImageViewerScreen(
+                                  imageUrl: index==0? occasionEntity.imagesUrl:
+                                  occasionEntity.imagesUrl2));
+                            },
+                            child: CachedNetworkImage(
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              imageUrl: index==0? occasionEntity.imagesUrl: occasionEntity.imagesUrl2,
+                              placeholder: (context, url) => const Center(
+                                child: CupertinoActivityIndicator(),
+                              ),
+                              errorWidget: (context, url, error) {
+                                return const Icon(
+                                  Icons.error,
+                                  color: Colors.red,
+                                );
+                              },
+                            ),
                           );
-                        },
+                        }),
                       ),
                       Positioned(
                         top: 10,
@@ -80,7 +93,7 @@ class OccasionCard extends StatelessWidget {
                             overflow:  TextOverflow.ellipsis,
                             style: TextStyles.textStyle18Bold.copyWith(
                                 color: ColorManager.white,
-                                fontSize: 13
+                                fontSize: 10
                             ),
                           ),
                         ),
@@ -90,24 +103,6 @@ class OccasionCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              if(isOrders)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.01,
-                    ),
-                    Text(occasionEntity.status.toString(),
-                      style: TextStyles.textStyle18Regular.copyWith(
-                          color: ColorManager.primaryBlue
-                      ),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.sizeOf(context).height * 0.01,
-                    ),
-                  ],
-                ),
 
               Container(
                 alignment:Alignment.center,
@@ -120,11 +115,27 @@ class OccasionCard extends StatelessWidget {
                   ),
                   color: ColorManager.primaryBlue,
                 ),
-                child: Text(occasionEntity.title.toString(),
-                  style: TextStyles.textStyle18Regular.copyWith(
-                      color: ColorManager.white
-                  ),
-                  textAlign:  TextAlign.center,
+                child: Column(
+                  children: [
+                    Text(occasionEntity.title.toString(),
+                      style: TextStyles.textStyle18Bold.copyWith(
+                          color: ColorManager.white
+                      ),
+                      textAlign:  TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: MediaQuery.sizeOf(context).height * 0.01,
+                    ),
+                    Text(occasionEntity.des.toString(),
+                      style: TextStyles.textStyle18Regular.copyWith(
+                          color: ColorManager.white,
+                          fontSize: 12
+                      ),
+                      textAlign:  TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ],
                 ),
               ),
             ],

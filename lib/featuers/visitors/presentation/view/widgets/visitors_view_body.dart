@@ -338,30 +338,8 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               padding: const EdgeInsets.all(15.0),
                               child: SearchBarWidget(
                                 onChanged: (value)async {
-                                  if(UserDataFromStorage.userIsGuest==false){
-                                    await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-                                    if(UserDataFromStorage.uIdFromStorage==''){
-                                      toastificationWidget(context: context,
-                                          title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                          body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
-                                          type: ToastificationType.error);
-                                      context.go(AppRouter.login);
-                                    }else{
-                                      if(UserDataFromStorage.isUserBlocked==true){
-                                        AuthCubit.get(context).logout();
-                                        context.go(AppRouter.login);
-                                        toastificationWidget(context: context,
-                                            title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                            body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
-                                            type: ToastificationType.error);
-                                      }else{
-                                        cubit.search(value);
-                                      }
-                                    }
-                                  }else{
+                                    print('search value $value');
                                     cubit.search(value);
-                                  }
-
                                 },
                                 searchController: cubit.searchController,
                               ),
@@ -473,7 +451,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                 ],
               ),
                 cubit.searchOccasionsList.isEmpty || cubit.searchController.text.trim().isEmpty? SizedBox(): Positioned(
-                  top: mediaQuery.height * 0.22,
+                  top: mediaQuery.height * 0.55,
                   left:  mediaQuery.width * 0.05,
                   right:  mediaQuery.width * 0.05,
                   child: SearchResultContainer(),

@@ -70,10 +70,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                     );
                   } ,
                 ),
-                SizedBox(
-                    height:  MediaQuery.sizeOf(context).height*0.12,
-                    child: LogoWidget()
-                ),
+                Expanded(child: LogoWidget()),
               ],
             )
         ),

@@ -56,15 +56,16 @@ class SearchResultContainer extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 12.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(20),
                           child: CachedNetworkImage(
-                            imageUrl: occasion.giftImage[0],
+                            imageUrl: occasion.giftType== "مبلغ مالى"? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa":
+                            occasion.giftImage[0],
                             height: MediaQuery.sizeOf(context).width * 0.15,
                             width: MediaQuery.sizeOf(context).width * 0.22,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                             placeholder: (context, url) =>
                                 const SearchResultShimmer(),
                             errorWidget: (context, url, error) => Image.asset(
@@ -78,7 +79,7 @@ class SearchResultContainer extends StatelessWidget {
                           SizedBox(width: MediaQuery.sizeOf(context).width * 0.03),
                         Expanded(
                           child: Text(
-                            occasion.occasionName,
+                            occasion.type,
                             style: TextStyles.textStyle18Medium,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
