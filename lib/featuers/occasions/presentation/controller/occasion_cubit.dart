@@ -437,7 +437,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       final DateTime expiryDate = DateTime.parse(data['expiryDate'] as String);
       final int maxUsage = data['maxUsage'] as int;
-      final int used = data['used'] as int;
+      final int used = data['used'] ?? 0;
       final double discount = (data['discount'] as num).toDouble();
 
       if (maxUsage <= used || expiryDate.isBefore(DateTime.now())) {
@@ -451,7 +451,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         if (freshData['used'] >= freshData['maxUsage']) {
           throw Exception('Discount code usage limit reached');
         }
-        discountValue = giftPrice * discount;
+        discountValue = discount;
         giftPrice -= discountValue;
         transaction.update(doc.reference, {
           'used': FieldValue.increment(1),
