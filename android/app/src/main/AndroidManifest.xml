@@ -37,6 +37,10 @@
                 android:name="flutterEmbedding"
                 android:value="2"/>
 
+            <meta-data
+                android:name="com.google.android.play.billingclient.version"
+                android:value="7.0.0" />
+
             <!-- Main launcher intent -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -7,6 +7,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/donot_h
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_password_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/remember_me_button.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
@@ -65,45 +66,35 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
                 // Email field
+
                 DefaultTextField(
-                  controller: widget.emailController,
-                  hintText: AppLocalizations.of(context)!
-                      .translate('emailHint')
-                      .toString(),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .translate('emailMessage')
-                          .toString();
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
-                  fillColor: ColorManager.gray,
+                    prefix: CountryCodeWidget(
+                      color: ColorManager.gray,
+                    ),
+                    controller: widget.emailController,
+                    hintText: AppLocalizations.of(context)!
+                        .translate('loginPhoneHint')
+                        .toString(),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return AppLocalizations.of(context)!
+                            .translate('loginPhoneHint')
+                            .toString();
+                      }
+                      if (value.length < 9 || value.length > 9) {
+                        return AppLocalizations.of(context)!
+                            .translate('validatePhone')
+                            .toString();
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.next,
+                    fillColor: ColorManager.gray
                 ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                // Password field
-                DefaultTextField(
-                  isPassword: true,
-                  withSuffix: true,
-                  controller: widget.passController,
-                  hintText: AppLocalizations.of(context)!
-                      .translate('loginPasswordHint')
-                      .toString(),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!
-                          .translate('validPassword')
-                          .toString();
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.visiblePassword,
-                  textInputAction: TextInputAction.done,
-                  fillColor: ColorManager.gray,
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+
+
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 // Remember Me and Forget Password
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -121,7 +112,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                         );
                       },
                     ),
-                    const ForgetPasswordButton(),
+                    // const ForgetPasswordButton(),
                   ],
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
@@ -145,7 +136,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     }
                     if (state is UserLoginErrorState) {
                       customToast(
-                        title: state.message,
+                        title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
                         color: ColorManager.error,
                       );
                     }

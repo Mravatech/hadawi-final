@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/ho
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -79,7 +80,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
 
                 /// text
                 Text(
-                  'ادخل كود التحقق',
+                  AppLocalizations.of(context)!.translate('enter_verification_code').toString(),
                   style: TextStyles.textStyle18Bold,
                 ),
 
@@ -89,7 +90,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
 
                 /// text
                 Text(
-                  'لقد ارسلنا لك رساله نصبه الي رقم هاتفك تحتوي علي رمز التحقق المكون من سته ارقام',
+                  AppLocalizations.of(context)!.translate('we_sent_you_sms').toString(),
                   style: TextStyles.textStyle18Bold,
                   textAlign: TextAlign.center,
                 ),
@@ -165,12 +166,10 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                           city: widget.city);
                     }
                     if (state is VerifiyOtpCodeErrorState) {
-                      customToast(
-                          title: state.message, color: ColorManager.error);
                     }
                     if(state is UserRegisterErrorState){
                       customToast(
-                          title: state.message, color: ColorManager.error);
+                          title:AppLocalizations.of(context)!.translate('phoneToastError').toString(), color: ColorManager.error);
                     }
                     if(state is UserRegisterSuccessState){
                       context.replace(AppRouter.home);
@@ -181,7 +180,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                     return state is VerifiyOtpCodeLoadingState
                         ? const CircularProgressIndicator()
                         : DefaultButton(
-                            buttonText: 'تاكيد',
+                            buttonText: AppLocalizations.of(context)!.translate('confirm').toString(),
                             onPressed: () {
                               cubit.verifyOtp(
                                 otp: int.parse(verifyOtpPinPutController.text),

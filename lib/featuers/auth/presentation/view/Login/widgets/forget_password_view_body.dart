@@ -100,8 +100,7 @@ class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
                           context.replace(AppRouter.login);
                         }
                         if (state is ResetPasswordErrorState) {
-                          customToast(
-                              title: state.message, color: ColorManager.error);
+
                         }
                       }, builder: (context, state) {
                         var cubit = context.read<AuthCubit>();

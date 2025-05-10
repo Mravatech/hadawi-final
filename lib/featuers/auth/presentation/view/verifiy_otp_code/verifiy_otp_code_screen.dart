@@ -4,6 +4,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/widg
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class VerifyPhoneScreen extends StatelessWidget {
   final String verificationOtp;
@@ -32,17 +33,17 @@ class VerifyPhoneScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         leading: IconButton(onPressed: (){
-          customPushAndRemoveUntil(context, RegisterScreen());
+          Navigator.pop(context);
           },
           icon: Icon(Icons.arrow_back_ios
         ),),
         backgroundColor: ColorManager.gray,
         centerTitle: true,
-        title: Text('تاكيد رقم الهاتف',style: TextStyles.textStyle18Bold,),
+        title: Text(AppLocalizations.of(context)!.translate('confirm_phone_number').toString(),style: TextStyles.textStyle18Bold,),
       ),
       body: WillPopScope(
         onWillPop: (){
-          customPushAndRemoveUntil(context, RegisterScreen());
+          Navigator.pop(context);
           return Future.value(true);
         },
         child: VerfiyCodeViewBody(

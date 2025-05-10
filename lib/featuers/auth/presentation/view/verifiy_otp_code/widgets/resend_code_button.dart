@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 class ResendCodeButton extends StatelessWidget {
   const ResendCodeButton({super.key,required this.name,required this.email,required this.phone});
@@ -29,29 +30,21 @@ class ResendCodeButton extends StatelessWidget {
               ),
             ),
 
-            SizedBox(width: MediaQuery.sizeOf(context).height * 0.001,),
+            SizedBox(width: MediaQuery.sizeOf(context).height * 0.01,),
 
+            cubit.resendButton==true?
             TextButton(
               onPressed: () {
                 if(cubit.resendButton==true){
                   context.read<AuthCubit>().secondTimer!.cancel();
-                  cubit.loginWithPhone(
-                     brithDate: cubit.brithDateController.text,
-                     email: '',
-                     isLogin: false,
-                     gender: cubit.genderValue,
-                     name: '',
-                     phone: '',
-                     city: '',
-                     resendCode:true,
-                     context: context
-                  ).then((value) {
-                    cubit.resendOtpTimer();
-                  });
+                  cubit.generateRandomCode();
+                  cubit.resendOtpTimer();
                 }
               },
-              child: Text('اعاده ارسال الكود',style: TextStyles.textStyle18Bold,),
-            ),
+              child: Text(AppLocalizations.of(context)!.translate('resend_code').toString(),style: TextStyles.textStyle18Bold,),
+            ):Text(AppLocalizations.of(context)!.translate('resend_code').toString(),style: TextStyles.textStyle18Bold.copyWith(
+                color: Colors.grey
+              )),
           ],
         );
       },

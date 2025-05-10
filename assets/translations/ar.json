@@ -340,7 +340,13 @@
   "confirmClosure": "تاكيد الإغلاق",
   "no": "لا",
   "occasionClosed": "المناسبة إلغيت",
+  "phoneToastError": "رقم الهاتف مسجل مستخدم من قبل",
+  "phoneError": "رقم الهاتف غير مسجل",
   "occasionClosedMessage": "تم إلغاء هذه المناسبة.",
   "occasionsListEmpty": "قائمة المناسبات فارغة , قم بأنشاء اول مناسبة لك",
-  "deliveryDataValidate": "يرجى ادخال جميع بيانات التوصيل (المدينة، الحي، رقم هاتف المستلم)"
+  "deliveryDataValidate": "يرجى ادخال جميع بيانات التوصيل (المدينة، الحي، رقم هاتف المستلم)",
+  "confirm_phone_number": "تأكيد رقم الهاتف",
+  "enter_verification_code": "ادخل كود التحقق",
+  "resend_code": "إعادة إرسال الكود",
+  "we_sent_you_sms": "لقد أرسلنا لك رسالة نصية إلى رقم هاتفك تحتوي على رمز التحقق المكون من ستة أرقام"
 }

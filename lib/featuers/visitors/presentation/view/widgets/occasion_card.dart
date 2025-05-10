@@ -55,7 +55,7 @@ class OccasionCard extends StatelessWidget {
                             },
                             child: CachedNetworkImage(
                               width: double.infinity,
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               imageUrl: index==0? occasionEntity.imagesUrl: occasionEntity.imagesUrl2,
                               placeholder: (context, url) => const Center(
                                 child: CupertinoActivityIndicator(),
@@ -76,7 +76,7 @@ class OccasionCard extends StatelessWidget {
                         child:Container(
                           alignment:  Alignment.center,
                           height:  MediaQuery.sizeOf(context).height * 0.04,
-                          width: MediaQuery.sizeOf(context).height * 0.06 ,
+                          width: MediaQuery.sizeOf(context).height * 0.1 ,
                           padding:  const EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 5,
@@ -93,7 +93,7 @@ class OccasionCard extends StatelessWidget {
                             overflow:  TextOverflow.ellipsis,
                             style: TextStyles.textStyle18Bold.copyWith(
                                 color: ColorManager.white,
-                                fontSize: 10
+                                fontSize: 12
                             ),
                           ),
                         ),
@@ -107,32 +107,32 @@ class OccasionCard extends StatelessWidget {
               Container(
                 alignment:Alignment.center,
                 padding: const EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-                height: MediaQuery.sizeOf(context).height * 0.1,
                 decoration: BoxDecoration(
                   borderRadius:  BorderRadius.only(
                     bottomLeft: Radius.circular(15),
                     bottomRight: Radius.circular(15),
                   ),
-                  color: ColorManager.primaryBlue,
                 ),
-                child: Column(
-                  children: [
-                    Text(occasionEntity.title.toString(),
-                      style: TextStyles.textStyle18Bold.copyWith(
-                          color: ColorManager.white
+                child: Expanded(
+                  child: Column(
+                    children: [
+                      Text(occasionEntity.title.toString(),
+                        style: TextStyles.textStyle18Bold.copyWith(
+                            color: ColorManager.primaryBlue
+                        ),
+                        textAlign:  TextAlign.center,
                       ),
-                      textAlign:  TextAlign.center,
-                    ),
-                    Text(occasionEntity.des.toString(),
-                      style: TextStyles.textStyle18Regular.copyWith(
-                          color: ColorManager.white,
-                          fontSize: 10
+                      Text(occasionEntity.des.toString(),
+                        style: TextStyles.textStyle18Regular.copyWith(
+                            color: ColorManager.primaryBlue,
+                            fontSize: 10
+                        ),
+                        textAlign:  TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
                       ),
-                      textAlign:  TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],

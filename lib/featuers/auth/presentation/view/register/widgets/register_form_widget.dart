@@ -179,8 +179,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                         });
                       },
                       items: context
-                          .read<AuthCubit>()
-                          .allCity
+                          .read<AuthCubit>().saudiCitiesList
                           .map<DropdownMenuItem<String>>((dynamic value) {
                         return DropdownMenuItem<String>(
                           value: value,
@@ -290,8 +289,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                     context.replace(AppRouter.home);
                   }
                   if (state is UserRegisterErrorState) {
-                    customToast(
-                        title: state.message, color: ColorManager.error);
+
                   }
                   if (state is GenerateCodeSuccessState) {
                     context
@@ -339,14 +337,11 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                           onPressed: () {
                             if (registerKey.currentState!.validate()) {
                               if (cubit.dropdownCity.isNotEmpty) {
-                                UserDataFromStorage.setMacAddress(
-                                    widget.passController.text);
+                                UserDataFromStorage.setMacAddress(widget.passController.text);
                                 cubit.generateRandomCode();
                               } else {
                                 customToast(
-                                    title: AppLocalizations.of(context)!
-                                        .translate('validateYourCity')
-                                        .toString(),
+                                    title: AppLocalizations.of(context)!.translate('validateYourCity').toString(),
                                     color: ColorManager.red);
                               }
                             }

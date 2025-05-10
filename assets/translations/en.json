@@ -340,7 +340,13 @@
   "confirmClosure": "Confirm Closure",
   "no": "No",
   "occasionClosed": "Occasion Cancelled",
+  "phoneToastError": "Phone number is already registered",
+  "phoneError": "Phone number not valid",
   "occasionClosedMessage": "This occasion has been cancelled.",
   "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion",
-  "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)"
+  "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)",
+  "confirm_phone_number": "Confirm phone number",
+  "enter_verification_code": "Enter verification code",
+  "resend_code": "Resend code",
+  "we_sent_you_sms": "We have sent you an SMS to your phone number containing a six-digit verification code"
 }

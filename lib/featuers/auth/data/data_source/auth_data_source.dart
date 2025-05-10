@@ -100,7 +100,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required context}) async {
     try {
       final user = await firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+          email: '$email@gmail.com', password: email);
       print(user.user!.uid);
 
       await getUserData(uId: user.user!.uid, context: context);
@@ -141,7 +141,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   }) async {
     try {
       final user = await firebaseAuth.createUserWithEmailAndPassword(
-          email: email, password: password);
+          email: '$phone@gmail.com', password: phone);
       await saveUserData(
         email: email,
         phone: phone,
@@ -379,7 +379,6 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
                   title: 'Phone number already exists',
                   color: ColorManager.error);
             } else {
-              customToast(title: exception.code, color: ColorManager.error);
             }
           }
         },
