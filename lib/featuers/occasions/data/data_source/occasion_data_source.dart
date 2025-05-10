@@ -19,6 +19,7 @@ class OccasionDataSource {
     }
   }
 
+
   Future<OccasionModel> addOccasion({
     required bool isForMe,
     required bool isActive,
