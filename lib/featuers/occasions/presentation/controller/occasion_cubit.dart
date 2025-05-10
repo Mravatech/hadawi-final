@@ -452,17 +452,20 @@ class OccasionCubit extends Cubit<OccasionState> {
           throw Exception('Discount code usage limit reached');
         }
         discountValue = discount;
-        giftPrice -= discountValue;
-        transaction.update(doc.reference, {
-          'used': FieldValue.increment(1),
-        });
+        if(discountValue > giftPrice){
+          _showErrorToast("قيمة الخصم أكبر من سعر الهدية");
+        }else{
+          giftPrice -= discountValue;
+          transaction.update(doc.reference, {
+            'used': FieldValue.increment(1),
+          });        }
+        showDiscountValue = true;
+        customToast(
+          title: "تم تطبيق الخصم",
+          color: ColorManager.primaryBlue,
+        );
       });
 
-      showDiscountValue = true;
-      customToast(
-        title: "تم تطبيق الخصم",
-        color: ColorManager.primaryBlue,
-      );
       emit(GetOccasionDiscountSuccessState());
     } catch (error) {
       showDiscountValue = false;
