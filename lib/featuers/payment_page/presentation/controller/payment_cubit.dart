@@ -29,7 +29,23 @@ class PaymentCubit extends Cubit<PaymentStates> {
   GlobalKey<FormState> paymentFormKey = GlobalKey<FormState>();
 
 
-  
+
+  String convertArabicToEnglishNumbers(String input) {
+    const arabicToEnglish = {
+      '٠': '0',
+      '١': '1',
+      '٢': '2',
+      '٣': '3',
+      '٤': '4',
+      '٥': '5',
+      '٦': '6',
+      '٧': '7',
+      '٨': '8',
+      '٩': '9',
+    };
+
+    return input.split('').map((char) => arabicToEnglish[char] ?? char).join();
+  }
   
   Future<void> addPaymentData({required BuildContext context, required String status ,required String transactionId,required String occasionId, required String remainingPrince ,required String occasionName, required double paymentAmount})async{
     emit(PaymentAddLoadingState());
@@ -130,7 +146,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
     try {
       // Format amount to ensure it has 2 decimal places
-      String formattedAmount = double.tryParse(paymentAmountController.text)?.toStringAsFixed(2) ?? "0.00";
+      String formattedAmount = double.tryParse(convertArabicToEnglishNumbers(paymentAmountController.text.toString()))?.toStringAsFixed(2) ?? "0.00";
 
       final response = await http.post(
         Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),
@@ -213,7 +229,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
     try {
       // Format amount to ensure it has 2 decimal places
-      String formattedAmount = double.tryParse(paymentAmountController.text)?.toStringAsFixed(2) ?? "0.00";
+      String formattedAmount = double.tryParse(convertArabicToEnglishNumbers(paymentAmountController.text.toString()))?.toStringAsFixed(2) ?? "0.00";
 
       final response = await http.post(
         Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),

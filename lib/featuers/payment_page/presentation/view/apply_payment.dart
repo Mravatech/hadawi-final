@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:http/http.dart' as http;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ApplePayWebView extends StatefulWidget {
@@ -119,10 +123,6 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         .wpwl-button:hover {
             background-color: #${primaryBlueHex}DD;
         }
-        /* Required style for Apple Pay button to appear correctly */
-        .wpwl-apple-pay-button {
-            -webkit-appearance: -apple-pay-button !important;
-        }
         .secure-badge {
             text-align: center;
             margin-top: 20px;
@@ -172,27 +172,24 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         
         <div id="apple-pay-available">
             <div class="apple-pay-details">
-                <div class="apple-pay-amount">${double.parse(context.read<PaymentCubit>().paymentAmountController.text.toString())} SAR</div>
+                <div class="apple-pay-amount">${widget.paymentAmount} SAR</div>
                 <div class="apple-pay-description">${widget.occasionName}</div>
             </div>
 
             <script>
                 // Configure Apple Pay options
                 var wpwlOptions = {
-                    paymentTarget: "_top",
+                    paymentTarget:"_top",
                     applePay: {
-                        displayName: "Hadawi",
-                        merchantCapabilities: ["supports3DS", "supportsDebit", "supportsCredit"],
-                        supportedNetworks: ["masterCard", "visa", "mada"],
+                        merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
+                        supportedNetworks: ['masterCard', 'visa', 'mada'],
                         supportedCountries: ["SA"],
-                        merchantIdentifier: "merchant.com.hadawi",
-                        countryCode: "SA",
-                        currencyCode: "SAR",
-                        buttonStyle: "black",
-                        buttonType: "buy",
+                        currencyCode: 'SAR',
+                        buttonStyle: 'black',
+                        buttonType: 'buy',
                         total: { 
-                            label: "Hadawi App", 
-                            amount: "${double.parse(context.read<PaymentCubit>().paymentAmountController.text.toString())}" 
+                            label: '${widget.occasionName}', 
+                            amount: '${widget.paymentAmount}' 
                         }
                     },
                     
@@ -212,7 +209,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
             </script>
             
             <div id="apple-pay-button-container">
-                <form action="https://hadawi.netlify.app/payment-result" class="paymentWidgets" data-brands="APPLEPAY"></form>
+                <form class="paymentWidgets" data-brands="APPLEPAY"></form>
             </div>
         </div>
         
@@ -262,8 +259,6 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
               isLoading = false;
             });
             debugPrint("Page finished loading: $url");
-            // This ensures JavaScript on the page gets executed properly
-            evaluateJavaScript();
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint("WebView error: ${error.description}");
@@ -271,17 +266,11 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
           onUrlChange: (UrlChange change) async {
             debugPrint("URL changed to: ${change.url}");
 
-            if (change.url != null) {
-              await context.read<PaymentCubit>().checkApplePaymentStatus(widget.checkoutId, context);
+            await context.read<PaymentCubit>().checkApplePaymentStatus(widget.checkoutId, context);
 
-              if (change.url!.contains("https://hadawi.netlify.app/payment-result")) {
-                Navigator.pop(context);
-                handlePaymentResult(
-                    context.read<PaymentCubit>().paymentStatusList.last['result']['code'],
-                    context.read<PaymentCubit>().paymentStatusList.last['result']['description'],
-                    context.read<PaymentCubit>().paymentStatusList.last
-                );
-              }
+            if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
+              Navigator.pop(context);
+              handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
             }
           },
         ),
@@ -294,26 +283,6 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         mimeType: 'text/html',
         encoding: Encoding.getByName('utf-8'),
       ));
-  }
-
-  // Helper method to evaluate JavaScript after page has loaded
-  void evaluateJavaScript() async {
-    try {
-      // Check Apple Pay availability
-      final jsResult = await controller.runJavaScriptReturningResult('''
-        (function() {
-          if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-            return true;
-          } else {
-            return false;
-          }
-        })()
-      ''');
-
-      debugPrint('Apple Pay available: $jsResult');
-    } catch (e) {
-      debugPrint('Error evaluating JavaScript: $e');
-    }
   }
 
   void handlePaymentResult(String resultCode, String description, Map<String, dynamic> fullData){

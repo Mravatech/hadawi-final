@@ -104,8 +104,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           DefaultTextField(
                             controller: cubit.nameController,
                             hintText: AppLocalizations.of(context)!.translate('personNameHint').toString(),
-                            validator: (value) =>
-                            value!.isEmpty ? AppLocalizations.of(context)!.translate('validatePersonName').toString() : null,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                customToast(
+                                  title: AppLocalizations.of(context)!.translate('validatePersonName').toString(),
+                                  color: Colors.red,
+                                );
+                                return AppLocalizations.of(context)!.translate('validatePersonName').toString();
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             fillColor: ColorManager.gray.withOpacity(0.5),
@@ -231,8 +239,17 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           DefaultTextField(
                             controller: cubit.giftNameController,
                             hintText: AppLocalizations.of(context)!.translate('giftNameHint').toString(),
-                            validator: (value) =>
-                            value!.trim().isEmpty ? AppLocalizations.of(context)!.translate('validateGiftName').toString() : null,
+                            validator: (value) {
+                              if (value!.trim().isEmpty) {
+                                final validationMessage = AppLocalizations.of(context)!.translate('validateGiftName').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             fillColor: ColorManager.gray.withOpacity(0.5),
@@ -247,13 +264,23 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           DefaultTextField(
                             controller: cubit.linkController,
                             hintText: AppLocalizations.of(context)!.translate('linkHint').toString(),
-                            validator: (value) {
+                           validator: (value) {
                               if (value!.trim().isEmpty) {
-                                return AppLocalizations.of(context)!.translate('validateLink').toString();
+                                final validationMessage = AppLocalizations.of(context)!.translate('validateLink').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
                               }
                               final uri = Uri.tryParse(value);
                               if (uri == null || !(uri.isScheme('http') || uri.isScheme('https')) || uri.host.isEmpty || !uri.host.contains('.')) {
-                                return AppLocalizations.of(context)!.translate('vaildLink').toString();
+                                final validationMessage = AppLocalizations.of(context)!.translate('vaildLink').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
                               }
                               return null;
                             },
@@ -377,8 +404,17 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                 child: DefaultTextField(
                                   controller: cubit.moneyAmountController,
                                   hintText: AppLocalizations.of(context)!.translate('giftAmountHint').toString(),
-                                  validator: (value) =>
-                                  value!.trim().isEmpty ? AppLocalizations.of(context)!.translate('validateGiftAmount').toString() : null,
+                                  validator: (value) {
+                                    if (value!.trim().isEmpty) {
+                                      final validationMessage = AppLocalizations.of(context)!.translate('validateGiftAmount').toString();
+                                      customToast(
+                                        title: validationMessage,
+                                        color: Colors.red,
+                                      );
+                                      return validationMessage;
+                                    }
+                                    return null;
+                                  },
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   fillColor: ColorManager.gray.withOpacity(0.5),
@@ -465,8 +501,17 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                 child: DefaultTextField(
                                   controller: cubit.moneyAmountController,
                                   hintText: AppLocalizations.of(context)!.translate('moneyAmountHint').toString(),
-                                  validator: (value) =>
-                                  value!.trim().isEmpty ? AppLocalizations.of(context)!.translate('validateMoneyAmount').toString() : null,
+                                  validator: (value) {
+                                    if (value!.trim().isEmpty) {
+                                      final validationMessage = AppLocalizations.of(context)!.translate('validateMoneyAmount').toString();
+                                      customToast(
+                                        title: validationMessage,
+                                        color: Colors.red,
+                                      );
+                                      return validationMessage;
+                                    }
+                                    return null;
+                                  },
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   fillColor: ColorManager.gray.withOpacity(0.5),
@@ -623,8 +668,17 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           DefaultTextField(
                             controller: cubit.giftDeliveryStreetController,
                             hintText: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
-                            validator: (value) =>
-                            value!.isEmpty ? AppLocalizations.of(context)!.translate('validateTheDistrict').toString() : null,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                final validationMessage = AppLocalizations.of(context)!.translate('validateTheDistrict').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
+                              }
+                              return null;
+                            },
                             keyboardType: TextInputType.text,
                             textInputAction: TextInputAction.next,
                             fillColor: ColorManager.gray.withOpacity(0.5),
@@ -639,12 +693,22 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           DefaultTextField(
                             controller: cubit.giftReceiverNumberController,
                             hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
-                            validator: (value) {
+                           validator: (value) {
                               if (value!.isEmpty) {
-                                return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
+                                final validationMessage = AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
                               }
                               if (value.length != 10) {
-                                return AppLocalizations.of(context)!.translate('validatePhone2').toString();
+                                final validationMessage = AppLocalizations.of(context)!.translate('validatePhone2').toString();
+                                customToast(
+                                  title: validationMessage,
+                                  color: Colors.red,
+                                );
+                                return validationMessage;
                               }
                               return null;
                             },
@@ -797,7 +861,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               color: Colors.red,
                             );
                           }
-
                         }
                       },
                       child: Container(

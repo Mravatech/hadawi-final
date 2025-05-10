@@ -980,7 +980,7 @@ class _EditOccasionState extends State<EditOccasion> {
                                             TextButton(
                                               child: Text(
                                                   AppLocalizations.of(context)!
-                                                      .translate('yes')
+                                                      .translate('confirmClosure')
                                                       .toString()),
                                               onPressed: () async {
                                                 Navigator.of(context).pop(); // Close the dialog first
@@ -994,7 +994,7 @@ class _EditOccasionState extends State<EditOccasion> {
                                             TextButton(
                                               child: Text(
                                                   AppLocalizations.of(context)!
-                                                      .translate('no')
+                                                      .translate('cancel')
                                                       .toString()),
                                               onPressed: () async {
                                                 Navigator.of(context)

@@ -349,7 +349,7 @@ class OccasionSummary extends StatelessWidget {
                                 context,
                                 label: AppLocalizations.of(context)!.translate('deliveryPrice').toString(),
                                 value: "${cubit.deliveryTax} ${AppLocalizations.of(context)!.translate('rsa')}",
-                                subtitle: "المطلوب مبلغ مالي مع تغليف وسيتم التحويل البنكي",
+                                subtitle: "المطلوب مبلغ مالي مع تغليف",
                               ),
                             if (cubit.isPresent == true && cubit.giftWithPackage != false)
                               _buildInfoRow(
