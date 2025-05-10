@@ -204,23 +204,14 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   double totalPriceCalculate=0;
-  double getAppCommission() {
-     print('moneyAmountController.text ${moneyAmountController.text}');
-    double giftPriceNumber = double.parse(moneyAmountController.text);
-    double appCommission = giftPriceNumber * serviceTax;
-     totalPriceCalculate= appCommission;
-    emit(GetTotalGiftPriceSuccessState());
-    return appCommission;
-  }
 
   double getTotalGiftPrice() {
     final text = convertArabicToEnglishNumbers(moneyAmountController.text.trim());
     double giftPriceNumber = double.tryParse(text) ?? 0.0;
     double packagePriceNumber = double.tryParse(giftWithPackageType.toString()) ?? 0.0;
 
-    double appCommission = giftPriceNumber * serviceTax;
 
-    giftPrice = (giftPriceNumber + packagePriceNumber + appCommission + deliveryTax) - discountValue;
+    giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax) - discountValue;
 
     emit(GetTotalGiftPriceSuccessState());
     return giftPrice;

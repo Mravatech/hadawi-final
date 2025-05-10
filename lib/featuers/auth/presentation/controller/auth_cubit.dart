@@ -415,14 +415,7 @@ class AuthCubit extends Cubit<AuthStates> {
       final userCredential =
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
-      // Handle null or empty name from Apple
-      String userName = "Apple User"; // Default name
-      if (credential.givenName != null && credential.familyName != null) {
-        userName = "${credential.givenName} ${credential.familyName}";
-      } else if (userCredential.user?.displayName != null &&
-          userCredential.user!.displayName!.isNotEmpty) {
-        userName = userCredential.user!.displayName!;
-      }
+      String userName = userCredential.user?.displayName ?? "Apple User";
 
       // Handle potentially null email
       String userEmail = credential.email ?? userCredential.user?.email ?? "";
