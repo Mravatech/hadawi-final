@@ -454,6 +454,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         discountValue = discount;
         if(discountValue > giftPrice){
           _showErrorToast("قيمة الخصم أكبر من سعر الهدية");
+          return;
         }else{
           giftPrice -= discountValue;
           transaction.update(doc.reference, {
