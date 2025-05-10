@@ -492,6 +492,29 @@ class AuthCubit extends Cubit<AuthStates> {
 
   List<String> allCity = [];
 
+  List<String> saudiCitiesList = [
+    'الرياض',
+    'جدة',
+    'مكة المكرمة',
+    'المدينة المنورة',
+    'الدمام',
+    'الخبر',
+    'الطائف',
+    'أبها',
+    'تبوك',
+    'بريدة',
+    'حائل',
+    'نجران',
+    'جيزان',
+    'القطيف',
+    'الظهران',
+    'ينبع',
+    'عرعر',
+    'سكاكا',
+    'الخرج',
+    'الأحساء',
+  ];
+
   Future<void> getAllCity()async{
 
     emit(GetAllCityLoadingState());
