@@ -31,13 +31,13 @@ class OccasionCubit extends Cubit<OccasionState> {
   OccasionCubit() : super(OccasionInitial());
 
   bool isForMe = true;
-  bool isPresent = true;
+  bool isPresent = false;
   bool isMoney = false;
   int selectedIndex = 0;
   bool isPublicValue = false;
   bool giftContainsNameValue = false;
   double giftPrice = 0;
-  String giftType = 'هدية';
+  String giftType = '';
   GlobalKey<FormState> forOtherFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> moneyFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> deliveryFormKey = GlobalKey<FormState>();
@@ -74,14 +74,14 @@ class OccasionCubit extends Cubit<OccasionState> {
    void resetData() {
     // isForMe = true;
      images = [];
-    isPresent = true;
+    isPresent = false;
     dropdownOccasionType = '';
     isMoney = false;
     selectedIndex = 0;
     isPublicValue = false;
     giftContainsNameValue = false;
     giftPrice = 0;
-    giftType = 'هدية';
+    giftType = '';
     giftNameController.clear();
     nameController.clear();
     occasionDateController.clear();
@@ -152,9 +152,16 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchForWhomOccasionSuccess());
   }
 
-  void switchGiftType() {
-    isPresent = !isPresent;
-    isMoney = !isMoney;
+  void switchGiftType({required bool present}) {
+    if(present){
+      giftType = 'هدية';
+      isPresent = true;
+      isMoney = false;
+    }else{
+      giftType = 'مبلغ مالى';
+      isPresent = false;
+      isMoney = true;
+    }
 
     emit(SwitchGiftTypeSuccess());
   }
@@ -595,53 +602,64 @@ class OccasionCubit extends Cubit<OccasionState> {
   AnalysisModel ?analysisModel;
 
   String dropdownCity = "";
-  List<String> saudiCities = [
-    // منطقة الرياض
-    "الرياض", "الدرعية", "الخرج", "الدوادمي", "المجمعة", "الزلفي", "شقراء",
-    "وادي الدواسر", "الأفلاج", "عفيف", "حوطة بني تميم", "السليل", "ثادق",
-    "حريملاء", "رماح", "المزاحمية", "ضرماء", "مرات",
+  String dropdownQuarter = "";
 
-    // منطقة مكة المكرمة
-    "مكة المكرمة", "جدة", "الطائف", "رابغ", "الليث", "القنفذة", "الخرمة",
-    "الكامل", "خليص", "الجموم", "رنية", "تربة",
+  String selectedCityId = "";
 
-    // منطقة المدينة المنورة
-    "المدينة المنورة", "ينبع", "العلا", "بدر", "الحناكية", "خيبر", "المهد",
+  List<String> allCity = [];
+  List<Map<String, dynamic>> allCityMap = [];
 
-    // المنطقة الشرقية
-    "الدمام", "الخبر", "الظهران", "الجبيل", "القطيف", "الأحساء", "رأس تنورة",
-    "الخفجي", "النعيرية", "حفر الباطن", "قرية العليا", "بقيق",
+  Future<void> getAllCity()async{
+    allCity = [];
+    emit(GetAllCityLoadingState());
+    try{
+      var response = await FirebaseFirestore.instance.collection('city').get();
+      response.docs.forEach((element) {
+        allCity.add(element.data()['name']);
+        allCityMap.add({
+          'name': element.data()['name'],
+          'id': element.data()['id'],
+        });
+      });
 
-    // منطقة القصيم
-    "بريدة", "عنيزة", "الرس", "المذنب", "البكيرية", "البدائع", "الأسياح",
-    "النبهانية", "عيون الجواء", "رياض الخبراء", "الشماسية",
+      emit(GetAllCitySuccessState());
+    }catch(e){
+      debugPrint('error in get all city $e');
+      emit(GetAllCityErrorState());
+    }
 
-    // منطقة عسير
-    "أبها", "خميس مشيط", "بيشة", "محايل عسير", "النماص", "رجال ألمع",
-    "سراة عبيدة", "ظهران الجنوب", "تثليث", "أحد رفيدة", "المجاردة", "البرك",
+  }
 
-    // منطقة حائل
-    "حائل", "بقعاء", "الشنان", "الغزالة", "الحائط", "السليمي", "سميراء",
 
-    // منطقة تبوك
-    "تبوك", "الوجه", "ضباء", "أملج", "حقل", "البدع",
+  Future<void> getCityId(String city)async{
+    for (var element in allCityMap) {
+      if(element['name'] == city){
+        selectedCityId = element['id'];
+        debugPrint('city id: $selectedCityId');
+        break;
+      }
+    }
+  }
 
-    // منطقة نجران
-    "نجران", "شرورة", "حبونا", "يدمة", "بدر الجنوب", "ثار", "خباش",
+  List<String> allQuarters = [];
 
-    // منطقة جازان
-    "جازان", "صبيا", "أبو عريش", "صامطة", "فرسان", "العارضة", "الداير بني مالك",
-    "أحد المسارحة", "بيش", "العيدابي", "الدرب", "الحرث",
+  Future<void> getQuarters({required String city}) async {
+    allQuarters = [];
+    emit(GetAllQuartersLoadingState());
 
-    // منطقة الباحة
-    "الباحة", "بلجرشي", "المندق", "المخواة", "العقيق", "قلوة",
-
-    // منطقة الجوف
-    "سكاكا", "القريات", "دومة الجندل",
-
-    // منطقة الحدود الشمالية
-    "عرعر", "رفحاء", "طريف"
-  ];
+    await getCityId(city);
+    try{
+      FirebaseFirestore.instance.collection('city').doc(selectedCityId).collection('quarters').get().then((value) {
+        value.docs.forEach((element) {
+          allQuarters.add(element.data()['name']);
+        });
+      });
+      emit(GetAllQuartersSuccessState());
+    }catch(e){
+      debugPrint('error in get all Quarters $e');
+      emit(GetAllQuartersErrorState());
+    }
+  }
 
 List<dynamic> urls=[];
   Future<void> updateOccasion({

@@ -342,6 +342,7 @@
   "occasionClosed": "Occasion Cancelled",
   "phoneToastError": "Phone number is already registered",
   "phoneError": "Phone number not valid",
+  "validateGiftType": "Gift type is required",
   "occasionClosedMessage": "This occasion has been cancelled.",
   "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion",
   "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)",

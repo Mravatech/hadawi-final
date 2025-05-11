@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
+import 'package:hadawi_app/featuers/occasions/data/models/cityModel.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -12,6 +13,7 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import '../../../../../utiles/cashe_helper/cashe_helper.dart';
 
 class ForMeBody extends StatefulWidget {
@@ -28,6 +30,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     context.read<OccasionCubit>().getOccasionTaxes();
+    context.read<OccasionCubit>().getAllCity();
     super.initState();
   }
 
@@ -48,7 +51,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
           onTap: (){
             FocusScope.of(context).unfocus();
           },
-          child: SingleChildScrollView(
+          child: (state is GetOccasionTaxesLoadingState) || (state is GetAllCityLoadingState) ? Center(child: LoadingAnimationWidget()) :SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.width * 0.02, vertical: SizeConfig.height * 0.02),
             child: Form(
               key: forMeFormKey,
@@ -199,9 +202,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               title: AppLocalizations.of(context)!.translate('gift').toString(),
                               isActive: cubit.isPresent,
                               onTap: () {
-                                cubit.giftType = 'هدية';
+                                // cubit.giftType = 'هدية';
+                                // cubit.isPresent = true;
+                                // cubit.isMoney = false;
                                 UserDataFromStorage.giftType = cubit.giftType;
-                                cubit.switchGiftType();
+                                cubit.switchGiftType(present: true);
                               },
                             ),
                             SizedBox(width: SizeConfig.width * 0.05),
@@ -210,9 +215,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               title: AppLocalizations.of(context)!.translate('money').toString(),
                               isActive: cubit.isMoney,
                               onTap: () {
-                                cubit.giftType = 'مبلغ مالي';
+                                // cubit.giftType = 'مبلغ مالي';
+                                // cubit.isPresent = false;
+                                // cubit.isMoney = true;
                                 UserDataFromStorage.giftType = cubit.giftType;
-                                cubit.switchGiftType();
+                                cubit.switchGiftType(present: false);
                               },
                             ),
                           ],
@@ -484,7 +491,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
 
                   /// Money Section
                   Visibility(
-                    visible: !cubit.isPresent,
+                    visible: cubit.isMoney,
                     child: _buildSectionCard(
                       context,
                       child: Column(
@@ -647,9 +654,10 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                 onChanged: (String? newValue) {
                                   setState(() {
                                     cubit.dropdownCity = newValue!;
+                                    cubit.getQuarters(city: newValue);
                                   });
                                 },
-                                items: context.read<AuthCubit>().allCity.map<DropdownMenuItem<String>>((dynamic value) {
+                                items: cubit.allCity.map<DropdownMenuItem<String>>((dynamic value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
@@ -658,32 +666,82 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                          SizedBox(height: SizeConfig.height * 0.02),
 
-                          Text(
-                            AppLocalizations.of(context)!.translate('theDistrict').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+                          Visibility(
+                            visible: cubit.dropdownCity.isNotEmpty,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(height: SizeConfig.height * 0.01),
+
+                                Text(
+                                  AppLocalizations.of(context)!.translate('theDistrict').toString(),
+                                  style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+                                ),
+                                SizedBox(height: SizeConfig.height * 0.01),
+                                state is GetAllQuartersLoadingState? LoadingAnimationWidget() :Container(
+                                  height: SizeConfig.height * 0.06,
+                                  decoration: BoxDecoration(
+                                    color: ColorManager.gray.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(12),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.05),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      value: cubit.dropdownQuarter.isEmpty ? null : cubit.dropdownQuarter,
+                                      hint: Text(AppLocalizations.of(context)!.translate('theDistrictHint').toString()),
+                                      icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
+                                      elevation: 16,
+                                      style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
+                                      isExpanded: true,
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          cubit.dropdownQuarter = newValue!;
+                                          cubit.giftDeliveryStreetController.text = newValue;
+                                        });
+                                      },
+                                      items: cubit.allQuarters.map<DropdownMenuItem<String>>((dynamic value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
+
+
                           SizedBox(height: SizeConfig.height * 0.01),
-                          DefaultTextField(
-                            controller: cubit.giftDeliveryStreetController,
-                            hintText: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('validateTheDistrict').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
+                          // DefaultTextField(
+                          //   controller: cubit.giftDeliveryStreetController,
+                          //   hintText: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
+                          //   validator: (value) {
+                          //     if (value!.isEmpty) {
+                          //       final validationMessage = AppLocalizations.of(context)!.translate('validateTheDistrict').toString();
+                          //       customToast(
+                          //         title: validationMessage,
+                          //         color: Colors.red,
+                          //       );
+                          //       return validationMessage;
+                          //     }
+                          //     return null;
+                          //   },
+                          //   keyboardType: TextInputType.text,
+                          //   textInputAction: TextInputAction.next,
+                          //   fillColor: ColorManager.gray.withOpacity(0.5),
+                          // ),
+                          // SizedBox(height: SizeConfig.height * 0.02),
 
                           Text(
                             AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
@@ -835,8 +893,14 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                   Center(
                     child: GestureDetector(
                       onTap: () async {
+                        if (cubit.isPresent== false && cubit.isMoney== false){
+                          customToast(
+                            title: AppLocalizations.of(context)!.translate('validateGiftType').toString(),
+                            color: Colors.red,
+                          );
+                          return;
+                        }
                         if (forMeFormKey.currentState!.validate()) {
-
                           if (cubit.dropdownOccasionType.isNotEmpty) {
                             if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
                               if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
