@@ -7,6 +7,7 @@ import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -33,39 +34,34 @@ class EditOccasion extends StatefulWidget {
   State<EditOccasion> createState() => _EditOccasionState();
 }
 
-class _EditOccasionState extends State<EditOccasion> {
+class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver{
+  @override
   @override
   void initState() {
-    context.read<OccasionCubit>().getOccasionTaxes();
-    context.read<OccasionCubit>().nameController.text =
-        widget.occasionModel.personName;
-    context.read<OccasionCubit>().giftNameController.text =
-        widget.occasionModel.giftName;
-    context.read<OccasionCubit>().linkController.text =
-        widget.occasionModel.giftLink;
-    context.read<OccasionCubit>().moneyAmountController.text =
-        widget.occasionModel.moneyGiftAmount.toString();
-    context.read<OccasionCubit>().giftDeliveryStreetController.text =
-        widget.occasionModel.district;
-    context.read<OccasionCubit>().giftReceiverNumberController.text =
-        widget.occasionModel.receiverPhone;
-    context.read<OccasionCubit>().giftReceiverNameController.text =
-        widget.occasionModel.receiverName;
-    context.read<OccasionCubit>().moneyGiftMessageController.text =
-        widget.occasionModel.giftCard;
-    context.read<OccasionCubit>().giftDeliveryNoteController.text =
-        widget.occasionModel.note;
-    context.read<OccasionCubit>().dropdownOccasionType =
-        widget.occasionModel.type;
-    context.read<OccasionCubit>().giftType = widget.occasionModel.giftType;
-    context.read<OccasionCubit>().moneyAmountController.text =
-        widget.occasionModel.giftPrice.toString();
-    context.read<OccasionCubit>().dropdownCity = widget.occasionModel.city;
-    context.read<OccasionCubit>().urls = widget.occasionModel.giftImage;
-    context.read<OccasionCubit>().isPublicValue =
-        widget.occasionModel.isPrivate;
-
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
+    final cubit = context.read<OccasionCubit>();
+    Future.microtask(() async {
+      await cubit.getAllCity();
+      await cubit.getQuarters(city: widget.occasionModel.city);
+      cubit.getOccasionTaxes();
+      cubit.nameController.text = widget.occasionModel.personName;
+      cubit.giftNameController.text = widget.occasionModel.giftName;
+      cubit.linkController.text = widget.occasionModel.giftLink;
+      cubit.moneyAmountController.text = widget.occasionModel.moneyGiftAmount.toString();
+      cubit.giftDeliveryStreetController.text = widget.occasionModel.district;
+      cubit.dropdownQuarter = widget.occasionModel.district;
+      cubit.giftReceiverNumberController.text = widget.occasionModel.receiverPhone;
+      cubit.giftReceiverNameController.text = widget.occasionModel.receiverName;
+      cubit.moneyGiftMessageController.text = widget.occasionModel.giftCard;
+      cubit.giftDeliveryNoteController.text = widget.occasionModel.note;
+      cubit.dropdownOccasionType = widget.occasionModel.type;
+      cubit.giftType = widget.occasionModel.giftType;
+      cubit.moneyAmountController.text = widget.occasionModel.giftPrice.toString();
+      cubit.dropdownCity = widget.occasionModel.city;
+      cubit.urls = widget.occasionModel.giftImage;
+      cubit.isPublicValue = widget.occasionModel.isPrivate;
+    });
   }
 
   @override
@@ -99,7 +95,7 @@ class _EditOccasionState extends State<EditOccasion> {
                   .toString(),
               color: ColorManager.success,
             );
-            customPushAndRemoveUntil(context, HomeLayout());
+            customPushReplacement(context, HomeLayout());
           }
           if (state is UpdateOccasionSuccessState) {
             if (widget.fromHome == true) {
@@ -124,7 +120,9 @@ class _EditOccasionState extends State<EditOccasion> {
           return ModalProgressHUD(
             inAsyncCall: state is DisableOccasionLoadingState,
             progressIndicator: const LoadingAnimationWidget(),
-            child: Padding(
+            child: (state is GetOccasionTaxesLoadingState) || (state is GetAllCityLoadingState) || (state is GetAllQuartersLoadingState) ? Center(
+              child: LoadingAnimationWidget(),
+            ) :Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.width * 0.02,
                   vertical: SizeConfig.height * 0.02),
@@ -781,10 +779,10 @@ class _EditOccasionState extends State<EditOccasion> {
                                       onChanged: (String? newValue) {
                                         setState(() {
                                           cubit.dropdownCity = newValue!;
+                                          cubit.getQuarters(city: newValue);
                                         });
                                       },
-                                      items: context
-                                          .read<AuthCubit>()
+                                      items: cubit
                                           .allCity
                                           .map<DropdownMenuItem<String>>(
                                               (dynamic value) {
@@ -801,31 +799,61 @@ class _EditOccasionState extends State<EditOccasion> {
                                     ),
                                   ),
                                 ),
-                                SizedBox(height: SizeConfig.height * 0.02),
 
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('theDistrict')
-                                      .toString(),
-                                  style: TextStyles.textStyle18Bold
-                                      .copyWith(color: ColorManager.black),
+                                Visibility(
+                                  visible: cubit.dropdownCity.isNotEmpty,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: SizeConfig.height * 0.01),
+
+                                      Text(
+                                        AppLocalizations.of(context)!.translate('theDistrict').toString(),
+                                        style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+                                      ),
+                                      SizedBox(height: SizeConfig.height * 0.01),
+                                      state is GetAllQuartersLoadingState? LoadingAnimationWidget() :Container(
+                                        height: SizeConfig.height * 0.06,
+                                        decoration: BoxDecoration(
+                                          color: ColorManager.gray.withOpacity(0.5),
+                                          borderRadius: BorderRadius.circular(12),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withOpacity(0.05),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        child: DropdownButtonHideUnderline(
+                                          child: DropdownButton<String>(
+                                            value: cubit.dropdownQuarter,
+                                            hint: Text(AppLocalizations.of(context)!.translate('theDistrictHint').toString()),
+                                            icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
+                                            elevation: 16,
+                                            style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
+                                            isExpanded: true,
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                cubit.dropdownQuarter = newValue!;
+                                                cubit.giftDeliveryStreetController.text = newValue;
+                                              });
+                                            },
+                                            items: cubit.allQuarters.map<DropdownMenuItem<String>>((dynamic value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                SizedBox(height: SizeConfig.height * 0.01),
-                                DefaultTextField(
-                                  controller:
-                                      cubit.giftDeliveryStreetController,
-                                  hintText: AppLocalizations.of(context)!
-                                      .translate('theDistrictHint')
-                                      .toString(),
-                                  validator: (value) => value!.isEmpty
-                                      ? AppLocalizations.of(context)!
-                                          .translate('validateTheDistrict')
-                                          .toString()
-                                      : null,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  fillColor: ColorManager.gray.withOpacity(0.5),
-                                ),
+
                                 SizedBox(height: SizeConfig.height * 0.02),
 
                                 Text(

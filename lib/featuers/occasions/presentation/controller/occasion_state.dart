@@ -70,5 +70,13 @@ final class DisableOccasionLoadingState extends OccasionState {}
 final class DisableOccasionSuccessState extends OccasionState {}
 final class DisableOccasionErrorState extends OccasionState {}
 
+class GetAllCityLoadingState extends OccasionState {}
+class GetAllCitySuccessState extends OccasionState {}
+class GetAllCityErrorState extends OccasionState {}
+
+class GetAllQuartersLoadingState extends OccasionState {}
+class GetAllQuartersSuccessState extends OccasionState {}
+class GetAllQuartersErrorState extends OccasionState {}
+
 
 

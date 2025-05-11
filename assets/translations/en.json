@@ -342,5 +342,6 @@
   "occasionClosed": "Occasion Cancelled",
   "occasionClosedMessage": "This occasion has been cancelled.",
   "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion",
-  "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)"
+  "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)",
+  "validateGiftType": "Gift type is required"
 }
