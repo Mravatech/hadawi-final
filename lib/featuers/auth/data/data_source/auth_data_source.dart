@@ -485,7 +485,7 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
           },
         ),
         data: {
-          "src": "Oursms",
+          "src": "hadawi",
           "dests": [formattedPhone],
           "body": "مرحباً بك في هداوي\n استخدم هذا الكود $otp للتحقق من رقم هاتفك"
         },
