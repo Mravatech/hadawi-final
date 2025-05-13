@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
+import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment.dart';
@@ -413,11 +414,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     integrity: checkoutData["integrity"],
                     paymentMethod: "APPLEPAY",
                     occasionId: widget.occasionEntity.occasionId,
-                    occasionName: widget.occasionEntity.occasionType,
+                    occasionName: widget.occasionEntity.type,
                     transactionId: merchantTransactionId,
                     remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
                         double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
-                    paymentAmount: double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+                    paymentAmount: double.parse(context.read<OccasionCubit>().convertArabicToEnglishNumbers(context.read<PaymentCubit>().paymentAmountController.text.toString())),
                   )
               );
               break;

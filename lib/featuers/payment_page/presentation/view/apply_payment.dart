@@ -172,7 +172,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         
         <div id="apple-pay-available">
             <div class="apple-pay-details">
-                <div class="apple-pay-amount">${double.parse(context.read<PaymentCubit>().paymentAmountController.text.toString())} SAR</div>
+                <div class="apple-pay-amount">${widget.paymentAmount} SAR</div>
                 <div class="apple-pay-description">${widget.occasionName}</div>
             </div>
 
