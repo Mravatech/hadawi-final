@@ -407,12 +407,13 @@ class OccasionCubit extends Cubit<OccasionState> {
       moneyPackageListPrice = value.docs[0]['packaging_tax'];
       moneyPackageListImage = value.docs[0]['pakaging_image'];
       giftPackageListPrice = value.docs[0]['packaging_gift_tax'];
-      giftPackageListImage = value.docs[0]['packaging_gift_image'];
+      giftPackageListImage = value.docs[0]['pakaging_gift_image'];
       occasionTypeItems = value.docs[0]['occasionType'];
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
       selectedGiftPackageImage = giftPackageListImage[0].toString();
       giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
+      moneyWithPackageType = int.parse(moneyPackageListPrice[0].toString());
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');
