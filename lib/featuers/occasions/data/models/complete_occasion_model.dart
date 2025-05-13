@@ -5,7 +5,6 @@ class CompleteOccasionModel {
   String imagesUrl2;
   String title;
   String des;
-  String status;
   double finalPrice;
 
   CompleteOccasionModel({
@@ -14,7 +13,6 @@ class CompleteOccasionModel {
     required this.imagesUrl2,
     required this.title,
     required this.des,
-    required this.status,
     required this.finalPrice,
   });
 
@@ -22,7 +20,6 @@ class CompleteOccasionModel {
     return CompleteOccasionModel(
       occasionId: json['occasionId'],
       imagesUrl: json['imagesUrl'] ,
-      status: json['status'] ??'',
       title: json['title'] ??'',
       imagesUrl2: json['imagesUrl2'] ??'',
       des: json['des'] ??'',

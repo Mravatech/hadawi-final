@@ -45,30 +45,33 @@ class OccasionCard extends StatelessWidget {
                   ),
                   child: Stack(
                     children: [
-                      PageView(
-                        children: List.generate(occasionEntity.imagesUrl2!=''?2:1, (index) {
-                          return GestureDetector(
-                            onTap: (){
-                              customPushNavigator(context, ImageViewerScreen(
-                                  imageUrl: index==0? occasionEntity.imagesUrl:
-                                  occasionEntity.imagesUrl2));
-                            },
-                            child: CachedNetworkImage(
-                              width: double.infinity,
-                              fit: BoxFit.fill,
-                              imageUrl: index==0? occasionEntity.imagesUrl: occasionEntity.imagesUrl2,
-                              placeholder: (context, url) => const Center(
-                                child: CupertinoActivityIndicator(),
-                              ),
-                              errorWidget: (context, url, error) {
-                                return const Icon(
-                                  Icons.error,
-                                  color: Colors.red,
-                                );
+                      Container(
+
+                        child: PageView(
+                          children: List.generate(occasionEntity.imagesUrl2!=''?2:1, (index) {
+                            return GestureDetector(
+                              onTap: (){
+                                customPushNavigator(context, ImageViewerScreen(
+                                    imageUrl: index==0? occasionEntity.imagesUrl:
+                                    occasionEntity.imagesUrl2));
                               },
-                            ),
-                          );
-                        }),
+                              child: CachedNetworkImage(
+                                width: double.infinity,
+                                fit: BoxFit.fill,
+                                imageUrl: index==0? occasionEntity.imagesUrl: occasionEntity.imagesUrl2,
+                                placeholder: (context, url) => const Center(
+                                  child: CupertinoActivityIndicator(),
+                                ),
+                                errorWidget: (context, url, error) {
+                                  return const Icon(
+                                    Icons.error,
+                                    color: Colors.red,
+                                  );
+                                },
+                              ),
+                            );
+                          }),
+                        ),
                       ),
                       Positioned(
                         top: 10,
@@ -89,7 +92,7 @@ class OccasionCard extends StatelessWidget {
                             ),
                           ),
                           child: Text(
-                            occasionEntity.finalPrice.toString(),
+                            '${occasionEntity.finalPrice.toInt()}',
                             overflow:  TextOverflow.ellipsis,
                             style: TextStyles.textStyle18Bold.copyWith(
                                 color: ColorManager.white,
@@ -113,26 +116,24 @@ class OccasionCard extends StatelessWidget {
                     bottomRight: Radius.circular(15),
                   ),
                 ),
-                child: Expanded(
-                  child: Column(
-                    children: [
-                      Text(occasionEntity.title.toString(),
-                        style: TextStyles.textStyle18Bold.copyWith(
-                            color: ColorManager.primaryBlue
-                        ),
-                        textAlign:  TextAlign.center,
+                child: Column(
+                  children: [
+                    Text(occasionEntity.title.toString(),
+                      style: TextStyles.textStyle18Bold.copyWith(
+                          color: ColorManager.primaryBlue
                       ),
-                      Text(occasionEntity.des.toString(),
-                        style: TextStyles.textStyle18Regular.copyWith(
-                            color: ColorManager.primaryBlue,
-                            fontSize: 10
-                        ),
-                        textAlign:  TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
+                      textAlign:  TextAlign.center,
+                    ),
+                    Text(occasionEntity.des.toString(),
+                      style: TextStyles.textStyle18Regular.copyWith(
+                          color: ColorManager.primaryBlue,
+                          fontSize: 10
                       ),
-                    ],
-                  ),
+                      textAlign:  TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ],
                 ),
               ),
             ],

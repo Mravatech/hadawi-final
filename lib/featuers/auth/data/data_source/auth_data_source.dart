@@ -452,11 +452,16 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     try {
       print('Uid $uId');
       final user = FirebaseAuth.instance.currentUser!;
+      print('phone ${user.email}');
+      print('pass ${UserDataFromStorage.macAddressFromStorage}');
+      String pass = '127755643@gmail.com';
+      String username = pass.split('@')[0];
+      print('username $username');
 
       // أعد تسجيل الدخول
       AuthCredential credential = EmailAuthProvider.credential(
-        email: user.email!,
-        password: UserDataFromStorage.macAddressFromStorage,
+        email: '${user.email}',
+        password: username,
       );
 
       await user.reauthenticateWithCredential(credential);

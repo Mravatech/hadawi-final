@@ -238,7 +238,8 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> deleteUser() async {
     emit(DeleteUserLoadingState());
     final result = await deleteUserUseCases.deleteUser(
-        uId: UserDataFromStorage.uIdFromStorage);
+        uId: UserDataFromStorage.uIdFromStorage
+    );
     result.fold((l) {
       emit(DeleteUserErrorState(message: l.message));
     }, (r) {
