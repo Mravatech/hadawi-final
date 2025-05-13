@@ -51,6 +51,8 @@ class OccasionDataSource {
     required double appCommission,
     required double deliveryPrice,
     required String type,
+    required String packageImage,
+    required String packagePrice,
   }) async {
     final docRef = fireStore.collection('Occasions').doc();
     final occasionId = docRef.id;
@@ -87,6 +89,8 @@ class OccasionDataSource {
       appCommission: appCommission,
       deliveryPrice: deliveryPrice,
       type: type,
+      packageImage: packageImage,
+      packagePrice: packagePrice,
     );
 
     try {

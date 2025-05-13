@@ -4,6 +4,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/occasions/data/models/cityModel.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/occasion_summary.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/open_image.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
@@ -459,22 +460,22 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                   children: [
                                     _buildPackageOption(
                                       context,
-                                      price: cubit.packageListPrice[0].toString(),
-                                      imageUrl: cubit.packageListImage[0].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[0].toString()),
+                                      price: cubit.giftPackageListPrice[0].toString(),
+                                      imageUrl: cubit.giftPackageListImage[0].toString(),
+                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[0].toString()),
                                       onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.packageListPrice[0].toString()),
-                                        cubit.packageListImage[0].toString(),
+                                        int.parse(cubit.giftPackageListPrice[0].toString()),
+                                        cubit.giftPackageListImage[0].toString(),
                                       ),
                                     ),
                                     _buildPackageOption(
                                       context,
-                                      price: cubit.packageListPrice[1].toString(),
-                                      imageUrl: cubit.packageListImage[1].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[1].toString()),
+                                      price: cubit.giftPackageListPrice[1].toString(),
+                                      imageUrl: cubit.giftPackageListImage[1].toString(),
+                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[1].toString()),
                                       onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.packageListPrice[1].toString()),
-                                        cubit.packageListImage[1].toString(),
+                                        int.parse(cubit.giftPackageListPrice[1].toString()),
+                                        cubit.giftPackageListImage[1].toString(),
                                       ),
                                     ),
                                   ],
@@ -555,22 +556,22 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                   children: [
                                     _buildPackageOption(
                                       context,
-                                      price: cubit.packageListPrice[0].toString(),
-                                      imageUrl: cubit.packageListImage[0].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[0].toString()),
-                                      onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.packageListPrice[0].toString()),
-                                        cubit.packageListImage[0].toString(),
+                                      price: cubit.moneyPackageListPrice[0].toString(),
+                                      imageUrl: cubit.moneyPackageListImage[0].toString(),
+                                      isSelected: cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[0].toString()),
+                                      onTap: () => cubit.switchMoneyWithPackageType(
+                                        int.parse(cubit.moneyPackageListPrice[0].toString()),
+                                        cubit.moneyPackageListImage[0].toString(),
                                       ),
                                     ),
                                     _buildPackageOption(
                                       context,
-                                      price: cubit.packageListPrice[1].toString(),
-                                      imageUrl: cubit.packageListImage[1].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.packageListPrice[1].toString()),
-                                      onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.packageListPrice[1].toString()),
-                                        cubit.packageListImage[1].toString(),
+                                      price: cubit.moneyPackageListPrice[1].toString(),
+                                      imageUrl: cubit.moneyPackageListImage[1].toString(),
+                                      isSelected: cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[1].toString()),
+                                      onTap: () => cubit.switchMoneyWithPackageType(
+                                        int.parse(cubit.moneyPackageListPrice[1].toString()),
+                                        cubit.moneyPackageListImage[1].toString(),
                                       ),
                                     ),
                                   ],
@@ -1040,6 +1041,9 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
     final mediaQuery = MediaQuery.sizeOf(context);
     return InkWell(
       onTap: onTap,
+      onLongPress: (){
+        customPushNavigator(context, ImageViewerScreen(imageUrl: imageUrl,));
+      },
       child: SizedBox(
         height: mediaQuery.height * 0.1,
         width: mediaQuery.height * 0.1,

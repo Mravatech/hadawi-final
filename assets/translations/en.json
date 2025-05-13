@@ -349,5 +349,6 @@
   "confirm_phone_number": "Confirm phone number",
   "enter_verification_code": "Enter verification code",
   "resend_code": "Resend code",
-  "we_sent_you_sms": "We have sent you an SMS to your phone number containing a six-digit verification code"
+  "we_sent_you_sms": "We have sent you an SMS to your phone number containing a six-digit verification code",
+  "appFees": "App Fees"
 }

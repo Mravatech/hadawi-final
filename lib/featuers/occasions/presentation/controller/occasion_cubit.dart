@@ -6,14 +6,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
-import 'package:hadawi_app/main.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/utiles/helper/material_navigation.dart';
-import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -69,6 +65,7 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   bool giftWithPackage = true;
   int giftWithPackageType = 0;
+  int moneyWithPackageType = 0;
 
 
    void resetData() {
@@ -102,11 +99,18 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(ResetDataSuccessState());
   }
 
-  String selectedPackageImage = '';
+  String selectedGiftPackageImage = '';
+  String selectedMoneyPackageImage = '';
 
   void switchGiftWithPackageType(int value, String image) {
-    selectedPackageImage = image;
+    selectedGiftPackageImage = image;
     giftWithPackageType = value;
+    emit(SwitchGiftWithPackageTypeSuccess());
+  }
+
+  void switchMoneyWithPackageType(int value, String image) {
+    selectedMoneyPackageImage = image;
+    moneyWithPackageType = value;
     emit(SwitchGiftWithPackageTypeSuccess());
   }
 
@@ -218,7 +222,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     double packagePriceNumber = double.tryParse(giftWithPackageType.toString()) ?? 0.0;
 
 
-    giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax) - discountValue;
+    giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue;
 
     emit(GetTotalGiftPriceSuccessState());
     return giftPrice;
@@ -320,6 +324,8 @@ class OccasionCubit extends Cubit<OccasionState> {
         appCommission: totalPriceCalculate,
         deliveryPrice: deliveryTax,
         type: dropdownOccasionType??'',
+        packageImage: isPresent? selectedGiftPackageImage : selectedMoneyPackageImage,
+        packagePrice: isPresent? giftWithPackageType.toString() : moneyWithPackageType.toString(),
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
@@ -385,8 +391,10 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   var deliveryTax = 0.0;
-  List packageListPrice = [];
-  List packageListImage = [];
+  List giftPackageListPrice = [];
+  List moneyPackageListPrice = [];
+  List giftPackageListImage = [];
+  List moneyPackageListImage = [];
   var serviceTax = 0.0;
 
   // get taxes from firebase collection taxs.
@@ -395,13 +403,15 @@ class OccasionCubit extends Cubit<OccasionState> {
 
     await FirebaseFirestore.instance.collection('taxs').get().then((value) {
       deliveryTax = double.parse(value.docs[0]['delivery_tax'].toString());
-      packageListPrice = value.docs[0]['packaging_tax'];
-      packageListImage = value.docs[0]['pakaging_image'];
+      moneyPackageListPrice = value.docs[0]['packaging_tax'];
+      moneyPackageListImage = value.docs[0]['pakaging_image'];
+      giftPackageListPrice = value.docs[0]['packaging_gift_tax'];
+      giftPackageListImage = value.docs[0]['packaging_gift_image'];
       occasionTypeItems = value.docs[0]['occasionType'];
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
-      selectedPackageImage = packageListImage[0].toString();
-      giftWithPackageType = int.parse(packageListPrice[0].toString());
+      selectedGiftPackageImage = giftPackageListImage[0].toString();
+      giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');

@@ -38,6 +38,9 @@ class OccasionRepoImp extends OccasionRepo {
       required appCommission,
       required deliveryPrice,
       required type,
+      required packageImage,
+      required packagePrice,
+
       }) async {
     final result = await OccasionDataSource().addOccasion(
         isForMe: isForMe,
@@ -70,6 +73,8 @@ class OccasionRepoImp extends OccasionRepo {
         appCommission: appCommission,
         deliveryPrice: deliveryPrice,
         type: type,
+        packageImage: packageImage,
+        packagePrice: packagePrice,
     );
     try {
       return Right(result);

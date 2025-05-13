@@ -190,10 +190,10 @@ class OccasionSummary extends StatelessWidget {
                                       child: _buildInfoRow(
                                         context,
                                         label: AppLocalizations.of(context)!.translate('packagingPrice').toString(),
-                                        value: "${cubit.giftWithPackageType} ${AppLocalizations.of(context)!.translate('rsa').toString()}",
+                                        value: "${cubit.isPresent? cubit.giftWithPackageType : cubit.moneyWithPackageType} ${AppLocalizations.of(context)!.translate('rsa').toString()}",
                                       ),
                                     ),
-                                    if (cubit.selectedPackageImage.isNotEmpty)
+                                    if (cubit.selectedGiftPackageImage.isNotEmpty || cubit.selectedMoneyPackageImage.isNotEmpty)
                                       Container(
                                         decoration: BoxDecoration(
                                           color: ColorManager.gray,
@@ -203,7 +203,7 @@ class OccasionSummary extends StatelessWidget {
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(8),
                                           child: Image.network(
-                                            cubit.selectedPackageImage,
+                                            cubit.isPresent? cubit.selectedGiftPackageImage: cubit.selectedMoneyPackageImage,
                                             fit: BoxFit.cover,
                                             height: 40,
                                             width: 40,
@@ -366,6 +366,14 @@ class OccasionSummary extends StatelessWidget {
                                 value: "${cubit.discountValue} ${AppLocalizations.of(context)!.translate('rsa')}",
                                 valueColor: Colors.green,
                               ),
+
+                            _buildInfoRow(
+                              context,
+                              label: AppLocalizations.of(context)!.translate('appFees').toString(),
+                              value: "${context.read<OccasionCubit>().serviceTax} ${AppLocalizations.of(context)!.translate('rsa')}",
+                              valueColor: ColorManager.primaryBlue,
+                              isTotal: true,
+                            ),
 
                             _buildInfoRow(
                               context,

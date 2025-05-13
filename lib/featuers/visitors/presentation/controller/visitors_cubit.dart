@@ -199,6 +199,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     appCommission: 0.0,
     deliveryPrice: 0.0,
     type: '',
+    packageImage: '',
+    packagePrice: '',
   );
 
   Future<void> getOccasionData({required String occasionId})async{

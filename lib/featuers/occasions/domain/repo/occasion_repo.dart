@@ -37,5 +37,7 @@ abstract class OccasionRepo {
       required double discount,
       required double appCommission,
       required double deliveryPrice,
+      required String packageImage,
+      required String packagePrice,
       });
 }

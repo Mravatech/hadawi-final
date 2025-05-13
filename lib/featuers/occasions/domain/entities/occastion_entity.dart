@@ -30,6 +30,8 @@ class OccasionEntity {
   final double appCommission;
   final double deliveryPrice;
   final String type;
+  final String packageImage;
+  final String packagePrice;
 
   OccasionEntity(
   {
@@ -64,5 +66,7 @@ class OccasionEntity {
     required this.appCommission,
     required this.deliveryPrice,
     required this.type,
+    required this.packageImage,
+    required this.packagePrice,
   });
 }
