@@ -37,7 +37,8 @@ class SettingViewBody extends StatelessWidget {
            context.go(AppRouter.login);
          }
          if(state is DeleteUserErrorState){
-           customToast(title: state.message, color: ColorManager.error);
+           customPushAndRemoveUntil(context, LoginScreen());
+           // customToast(title: state.message, color: ColorManager.error);
          }
       },
       builder: (context, state) {
