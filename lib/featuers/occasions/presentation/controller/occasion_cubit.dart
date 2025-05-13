@@ -219,7 +219,8 @@ class OccasionCubit extends Cubit<OccasionState> {
   double getTotalGiftPrice() {
     final text = convertArabicToEnglishNumbers(moneyAmountController.text.trim());
     double giftPriceNumber = double.tryParse(text) ?? 0.0;
-    double packagePriceNumber = double.tryParse(giftWithPackageType.toString()) ?? 0.0;
+    String packagePrice = isPresent?giftWithPackageType.toString():moneyWithPackageType.toString();
+    double packagePriceNumber = double.tryParse(packagePrice) ?? 0.0;
 
 
     giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue;
