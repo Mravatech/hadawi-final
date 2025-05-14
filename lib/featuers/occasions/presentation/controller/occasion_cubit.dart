@@ -352,13 +352,16 @@ class OccasionCubit extends Cubit<OccasionState> {
   Future<void> captureAndShareQr({
     required String occasionName,
     required String personName,
-    required GlobalKey qrKey
+    required GlobalKey qrKey,
   }) async {
     try {
-      // Start by emitting a loading state (if needed)
       emit(CaptureAndShareQrLoadingState());
 
-      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      await Future.delayed(const Duration(milliseconds: 300));
+      await WidgetsBinding.instance.endOfFrame;
+
+      RenderRepaintBoundary boundary =
+      qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
@@ -367,12 +370,14 @@ class OccasionCubit extends Cubit<OccasionState> {
       final file = await File('${tempDir.path}/occasion_qr.png').create();
       await file.writeAsBytes(pngBytes);
 
+      final xFile = XFile(file.path, mimeType: 'image/png');
+
       final shareResult = await Share.shareXFiles(
-        [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+        [xFile],
+        text:
+        'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
-      // Check if sharing completed or was canceled
       if (shareResult.status == ShareResultStatus.success ||
           shareResult.status == ShareResultStatus.dismissed) {
         emit(CaptureAndShareQrSuccessState());
@@ -380,11 +385,8 @@ class OccasionCubit extends Cubit<OccasionState> {
         emit(CaptureAndShareQrErrorState());
       }
 
-      // Cleanup temporary file
-      if (await file.exists()) {
-        await file.delete();
-      }
-
+      // Optional: Clean up file
+      if (await file.exists()) await file.delete();
     } catch (e) {
       print('Error sharing QR code: $e');
       emit(CaptureAndShareQrErrorState());
