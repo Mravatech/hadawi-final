@@ -78,9 +78,10 @@ dependencies:
   uuid: ^4.5.1
   saver_gallery: 3.0.6
   dots_indicator: ^4.0.1
-
+  sentry_flutter: ^8.14.2
 
 dev_dependencies:
+  sentry_dart_plugin: ^2.4.1
   flutter_test:
     sdk: flutter
   flutter_localizations:
@@ -138,3 +139,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter-d7
+  org: mmdouh

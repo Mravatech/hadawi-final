@@ -18,6 +18,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -363,7 +364,8 @@ class OccasionCubit extends Cubit<OccasionState> {
       RenderRepaintBoundary boundary =
       qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+      await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
@@ -387,8 +389,9 @@ class OccasionCubit extends Cubit<OccasionState> {
 
       // Optional: Clean up file
       if (await file.exists()) await file.delete();
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Error sharing QR code: $e');
+      await Sentry.captureException(e, stackTrace: stackTrace);
       emit(CaptureAndShareQrErrorState());
     }
   }

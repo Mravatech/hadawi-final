@@ -33,6 +33,7 @@ import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/services/notification_service.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
@@ -116,32 +117,46 @@ final GoRouter _router = GoRouter(
   ],
 );
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  ServiceLocator().init();
-  SharedPreferences.getInstance();
-  CashHelper.init();
-  DioHelper.dioInit();
-  Bloc.observer = MyBlocObserver();
+Future<void> main() async {
+  await SentryFlutter.init(
+        (options) {
+      options.dsn = 'https://84d149a4ed2f407b023cd9ca435bab0c@o4509321210494981.ingest.de.sentry.io/4509321270788176';
+      options.tracesSampleRate = 1.0; // For performance monitoring (optional)
+    },
+    appRunner: () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+      ServiceLocator().init();
+      await SharedPreferences.getInstance(); // Note: this should be awaited
+      CashHelper.init();
+      DioHelper.dioInit();
+      Bloc.observer = MyBlocObserver();
+
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+
+      FlutterError.onError = (FlutterErrorDetails details) {
+        if (details.exception.toString().contains('HttpException') &&
+            details.exception.toString().contains('Invalid statusCode: 404')) {
+          return;
+        }
+        // Report to Sentry
+        Sentry.captureException(
+          details.exception,
+          stackTrace: details.stack,
+        );
+
+        FlutterError.presentError(details);
+      };
+
+      NotificationService().initRemoteNotification();
+
+      debugPrint("current date is ${DateTime.now()}");
+
+      runApp(const MyApp());
+    },
   );
-
-  FlutterError.onError = (FlutterErrorDetails details) {
-    if (details.exception.toString().contains('HttpException') &&
-        details.exception.toString().contains('Invalid statusCode: 404')) {
-      return;
-    }
-    FlutterError.presentError(details);
-  };
-
-  NotificationService().initRemoteNotification();
-  // NotificationService().getAccessToken();
-
-  debugPrint("current date is ${DateTime.now()}");
-
-  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
