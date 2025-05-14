@@ -48,6 +48,7 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
   void dispose() {
     // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
+    context.read<OccasionCubit>().qrKey.currentState!.dispose();
     super.dispose();
   }
 
@@ -229,7 +230,6 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
                         onTap: () async {
                           if (cubit.occasionLink.isNotEmpty) {
                             await cubit.captureAndShareQr(
-                              qrKey: qrKey,
                                 occasionName: widget.occasionModel.occasionType.toString(),
                                 personName: UserDataFromStorage.userNameFromStorage);
                           }
