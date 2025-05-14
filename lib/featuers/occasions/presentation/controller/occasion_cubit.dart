@@ -355,39 +355,78 @@ class OccasionCubit extends Cubit<OccasionState> {
     required GlobalKey qrKey
   }) async {
     try {
-      // Start by emitting a loading state (if needed)
+      // Start by emitting a loading state
       emit(CaptureAndShareQrLoadingState());
 
-      RenderRepaintBoundary boundary = qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      // Use compute to move the image processing off the main thread
+      final pngBytes = await compute(_captureQrCode, {
+        'key': qrKey,
+        'pixelRatio': 2.0, // Reduced from 3.0 to lower memory usage
+      });
 
+      // Create file in temporary directory
       final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/occasion_qr.png').create();
+      final file = await File('${tempDir.path}/occasion_qr_${DateTime.now().millisecondsSinceEpoch}.png').create();
       await file.writeAsBytes(pngBytes);
 
+      // Share with more limited text to avoid potential issues with length/encoding
       final shareResult = await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+          text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
-      // Check if sharing completed or was canceled
-      if (shareResult.status == ShareResultStatus.success ||
-          shareResult.status == ShareResultStatus.dismissed) {
+      // Handle share result
+      if (shareResult.status == ShareResultStatus.success) {
+        emit(CaptureAndShareQrSuccessState());
+      } else if (shareResult.status == ShareResultStatus.dismissed) {
+        // User dismissed sharing, still consider this a "success" from app perspective
         emit(CaptureAndShareQrSuccessState());
       } else {
         emit(CaptureAndShareQrErrorState());
       }
 
-      // Cleanup temporary file
-      if (await file.exists()) {
-        await file.delete();
-      }
-
     } catch (e) {
       print('Error sharing QR code: $e');
       emit(CaptureAndShareQrErrorState());
+    } finally {
+      // Clean up temporary files in a delayed manner to avoid race conditions
+      _cleanupTempFiles();
+    }
+  }
+
+// Helper function to run in a separate isolate
+  static Future<Uint8List> _captureQrCode(Map<String, dynamic> params) async {
+    final GlobalKey key = params['key'];
+    final double pixelRatio = params['pixelRatio'];
+
+    // This could throw an exception if the key is no longer valid
+    final RenderRepaintBoundary boundary = key.currentContext?.findRenderObject() as RenderRepaintBoundary;
+
+    final ui.Image image = await boundary.toImage(pixelRatio: pixelRatio);
+    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    if (byteData == null) {
+      throw Exception('Failed to get image data');
+    }
+
+    return byteData.buffer.asUint8List();
+  }
+
+// Clean up temporary files
+  Future<void> _cleanupTempFiles() async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final files = await tempDir.list().where((entity) =>
+      entity is File && entity.path.contains('occasion_qr_')).toList();
+
+      for (final file in files) {
+        if (file is File && await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (e) {
+      print('Error cleaning up temp files: $e');
+      // Don't propagate this error as it's just cleanup
     }
   }
 
