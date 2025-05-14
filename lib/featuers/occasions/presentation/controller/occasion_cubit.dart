@@ -354,42 +354,127 @@ class OccasionCubit extends Cubit<OccasionState> {
     required String personName,
     required GlobalKey qrKey,
   }) async {
+    File? tempFile;
+
     try {
+      // Start by emitting a loading state
       emit(CaptureAndShareQrLoadingState());
 
-      await Future.delayed(const Duration(milliseconds: 300));
-      await WidgetsBinding.instance.endOfFrame;
+      // Add a delay to ensure the QR code is fully rendered
+      await Future.delayed(const Duration(milliseconds: 100));
 
-      RenderRepaintBoundary boundary =
-      qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/occasion_qr.png').create();
-      await file.writeAsBytes(pngBytes);
-
-      final xFile = XFile(file.path, mimeType: 'image/png');
-
-      final shareResult = await Share.shareXFiles(
-        [xFile],
-        text:
-        'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
-      );
-
-      if (shareResult.status == ShareResultStatus.success ||
-          shareResult.status == ShareResultStatus.dismissed) {
-        emit(CaptureAndShareQrSuccessState());
-      } else {
+      // Safely access the render object
+      if (!qrKey.currentContext!.mounted) {
         emit(CaptureAndShareQrErrorState());
+        return;
       }
 
-      // Optional: Clean up file
-      if (await file.exists()) await file.delete();
+      final RenderRepaintBoundary boundary =
+      qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+      // Use a lower pixel ratio for iOS - reduces memory pressure
+      final ui.Image image = await boundary.toImage(pixelRatio: 1.5);
+
+      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        emit(CaptureAndShareQrErrorState());
+        return;
+      }
+
+      final Uint8List pngBytes = byteData.buffer.asUint8List();
+
+      // Create a file in the proper documents directory for iOS
+      // Use getApplicationDocumentsDirectory() which is more reliable for sharing on iOS
+      // than the temporary directory
+      final directory = await getApplicationDocumentsDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final filePath = '${directory.path}/QRCode_$timestamp.png';
+      tempFile = File(filePath);
+
+      await tempFile.writeAsBytes(pngBytes);
+
+      // For iOS, we need to ensure the file URL can be shared between apps
+      final String? shareFilePath = tempFile.path;
+      if (shareFilePath == null) {
+        emit(CaptureAndShareQrErrorState());
+        return;
+      }
+
+      // iOS safe sharing approach
+      try {
+        // On iOS, prefer using the standard Share.shareFiles method
+        // The arabic text is wrapped in a try-catch block to isolate any encoding issues
+        String sharingText;
+        try {
+          sharingText = 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية';
+        } catch (e) {
+          // Fallback to plain text if there are encoding issues
+          sharingText = 'Invitation from $personName for $occasionName';
+        }
+
+        // On iOS, we'll use the standard shareFiles method with a subject parameter
+        if (Platform.isIOS) {
+          await Share.shareFiles(
+              [shareFilePath],
+              text: sharingText,
+              subject: 'Invitation for $occasionName'
+          );
+        } else {
+          // For Android, use the original XFile approach
+          await Share.shareXFiles(
+            [XFile(shareFilePath)],
+            text: sharingText,
+          );
+        }
+
+        emit(CaptureAndShareQrSuccessState());
+      } catch (shareError) {
+        print('Error sharing on iOS: $shareError');
+
+        // iOS-specific fallback method
+        try {
+          // Try with simpler sharing parameters
+          await Share.shareFiles(
+              [shareFilePath],
+              mimeTypes: ['image/png'],
+              subject: 'QR Code'
+          );
+          emit(CaptureAndShareQrSuccessState());
+        } catch (fallbackError) {
+          print('Fallback iOS share failed: $fallbackError');
+          emit(CaptureAndShareQrErrorState());
+        }
+      }
+
+      // Important: On iOS, don't delete the file immediately
+      // Schedule deletion for later to avoid conflicts with sharing
+      Future.delayed(const Duration(seconds: 5), () {
+        try {
+          if (tempFile != null && tempFile.existsSync()) {
+            tempFile.deleteSync();
+          }
+        } catch (e) {
+          print('File cleanup error: $e');
+        }
+      });
+
     } catch (e) {
-      print('Error sharing QR code: $e');
+      print('Error in QR sharing process: $e');
       emit(CaptureAndShareQrErrorState());
+
+      // Ensure file cleanup even on error
+      if (tempFile != null) {
+        Future.delayed(const Duration(seconds: 5), () {
+          try {
+            if (tempFile!.existsSync()) {
+              tempFile.deleteSync();
+            }
+          } catch (e) {
+            // Just log cleanup errors
+            print('Error cleaning up file: $e');
+          }
+        });
+      }
     }
   }
 
