@@ -62,6 +62,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
     super.initState();
   }
 
+  final GlobalKey qrKey = GlobalKey();
   int _currentIndex = 0;
 
   @override
@@ -69,7 +70,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
     context.read<VisitorsCubit>().editOccasionNameController.dispose();
     context.read<VisitorsCubit>().editGiftNameController.dispose();
     context.read<VisitorsCubit>().editPersonNameController.dispose();
-    context.read<OccasionCubit>().qrKey.currentState!.dispose();
+    qrKey.currentState!.dispose();
     super.dispose();
   }
   @override
@@ -362,7 +363,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               RepaintBoundary(
-                                key: context.read<OccasionCubit>().qrKey,
+                                key: qrKey,
                                 child: QrImageView(
                                   data: context.read<OccasionCubit>().occasionLink,
                                   version: QrVersions.auto,
@@ -383,6 +384,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
                                   context
                                       .read<OccasionCubit>()
                                       .captureAndShareQr(
+                                       qrKey: qrKey,
                                       occasionName: cubit.occasionModel.type,
                                       personName: UserDataFromStorage.userNameFromStorage);
                                 },
