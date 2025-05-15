@@ -350,5 +350,6 @@
   "enter_verification_code": "Enter verification code",
   "resend_code": "Resend code",
   "we_sent_you_sms": "We have sent you an SMS to your phone number containing a six-digit verification code",
-  "appFees": "App Fees"
+  "appFees": "App Fees",
+  "packagingOpenImageNote": "You can open the packaging image by long press on it"
 }

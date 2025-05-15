@@ -453,6 +453,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                             child: Column(
                               children: [
                                 SizedBox(height: SizeConfig.height * 0.02),
+                                Text(
+                                  AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
+                                  style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
+                                ),
+                                SizedBox(height: SizeConfig.height * 0.02),
                                 state is GetOccasionTaxesLoadingState
                                     ? const LoadingAnimationWidget()
                                     : Row(
@@ -548,6 +553,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                             visible: cubit.giftWithPackage,
                             child: Column(
                               children: [
+                                SizedBox(height: SizeConfig.height * 0.02),
+                                Text(
+                                  AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
+                                  style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
+                                ),
                                 SizedBox(height: SizeConfig.height * 0.02),
                                 state is GetOccasionTaxesLoadingState
                                     ? const LoadingAnimationWidget()
