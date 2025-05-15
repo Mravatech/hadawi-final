@@ -61,7 +61,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           child: BlocConsumer<EditProfileCubit,EditProfileStates>(
               builder: (context, state) {
                 return ModalProgressHUD(
-                  inAsyncCall: state is EditProfileLoadingState,
+                  inAsyncCall: state is EditProfileLoadingState || state is CheckPhoneLoadingState,
                   progressIndicator: const CircularProgressIndicator(),
                   child: SingleChildScrollView(
                     child: Form(
@@ -309,14 +309,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           margin:  EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).height * .05,),
                                           child: DefaultButton(
                                             buttonText: AppLocalizations.of(context)!.translate('save').toString(),
-                                            onPressed: (){
-                                                if(formKey.currentState!.validate()){
-                                                  context.read<EditProfileCubit>().editProfile(
-                                                    name: nameController.text,
-                                                    context: context,
-                                                    gender: genderController.text,
-                                                    phone: phoneController.text,
-                                                  );
+                                            onPressed: ()async{
+                                                if(formKey.currentState!.validate()){print('phone ${phoneController.text}');
+                                                  await context.read<EditProfileCubit>().getUserInfo(phone: phoneController.text,context: context,gender: genderController.text,name: nameController.text ).then((value) async{
+
+                                                  });
+
+
                                                 }
                                             },
                                             buttonColor: ColorManager.primaryBlue,
@@ -338,8 +337,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 if(state is EditProfileErrorState){
                   customToast(title: state.message, color: ColorManager.error);
                 }
-                if(state is EditProfileSuccessState){
-                  Navigator.pop(context);
+                if(state is CheckPhoneSuccessState){
+                  if(context.read<EditProfileCubit>().isUsed==false){
+                    Navigator.pop(context);
+
+                  }
                 }
               }
           ),

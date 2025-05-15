@@ -8,3 +8,7 @@ class EditProfileErrorState extends EditProfileStates{
   String message;
   EditProfileErrorState({required this.message});
 }
+
+class CheckPhoneLoadingState extends EditProfileStates{}
+class CheckPhoneSuccessState extends EditProfileStates{}
+class CheckPhoneErrorState extends EditProfileStates{}

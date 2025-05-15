@@ -424,7 +424,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
 
                           /// share and pay
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               /// share
                               GestureDetector(
@@ -511,7 +511,8 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
                             /// edit
                             state is EditOccasionLoadingState
                                 ? LoadingAnimationWidget()
-                                : GestureDetector(
+                                : UserDataFromStorage.uIdFromStorage ==
+                                cubit.occasionModel.personId? GestureDetector(
                                     onTap: () {
                                       customPushNavigator(context, EditOccasion(occasionModel:  cubit.occasionModel, fromHome: widget.fromHome,),);
                                     },
@@ -546,7 +547,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
                                         ),
                                       ),
                                     ),
-                                  ),
+                                  ):Container(),
                           ],
                         ),
                       ],
