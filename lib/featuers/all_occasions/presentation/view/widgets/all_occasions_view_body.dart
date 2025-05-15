@@ -64,13 +64,13 @@ class AllOccasionsViewBody extends StatelessWidget {
             height: MediaQuery.sizeOf(context).height * 0.045,
           ),
 
-          // المناسبات المسحله سابقا
+          // المناسبات المغلقه
           InkWell(
               onTap: () => customPushNavigator(context, PastOccasions()),
               child: ProfileRowWidget(
                 image: '',
                 title: AppLocalizations.of(context)!
-                    .translate('previousEvents')
+                    .translate('closedEvents')
                     .toString(),
               )),
 
@@ -78,7 +78,7 @@ class AllOccasionsViewBody extends StatelessWidget {
             height: MediaQuery.sizeOf(context).height * 0.045,
           ),
 
-          // المناسبات المغلقه
+          // المناسبات الملغاه
           InkWell(
               onTap: () => customPushNavigator(context, ClosedOccasions()),
               child: ProfileRowWidget(

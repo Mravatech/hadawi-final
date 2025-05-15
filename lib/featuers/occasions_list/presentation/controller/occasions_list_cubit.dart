@@ -69,8 +69,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
   Future<void> getPastOccasionsList() async {
     pastOccasionsList = [];
     emit(GetPastOccasionListLoadingState());
-    try {
-      await FirebaseFirestore.instance.collection('Occasions').get().then((value){
+    try {await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
           if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
             pastOccasionsList.add(OccasionModel.fromJson(element.data()));
@@ -84,15 +83,12 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
       emit(GetPastOccasionListErrorState());
     }
   }
-
-
   Future<void> getClosedOccasionsList() async {
     closedOccasionsList = [];
     emit(GetClosedOccasionListLoadingState());
-    try {
-      await FirebaseFirestore.instance.collection('Occasions').get().then((value){
+    try {await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element['giftPrice'] >= int.parse(element['moneyGiftAmount'])){
+          if(element['isActive'] ==false){
             closedOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
