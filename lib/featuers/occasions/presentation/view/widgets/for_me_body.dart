@@ -904,6 +904,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                   Center(
                     child: GestureDetector(
                       onTap: () async {
+                        if (cubit.dropdownOccasionType.isEmpty) {
+                          customToast(
+                            title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
+                            color: Colors.red,
+                          );
+                          return;
+                        }
+                        if (!forMeFormKey.currentState!.validate()) {
+                          return;
+                        }
                         if (cubit.isPresent== false && cubit.isMoney== false){
                           customToast(
                             title: AppLocalizations.of(context)!.translate('validateGiftType').toString(),
@@ -911,32 +921,23 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                           );
                           return;
                         }
-                        if (forMeFormKey.currentState!.validate()) {
-                          if (cubit.dropdownOccasionType.isNotEmpty) {
-                            if ((cubit.images.isNotEmpty && cubit.isPresent) || !cubit.isPresent) {
-                              if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
-                                customToast(
-                                  title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
-                                  color: Colors.red,
-                                );
-                              }else{
-                                cubit.getTotalGiftPrice();
-                                customPushNavigator(context, OccasionSummary());
-                              }
 
-                            } else {
-                              customToast(
-                                title: AppLocalizations.of(context)!.translate('validateImage').toString(),
-                                color: Colors.red,
-                              );
-                            }
-                          } else {
-                            customToast(
-                              title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
-                              color: Colors.red,
-                            );
-                          }
+                        if (cubit.images.isEmpty && cubit.isPresent) {
+                          customToast(
+                            title: AppLocalizations.of(context)!.translate('validateImage').toString(),
+                            color: Colors.red,
+                          );
+                          return;
                         }
+                        if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
+                          customToast(
+                            title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
+                            color: Colors.red,
+                          );
+                          return;
+                        }
+                        cubit.getTotalGiftPrice();
+                        customPushNavigator(context, OccasionSummary());
                       },
                       child: Container(
                         height: mediaQuery.height * 0.06,

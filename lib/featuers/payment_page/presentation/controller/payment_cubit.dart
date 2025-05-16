@@ -50,7 +50,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
   Future<void> addPaymentData({required BuildContext context, required String status ,required String transactionId,required String occasionId, required String remainingPrince ,required String occasionName, required double paymentAmount})async{
     emit(PaymentAddLoadingState());
 
-    double paymentCounterValue = double.parse(paymentAmountController.text);
+    double paymentCounterValue = double.parse(convertArabicToEnglishNumbers(paymentAmountController.text.toString()));
 
     await FirebaseFirestore.instance.collection("Occasions").doc(occasionId).update({
       "moneyGiftAmount": paymentAmount + paymentCounterValue,

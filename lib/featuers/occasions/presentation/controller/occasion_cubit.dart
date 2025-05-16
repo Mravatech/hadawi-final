@@ -71,8 +71,13 @@ class OccasionCubit extends Cubit<OccasionState> {
 
    void resetData() {
     // isForMe = true;
-     images = [];
+    images = [];
+    giftType = '';
+    showDeliveryData = false;
     isPresent = false;
+    giftWithPackage = true;
+    giftWithPackageType = 0;
+    moneyWithPackageType = 0;
     dropdownOccasionType = '';
     isMoney = false;
     selectedIndex = 0;
@@ -96,6 +101,10 @@ class OccasionCubit extends Cubit<OccasionState> {
     giftDeliveryNoteController.clear();
     giftDeliveryCityController.clear();
     dropdownCity='';
+    giftDeliveryStreetController.clear();
+    dropdownQuarter='';
+    showGiftCard = false;
+    showNote = false;
     giftDeliveryStreetController.clear();
     emit(ResetDataSuccessState());
   }
