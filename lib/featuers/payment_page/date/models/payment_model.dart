@@ -5,10 +5,12 @@ class PaymentModel {
   final String paymentStatus;
   final String occasionId;
   final String occasionName;
+  final String payerName;
   final String personId;
   final String personName;
   final String personPhone;
   final String personEmail;
+  final String transactionId;
 
   PaymentModel({
     required this.paymentAmount,
@@ -17,10 +19,12 @@ class PaymentModel {
     required this.paymentStatus,
     required this.occasionId,
     required this.occasionName,
+    required this.payerName,
     required this.personId,
     required this.personName,
     required this.personPhone,
     required this.personEmail,
+    required this.transactionId,
   });
 
   factory PaymentModel.fromMap(Map<String, dynamic> json) => PaymentModel(
@@ -30,10 +34,12 @@ class PaymentModel {
     paymentStatus: json["paymentStatus"]??"",
     occasionId: json["occasionId"]??"",
     occasionName: json["occasionName"]??"",
+    payerName: json["payerName"]??"",
     personId: json["personId"]??"",
     personName: json["personName"]??"",
     personPhone: json["personPhone"]??"",
     personEmail: json["personEmail"]??"",
+    transactionId: json["transactionId"]??"",
   );
 
   Map<String, dynamic> toMap() => {
@@ -44,8 +50,10 @@ class PaymentModel {
     "occasionId": occasionId??"",
     "occasionName": occasionName??"",
     "personId": personId??"",
+    "payerName": payerName??"",
     "personName": personName??"",
     "personPhone": personPhone??"",
     "personEmail": personEmail??"",
+    "transactionId": transactionId??"",
   };
 }

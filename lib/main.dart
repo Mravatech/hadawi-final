@@ -47,19 +47,25 @@ final GoRouter _router = GoRouter(
     final uri = Uri.parse(state.uri.toString());
 
     // Handle dynamic links with app scheme
-    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') && uri.host == 'google') {
-      // Process any parameters from the dynamic link if needed
-      debugPrint('Handling dynamic link in redirect: ${uri.toString()}');
+    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
+      debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
 
-      // Check if there's any occasion ID to extract from query parameters
-      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
-        final occasionId = uri.pathSegments[1];
-        return '/occasion-details/$occasionId/true';
+      // Process the path segments
+      final pathSegments = uri.pathSegments;
+
+      if (pathSegments.isNotEmpty) {
+        // Check for occasion details path (case-insensitive)
+        if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
+          final occasionId = pathSegments[1];
+          return '/occasion-details/$occasionId/true';
+        }
       }
 
-      // Default redirect for dynamic links without specific parameters
-      return '/login';
+      // Default redirect for unprocessed app scheme links
+      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+      return isLoggedIn ? '/home' : '/login';
     }
+
     return null; // Continue with normal routing
   },
   routes: [
@@ -127,7 +133,9 @@ Future<void> main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       ServiceLocator().init();
-      await SharedPreferences.getInstance(); // Note: this should be awaited
+      await SharedPreferences.getInstance();
+      UserDataFromStorage.getData();
+      // Note: this should be awaited
       CashHelper.init();
       DioHelper.dioInit();
       Bloc.observer = MyBlocObserver();
@@ -214,11 +222,45 @@ class _MyAppState extends State<MyApp> {
   void _handleDeepLink(Uri uri) {
     debugPrint('Received deep link: ${uri.toString()}');
 
-    if (uri.pathSegments.isNotEmpty) {
-      if (uri.pathSegments.first == 'Occasion-details' && uri.pathSegments.length > 1) {
-        final occasionId = uri.pathSegments[1];
-        context.go('/Occasion-details/$occasionId/true');
+    // Check if it's a Dynamic Link (https://hadawiapp.page.link/...)
+    if (uri.host == 'hadawiapp.page.link') {
+      // Extract the path segments after the domain
+      final pathSegments = uri.pathSegments;
+
+      if (pathSegments.isNotEmpty) {
+        if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
+          final occasionId = pathSegments[1];
+          final fromHome = pathSegments.length > 2 ? pathSegments[2] : 'true';
+
+          // Use case-insensitive match with your route
+          if (mounted) {
+            context.go('/occasion-details/$occasionId/$fromHome');
+          }
+          return;
+        }
       }
+    }
+    // Check if it's a custom scheme (com.app.hadawiapp:// or hadawi://)
+    else if (uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') {
+      // Handle custom scheme links
+      if (uri.host == 'google' || uri.host == 'occasion-details') {
+        final pathSegments = uri.pathSegments;
+
+        if (pathSegments.isNotEmpty && pathSegments.length > 1) {
+          final occasionId = pathSegments[1];
+          if (mounted) {
+            context.go('/occasion-details/$occasionId/true');
+          }
+          return;
+        }
+      }
+    }
+
+    // Default fallback if no specific route is matched
+    if (mounted) {
+      // Navigate to home or login depending on authentication status
+      final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
+      context.go(isLoggedIn ? '/home' : '/login');
     }
   }
 

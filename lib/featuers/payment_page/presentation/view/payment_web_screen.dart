@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -19,9 +21,10 @@ class PaymentWebScreen extends StatefulWidget {
   final double paymentAmount;
   final double remainingPrice;
   final String paymentMethod;
+  final OccasionEntity occasionEntity;
 
 
-  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount, required this.transactionId, required this.remainingPrice, required this.paymentMethod});
+  const PaymentWebScreen({super.key, required this.checkoutId, required integrity, required this.occasionId, required this.occasionName, required this.paymentAmount, required this.transactionId, required this.remainingPrice, required this.paymentMethod, required this.occasionEntity});
 
   @override
   _PaymentWebScreenState createState() => _PaymentWebScreenState();
@@ -367,7 +370,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, occasionEntity: widget.occasionEntity, fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 transactionId: widget.transactionId,
@@ -395,13 +398,13 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, occasionEntity: widget.occasionEntity, fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 occasionId: widget.occasionId,
                 transactionId: widget.transactionId,
                 remainingPrince: widget.remainingPrice.toString(),
-                status: "success",
+                status: "pending",
                 occasionName: widget.occasionName,
                 paymentAmount: widget.paymentAmount,
               );

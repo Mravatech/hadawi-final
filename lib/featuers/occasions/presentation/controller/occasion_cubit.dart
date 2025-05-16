@@ -520,24 +520,37 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   Future<String> createDynamicLink(String occasionId) async {
     emit(CreateOccasionLinkLoadingState());
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://hadawiapp.page.link',
-      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
-      androidParameters: const AndroidParameters(
-        packageName: 'com.app.hadawi_app',
-        minimumVersion: 1,
-      ),
-      iosParameters: const IOSParameters(
-        bundleId: 'com.app.hadawiapp',
-        minimumVersion: '1.0.0',
-      ),
-    );
 
-    final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
-    debugPrint("shortLink: ${shortLink.shortUrl}");
-    occasionLink = shortLink.shortUrl.toString();
-    emit(CreateOccasionLinkSuccessState());
-    return shortLink.shortUrl.toString();
+    try {
+      final DynamicLinkParameters parameters = DynamicLinkParameters(
+        uriPrefix: 'https://hadawiapp.page.link',
+        // Make this path consistent with how you're handling it
+        link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId/true'),
+        androidParameters: const AndroidParameters(
+          packageName: 'com.app.hadawi_app',
+          minimumVersion: 1,
+        ),
+        iosParameters: const IOSParameters(
+          bundleId: 'com.app.hadawiapp',
+          minimumVersion: '1.0.0',
+        ),
+        // Adding social metadata for better link previews
+        socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Hadawi - Pay for occasion',
+          description: 'View this occasion in the Hadawi App',
+        ),
+      );
+
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+      debugPrint("shortLink: ${shortLink.shortUrl}");
+      occasionLink = shortLink.shortUrl.toString();
+      emit(CreateOccasionLinkSuccessState());
+      return shortLink.shortUrl.toString();
+    } catch (error) {
+      debugPrint("Error creating dynamic link: $error");
+      emit(CreateOccasionLinkErrorState());
+      return '';
+    }
   }
 
 

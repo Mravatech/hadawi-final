@@ -442,6 +442,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
               double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
           paymentAmount: double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+          occasionEntity: widget.occasionEntity,
         )
     );
   }

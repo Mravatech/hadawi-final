@@ -473,17 +473,27 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
 
                             /// pay
                             GestureDetector(
-                              onTap: () => customPushNavigator(
-                                  context,
-                                  PaymentScreen(
-                                    occasionEntity: widget.occasionEntity!,
-                                  )),
+                              onTap: () {
+                                if(double.parse(cubit.remainingBalanceController.text)>0){
+                                  customPushNavigator(
+                                      context,
+                                      PaymentScreen(
+                                        occasionEntity: widget.occasionEntity!,
+                                      ));
+                                }else{
+                                  customToast(
+                                      title: AppLocalizations.of(context)!
+                                          .translate('paymentComplete')
+                                          .toString(),
+                                      color: ColorManager.warning);
+                                }
+                              },
                               child: Container(
                                 height:
                                     MediaQuery.sizeOf(context).height * .055,
                                 width: MediaQuery.sizeOf(context).width * .25,
                                 decoration: BoxDecoration(
-                                  color: ColorManager.primaryBlue,
+                                  color: double.parse(cubit.remainingBalanceController.text)>0?ColorManager.primaryBlue:ColorManager.gray,
                                   borderRadius: BorderRadius.circular(
                                       MediaQuery.sizeOf(context).height * 0.05),
                                 ),
