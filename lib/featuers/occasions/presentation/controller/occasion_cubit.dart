@@ -22,6 +22,7 @@ import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
 part 'occasion_state.dart';
 
 class OccasionCubit extends Cubit<OccasionState> {
@@ -68,8 +69,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   int giftWithPackageType = 0;
   int moneyWithPackageType = 0;
 
-
-   void resetData() {
+  void resetData() {
     // isForMe = true;
     images = [];
     giftType = '';
@@ -100,9 +100,9 @@ class OccasionCubit extends Cubit<OccasionState> {
     moneyGiftMessageController.clear();
     giftDeliveryNoteController.clear();
     giftDeliveryCityController.clear();
-    dropdownCity='';
+    dropdownCity = '';
     giftDeliveryStreetController.clear();
-    dropdownQuarter='';
+    dropdownQuarter = '';
     showGiftCard = false;
     showNote = false;
     giftDeliveryStreetController.clear();
@@ -136,10 +136,8 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchShowDeliveryDataSuccess());
   }
 
-
   bool showGiftCard = false;
   bool showNote = false;
-
 
   void switchShowGiftCard() {
     showGiftCard = !showGiftCard;
@@ -167,11 +165,11 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   void switchGiftType({required bool present}) {
-    if(present){
+    if (present) {
       giftType = 'هدية';
       isPresent = true;
       isMoney = false;
-    }else{
+    } else {
       giftType = 'مبلغ مالى';
       isPresent = false;
       isMoney = true;
@@ -203,7 +201,8 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   void setMoneyReceiveDate({required DateTime brithDateValue}) {
-    moneyReceiveDateController.text = DateFormat('yyyy-MM-dd').format(brithDateValue);
+    moneyReceiveDateController.text =
+        DateFormat('yyyy-MM-dd').format(brithDateValue);
     emit(SetMoneyReceiveDateState());
   }
 
@@ -224,16 +223,20 @@ class OccasionCubit extends Cubit<OccasionState> {
     return input.split('').map((char) => arabicToEnglish[char] ?? char).join();
   }
 
-  double totalPriceCalculate=0;
+  double totalPriceCalculate = 0;
 
   double getTotalGiftPrice() {
-    final text = convertArabicToEnglishNumbers(moneyAmountController.text.trim());
+    final text =
+        convertArabicToEnglishNumbers(moneyAmountController.text.trim());
     double giftPriceNumber = double.tryParse(text) ?? 0.0;
-    String packagePrice = isPresent?giftWithPackageType.toString():moneyWithPackageType.toString();
+    String packagePrice = isPresent
+        ? giftWithPackageType.toString()
+        : moneyWithPackageType.toString();
     double packagePriceNumber = double.tryParse(packagePrice) ?? 0.0;
 
-
-    giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue;
+    giftPrice =
+        (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) -
+            discountValue;
 
     emit(GetTotalGiftPriceSuccessState());
     return giftPrice;
@@ -264,6 +267,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       emit(RemovePickedImageSuccessState());
     }
   }
+
   void removeNetworkImage(int index, List<dynamic> networkImages) {
     if (index >= 0 && index < networkImages.length) {
       networkImages.removeAt(index);
@@ -300,9 +304,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(AddOccasionLoadingState());
 
     try {
-      final List<String>? imageUrl = isPresent
-          ? await uploadImages()
-          : [];
+      final List<String>? imageUrl = isPresent ? await uploadImages() : [];
       debugPrint('imageUrl: $imageUrl');
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
@@ -319,7 +321,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         giftName: giftNameController.text,
         giftLink: linkController.text,
         giftPrice: giftPrice,
-        giftType: isPresent? 'هدية':"مبلغ مالى",
+        giftType: isPresent ? 'هدية' : "مبلغ مالى",
         isSharing: isPublicValue,
         receiverName: giftReceiverNameController.text,
         receiverPhone: giftReceiverNumberController.text,
@@ -334,19 +336,27 @@ class OccasionCubit extends Cubit<OccasionState> {
         discount: discountValue,
         appCommission: totalPriceCalculate,
         deliveryPrice: deliveryTax,
-        type: dropdownOccasionType??'',
-        packageImage: isPresent? selectedGiftPackageImage : selectedMoneyPackageImage,
-        packagePrice: isPresent? giftWithPackageType.toString() : moneyWithPackageType.toString(),
+        type: dropdownOccasionType ?? '',
+        packageImage:
+            isPresent ? selectedGiftPackageImage : selectedMoneyPackageImage,
+        packagePrice: isPresent
+            ? giftWithPackageType.toString()
+            : moneyWithPackageType.toString(),
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
-      }, (occasion)async {
+      }, (occasion) async {
         int openCount = 0;
-        await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').get().then((value)async {
+        await FirebaseFirestore.instance
+            .collection('analysis')
+            .doc('x6cWwImrRB3PIdVfcHnP')
+            .get()
+            .then((value) async {
           openCount = value.data()!['openOccasions'];
-          await FirebaseFirestore.instance.collection('analysis').doc('x6cWwImrRB3PIdVfcHnP').update({
-            'openOccasions': openCount
-          });
+          await FirebaseFirestore.instance
+              .collection('analysis')
+              .doc('x6cWwImrRB3PIdVfcHnP')
+              .update({'openOccasions': openCount});
         });
 
         emit(AddOccasionSuccessState(occasion: occasion));
@@ -357,7 +367,6 @@ class OccasionCubit extends Cubit<OccasionState> {
       emit(AddOccasionErrorState(error: error.toString()));
     }
   }
-
 
   Future<void> captureAndShareQr({
     required String occasionName,
@@ -371,10 +380,10 @@ class OccasionCubit extends Cubit<OccasionState> {
       await WidgetsBinding.instance.endOfFrame;
 
       RenderRepaintBoundary boundary =
-      qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          qrKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 3.0);
       ByteData? byteData =
-      await image.toByteData(format: ui.ImageByteFormat.png);
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
 
       final tempDir = await getTemporaryDirectory();
@@ -386,7 +395,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       final shareResult = await Share.shareXFiles(
         [xFile],
         text:
-        'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+            'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
       if (shareResult.status == ShareResultStatus.success ||
@@ -413,7 +422,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   var serviceTax = 0.0;
 
   // get taxes from firebase collection taxs.
-  Future<void> getOccasionTaxes() async{
+  Future<void> getOccasionTaxes() async {
     emit(GetOccasionTaxesLoadingState());
 
     await FirebaseFirestore.instance.collection('taxs').get().then((value) {
@@ -429,16 +438,14 @@ class OccasionCubit extends Cubit<OccasionState> {
       giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
       moneyWithPackageType = int.parse(moneyPackageListPrice[0].toString());
       emit(GetOccasionTaxesSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       debugPrint('error when get occasion taxes: $error');
       emit(GetOccasionTaxesErrorState());
     });
-
   }
-  
-  
+
   bool showDiscountField = false;
-  
+
   void switchDiscountField() {
     showDiscountField = !showDiscountField;
     emit(SwitchDiscountFieldSuccess());
@@ -485,14 +492,15 @@ class OccasionCubit extends Cubit<OccasionState> {
           throw Exception('Discount code usage limit reached');
         }
         discountValue = discount;
-        if(discountValue > giftPrice){
+        if (discountValue > giftPrice) {
           _showErrorToast("قيمة الخصم أكبر من سعر الهدية");
           return;
-        }else{
+        } else {
           giftPrice -= discountValue;
           transaction.update(doc.reference, {
             'used': FieldValue.increment(1),
-          });        }
+          });
+        }
         showDiscountValue = true;
         customToast(
           title: "تم تطبيق الخصم",
@@ -522,7 +530,8 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(CreateOccasionLinkLoadingState());
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: 'https://hadawiapp.page.link',
-      link: Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
+      link:
+          Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
       androidParameters: const AndroidParameters(
         packageName: 'com.app.hadawi_app',
         minimumVersion: 1,
@@ -533,15 +542,16 @@ class OccasionCubit extends Cubit<OccasionState> {
       ),
     );
 
-    final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+    final ShortDynamicLink shortLink =
+        await FirebaseDynamicLinks.instance.buildShortLink(parameters);
     debugPrint("shortLink: ${shortLink.shortUrl}");
     occasionLink = shortLink.shortUrl.toString();
     emit(CreateOccasionLinkSuccessState());
     return shortLink.shortUrl.toString();
   }
 
-
-  Future<void> disableOccasion({required String occasionId, required BuildContext context}) async {
+  Future<void> disableOccasion(
+      {required String occasionId, required BuildContext context}) async {
     emit(DisableOccasionLoadingState());
     try {
       // Get all payments for this occasion
@@ -587,7 +597,8 @@ class OccasionCubit extends Cubit<OccasionState> {
       const String baseUrl = 'https://eu-test.oppwa.com';
       const String path = '/v1/payments';
       const String entityId = '8a8294174d0595bb014d05d829cb01cd';
-      const String authToken = 'OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==';
+      const String authToken =
+          'OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==';
 
       // Prepare headers
       final headers = {
@@ -615,7 +626,8 @@ class OccasionCubit extends Cubit<OccasionState> {
         debugPrint('Refund processed successfully: ${responseData.toString()}');
         return true;
       } else {
-        debugPrint('Refund failed with status: ${response.statusCode}, body: ${response.body}');
+        debugPrint(
+            'Refund failed with status: ${response.statusCode}, body: ${response.body}');
         return false;
       }
     } catch (error) {
@@ -624,8 +636,7 @@ class OccasionCubit extends Cubit<OccasionState> {
     }
   }
 
-
-  AnalysisModel ?analysisModel;
+  AnalysisModel? analysisModel;
 
   String dropdownCity = "";
   String dropdownQuarter = "";
@@ -635,10 +646,10 @@ class OccasionCubit extends Cubit<OccasionState> {
   List<String> allCity = [];
   List<Map<String, dynamic>> allCityMap = [];
 
-  Future<void> getAllCity()async{
+  Future<void> getAllCity() async {
     allCity = [];
     emit(GetAllCityLoadingState());
-    try{
+    try {
       var response = await FirebaseFirestore.instance.collection('city').get();
       response.docs.forEach((element) {
         allCity.add(element.data()['name']);
@@ -649,17 +660,15 @@ class OccasionCubit extends Cubit<OccasionState> {
       });
 
       emit(GetAllCitySuccessState());
-    }catch(e){
+    } catch (e) {
       debugPrint('error in get all city $e');
       emit(GetAllCityErrorState());
     }
-
   }
 
-
-  Future<void> getCityId(String city)async{
+  Future<void> getCityId(String city) async {
     for (var element in allCityMap) {
-      if(element['name'] == city){
+      if (element['name'] == city) {
         selectedCityId = element['id'];
         debugPrint('city id: $selectedCityId');
         break;
@@ -674,26 +683,33 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(GetAllQuartersLoadingState());
 
     await getCityId(city);
-    try{
-      FirebaseFirestore.instance.collection('city').doc(selectedCityId).collection('quarters').get().then((value) {
+    try {
+      FirebaseFirestore.instance
+          .collection('city')
+          .doc(selectedCityId)
+          .collection('quarters')
+          .get()
+          .then((value) {
         value.docs.forEach((element) {
           allQuarters.add(element.data()['name']);
         });
       });
       emit(GetAllQuartersSuccessState());
-    }catch(e){
+    } catch (e) {
       debugPrint('error in get all Quarters $e');
       emit(GetAllQuartersErrorState());
     }
   }
 
-List<dynamic> urls=[];
+  List<dynamic> urls = [];
+
   Future<void> updateOccasion({
     required String occasionId,
   }) async {
     emit(UpdateOccasionLoadingState());
     try {
-      final List<String>? imageUrl = images.isNotEmpty ? await uploadImages():null;
+      final List<String>? imageUrl =
+          images.isNotEmpty ? await uploadImages() : null;
       await FirebaseFirestore.instance
           .collection('Occasions')
           .doc(occasionId)
@@ -708,9 +724,9 @@ List<dynamic> urls=[];
         'city': dropdownCity,
         'district': giftDeliveryStreetController.text,
         'giftCard': moneyGiftMessageController.text,
-        'receiverName':  giftReceiverNameController.text ,
+        'receiverName': giftReceiverNameController.text,
         'receiverPhone': giftReceiverNumberController.text,
-        'occasionImage': imageUrl?? urls,
+        'occasionImage': imageUrl ?? urls,
         'note': giftDeliveryNoteController.text,
         'type': dropdownOccasionType,
         'isPrivate': isPublicValue,
@@ -721,8 +737,51 @@ List<dynamic> urls=[];
       debugPrint("error when edit occasion: ${e.toString()}");
       if (kDebugMode) {
         print(e.toString());
-        emit(UpdateOccasionErrorState(error:  e.toString()));
+        emit(UpdateOccasionErrorState(error: e.toString()));
       }
+    }
+  }
+String userFcmToken = "";
+  Future<void> getUserToken() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(UserDataFromStorage.uIdFromStorage)
+        .get()
+        .then((value) {
+      userFcmToken = value.data()!['token'];
+    });
+  }
+
+  Future<void> sendNotification({
+    required String title,
+    required String body,
+  }) async {
+    try {
+      print('Token: $userFcmToken');
+      print('body: $body');
+      print('title: $title');
+
+      final url = Uri.parse('https://souqna.pro/api/notification');
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'title': title,
+          'body': body,
+          'token': userFcmToken,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        print('Notification sent: ${response.body}');
+      } else {
+        print(
+            'Failed to send notification: ${response.statusCode} - ${response.body}');
+      }
+    } catch (e) {
+      print('Unexpected error: $e');
     }
   }
 }

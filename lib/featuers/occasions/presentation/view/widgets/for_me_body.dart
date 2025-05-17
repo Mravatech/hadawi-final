@@ -32,6 +32,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     context.read<OccasionCubit>().getOccasionTaxes();
     context.read<OccasionCubit>().getAllCity();
+    context.read<OccasionCubit>().getUserToken();
     super.initState();
   }
 

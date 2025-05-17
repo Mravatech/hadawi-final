@@ -13,10 +13,13 @@ class AcceptFollowRequestUseCases {
   Future<Either<Faliure, void>> call({
     required String userId,
     required String followerId,
+    required String userName,
   })async {
     return await friendsRepo.acceptFollowRequest(
       userId: userId,
       followerId: followerId,
+      userName: userName,
+
     );
   }
 

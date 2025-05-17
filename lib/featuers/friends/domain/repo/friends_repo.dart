@@ -13,6 +13,7 @@ abstract class FriendsRepo {
   Future<Either<Faliure, void>> acceptFollowRequest({
     required String userId,
     required String followerId,
+    required String userName,
   });
   Future<Either<Faliure, void>> rejectFollowRequest({
     required String userId,

@@ -26,12 +26,13 @@ class FriendsCubit extends Cubit<FriendsStates> {
       {
         required String userId,
         required String followerId,
-
+        required String userName,
       })async{
     emit(AcceptFollowRequestLoadingState());
     var response = await acceptFollowRequestUseCases.call(
         userId: userId,
         followerId: followerId,
+        userName: userName
     );
 
     response.fold(

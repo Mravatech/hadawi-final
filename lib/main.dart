@@ -233,7 +233,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => PaymentCubit()),
         BlocProvider(create: (context) => HomeCubit()..getUserNotifications()..getPrivacyPolices()),
         BlocProvider(create: (context) => OccasionCubit()),
-        BlocProvider(create: (context) => VisitorsCubit(getIt())..getAnalysis()),
+        BlocProvider(create: (context) => VisitorsCubit(getIt(),getIt(),getIt())..getAnalysis()),
         BlocProvider(create: (context) => OccasionsListCubit()),
         BlocProvider(create: (context) => LocalizationCubit()..fetchLocalization()),
       ],
