@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
@@ -19,6 +21,7 @@ class ApplePayWebView extends StatefulWidget {
   final double paymentAmount;
   final double remainingPrice;
   final String paymentMethod;
+  final OccasionEntity occasionEntity;
 
   const ApplePayWebView({
     super.key,
@@ -28,7 +31,9 @@ class ApplePayWebView extends StatefulWidget {
     required this.paymentAmount,
     required this.transactionId,
     required this.remainingPrice,
-    required this.paymentMethod, required integrity
+    required this.paymentMethod,
+    required integrity,
+    required this.occasionEntity,
   });
 
   @override
@@ -313,6 +318,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId,fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 transactionId: widget.transactionId,
@@ -341,6 +347,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
           TextButton(
             onPressed: () async {
               Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 occasionId: widget.occasionId,

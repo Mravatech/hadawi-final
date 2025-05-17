@@ -101,7 +101,6 @@ class _MyGiftsWidgetState extends State<MyGiftsWidget> {
                                 OccasionDetails(
                                   occasionId:
                                   occasionItem.occasionId,
-                                  occasionEntity: occasionItem,
                                   fromHome: false,
                                 ));
                           },

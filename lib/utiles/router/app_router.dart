@@ -72,7 +72,7 @@ class AppRouter {
             );(args is Map<String, dynamic> ? args['occasionEntity'] : null);
 
         return MaterialPageRoute(
-          builder: (_) => OccasionDetails(occasionId: occasionId!, fromHome: false, occasionEntity: null,),
+          builder: (_) => OccasionDetails(occasionId: occasionId!, fromHome: true,),
         );
       default:
       // 404 page

@@ -416,6 +416,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     occasionId: widget.occasionEntity.occasionId,
                     occasionName: widget.occasionEntity.type,
                     transactionId: merchantTransactionId,
+                    occasionEntity: widget.occasionEntity,
                     remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
                         double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
                     paymentAmount: double.parse(context.read<OccasionCubit>().convertArabicToEnglishNumbers(context.read<PaymentCubit>().paymentAmountController.text.toString())),

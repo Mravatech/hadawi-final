@@ -54,6 +54,7 @@ final GoRouter _router = GoRouter(
       final pathSegments = uri.pathSegments;
 
       if (pathSegments.isNotEmpty) {
+        OccasionEntity? occasionEntity;
         // Check for occasion details path (case-insensitive)
         if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
           final occasionId = pathSegments[1];
@@ -78,8 +79,7 @@ final GoRouter _router = GoRouter(
       builder: (context, state) {
         final occasionId = state.pathParameters['id'];
         final fromHome = state.pathParameters['fromHome'] == 'true';
-        final occasionEntity = state.extra as OccasionEntity?;
-        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome,occasionEntity: occasionEntity);
+        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome);
       },
     ),
     GoRoute(

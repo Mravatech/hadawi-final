@@ -167,14 +167,14 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
   }
 
-  OccasionModel occasionModel = OccasionModel(
+  OccasionModel emptyOccasionModel = OccasionModel(
     isForMe: false,
     isActive: false,
     occasionName: '',
     occasionDate: '',
     occasionId: '',
     occasionType: '',
-    moneyGiftAmount: '',
+    moneyGiftAmount: 0.0,
     personId: '',
     personName: '',
     personPhone: '',
@@ -182,7 +182,43 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     giftImage: [],
     giftName: '',
     giftLink: '',
-    giftPrice: '',
+    giftPrice: 0.0,
+    giftType: '',
+    isSharing: false,
+    receiverName: '',
+    receiverPhone: '',
+    bankName: '',
+    ibanNumber: '',
+    isContainName: false,
+    giftCard: '',
+    city: '',
+    district: '',
+    note: '',
+    isPrivate: false,
+    discount: 0.0,
+    appCommission: 0.0,
+    deliveryPrice: 0.0,
+    type: '',
+    packageImage: '',
+    packagePrice: '',
+  );
+
+  OccasionModel occasionDetailsModel = OccasionModel(
+    isForMe: false,
+    isActive: false,
+    occasionName: '',
+    occasionDate: '',
+    occasionId: '',
+    occasionType: '',
+    moneyGiftAmount: 0.0,
+    personId: '',
+    personName: '',
+    personPhone: '',
+    personEmail: '',
+    giftImage: [],
+    giftName: '',
+    giftLink: '',
+    giftPrice: 0.0,
     giftType: '',
     isSharing: false,
     receiverName: '',
@@ -206,8 +242,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   Future<void> getOccasionData({required String occasionId})async{
     emit(GetOccasionDataLoadingState());
     FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
-      occasionModel = OccasionModel.fromJson(value.data()!);
-      debugPrint("occasionModel: ${occasionModel!.occasionName}");
+      occasionDetailsModel = OccasionModel.fromJson(value.data()!);
+      debugPrint("occasionModel: ${occasionDetailsModel!.occasionName}");
       emit(GetOccasionDataSuccessState());
     }).catchError((error){
       debugPrint("error in getting occasion data: $error");

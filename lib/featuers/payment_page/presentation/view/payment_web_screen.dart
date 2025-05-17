@@ -370,7 +370,8 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, occasionEntity: widget.occasionEntity, fromHome: true,));
+              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 transactionId: widget.transactionId,
@@ -398,7 +399,8 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
         actions: [
           TextButton(
             onPressed: () async {
-              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, occasionEntity: widget.occasionEntity, fromHome: true,));
+              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionId, fromHome: true,));
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
                 occasionId: widget.occasionId,
