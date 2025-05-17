@@ -43,31 +43,31 @@ final GoRouter _router = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: true,
   errorBuilder: (context, state) => const LoginScreen(),
-  redirect: (context, state) {
-    final uri = Uri.parse(state.uri.toString());
-
-    // Handle dynamic links with app scheme
-    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
-      debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
-
-      // Process the path segments
-      final pathSegments = uri.pathSegments;
-
-      if (pathSegments.isNotEmpty) {
-        // Check for occasion details path (case-insensitive)
-        if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
-          final occasionId = pathSegments[1];
-          return '/occasion-details/$occasionId/true';
-        }
-      }
-
-      // Default redirect for unprocessed app scheme links
-      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
-      return isLoggedIn ? '/home' : '/login';
-    }
-
-    return null; // Continue with normal routing
-  },
+  // redirect: (context, state) {
+  //   final uri = Uri.parse(state.uri.toString());
+  //
+  //   // Handle dynamic links with app scheme
+  //   if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
+  //     debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
+  //
+  //     // Process the path segments
+  //     final pathSegments = uri.pathSegments;
+  //
+  //     if (pathSegments.isNotEmpty) {
+  //       // Check for occasion details path (case-insensitive)
+  //       if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
+  //         final occasionId = pathSegments[1];
+  //         return '/occasion-details/$occasionId/true';
+  //       }
+  //     }
+  //
+  //     // Default redirect for unprocessed app scheme links
+  //     final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+  //     return isLoggedIn ? '/home' : '/login';
+  //   }
+  //
+  //   return null; // Continue with normal routing
+  // },
   routes: [
     GoRoute(
       path: '/',
