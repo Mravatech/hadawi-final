@@ -92,7 +92,7 @@
             <string>firebase</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>https://hadawiapp.page.link</string>
+                <string>hadawiapp.page.link</string>
             </array>
         </dict>
     </array>
