@@ -46,80 +46,44 @@ final GoRouter _router = GoRouter(
   redirect: (context, state) {
     final uri = Uri.parse(state.uri.toString());
 
-    // Handle dynamic links with app scheme
-    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
+    // روابط custom scheme زي hadawi:// أو com.app.hadawiapp://
+    if (uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') {
       debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
 
-      // Process the path segments
       final pathSegments = uri.pathSegments;
 
       if (pathSegments.isNotEmpty) {
-        OccasionEntity? occasionEntity;
-        // Check for occasion details path (case-insensitive)
         if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
           final occasionId = pathSegments[1];
           return '/occasion-details/$occasionId/true';
         }
       }
 
-      // Default redirect for unprocessed app scheme links
-      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+      final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
       return isLoggedIn ? '/home' : '/login';
     }
 
     return null; // Continue with normal routing
   },
   routes: [
-    GoRoute(
-      path: '/',
-      builder: (context, state) => SplashScreen(),
-    ),
+    GoRoute(path: '/', builder: (context, state) => SplashScreen()),
     GoRoute(
       path: '/occasion-details/:id/:fromHome',
       builder: (context, state) {
         final occasionId = state.pathParameters['id'];
         final fromHome = state.pathParameters['fromHome'] == 'true';
-        return OccasionDetails(occasionId: occasionId!,fromHome: fromHome);
+        return OccasionDetails(occasionId: occasionId!, fromHome: fromHome);
       },
     ),
-    GoRoute(
-      path: '/home',
-      name: 'home',
-      builder: (context, state) => HomeLayout(),
-    ),
-    GoRoute(
-      path: '/summary',
-      builder: (context, state) => OccasionSummary(),
-    ),
-    GoRoute(
-      path: '/visitors',
-      builder: (context, state) => VisitorsScreen(),
-    ),
-    GoRoute(
-      path: '/notification',
-      builder: (context, state) => NotificationScreen(),
-    ),
-    GoRoute(
-      path: '/privacy-policies',
-      builder: (context, state) => PrivacyPoliciesScreen(),
-    ),
-    GoRoute(
-      path: '/login',
-      builder: (context, state) => LoginScreen(),
-    ),
-    GoRoute(
-      path: '/my-occasions',
-      builder: (context, state) => MyOccasions(),
-    ),
-    GoRoute(
-        path: '/sign-up',
-        builder: (context, state) => const RegisterScreen()
-    ),
-    // Add catch-all route for handling unknown paths
-    GoRoute(
-      path: '/:path(.*)',
-      builder: (context, state) => const LoginScreen(),
-    ),
+    GoRoute(path: '/home', builder: (context, state) => HomeLayout()),
+    GoRoute(path: '/summary', builder: (context, state) => OccasionSummary()),
+    GoRoute(path: '/visitors', builder: (context, state) => VisitorsScreen()),
+    GoRoute(path: '/notification', builder: (context, state) => NotificationScreen()),
+    GoRoute(path: '/privacy-policies', builder: (context, state) => PrivacyPoliciesScreen()),
+    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+    GoRoute(path: '/my-occasions', builder: (context, state) => MyOccasions()),
+    GoRoute(path: '/sign-up', builder: (context, state) => const RegisterScreen()),
+    GoRoute(path: '/:path(.*)', builder: (context, state) => const LoginScreen()),
   ],
 );
 
@@ -127,16 +91,15 @@ Future<void> main() async {
   await SentryFlutter.init(
         (options) {
       options.dsn = 'https://84d149a4ed2f407b023cd9ca435bab0c@o4509321210494981.ingest.de.sentry.io/4509321270788176';
-      options.tracesSampleRate = 1.0; // For performance monitoring (optional)
+      options.tracesSampleRate = 1.0;
     },
     appRunner: () async {
       WidgetsFlutterBinding.ensureInitialized();
 
       ServiceLocator().init();
       await SharedPreferences.getInstance();
+      await CashHelper.init();
       UserDataFromStorage.getData();
-      // Note: this should be awaited
-      CashHelper.init();
       DioHelper.dioInit();
       Bloc.observer = MyBlocObserver();
 
@@ -144,23 +107,16 @@ Future<void> main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
 
-      FlutterError.onError = (FlutterErrorDetails details) {
+      FlutterError.onError = (details) {
         if (details.exception.toString().contains('HttpException') &&
             details.exception.toString().contains('Invalid statusCode: 404')) {
           return;
         }
-        // Report to Sentry
-        Sentry.captureException(
-          details.exception,
-          stackTrace: details.stack,
-        );
-
+        Sentry.captureException(details.exception, stackTrace: details.stack);
         FlutterError.presentError(details);
       };
 
-      NotificationService().initRemoteNotification();
-
-      debugPrint("current date is ${DateTime.now()}");
+      await NotificationService().initRemoteNotification();
 
       runApp(const MyApp());
     },
@@ -182,10 +138,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    SharedPreferences.getInstance();
-    UserDataFromStorage.getData();
-    CashHelper.init();
-    DioHelper.dioInit();
     _initDeepLinkHandling();
   }
 
@@ -196,109 +148,65 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initDeepLinkHandling() async {
-    // Listen for incoming links while the app is running
     _linkSubscription = _appLinks.uriLinkStream.listen(
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        // Don't navigate automatically on error
+        GoRouter.of(context).go('/login');
       },
     );
 
     try {
-      // Handle links that launched the app
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
-        debugPrint('Got initial link: ${initialLink.toString()}');
-        _handleDeepLink(initialLink);
-      } else {
-        debugPrint('No initial link found');
-        // Only navigate to home if the user is logged in
-        if (mounted) {
-          final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
-          if (isLoggedIn) {
-            GoRouter.of(context).go('/home');
-          } else {
-            GoRouter.of(context).go('/login');
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _handleDeepLink(Uri.parse(initialLink.toString()));
           }
-        }
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
+            GoRouter.of(context).go(isLoggedIn ? '/home' : '/login');
+          }
+        });
       }
     } catch (e) {
+      GoRouter.of(context).go('/login');
       debugPrint('Error getting initial deep link: $e');
-      // Don't navigate automatically on error
     }
   }
 
-// Improve your deep link handling logic
   void _handleDeepLink(Uri uri) {
-    debugPrint('Handling deep link: ${uri.toString()}');
-    debugPrint('URI scheme: ${uri.scheme}');
-    debugPrint('URI host: ${uri.host}');
-    debugPrint('URI path: ${uri.path}');
-    debugPrint('URI pathSegments: ${uri.pathSegments}');
-    debugPrint('URI queryParameters: ${uri.queryParameters}');
+    debugPrint('Received deep link: $uri');
+    final pathSegments = uri.pathSegments;
 
-    // First, check for Firebase Dynamic Links format
     if (uri.host == 'hadawiapp.page.link') {
-      // For Firebase Dynamic Links, we need to resolve the URL first
-      FirebaseDynamicLinks.instance.getDynamicLink(uri).then((dynamicLinkData) {
-        if (dynamicLinkData != null) {
-          final deepLink = dynamicLinkData.link;
-          debugPrint('Resolved dynamic link: ${deepLink.toString()}');
-          _processDeepLinkUri(deepLink);
-        } else {
-          debugPrint('Could not resolve dynamic link');
-          _processDeepLinkUri(uri); // Try to process the original URI as fallback
+      if (pathSegments.isNotEmpty &&
+          pathSegments.first.toLowerCase() == 'occasion-details' &&
+          pathSegments.length > 1) {
+        final occasionId = pathSegments[1];
+        final fromHome = pathSegments.length > 2 ? pathSegments[2] : 'true';
+        if (mounted) {
+          GoRouter.of(context).go('/occasion-details/$occasionId/$fromHome');
         }
-      }).catchError((error) {
-        debugPrint('Error resolving dynamic link: $error');
-        _processDeepLinkUri(uri); // Try to process the original URI as fallback
-      });
-    } else {
-      // For direct deep links (custom schemes), process directly
-      _processDeepLinkUri(uri);
-    }
-  }
-
-// New method to centralize the deep link path processing logic
-  void _processDeepLinkUri(Uri uri) {
-    // Check for occasion details in various formats
-
-    // 1. Check path-based format: /occasion-details/{id}
-    if (uri.path.toLowerCase().startsWith('/occasion-details') && uri.pathSegments.length > 1) {
-      final occasionId = uri.pathSegments[1];
-      if (mounted) {
-        debugPrint('Navigating to occasion details with ID: $occasionId');
-        GoRouter.of(context).go('/occasion-details/$occasionId/true');
         return;
+      }
+    } else if (uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') {
+      if (uri.host == 'occasion-details' || uri.host == 'google') {
+        if (pathSegments.isNotEmpty && pathSegments.length > 1) {
+          final occasionId = pathSegments[1];
+          if (mounted) {
+            GoRouter.of(context).go('/occasion-details/$occasionId/true');
+          }
+          return;
+        }
       }
     }
 
-    // 2. Check host-based format: occasion-details/{id}
-    else if (uri.host.toLowerCase() == 'occasion-details' && uri.pathSegments.isNotEmpty) {
-      final occasionId = uri.pathSegments.first;
-      if (mounted) {
-        debugPrint('Navigating to occasion details with ID: $occasionId');
-        GoRouter.of(context).go('/occasion-details/$occasionId/true');
-        return;
-      }
-    }
-
-    // 3. Check query parameter format: ?occasion_id={id}
-    else if (uri.queryParameters.containsKey('occasion_id')) {
-      final occasionId = uri.queryParameters['occasion_id'];
-      if (occasionId != null && mounted) {
-        debugPrint('Navigating to occasion details with ID from query param: $occasionId');
-        GoRouter.of(context).go('/occasion-details/$occasionId/true');
-        return;
-      }
-    }
-
-    // Default fallback if no specific route is matched
     if (mounted) {
-      // Navigate to home or login depending on authentication status
-      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
-      debugPrint('No specific path matched. Navigating to ${isLoggedIn ? 'home' : 'login'}');
+      final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
       GoRouter.of(context).go(isLoggedIn ? '/home' : '/login');
     }
   }
@@ -332,10 +240,7 @@ class _MyAppState extends State<MyApp> {
               GlobalCupertinoLocalizations.delegate,
               DefaultCupertinoLocalizations.delegate,
             ],
-            supportedLocales: const [
-              Locale("ar", ""),
-              Locale("en", ""),
-            ],
+            supportedLocales: const [Locale("ar", ""), Locale("en", "")],
             locale: LocalizationCubit.get(context).appLocal,
             localeResolutionCallback: (currentLang, supportLang) {
               if (currentLang != null) {
