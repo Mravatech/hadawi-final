@@ -13,7 +13,44 @@
           "package_name": "com.app.hadawi_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1698335350-56bgaitdi9m43veh7ltpk45sgpkfg4rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.hadawi_app",
+            "certificate_hash": "3be8e02d8254ec64650a11c9be86d65436ddafc1"
+          }
+        },
+        {
+          "client_id": "1698335350-bi53asf915hnvqk6gasi7d0klr50kavs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.hadawi_app",
+            "certificate_hash": "6dcd20bd007284b63ec467b94e028b58d1ddb33c"
+          }
+        },
+        {
+          "client_id": "1698335350-mpjdhrkppagdstmfjq708704r50vs8i9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.hadawi_app",
+            "certificate_hash": "099fbe259a46d7d54891b7fb6d28b6cfad3603ce"
+          }
+        },
+        {
+          "client_id": "1698335350-t31luie8gccft7llnqn50bkadn72r51i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.hadawi_app",
+            "certificate_hash": "04f8de1b97ae43e8f4dc8eb0fcea31201b53ddaa"
+          }
+        },
+        {
+          "client_id": "1698335350-u6i6qmgeoq5s0cgqimd3rh6f1haqecek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
@@ -21,18 +58,35 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1698335350-u6i6qmgeoq5s0cgqimd3rh6f1haqecek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1698335350-4mf0u4jj1acl8a5df2taceho7nhi2o89.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hadawiDathboard"
+              }
+            }
+          ]
         }
       }
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1698335350:android:785fe81f4e8505888aed57",
+        "mobilesdk_app_id": "1:1698335350:android:c8743afcc72454468aed57",
         "android_client_info": {
-          "package_name": "com.client_transport_app.client_transport_app"
+          "package_name": "com.example.hadawi_dathboard"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1698335350-u6i6qmgeoq5s0cgqimd3rh6f1haqecek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
@@ -40,26 +94,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1698335350:android:ba978fd00660bb858aed57",
-        "android_client_info": {
-          "package_name": "com.transport_app.transport_app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBpZjRD-F7GCWVY3D5I6OVvap5VVHgO4VM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1698335350-u6i6qmgeoq5s0cgqimd3rh6f1haqecek.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1698335350-4mf0u4jj1acl8a5df2taceho7nhi2o89.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.hadawiDathboard"
+              }
+            }
+          ]
         }
       }
     }

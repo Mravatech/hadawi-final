@@ -19,13 +19,13 @@ class CompleteOccasionModel {
   factory CompleteOccasionModel.fromJson(Map<String, dynamic> json) {
     return CompleteOccasionModel(
       occasionId: json['occasionId'],
-      imagesUrl: json['imagesUrl'] ,
+      imagesUrl: json['imagesUrl']??'' ,
       title: json['title'] ??'',
       imagesUrl2: json['imagesUrl2'] ??'',
       des: json['des'] ??'',
       finalPrice: json['finalPrice'].runtimeType == int
           ? (json['finalPrice'] as int).toDouble()
-          : json['finalPrice'] as double,
+          : json['finalPrice']??0.0,
     );
   }
 

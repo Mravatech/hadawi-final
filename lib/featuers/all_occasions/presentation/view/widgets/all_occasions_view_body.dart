@@ -84,7 +84,7 @@ class AllOccasionsViewBody extends StatelessWidget {
               child: ProfileRowWidget(
                 image: '',
                 title: AppLocalizations.of(context)!
-                    .translate('closedEvents')
+                    .translate('deleteEvents')
                     .toString(),
               )),
         ],

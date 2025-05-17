@@ -47,7 +47,7 @@ dependencies:
   toastification: ^2.3.0
   salomon_bottom_bar: ^3.3.2
   intl:
-  google_sign_in: ^6.2.2
+  google_sign_in:
   sign_in_with_apple: ^6.1.4
   modal_progress_hud_nsn: ^0.5.1
   pin_code_fields: ^8.0.1
