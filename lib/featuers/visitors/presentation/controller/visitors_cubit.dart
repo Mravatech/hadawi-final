@@ -106,6 +106,30 @@ class VisitorsCubit extends Cubit<VisitorsState> {
             activeOccasions.add(element);
           }
         }
+
+
+          if ( double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
+          } else {
+            print('this occasion is done ${element.occasionId}');
+            var res = await FirebaseFirestore.instance
+                .collection('Occasions')
+                .doc(element.occasionId)
+                .collection('receivedOccasions')
+                .get();
+            if (res.docs.isNotEmpty) {
+              doneOccasions
+                  .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              if (element.personId ==
+                  UserDataFromStorage.uIdFromStorage) {
+                myOrderOccasions
+                    .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              }
+            }
+
+        }
+
+
+
       }
       await FirebaseFirestore.instance
           .collection('analysis')

@@ -241,11 +241,12 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
         required context}) async {
     try {
       // Initialize GoogleSignIn with proper configuration
-      final GoogleSignIn googleSignIn = GoogleSignIn(
+
+      final GoogleSignIn googleSignIn = Platform.isIOS? GoogleSignIn(
         scopes: ['email', 'profile'],
         // Add this line to explicitly specify client ID for iOS
         clientId: '1698335350-rn56pn1c22pc1gah4020je52u0oh6it2.apps.googleusercontent.com',
-      );
+      ): GoogleSignIn();
 
       // Clear previous sign-in state to avoid conflicts
       await googleSignIn.signOut();
@@ -454,20 +455,28 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       final user = FirebaseAuth.instance.currentUser!;
       print('phone ${user.email}');
       print('pass ${UserDataFromStorage.macAddressFromStorage}');
-      String pass = '127755643@gmail.com';
+      String pass = '${user.email}';
       String username = pass.split('@')[0];
       print('username $username');
 
-      // أعد تسجيل الدخول
-      AuthCredential credential = EmailAuthProvider.credential(
-        email: '${user.email}',
-        password: username,
-      );
+      final numericRegex = RegExp(r'^\d+$');
+      if (numericRegex.hasMatch(username)) {
+        print('username is numeric');
+        // أعد تسجيل الدخول
+        AuthCredential credential = EmailAuthProvider.credential(
+          email: '${user.email}',
+          password: username,
+        );
 
-      await user.reauthenticateWithCredential(credential);
+        await user.reauthenticateWithCredential(credential);
 
-      // احذف الحساب بعد التوثيق
-      await user.delete();
+        // احذف الحساب بعد التوثيق
+        await user.delete();
+      }else{
+
+      }
+
+
       await FirebaseFirestore.instance.collection('users').doc(uId).delete();
       await UserDataFromStorage.removeAllDataFromStorage();
     } on FirebaseException catch (error) {

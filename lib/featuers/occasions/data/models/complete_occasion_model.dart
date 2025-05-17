@@ -25,7 +25,7 @@ class CompleteOccasionModel {
       des: json['des'] ??'',
       finalPrice: json['finalPrice'].runtimeType == int
           ? (json['finalPrice'] as int).toDouble()
-          : json['finalPrice'] ??0.0
+          : json['finalPrice']??0.0, 
     );
   }
 

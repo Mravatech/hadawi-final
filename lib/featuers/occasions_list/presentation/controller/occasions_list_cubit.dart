@@ -88,7 +88,8 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     emit(GetClosedOccasionListLoadingState());
     try {await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element['isActive'] ==false){
+          print("element['isActive'] ${element['isActive']}");
+          if(element['isActive'] ==false && element['personId'] == UserDataFromStorage.uIdFromStorage){
             closedOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }
