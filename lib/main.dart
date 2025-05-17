@@ -43,31 +43,31 @@ final GoRouter _router = GoRouter(
   initialLocation: '/',
   debugLogDiagnostics: true,
   errorBuilder: (context, state) => const LoginScreen(),
-  // redirect: (context, state) {
-  //   final uri = Uri.parse(state.uri.toString());
-  //
-  //   // Handle dynamic links with app scheme
-  //   if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
-  //     debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
-  //
-  //     // Process the path segments
-  //     final pathSegments = uri.pathSegments;
-  //
-  //     if (pathSegments.isNotEmpty) {
-  //       // Check for occasion details path (case-insensitive)
-  //       if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
-  //         final occasionId = pathSegments[1];
-  //         return '/occasion-details/$occasionId/true';
-  //       }
-  //     }
-  //
-  //     // Default redirect for unprocessed app scheme links
-  //     final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
-  //     return isLoggedIn ? '/home' : '/login';
-  //   }
-  //
-  //   return null; // Continue with normal routing
-  // },
+  redirect: (context, state) {
+    final uri = Uri.parse(state.uri.toString());
+
+    // Handle dynamic links with app scheme
+    if ((uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi')) {
+      debugPrint('Handling custom scheme in redirect: ${uri.toString()}');
+
+      // Process the path segments
+      final pathSegments = uri.pathSegments;
+
+      if (pathSegments.isNotEmpty) {
+        // Check for occasion details path (case-insensitive)
+        if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
+          final occasionId = pathSegments[1];
+          return '/occasion-details/$occasionId/true';
+        }
+      }
+
+      // Default redirect for unprocessed app scheme links
+      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+      return isLoggedIn ? '/home' : '/login';
+    }
+
+    return null; // Continue with normal routing
+  },
   routes: [
     GoRoute(
       path: '/',
@@ -200,7 +200,7 @@ class _MyAppState extends State<MyApp> {
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        context.go('/home');
+        GoRouter.of(context).go('/login');
       },
     );
 
@@ -210,17 +210,22 @@ class _MyAppState extends State<MyApp> {
         _handleDeepLink(Uri.parse(initialLink.toString()));
       }else{
         if(mounted){
-          context.go('/home');
+          GoRouter.of(context).go('/home');
         }
       }
     } catch (e) {
-      context.go('/login');
+      GoRouter.of(context).go('/login');
       debugPrint('Error getting initial deep link: $e');
     }
   }
 
   void _handleDeepLink(Uri uri) {
     debugPrint('Received deep link: ${uri.toString()}');
+    debugPrint('Received deep link: ${uri.toString()}');
+    debugPrint('URI scheme: ${uri.scheme}');
+    debugPrint('URI host: ${uri.host}');
+    debugPrint('URI path: ${uri.path}');
+    debugPrint('URI pathSegments: ${uri.pathSegments}');
 
     // Check if it's a Dynamic Link (https://hadawiapp.page.link/...)
     if (uri.host == 'hadawiapp.page.link') {
@@ -234,7 +239,7 @@ class _MyAppState extends State<MyApp> {
 
           // Use case-insensitive match with your route
           if (mounted) {
-            context.go('/occasion-details/$occasionId/$fromHome');
+            GoRouter.of(context).go('/occasion-details/$occasionId/$fromHome');
           }
           return;
         }
@@ -249,7 +254,7 @@ class _MyAppState extends State<MyApp> {
         if (pathSegments.isNotEmpty && pathSegments.length > 1) {
           final occasionId = pathSegments[1];
           if (mounted) {
-            context.go('/occasion-details/$occasionId/true');
+            GoRouter.of(context).go('/occasion-details/$occasionId/true');
           }
           return;
         }
@@ -260,7 +265,7 @@ class _MyAppState extends State<MyApp> {
     if (mounted) {
       // Navigate to home or login depending on authentication status
       final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
-      context.go(isLoggedIn ? '/home' : '/login');
+      GoRouter.of(context).go(isLoggedIn ? '/home' : '/login');
     }
   }
 
