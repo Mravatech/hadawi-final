@@ -106,7 +106,8 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> with Wi
                                     onPressed: () async {
                                       cubit.acceptFollowRequest(
                                           userId: UserDataFromStorage.uIdFromStorage,
-                                          followerId: cubit.followersRequest[index].userId
+                                          followerId: cubit.followersRequest[index].userId,
+                                        userName: cubit.followersRequest[index].userName,
                                       );
                                     },
                                     buttonColor: ColorManager.primaryBlue,

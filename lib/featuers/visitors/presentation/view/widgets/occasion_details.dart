@@ -163,7 +163,7 @@ context.read<VisitorsCubit>().editOccasionNameController.text =
                                               followerId: UserDataFromStorage
                                                   .uIdFromStorage,
                                               userName: widget.occasionEntity?.personName??"",
-                                              image: widget.occasionEntity?.giftImage[0]??"",
+                                              image: "",
                                             )
                                             .then((value) {
                                           customToast(

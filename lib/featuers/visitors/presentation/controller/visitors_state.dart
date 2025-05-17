@@ -57,3 +57,17 @@ class EditOccasionErrorState extends VisitorsState {
   final String error;
   EditOccasionErrorState(this.error);
 }
+
+class FollowingLoadingState extends VisitorsState{}
+class FollowingSuccessState extends VisitorsState{}
+class FollowingErrorState extends VisitorsState{
+ final String message;
+  FollowingErrorState({required this.message});
+}
+
+class FollowersLoadingState extends VisitorsState{}
+class FollowersSuccessState extends VisitorsState{}
+class FollowersErrorState extends VisitorsState{
+ final  String message;
+  FollowersErrorState({required this.message});
+}

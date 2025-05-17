@@ -24,7 +24,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
     super.initState();
     context
         .read<FriendsCubit>()
-        .getFollowers(userId: UserDataFromStorage.uIdFromStorage);
+        .getFollowing(userId: UserDataFromStorage.uIdFromStorage);
   }
 
   @override
@@ -37,17 +37,17 @@ class _FollowersScreenState extends State<FollowersScreen> {
                 .toString()),
         body: BlocConsumer<FriendsCubit, FriendsStates>(
           listener: (context, state) {
-            if (state is GetFollowersErrorState) {
+            if (state is GetFollowingErrorState) {
               customToast(title: state.message, color: ColorManager.error);
             }
           },
           builder: (context, state) {
             var cubit = context.read<FriendsCubit>();
             return ModalProgressHUD(
-              inAsyncCall: state is GetFollowersLoadingState,
-              child: state is GetFollowersLoadingState
+              inAsyncCall: state is GetFollowingLoadingState,
+              child: state is GetFollowingLoadingState
                   ? const Center(child: CircularProgressIndicator())
-                  : cubit.followers.isEmpty
+                  : cubit.following.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,7 +63,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
                       : ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
-                          itemCount: cubit.followers.length,
+                          itemCount: cubit.following.length,
                           separatorBuilder: (context, index) {
                             return SizedBox(
                               height: 0,
@@ -97,7 +97,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
                                 width: MediaQuery.sizeOf(context).height * 0.02,
                               ),
                               Expanded(
-                                child: Text(cubit.followers[index].userName,
+                                child: Text(cubit.following[index].userName,
                                     style: TextStyles.textStyle18Medium
                                         .copyWith(color: ColorManager.black)),
                               )

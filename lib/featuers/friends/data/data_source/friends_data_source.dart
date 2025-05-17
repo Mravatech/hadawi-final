@@ -4,6 +4,8 @@ import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/friends/data/models/followers_model.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 
+import '../../../../utiles/shared_preferences/shared_preference.dart';
+
 abstract class FriendsDataSource {
   
   Future<List<FollowersModel>> getMyFollowers({
@@ -16,6 +18,7 @@ abstract class FriendsDataSource {
   Future<void> acceptFollowRequest({
     required String userId,
     required String followerId,
+    required String userName,
   });
   Future<void> rejectFollowRequest({
     required String userId,
@@ -30,6 +33,7 @@ class FriendsDataSourceImplement implements FriendsDataSource {
   Future<void> acceptFollowRequest({
     required String userId,
     required String followerId,
+    required String userName,
   })async {
 
     print('followerId $followerId');
@@ -109,11 +113,11 @@ class FriendsDataSourceImplement implements FriendsDataSource {
 
       await FirebaseFirestore.instance.collection('users')
           .doc(followerId).collection('followers').doc(userId)
-          .update({'follow': true,});
+          .update({'follow': false,});
 
       await FirebaseFirestore.instance.collection('users')
           .doc(userId).collection('following').doc(followerId)
-          .update({'follow': true,});
+          .update({'follow': false,});
 
       await getMyFollowers(userId: followerId);
       await getMyFollowing(userId: followerId);

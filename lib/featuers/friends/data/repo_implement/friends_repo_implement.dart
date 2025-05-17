@@ -14,11 +14,12 @@ class FriendsRepoImplement extends FriendsRepo {
   @override
   Future<Either<Faliure, void>> acceptFollowRequest({
     required String userId,
-    required String followerId
+    required String followerId,
+    required String userName,
   })async {
 
     try{
-      return Right(await friendsDataSource.acceptFollowRequest(userId: userId, followerId: followerId));
+      return Right(await friendsDataSource.acceptFollowRequest(userId: userId, followerId: followerId, userName: userName));
     }on FireStoreException catch(e){
       return Left(FireStoreFaliure.fromMessage(e));
     }on Exception catch(e){
