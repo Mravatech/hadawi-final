@@ -196,75 +196,109 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _initDeepLinkHandling() async {
+    // Listen for incoming links while the app is running
     _linkSubscription = _appLinks.uriLinkStream.listen(
       _handleDeepLink,
       onError: (error) {
         debugPrint('Deep link error: $error');
-        GoRouter.of(context).go('/login');
+        // Don't navigate automatically on error
       },
     );
 
     try {
+      // Handle links that launched the app
       final initialLink = await _appLinks.getInitialLink();
       if (initialLink != null) {
-        _handleDeepLink(Uri.parse(initialLink.toString()));
-      }else{
-        if(mounted){
-          GoRouter.of(context).go('/home');
+        debugPrint('Got initial link: ${initialLink.toString()}');
+        _handleDeepLink(initialLink);
+      } else {
+        debugPrint('No initial link found');
+        // Only navigate to home if the user is logged in
+        if (mounted) {
+          final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+          if (isLoggedIn) {
+            GoRouter.of(context).go('/home');
+          } else {
+            GoRouter.of(context).go('/login');
+          }
         }
       }
     } catch (e) {
-      GoRouter.of(context).go('/login');
       debugPrint('Error getting initial deep link: $e');
+      // Don't navigate automatically on error
     }
   }
 
+// Improve your deep link handling logic
   void _handleDeepLink(Uri uri) {
-    debugPrint('Received deep link: ${uri.toString()}');
-    debugPrint('Received deep link: ${uri.toString()}');
+    debugPrint('Handling deep link: ${uri.toString()}');
     debugPrint('URI scheme: ${uri.scheme}');
     debugPrint('URI host: ${uri.host}');
     debugPrint('URI path: ${uri.path}');
     debugPrint('URI pathSegments: ${uri.pathSegments}');
+    debugPrint('URI queryParameters: ${uri.queryParameters}');
 
-    // Check if it's a Dynamic Link (https://hadawiapp.page.link/...)
+    // First, check for Firebase Dynamic Links format
     if (uri.host == 'hadawiapp.page.link') {
-      // Extract the path segments after the domain
-      final pathSegments = uri.pathSegments;
-
-      if (pathSegments.isNotEmpty) {
-        if (pathSegments.first.toLowerCase() == 'occasion-details' && pathSegments.length > 1) {
-          final occasionId = pathSegments[1];
-          final fromHome = pathSegments.length > 2 ? pathSegments[2] : 'true';
-
-          // Use case-insensitive match with your route
-          if (mounted) {
-            GoRouter.of(context).go('/occasion-details/$occasionId/$fromHome');
-          }
-          return;
+      // For Firebase Dynamic Links, we need to resolve the URL first
+      FirebaseDynamicLinks.instance.getDynamicLink(uri).then((dynamicLinkData) {
+        if (dynamicLinkData != null) {
+          final deepLink = dynamicLinkData.link;
+          debugPrint('Resolved dynamic link: ${deepLink.toString()}');
+          _processDeepLinkUri(deepLink);
+        } else {
+          debugPrint('Could not resolve dynamic link');
+          _processDeepLinkUri(uri); // Try to process the original URI as fallback
         }
+      }).catchError((error) {
+        debugPrint('Error resolving dynamic link: $error');
+        _processDeepLinkUri(uri); // Try to process the original URI as fallback
+      });
+    } else {
+      // For direct deep links (custom schemes), process directly
+      _processDeepLinkUri(uri);
+    }
+  }
+
+// New method to centralize the deep link path processing logic
+  void _processDeepLinkUri(Uri uri) {
+    // Check for occasion details in various formats
+
+    // 1. Check path-based format: /occasion-details/{id}
+    if (uri.path.toLowerCase().startsWith('/occasion-details') && uri.pathSegments.length > 1) {
+      final occasionId = uri.pathSegments[1];
+      if (mounted) {
+        debugPrint('Navigating to occasion details with ID: $occasionId');
+        GoRouter.of(context).go('/occasion-details/$occasionId/true');
+        return;
       }
     }
-    // Check if it's a custom scheme (com.app.hadawiapp:// or hadawi://)
-    else if (uri.scheme == 'com.app.hadawiapp' || uri.scheme == 'hadawi') {
-      // Handle custom scheme links
-      if (uri.host == 'google' || uri.host == 'occasion-details') {
-        final pathSegments = uri.pathSegments;
 
-        if (pathSegments.isNotEmpty && pathSegments.length > 1) {
-          final occasionId = pathSegments[1];
-          if (mounted) {
-            GoRouter.of(context).go('/occasion-details/$occasionId/true');
-          }
-          return;
-        }
+    // 2. Check host-based format: occasion-details/{id}
+    else if (uri.host.toLowerCase() == 'occasion-details' && uri.pathSegments.isNotEmpty) {
+      final occasionId = uri.pathSegments.first;
+      if (mounted) {
+        debugPrint('Navigating to occasion details with ID: $occasionId');
+        GoRouter.of(context).go('/occasion-details/$occasionId/true');
+        return;
+      }
+    }
+
+    // 3. Check query parameter format: ?occasion_id={id}
+    else if (uri.queryParameters.containsKey('occasion_id')) {
+      final occasionId = uri.queryParameters['occasion_id'];
+      if (occasionId != null && mounted) {
+        debugPrint('Navigating to occasion details with ID from query param: $occasionId');
+        GoRouter.of(context).go('/occasion-details/$occasionId/true');
+        return;
       }
     }
 
     // Default fallback if no specific route is matched
     if (mounted) {
       // Navigate to home or login depending on authentication status
-      final isLoggedIn = CashHelper.getData(key: 'isLoggedIn') ?? false;
+      final isLoggedIn = UserDataFromStorage.userIsGuest ?? false;
+      debugPrint('No specific path matched. Navigating to ${isLoggedIn ? 'home' : 'login'}');
       GoRouter.of(context).go(isLoggedIn ? '/home' : '/login');
     }
   }
