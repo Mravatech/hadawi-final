@@ -36,8 +36,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
 
-// Custom route generation class to replace GoRouter
-// Routes definition using standard Navigator
 class AppRoutes {
   static const String splash = '/';
   static const String home = '/home';

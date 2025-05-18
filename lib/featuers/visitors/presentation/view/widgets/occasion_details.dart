@@ -510,12 +510,12 @@ class _OccasionDetailsState extends State<OccasionDetails>{
             ),
           ),
         ),
-        SizedBox(width: MediaQuery.sizeOf(context).width * .05),
+        SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// pay button
         GestureDetector(
           onTap: () {
-            if (double.parse(cubit.remainingBalanceController.text) > 0) {
+            if (double.parse(cubit.remainingBalanceController.text) > 0 || cubit.occasionDetailsModel.giftPrice > cubit.occasionDetailsModel.moneyGiftAmount) {
               customPushNavigator(
                   context,
                   PaymentScreen(
@@ -533,7 +533,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
             height: MediaQuery.sizeOf(context).height * .055,
             width: MediaQuery.sizeOf(context).width * .25,
             decoration: BoxDecoration(
-              color: double.parse(cubit.remainingBalanceController.text) > 0
+              color: double.parse(cubit.remainingBalanceController.text) > 0 || cubit.occasionDetailsModel.giftPrice > cubit.occasionDetailsModel.moneyGiftAmount
                   ? ColorManager.primaryBlue
                   : ColorManager.gray,
               borderRadius: BorderRadius.circular(
@@ -556,7 +556,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
             ),
           ),
         ),
-        SizedBox(width: MediaQuery.sizeOf(context).width * .05),
+        SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// edit button
         if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId)
