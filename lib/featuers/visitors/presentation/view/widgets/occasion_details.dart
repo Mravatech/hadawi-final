@@ -195,7 +195,8 @@ class _OccasionDetailsState extends State<OccasionDetails>{
                               cubit.occasionDetailsModel.personId)
                           ? Container()
                           : SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.3,
+                        width:
+                        MediaQuery.sizeOf(context).width * 0.3,
                         child: DefaultButton(
                           buttonText: AppLocalizations.of(context)!
                               .translate('follow')
@@ -203,11 +204,12 @@ class _OccasionDetailsState extends State<OccasionDetails>{
                           onPressed: () {
                             context.read<VisitorsCubit>()
                                 .sendFollowRequest(
-                              userId: cubit.occasionDetailsModel.personId,
-                              followerId: UserDataFromStorage.uIdFromStorage,
-                              userName: cubit.occasionDetailsModel.personName,
-                              image: cubit.occasionDetailsModel.giftImage.isNotEmpty ?
-                              cubit.occasionDetailsModel.giftImage[0] ?? "" : "",
+                              userId:
+                              cubit.occasionDetailsModel.personId,
+                              followerId: UserDataFromStorage
+                                  .uIdFromStorage,
+                              userName:cubit.occasionDetailsModel.personName,
+                              image: "",
                             )
                                 .then((value) {
                               customToast(
