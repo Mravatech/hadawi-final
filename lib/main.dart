@@ -3,7 +3,6 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
@@ -37,34 +36,64 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
 
-final GoRouter _router = GoRouter(
-  initialLocation: '/',
-  debugLogDiagnostics: true,
-  errorBuilder: (context, state) => const LoginScreen(),
-  routes: [
-    GoRoute(path: '/', builder: (context, state) => SplashScreen()),
-    GoRoute(
-      path: '/occasion-details/:id/:fromHome',
-      name: 'occasion-details',
-      builder: (context, state) {
-        final occasionId = state.pathParameters['id'];
-        final fromHome = state.pathParameters['fromHome'] == 'true';
-        debugPrint('Opening occasion details for ID: $occasionId, fromHome: $fromHome');
-        return OccasionDetails(occasionId: occasionId!, fromHome: fromHome);
-      },
-    ),
-    GoRoute(path: '/home', builder: (context, state) => HomeLayout()),
-    GoRoute(path: '/summary', builder: (context, state) => OccasionSummary()),
-    GoRoute(path: '/visitors', builder: (context, state) => VisitorsScreen()),
-    GoRoute(path: '/notification', builder: (context, state) => NotificationScreen()),
-    GoRoute(path: '/privacy-policies', builder: (context, state) => PrivacyPoliciesScreen()),
-    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
-    GoRoute(path: '/my-occasions', builder: (context, state) => MyOccasions()),
-    GoRoute(path: '/sign-up', builder: (context, state) => const RegisterScreen()),
-    GoRoute(path: '/:path(.*)', builder: (context, state) => const LoginScreen()),
-  ],
-);
+// Custom route generation class to replace GoRouter
+// Routes definition using standard Navigator
+class AppRoutes {
+  static const String splash = '/';
+  static const String home = '/home';
+  static const String occasionDetails = '/occasion-details';
+  static const String summary = '/summary';
+  static const String visitors = '/visitors';
+  static const String notification = '/notification';
+  static const String privacyPolicies = '/privacy-policies';
+  static const String login = '/login';
+  static const String myOccasions = '/my-occasions';
+  static const String signUp = '/sign-up';
 
+  // Define route generator function
+  static Route<dynamic> generateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case splash:
+        return MaterialPageRoute(builder: (_) => SplashScreen());
+
+      case occasionDetails:
+        final args = settings.arguments as Map<String, dynamic>;
+        final occasionId = args['occasionId'] as String;
+        final fromHome = args['fromHome'] as bool;
+        debugPrint('Opening occasion details for ID: $occasionId, fromHome: $fromHome');
+        return MaterialPageRoute(
+            builder: (_) => OccasionDetails(occasionId: occasionId, fromHome: fromHome)
+        );
+
+      case home:
+        return MaterialPageRoute(builder: (_) => HomeLayout());
+
+      case summary:
+        return MaterialPageRoute(builder: (_) => OccasionSummary());
+
+      case visitors:
+        return MaterialPageRoute(builder: (_) => VisitorsScreen());
+
+      case notification:
+        return MaterialPageRoute(builder: (_) => NotificationScreen());
+
+      case privacyPolicies:
+        return MaterialPageRoute(builder: (_) => PrivacyPoliciesScreen());
+
+      case login:
+        return MaterialPageRoute(builder: (_) => LoginScreen());
+
+      case myOccasions:
+        return MaterialPageRoute(builder: (_) => MyOccasions());
+
+      case signUp:
+        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+
+      default:
+        return MaterialPageRoute(builder: (_) => const LoginScreen());
+    }
+  }
+}
 
 Future<void> main() async {
   await SentryFlutter.init(
@@ -130,10 +159,6 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   // Extract occasion ID from the link
   String? occasionId;
 
-  // Check for both formats:
-  // 1. https://hadawiapp.page.link/occasion-details/{occasionId}
-  // 2. https://hadawiapp.page.link/?link=https://hadawiapp.page.link/occasion-details/{occasionId}
-
   if (deepLink.pathSegments.isNotEmpty) {
     // Handle path segments
     int occasionDetailsIndex = deepLink.pathSegments.indexOf('occasion-details');
@@ -177,15 +202,22 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   debugPrint('Extracted occasion ID: $occasionId');
 
   if (occasionId != null && occasionId.isNotEmpty) {
-    // Navigate to occasion details using global navigation context
+    // Navigate to occasion details using standard Navigator
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      MyApp.navigatorKey.currentState?.context.go('/occasion-details/$occasionId/true');
+      MyApp.navigatorKey.currentState?.pushNamed(
+          AppRoutes.occasionDetails,
+          arguments: {
+            'occasionId': occasionId,
+            'fromHome': true
+          }
+      );
     });
   }
 }
 
 class MyApp extends StatefulWidget {
-  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+  // Keep the navigator key for global navigation access
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   const MyApp({super.key});
 
   @override
@@ -253,21 +285,44 @@ class _MyAppState extends State<MyApp> {
           occasionId = uri.pathSegments.last;
         }
       }
+
+      // Check if a link parameter is provided
+      if (occasionId == null && uri.queryParameters.containsKey('link')) {
+        final linkUri = Uri.tryParse(uri.queryParameters['link']!);
+        if (linkUri != null) {
+          // Extract ID from the link parameter
+          if (linkUri.pathSegments.contains('occasion-details')) {
+            int idx = linkUri.pathSegments.indexOf('occasion-details');
+            if (idx < linkUri.pathSegments.length - 1) {
+              occasionId = linkUri.pathSegments[idx + 1];
+            }
+          }
+        }
+      }
     }
 
     debugPrint('Extracted occasion ID from app link: $occasionId');
 
     if (occasionId != null && occasionId.isNotEmpty) {
-      // Use GoRouter to navigate
-      if (mounted) {
-        GoRouter.of(context).go('/occasion-details/$occasionId/true');
-      }
+      // Use WidgetsBinding to ensure the navigation happens after the widget tree is built
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Navigate using the standard Navigator and the navigatorKey
+        MyApp.navigatorKey.currentState?.pushNamed(
+            AppRoutes.occasionDetails,
+            arguments: {
+              'occasionId': occasionId,
+              'fromHome': true
+            }
+        );
+      });
     } else {
       // Default navigation if no occasion ID is found
-      if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         final isLoggedIn = UserDataFromStorage.userIsGuest;
-        GoRouter.of(context).go(isLoggedIn ? '/home' : '/login');
-      }
+        MyApp.navigatorKey.currentState?.pushReplacementNamed(
+            isLoggedIn ? AppRoutes.home : AppRoutes.login
+        );
+      });
     }
   }
 
@@ -288,11 +343,13 @@ class _MyAppState extends State<MyApp> {
       ],
       child: BlocBuilder<LocalizationCubit, LocalizationStates>(
         builder: (context, state) {
-          return MaterialApp.router(
+          return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'Hadawi',
             theme: getApplicationTheme(context),
-            routerConfig: _router,
+            navigatorKey: MyApp.navigatorKey,
+            initialRoute: AppRoutes.splash,
+            onGenerateRoute: AppRoutes.generateRoute,
             localizationsDelegates: [
               AppLocalizations.delegate,
               GlobalMaterialLocalizations.delegate,
