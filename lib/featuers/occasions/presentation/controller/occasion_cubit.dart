@@ -525,7 +525,7 @@ class OccasionCubit extends Cubit<OccasionState> {
       final DynamicLinkParameters parameters = DynamicLinkParameters(
         uriPrefix: 'https://hadawiapp.page.link',
         // Make this path consistent with how you're handling it
-        link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId/true'),
+        link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId'),
         androidParameters: const AndroidParameters(
           packageName: 'com.app.hadawi_app',
           minimumVersion: 1,
@@ -533,6 +533,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         iosParameters: const IOSParameters(
           bundleId: 'com.app.hadawiapp',
           minimumVersion: '1.0.0',
+          appStoreId: '6742405578',
         ),
         // Adding social metadata for better link previews
         socialMetaTagParameters: SocialMetaTagParameters(
@@ -541,7 +542,8 @@ class OccasionCubit extends Cubit<OccasionState> {
         ),
       );
 
-      final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters,
+        shortLinkType: ShortDynamicLinkType.unguessable,);
       debugPrint("shortLink: ${shortLink.shortUrl}");
       occasionLink = shortLink.shortUrl.toString();
       emit(CreateOccasionLinkSuccessState());
