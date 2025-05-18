@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
@@ -28,13 +27,13 @@ class SettingViewBody extends StatelessWidget {
     return BlocConsumer<AuthCubit,AuthStates>(
       listener: (context, state) {
          if(state is UserLogoutSuccessState){
-           context.go(AppRouter.login);
+           customPushReplacement(context, LoginScreen());
          }
          if(state is UserLogoutErrorState){
            customToast(title: state.message, color: ColorManager.error);
          }
          if(state is DeleteUserSuccessState){
-           context.go(AppRouter.login);
+           customPushReplacement(context, LoginScreen());
          }
          if(state is DeleteUserErrorState){
            customPushAndRemoveUntil(context, LoginScreen());

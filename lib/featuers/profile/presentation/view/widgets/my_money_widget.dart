@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
@@ -47,7 +46,7 @@ class _MyMoneyWidgetState extends State<MyMoneyWidget> {
         actions: [
           GestureDetector(
             onTap: () {
-              context.replace(AppRouter.home);
+              customPushReplacement(context, HomeLayout());
             },
             child: Padding(
               padding: const EdgeInsets.all(5.0),

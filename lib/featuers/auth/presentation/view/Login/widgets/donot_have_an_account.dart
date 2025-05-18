@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/register_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';

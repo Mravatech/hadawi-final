@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
@@ -22,7 +21,7 @@ class LoginWithSocialButton extends StatelessWidget {
           // customToast(title: state.message, color: ColorManager.primaryBlue);
         }
         if(state is SignInWithSocialMediaSuccessState){
-          context.replace(AppRouter.home);
+          customPushReplacement(context, HomeLayout());
         }
       },
       builder: (context, state) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_form_widget.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
@@ -97,7 +98,7 @@ class _ForgetPasswordViewBodyState extends State<ForgetPasswordViewBody> {
                                 .toString(),
                             color: ColorManager.success
                           );
-                          context.replace(AppRouter.login);
+                          customPushReplacement(context, LoginScreen());
                         }
                         if (state is ResetPasswordErrorState) {
 

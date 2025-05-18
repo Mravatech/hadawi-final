@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
@@ -155,7 +154,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                     visible: UserDataFromStorage.userIsGuest == true? true:false,
                                     child: IconButton(
                                       onPressed: (){
-                                        context.go(AppRouter.login);
+                                        customPushReplacement(context, LoginScreen());
                                       },
                                       icon: const Icon(Icons.login_outlined),color: ColorManager.black,
                                     ),
@@ -184,12 +183,12 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                               title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
                                               body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
                                               type: ToastificationType.error);
-                                          context.go(AppRouter.login);
+                                          customPushReplacement(context, LoginScreen());
 
                                         }else{
                                           if(UserDataFromStorage.isUserBlocked==true){
                                             AuthCubit.get(context).logout();
-                                            context.go(AppRouter.login);
+                                            customPushReplacement(context, LoginScreen());
                                             toastificationWidget(context: context,
                                                 title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
                                                 body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
@@ -228,11 +227,11 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                               title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
                                               body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
                                               type: ToastificationType.error);
-                                          context.go(AppRouter.login);
+                                          customPushReplacement(context, LoginScreen());
                                         }else{
                                           if(UserDataFromStorage.isUserBlocked==true){
                                             AuthCubit.get(context).logout();
-                                            context.go(AppRouter.login);
+                                            customPushReplacement(context, LoginScreen());
                                             toastificationWidget(context: context,
                                                 title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
                                                 body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
@@ -366,10 +365,10 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                               title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
                                               body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
                                               type: ToastificationType.error);
-                                          context.go(AppRouter.login);
+                                          customPushReplacement(context, LoginScreen());
                                         }else{
                                           if(UserDataFromStorage.isUserBlocked==true){
-                                            context.go(AppRouter.login);
+                                            customPushReplacement(context, LoginScreen());
                                             toastificationWidget(context: context,
                                                 title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
                                                 body: AppLocalizations.of(context)!.translate('blockMessage').toString(),

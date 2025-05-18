@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/donot_have_an_account.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_password_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/remember_me_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
@@ -132,7 +135,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                           emailController: widget.emailController.text,
                           passController: widget.passController.text,
                           value: UserDataFromStorage.rememberMe);
-                      context.replace(AppRouter.home);
+                      customPushReplacement(context, HomeLayout());
                     }
                     if (state is UserLoginErrorState) {
                       customToast(
@@ -171,7 +174,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       .toString(),
                   onPressed: () {
                     UserDataFromStorage.setUserIsGuest(true);
-                    context.go(AppRouter.visitors);
+                    customPushReplacement(context, VisitorsScreen());
                   },
                   buttonColor: ColorManager.primaryBlue,
                 ),

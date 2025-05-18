@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/widgets/logo_image.dart';
 import 'package:hadawi_app/main.dart';

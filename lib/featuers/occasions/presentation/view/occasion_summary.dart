@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/view/widgets/occasion_qr.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -65,7 +65,7 @@ class OccasionSummary extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: InkWell(
-                  onTap: () => context.replace(AppRouter.home),
+                  onTap: () => customPushReplacement(context, HomeLayout()),
                   child: Image(image: _logoProvider, height: 40),
                 ),
               ),

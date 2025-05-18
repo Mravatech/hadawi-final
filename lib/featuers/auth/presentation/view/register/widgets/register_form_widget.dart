@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
@@ -286,7 +285,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 // sign up
                 BlocConsumer<AuthCubit, AuthStates>(listener: (context, state) {
                   if (state is UserRegisterSuccessState) {
-                    context.replace(AppRouter.home);
+                    customPushReplacement(context, HomeLayout());
                   }
                   if (state is UserRegisterErrorState) {
 
