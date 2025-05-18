@@ -9,7 +9,7 @@ import FirebaseDynamicLinks
 import GoogleSignIn
 import UserNotifications
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
     private var dynamicLinksChannel: FlutterMethodChannel?
 

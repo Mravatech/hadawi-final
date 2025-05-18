@@ -381,7 +381,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                                 value:   cubit,
                                                 child: OccasionDetails(
                                                   occasionId: cubit.activeOccasions[index].occasionId,
-                                                  occasionEntity: cubit.activeOccasions[index],
                                                   fromHome: true,
                                                 ),
                                               ),
@@ -395,7 +394,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                             value:  cubit,
                                             child: OccasionDetails(
                                               occasionId: cubit.activeOccasions[index].occasionId,
-                                              occasionEntity: cubit.activeOccasions[index],
                                               fromHome: true,
                                             ),
                                           ),

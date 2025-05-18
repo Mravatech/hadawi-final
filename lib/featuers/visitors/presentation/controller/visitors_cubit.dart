@@ -14,11 +14,7 @@ import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_reques
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../friends/domain/entities/follower_entities.dart';
-import '../../../friends/domain/use_cases/get_followers_use_cases.dart';
-import '../../../friends/domain/use_cases/get_following_use_cases.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
-
 part 'visitors_state.dart';
 
 class VisitorsCubit extends Cubit<VisitorsState> {
@@ -46,12 +42,11 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   }
 
   TextEditingController searchController = TextEditingController();
-  int closeCount = 0;
-  int openCount = 0;
-
+  int closeCount=0;
+  int openCount=0;
   Future<void> getOccasions() async {
-    closeCount = 0;
-    openCount = 0;
+    closeCount=0;
+    openCount=0;
     emit(GetOccasionsLoadingState());
     final result = await OccasionRepoImp().getOccasions();
     result.fold((failure) {
@@ -215,14 +210,14 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     });
   }
 
-  OccasionModel occasionModel = OccasionModel(
+  OccasionModel emptyOccasionModel = OccasionModel(
     isForMe: false,
     isActive: false,
     occasionName: '',
     occasionDate: '',
     occasionId: '',
     occasionType: '',
-    moneyGiftAmount: '',
+    moneyGiftAmount: 0.0,
     personId: '',
     personName: '',
     personPhone: '',
@@ -230,7 +225,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     giftImage: [],
     giftName: '',
     giftLink: '',
-    giftPrice: '',
+    giftPrice: 0.0,
     giftType: '',
     isSharing: false,
     receiverName: '',
@@ -251,43 +246,89 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     packagePrice: '',
   );
 
-  Future<void> getOccasionData({required String occasionId}) async {
+  OccasionModel occasionDetailsModel = OccasionModel(
+    isForMe: false,
+    isActive: false,
+    occasionName: '',
+    occasionDate: '',
+    occasionId: '',
+    occasionType: '',
+    moneyGiftAmount: 0.0,
+    personId: '',
+    personName: '',
+    personPhone: '',
+    personEmail: '',
+    giftImage: [],
+    giftName: '',
+    giftLink: '',
+    giftPrice: 0.0,
+    giftType: '',
+    isSharing: false,
+    receiverName: '',
+    receiverPhone: '',
+    bankName: '',
+    ibanNumber: '',
+    isContainName: false,
+    giftCard: '',
+    city: '',
+    district: '',
+    note: '',
+    isPrivate: false,
+    discount: 0.0,
+    appCommission: 0.0,
+    deliveryPrice: 0.0,
+    type: '',
+    packageImage: '',
+    packagePrice: '',
+  );
+
+  Future<void> getOccasionData({required String occasionId})async{
     emit(GetOccasionDataLoadingState());
-    FirebaseFirestore.instance
-        .collection('Occasions')
-        .doc(occasionId)
-        .get()
-        .then((value) {
-      occasionModel = OccasionModel.fromJson(value.data()!);
-      debugPrint("occasionModel: ${occasionModel!.occasionName}");
+    FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
+      occasionDetailsModel = OccasionModel.fromJson(value.data()!);
+      debugPrint("occasionModel: ${occasionDetailsModel!.occasionName}");
       emit(GetOccasionDataSuccessState());
-    }).catchError((error) {
+    }).catchError((error){
       debugPrint("error in getting occasion data: $error");
       emit(GetOccasionDataErrorState());
     });
   }
 
+  String occasionLink = '';
+
   Future<String> createDynamicLink(String occasionId) async {
     emit(CreateOccasionLinkDetailsLoadingState());
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix: 'https://hadawiapp.page.link',
-      link:
-          Uri.parse('https://hadawiapp.page.link/Occasion-details/$occasionId'),
-      androidParameters: const AndroidParameters(
-        packageName: 'com.app.hadawi_app',
-        minimumVersion: 1,
-      ),
-      iosParameters: const IOSParameters(
-        bundleId: 'com.app.hadawiapp',
-        minimumVersion: '1.0.0',
-      ),
-    );
 
-    final ShortDynamicLink shortLink =
-        await FirebaseDynamicLinks.instance.buildShortLink(parameters);
-    debugPrint("shortLink: ${shortLink.shortUrl}");
-    emit(CreateOccasionLinkDetailsSuccessState());
-    return shortLink.shortUrl.toString();
+    try {
+      final DynamicLinkParameters parameters = DynamicLinkParameters(
+        uriPrefix: 'https://hadawiapp.page.link',
+        // Make this path consistent with how you're handling it
+        link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId'),
+        androidParameters: const AndroidParameters(
+          packageName: 'com.app.hadawi_app',
+          minimumVersion: 1,
+        ),
+        iosParameters: const IOSParameters(
+          bundleId: 'com.app.hadawiapp',
+          minimumVersion: '1.0.0',
+          appStoreId: '6742405578',
+        ),
+        // Adding social metadata for better link previews
+        socialMetaTagParameters: SocialMetaTagParameters(
+          title: 'Hadawi App - Occasion Details',
+          description: 'View this occasion in the Hadawi App',
+        ),
+      );
+
+      final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+      debugPrint("shortLink: ${shortLink.shortUrl}");
+      occasionLink = shortLink.shortUrl.toString();
+      emit(CreateOccasionLinkDetailsSuccessState());return shortLink.shortUrl.toString();
+    } catch (error) {
+      debugPrint("Error creating dynamic link: $error");
+      emit(CreateOccasionLinkDetailsErrorState());
+      return '';
+    }
   }
 
   AnalysisModel? analysisModel;

@@ -161,7 +161,7 @@ class _MyGiftPaymentsListState extends State<MyGiftPaymentsList> {
                               child: Text(
                                 PaymentCubit.get(context)
                                     .occasionPaymentsList[index]
-                                    .personName,
+                                    .payerName,
                                 style: TextStyles.textStyle10Bold
                                     .copyWith(color: ColorManager.primaryBlue),
                                 textAlign: TextAlign.center,

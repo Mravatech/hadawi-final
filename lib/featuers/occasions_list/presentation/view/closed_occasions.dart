@@ -100,7 +100,6 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                                               context,
                                               OccasionDetails(
                                                 occasionId: occasionItem.occasionId,
-                                                occasionEntity: occasionItem,
                                                 fromHome: false,
                                               ));
                                         },
