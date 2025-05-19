@@ -6,62 +6,72 @@ import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_prof
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
+import 'package:intl/intl.dart';
 
-class EditProfileCubit extends Cubit<EditProfileStates>{
-
-  EditProfileCubit({required this.editProfileUseCases}):super(EditProfileInitialState());
+class EditProfileCubit extends Cubit<EditProfileStates> {
+  EditProfileCubit({required this.editProfileUseCases})
+      : super(EditProfileInitialState());
 
   EditProfileUseCases editProfileUseCases;
 
-
-  Future<void> editProfile({required String name, required String phone,required context,required String gender})async{
+  Future<void> editProfile(
+      { String? name,
+       String? phone,
+       String? birthDate,
+       context,
+       String? gender}) async {
     emit(EditProfileLoadingState());
-    var result = await editProfileUseCases.editProfile(name: name, phone: phone,context: context,gender: gender);
+    var result = await editProfileUseCases.editProfile(
+      birthDate: birthDate,
+        name: name, phone: phone, context: context, gender: gender);
     result.fold((l) {
       emit(EditProfileErrorState(message: l.message));
     }, (r) {
       emit(EditProfileSuccessState());
     });
-
   }
 
-  bool isUsed=false;
+  bool isUsed = false;
 
-  Future<void> getUserInfo({required String phone,required context,required String name,required String gender})async{
-    isUsed=false;
+  Future<void> getUserInfo(
+      {required String phone,
+      required context,
+      required String name,
+      required String birthDate,
+      required String gender}) async {
+    isUsed = false;
     emit(CheckPhoneLoadingState());
-    FirebaseFirestore.instance.collection('users').where('phone',isEqualTo: phone)
-        .get().then((value) {
-          value.docs.forEach((element) {
-            print(element.data());
-          });
-          print('fhdfhd');
-
-          if(value.docs.isEmpty){
-            isUsed=false;
-            editProfile(
-              name:name,
-              context: context,
-              gender: gender,
-              phone: phone,
-            );
-          }else{
-            isUsed=true;
-            customToast(title: AppLocalizations.of(context)!.translate('phoneToastError').toString() , color: Colors.red);
-          }
+    FirebaseFirestore.instance
+        .collection('users')
+        .where('phone', isEqualTo: phone)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        print(element.data());
+      });
+      print('fhdfhd');
 
       emit(CheckPhoneSuccessState());
-    }).catchError((error){
-      isUsed=false;
+    }).catchError((error) {
+      isUsed = false;
       debugPrint("error in getting user info: $error");
       emit(CheckPhoneErrorState());
       return;
     });
   }
 
+  void setBrithDate(
+      {required DateTime brithDateValue,
+      required TextEditingController brithDateController}) {
+    brithDateController.text = DateFormat('yyyy-MM-dd').format(brithDateValue);
+    emit(SetBrithDayState());
+  }
 
+  String genderValue = 'Male';
 
-
-
-
+  void changeGenderValue(String? value) {
+    genderValue = value!;
+    print(genderValue);
+    emit(SelectGenderState());
+  }
 }

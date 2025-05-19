@@ -276,7 +276,7 @@ class _RegisterFormWidgetState extends State<RegisterFormWidget> {
                 ),
 
                 // gender
-                SelectGenderWidget(),
+                SelectGenderWidget(isFromRegister: true,),
 
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.04,

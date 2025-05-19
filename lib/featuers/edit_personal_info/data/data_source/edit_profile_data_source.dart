@@ -4,38 +4,42 @@ import 'package:hadawi_app/featuers/auth/data/data_source/auth_data_source.dart'
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
-abstract class EditProfileDataSource{
-
-  Future<void> editProfileData({
-    required String name,
-    required String phone,
-    required String gender,
-    required context
-  });
-
+abstract class EditProfileDataSource {
+  Future<void> editProfileData(
+      {String? name,
+      String? phone,
+      String? gender,
+      String? birthDate,
+      context});
 }
 
-class EditProfileDataSourceImplement extends EditProfileDataSource{
-
-  BaseAuthDataSource baseAuthDataSource ;
+class EditProfileDataSourceImplement extends EditProfileDataSource {
+  BaseAuthDataSource baseAuthDataSource;
 
   EditProfileDataSourceImplement({required this.baseAuthDataSource});
 
   @override
-  Future<void> editProfileData({required String name, required String phone, required context, required String gender}) async{
-    try{
-      await FirebaseFirestore.instance.collection('users')
+  Future<void> editProfileData(
+      {
+       String? name,
+       String? birthDate,
+       String? phone,
+       context,
+       String? gender}) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
           .doc(UserDataFromStorage.uIdFromStorage)
-          .update(
-          {
-            'name': name,
-            'phone': phone,
-            'gender': gender
-          });
-      baseAuthDataSource.getUserData(uId: UserDataFromStorage.uIdFromStorage,context: context);
-    }on FirebaseException catch(error){
+          .update({
+        'name': name,
+        'phone': phone,
+        'gender': gender,
+        'brithDate': birthDate
+      });
+      baseAuthDataSource.getUserData(
+          uId: UserDataFromStorage.uIdFromStorage, context: context);
+    } on FirebaseException catch (error) {
       throw FireStoreException(firebaseException: error);
     }
   }
-
 }
