@@ -5,24 +5,28 @@ import 'package:hadawi_app/featuers/edit_personal_info/domain/repo/edit_profile_
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
-class EditProfileRepoImplement extends EditProfileRepo{
-
+class EditProfileRepoImplement extends EditProfileRepo {
   EditProfileDataSource editProfileDataSource;
 
   EditProfileRepoImplement({required this.editProfileDataSource});
 
   @override
-  Future<Either<Faliure, void>> editProfile({required String userName, required String gender ,required String phone,required context}) async{
-    try{
+  Future<Either<Faliure, void>> editProfile(
+      {
+       String? userName,
+       String? birthDate,
+       String? gender,
+       String? phone,
+      required context}) async {
+    try {
       return Right(await editProfileDataSource.editProfileData(
           name: userName,
           context: context,
           phone: phone,
+          birthDate: birthDate,
           gender: gender));
-    }on FireStoreException catch(e){
+    } on FireStoreException catch (e) {
       return Left(FireStoreFaliure.fromMessage(e));
     }
-
   }
-
 }

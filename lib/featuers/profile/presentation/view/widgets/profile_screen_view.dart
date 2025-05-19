@@ -21,123 +21,145 @@ import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
+import '../../../../../utiles/services/service_locator.dart';
+import '../../../../edit_personal_info/view/controller/edit_profile_cubit.dart';
+
 class ProfileBodyView extends StatelessWidget {
   const ProfileBodyView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  BlocConsumer<OccasionsListCubit,OccasionsListStates>(
-      listener: (context,state){},
+    return BlocConsumer<OccasionsListCubit, OccasionsListStates>(
+      listener: (context, state) {},
       builder: (context, state) {
         return SingleChildScrollView(
           child: Container(
-            width:  MediaQuery.sizeOf(context).width,
-            margin:  EdgeInsets.symmetric(
-                horizontal: MediaQuery.sizeOf(context).height*0.02,
-                vertical: MediaQuery.sizeOf(context).height*0.02
-            ),
+            width: MediaQuery.sizeOf(context).width,
+            margin: EdgeInsets.symmetric(
+                horizontal: MediaQuery.sizeOf(context).height * 0.02,
+                vertical: MediaQuery.sizeOf(context).height * 0.02),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
+                ),
 
                 // البيانات الشخصية
                 GestureDetector(
-                    onTap:  (){
-                      customPushNavigator(context, EditProfileScreen());
+                    onTap: () {
+                      customPushNavigator(
+                          context,
+                          BlocProvider(
+                              create: (context) => EditProfileCubit(editProfileUseCases: getIt()),
+                            child: EditProfileScreen(),
+                          ));
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.userIcon,
-                        title: AppLocalizations.of(context)!.translate('info').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('info')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.035,),
-          
+
                 // قائمة المناسبات
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       customPushNavigator(context, AllOccasionsScreen());
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.balloonsIcon,
-                        title: AppLocalizations.of(context)!.translate('occasionsList').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('occasionsList')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.035,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.035,),
-          
+
                 // قائمة الاصدقاء
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       customPushNavigator(context, FriendsScreen());
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.friendsIcon,
-                        title: AppLocalizations.of(context)!.translate('friendsList').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('friendsList')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-          
+
                 // طلباتي
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       customPushNavigator(context, MyOrdersWidgets());
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.requestAccount,
-                        title: AppLocalizations.of(context)!.translate('myRequests').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('myRequests')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-          
+
                 // هداياي
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       customPushNavigator(context, MyGiftsWidget());
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.giftAccount,
-                        title: AppLocalizations.of(context)!.translate('myGifts').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('myGifts')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-          
+
                 // المساهمات
                 GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       customPushNavigator(context, MyMoneyWidget());
                     },
                     child: ProfileRowWidget(
                         image: AssetsManager.moneyAccount,
-                        title: AppLocalizations.of(context)!.translate('myContributions').toString()
-                    )
+                        title: AppLocalizations.of(context)!
+                            .translate('myContributions')
+                            .toString())),
+
+                SizedBox(
+                  height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
-          
-                SizedBox(height: MediaQuery.sizeOf(context).height*0.03,),
-          
+
                 // private user
                 Row(
-                  mainAxisAlignment:MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      AppLocalizations.of(context)!.translate('privateUser').toString(),
+                      AppLocalizations.of(context)!
+                          .translate('privateUser')
+                          .toString(),
                       style: TextStyles.textStyle18Bold.copyWith(
-                          color: ColorManager.primaryBlue,
-                          fontSize: 16
-                      ),
+                          color: ColorManager.primaryBlue, fontSize: 16),
                     ),
                     Switch(
                       inactiveThumbColor: ColorManager.gray,
                       inactiveTrackColor: ColorManager.white.withOpacity(0.6),
-                      activeTrackColor: ColorManager.primaryBlue.withOpacity(0.8),
+                      activeTrackColor:
+                          ColorManager.primaryBlue.withOpacity(0.8),
                       activeColor: ColorManager.white,
                       value: OccasionsListCubit.get(context).privateAccount,
-                      onChanged: (bool value) =>  OccasionsListCubit.get(context).changePrivateAccount(),
+                      onChanged: (bool value) => OccasionsListCubit.get(context)
+                          .changePrivateAccount(),
                     ),
                   ],
                 ),
@@ -147,6 +169,5 @@ class ProfileBodyView extends StatelessWidget {
         );
       },
     );
-
   }
 }
