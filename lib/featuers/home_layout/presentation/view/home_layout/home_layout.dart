@@ -139,6 +139,7 @@ class _HomeLayoutState extends State<HomeLayout> {
                   : defaultAppBarWidget(
                       appBarTitle:
                           AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString(),
+                  context: context
                     ),
               body: AppConstants().homeLayoutWidgets[cubit.currentIndex],
               bottomNavigationBar: BottomNavigationBarWidget(),

@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/friends/presentation/controller/firends_states.dart';
@@ -32,6 +33,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
     return Scaffold(
         backgroundColor: ColorManager.white,
         appBar: defaultAppBarWidget(
+            context: context,
             appBarTitle: AppLocalizations.of(context)!
                 .translate('friendsIFollow')
                 .toString()),

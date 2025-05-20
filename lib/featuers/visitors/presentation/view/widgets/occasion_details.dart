@@ -643,8 +643,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// edit button
-        if (UserDataFromStorage.uIdFromStorage ==
-            cubit.occasionDetailsModel.personId)
+        if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId)
           state is EditOccasionLoadingState
               ? LoadingAnimationWidget()
               : isActive == true

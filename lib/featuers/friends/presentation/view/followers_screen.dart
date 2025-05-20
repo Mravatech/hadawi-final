@@ -32,6 +32,7 @@ class _FollowersScreenState extends State<FollowersScreen> {
     return Scaffold(
         backgroundColor: ColorManager.white,
         appBar: defaultAppBarWidget(
+            context: context,
             appBarTitle: AppLocalizations.of(context)!
                 .translate('friendsFollowMe')
                 .toString()),

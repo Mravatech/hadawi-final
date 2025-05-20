@@ -43,7 +43,7 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> with Wi
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      appBar: defaultAppBarWidget(appBarTitle:AppLocalizations.of(context)!.translate('followRequests').toString()),
+      appBar: defaultAppBarWidget(appBarTitle:AppLocalizations.of(context)!.translate('followRequests').toString(),context: context,),
       body: BlocConsumer<FriendsCubit, FriendsStates>(
         listener: (context, state) {
           if(state is AcceptFollowRequestErrorState){

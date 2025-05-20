@@ -19,7 +19,7 @@ class FriendsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      appBar: defaultAppBarWidget(appBarTitle: AppLocalizations.of(context)!.translate('friends').toString()),
+      appBar: defaultAppBarWidget(appBarTitle: AppLocalizations.of(context)!.translate('friends').toString(),context: context,),
       body: BlocProvider(
         create:(context) => FriendsCubit(getIt(),getIt(),getIt(),getIt()),
         child: BlocConsumer<FriendsCubit,FriendsStates>(

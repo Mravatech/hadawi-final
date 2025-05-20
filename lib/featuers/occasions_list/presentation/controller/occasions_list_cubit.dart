@@ -50,7 +50,7 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
         for (var element in value.docs) {
-          if(element['personId'] == UserDataFromStorage.uIdFromStorage){
+          if(element['personId'] == UserDataFromStorage.uIdFromStorage && element['isActive'] == true && element['giftPrice'].toInt() > element['moneyGiftAmount'].toInt()){
             myOccasionsList.add(OccasionModel.fromJson(element.data()));
           }
         }

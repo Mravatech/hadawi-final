@@ -55,8 +55,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: defaultAppBarWidget(
+          context: context,
           appBarTitle:
-              AppLocalizations.of(context)!.translate('info').toString()),
+              AppLocalizations.of(context)!.translate('info').toString())
+      ,
       body: BlocConsumer<EditProfileCubit, EditProfileStates>(
           builder: (context, state) {
 

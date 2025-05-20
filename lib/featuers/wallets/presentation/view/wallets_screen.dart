@@ -10,7 +10,7 @@ class WalletsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: defaultAppBarWidget(appBarTitle: 'البروفيل - المحفظه'),
+      appBar: defaultAppBarWidget(appBarTitle: 'البروفيل - المحفظه',context: context),
       body: WalletsViewBody(),
     );
   }

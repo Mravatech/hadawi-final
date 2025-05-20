@@ -48,6 +48,7 @@ class ProfileBodyView extends StatelessWidget {
                 // البيانات الشخصية
                 GestureDetector(
                     onTap: () {
+                      print('fdf ${context.read<HomeCubit>().currentIndex}');
                       customPushNavigator(
                           context,
                           BlocProvider(
