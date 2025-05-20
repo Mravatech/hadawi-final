@@ -23,6 +23,7 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 
 import '../../../../../utiles/services/service_locator.dart';
 import '../../../../edit_personal_info/view/controller/edit_profile_cubit.dart';
+import '../../../../payment_page/presentation/view/my_occasions_list.dart';
 
 class ProfileBodyView extends StatelessWidget {
   const ProfileBodyView({super.key});
@@ -52,7 +53,7 @@ class ProfileBodyView extends StatelessWidget {
                       customPushNavigator(
                           context,
                           BlocProvider(
-                              create: (context) => EditProfileCubit(editProfileUseCases: getIt()),
+                            create: (context) => EditProfileCubit(editProfileUseCases: getIt()),
                             child: EditProfileScreen(),
                           ));
                     },
@@ -110,17 +111,22 @@ class ProfileBodyView extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.03,
                 ),
-
-                // هداياي
-                GestureDetector(
-                    onTap: () {
-                      customPushNavigator(context, MyGiftsWidget());
+                // الاصدقاء المشاركين بهديتي
+                InkWell(
+                    onTap: (){
+                      customPushNavigator(context, MyOccasionsList());
                     },
-                    child: ProfileRowWidget(
-                        image: AssetsManager.giftAccount,
-                        title: AppLocalizations.of(context)!
-                            .translate('myGifts')
-                            .toString())),
+                    child: ProfileRowWidget(image: 'assets/images/investor.png', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),)),
+                // // هداياي
+                // GestureDetector(
+                //     onTap: () {
+                //       customPushNavigator(context, MyGiftsWidget());
+                //     },
+                //     child: ProfileRowWidget(
+                //         image: AssetsManager.giftAccount,
+                //         title: AppLocalizations.of(context)!
+                //             .translate('myGifts')
+                //             .toString())),
 
                 SizedBox(
                   height: MediaQuery.sizeOf(context).height * 0.03,
@@ -156,7 +162,7 @@ class ProfileBodyView extends StatelessWidget {
                       inactiveThumbColor: ColorManager.gray,
                       inactiveTrackColor: ColorManager.white.withOpacity(0.6),
                       activeTrackColor:
-                          ColorManager.primaryBlue.withOpacity(0.8),
+                      ColorManager.primaryBlue.withOpacity(0.8),
                       activeColor: ColorManager.white,
                       value: OccasionsListCubit.get(context).privateAccount,
                       onChanged: (bool value) => OccasionsListCubit.get(context)

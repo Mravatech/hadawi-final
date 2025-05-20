@@ -44,7 +44,6 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   final GlobalKey qrKey = GlobalKey();
   late Future<void> _initializationFuture;
   bool isLoading = false;
-  bool isActive = false;
 
   @override
   void initState() {
@@ -67,7 +66,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
     // Now it's safe to access occasionDetailsModel
     final cubit = context.read<VisitorsCubit>();
     final model = cubit.occasionDetailsModel;
-    isActive = model.isActive;
+    // isActive = model.isActive;
     cubit.editOccasionNameController.text = model.type;
     cubit.editGiftNameController.text = model.giftName;
     cubit.editPersonNameController.text = model.personName;
@@ -79,10 +78,10 @@ class _OccasionDetailsState extends State<OccasionDetails> {
 
   @override
   void dispose() {
-    // final cubit = context.read<VisitorsCubit>();
-    context.read<VisitorsCubit>().editOccasionNameController.dispose();
-    context.read<VisitorsCubit>().editGiftNameController.dispose();
-    context.read<VisitorsCubit>().editPersonNameController.dispose();
+    final cubit = context.read<VisitorsCubit>();
+    cubit.editOccasionNameController.dispose();
+    cubit.editGiftNameController.dispose();
+    cubit.editPersonNameController.dispose();
     super.dispose();
   }
 
@@ -357,7 +356,11 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                     MediaQuery.sizeOf(context).height * 0.05),
 
                             /// share and pay
-                            _buildActionButtons(cubit, state, isActive),
+
+                            state is IsActiveLoading
+                                ? LoadingAnimationWidget()
+                                : _buildActionButtons(
+                                    cubit, state, cubit.isActive),
                           ],
                         ),
                       ),
@@ -530,26 +533,20 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         isActiveOccasion == true
             ? GestureDetector(
                 onTap: () async {
-                  if (double.parse(
-                      cubit.remainingBalanceController.text) >
-                      0 ||
+                  if (double.parse(cubit.remainingBalanceController.text) > 0 ||
                       cubit.occasionDetailsModel.giftPrice >
-                          cubit.occasionDetailsModel.moneyGiftAmount){
+                          cubit.occasionDetailsModel.moneyGiftAmount) {
                     String link =
-                    await cubit.createDynamicLink(widget.occasionId);
+                        await cubit.createDynamicLink(widget.occasionId);
                     Share.share(
                         'قام صديقك ${cubit.occasionDetailsModel.personName} بدعوتك للمشاركة في مناسبة له ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
-
-                  }else{
-
-                  customToast(
-                  title: AppLocalizations.of(context)!
-                      .translate('canNotShare')
-                      .toString(),
-                  color: ColorManager.warning);
-
+                  } else {
+                    customToast(
+                        title: AppLocalizations.of(context)!
+                            .translate('canNotShare')
+                            .toString(),
+                        color: ColorManager.warning);
                   }
-
                 },
                 child: state is CreateOccasionLinkLoadingState
                     ? LoadingAnimationWidget()
@@ -557,12 +554,13 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         height: MediaQuery.sizeOf(context).height * .055,
                         width: MediaQuery.sizeOf(context).width * .25,
                         decoration: BoxDecoration(
-                          color: double.parse(
-                              cubit.remainingBalanceController.text) >
-                              0 ||
-                              cubit.occasionDetailsModel.giftPrice >
-                                  cubit.occasionDetailsModel.moneyGiftAmount?
-                          ColorManager.primaryBlue:ColorManager.gray,
+                          color: double.parse(cubit
+                                          .remainingBalanceController.text) >
+                                      0 ||
+                                  cubit.occasionDetailsModel.giftPrice >
+                                      cubit.occasionDetailsModel.moneyGiftAmount
+                              ? ColorManager.primaryBlue
+                              : ColorManager.gray,
                           borderRadius: BorderRadius.circular(
                               MediaQuery.sizeOf(context).height * 0.05),
                         ),
@@ -587,10 +585,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// pay button
-        isActiveOccasion == true ||
-                double.parse(cubit.remainingBalanceController.text) > 0 ||
-                cubit.occasionDetailsModel.giftPrice >
-                    cubit.occasionDetailsModel.moneyGiftAmount
+        isActiveOccasion == true
             ? GestureDetector(
                 onTap: () {
                   if (double.parse(cubit.remainingBalanceController.text) > 0 ||
@@ -646,7 +641,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId)
           state is EditOccasionLoadingState
               ? LoadingAnimationWidget()
-              : isActive == true
+              : isActiveOccasion == true
                   ? GestureDetector(
                       onTap: () {
                         if (double.parse(
