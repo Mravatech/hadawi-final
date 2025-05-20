@@ -2,6 +2,10 @@
 class Assets {
   Assets._();
 
+  static const String assetsTranslationsAr = 'assets/translations/ar.json~';
+  static const String fontsCairoBold = 'assets/fonts/Cairo-Bold.ttf';
+  static const String fontsCairoMedium = 'assets/fonts/Cairo-Medium.ttf';
+  static const String fontsCairoRegular = 'assets/fonts/Cairo-Regular.ttf';
   static const String fontsNanumGothicBold = 'assets/fonts/NanumGothic-Bold.ttf';
   static const String fontsNanumGothicExtraBold = 'assets/fonts/NanumGothic-ExtraBold.ttf';
   static const String fontsNanumGothicRegular = 'assets/fonts/NanumGothic-Regular.ttf';
@@ -9,16 +13,30 @@ class Assets {
   static const String imagesBalloons = 'assets/images/balloons.png';
   static const String imagesBox = 'assets/images/box.png';
   static const String imagesDarkLogo = 'assets/images/dark_logo.png';
+  static const String imagesDelete = 'assets/images/delete.png';
   static const String imagesFriends = 'assets/images/friends.png';
   static const String imagesGiftbox = 'assets/images/giftbox.png';
+  static const String imagesGlobal = 'assets/images/global.png';
   static const String imagesGoogle = 'assets/images/google.png';
+  static const String imagesInvestor = 'assets/images/investor.png';
   static const String imagesLightLogo = 'assets/images/light_logo.jpg';
   static const String imagesLogoWithoutBackground = 'assets/images/logo_without_background.png';
+  static const String imagesLogout = 'assets/images/logout.png';
+  static const String imagesMadaPay = 'assets/images/mada_pay.png';
+  static const String imagesMastercard = 'assets/images/mastercard.png';
   static const String imagesMoney = 'assets/images/money.png';
+  static const String imagesMoney1 = 'assets/images/money_1.png';
   static const String imagesMoneyBag = 'assets/images/money_bag.png';
   static const String imagesMoneyBag2 = 'assets/images/money_bag2.png';
+  static const String imagesNotification = 'assets/images/notification.png';
+  static const String imagesPrivacy = 'assets/images/privacy.png';
+  static const String imagesQuoteRequest = 'assets/images/quote-request.png';
   static const String imagesShare = 'assets/images/share.png';
+  static const String imagesStcPay = 'assets/images/stc_pay.jpg';
+  static const String imagesSupport = 'assets/images/support.png';
   static const String imagesUser = 'assets/images/user.png';
+  static const String imagesVisaCard = 'assets/images/visa_card.png';
+  static const String imagesWhatsapp = 'assets/images/whatsapp.png';
   static const String translationsAr = 'assets/translations/ar.json';
   static const String translationsEn = 'assets/translations/en.json';
 

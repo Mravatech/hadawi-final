@@ -490,7 +490,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                             ),
 
                             state is GetOccasionsStillLoadingState ||
-                                    cubit.activeOccasions.isEmpty ||
+                                    cubit.activeOccasions.isEmpty &&
                                     cubit.doneOccasions.isEmpty
                                 ? Column(
                               mainAxisAlignment: MainAxisAlignment.center,
