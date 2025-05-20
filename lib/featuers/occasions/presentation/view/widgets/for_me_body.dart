@@ -453,7 +453,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                             visible: cubit.giftWithPackage,
                             child: Column(
                               children: [
-                                SizedBox(height: SizeConfig.height * 0.02),
                                 Text(
                                   AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
                                   style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
@@ -554,7 +553,6 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                             visible: cubit.giftWithPackage,
                             child: Column(
                               children: [
-                                SizedBox(height: SizeConfig.height * 0.02),
                                 Text(
                                   AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
                                   style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
