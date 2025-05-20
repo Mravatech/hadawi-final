@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
+import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/delete_occasions_widget.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/occasions_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -98,7 +99,7 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                                         onTap: () {
                                           customPushNavigator(
                                               context,
-                                              OccasionDetails(
+                                              DeleteOccasionsWidget(
                                                 occasionId: occasionItem.occasionId,
                                                 fromHome: false,
                                               ));
