@@ -94,7 +94,11 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                   .toString(),
               color: ColorManager.success,
             );
-            customPushReplacement(context, HomeLayout());
+            context.read<VisitorsCubit>().getOccasions().then(
+                  (value) {
+                customPushAndRemoveUntil(context, HomeLayout());
+              },
+            );
           }
           if (state is UpdateOccasionSuccessState) {
             if (widget.fromHome == true) {

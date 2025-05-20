@@ -3,10 +3,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progress_indicator_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/edit_occasion.dart';
 import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -90,6 +92,15 @@ class _OccasionDetailsState extends State<OccasionDetails>{
       appBar: AppBar(
         backgroundColor: ColorManager.gray,
         surfaceTintColor: ColorManager.gray,
+        leading: IconButton(
+          icon: Icon(
+            CashHelper.languageKey == 'ar'? Icons.arrow_forward :Icons.arrow_back,
+            color: ColorManager.black,
+          ),
+          onPressed: () {
+            widget.fromHome? (UserDataFromStorage.userIsGuest?customPushAndRemoveUntil(context, VisitorsScreen()) : customPushAndRemoveUntil(context,HomeLayout())): Navigator.pop(context);
+          },
+        ),
         title: Text(
           AppLocalizations.of(context)!.translate('occasionDetails').toString(),
           style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
