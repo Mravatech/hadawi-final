@@ -33,27 +33,34 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
 
   bool isUsed = false;
 
-  Future<void> getUserInfo(
-      {required String phone,
-      required context,
-      required String name,
-      required String birthDate,
-      required String gender}) async {
-    isUsed = false;
+  Future<void> getUserInfo({required String phone,required context,required String name,required String gender,required String date})async{
+    isUsed=false;
     emit(CheckPhoneLoadingState());
-    FirebaseFirestore.instance
-        .collection('users')
-        .where('phone', isEqualTo: phone)
-        .get()
-        .then((value) {
+    FirebaseFirestore.instance.collection('users').where('phone',isEqualTo: phone)
+        .get().then((value) {
       value.docs.forEach((element) {
         print(element.data());
       });
-      print('fhdfhd');
+
+      print('Length ${value.docs.length}');
+
+      if(value.docs.isEmpty){
+        isUsed=false;
+        editProfile(
+          name:name,
+          context: context,
+          gender: gender,
+          phone: phone,
+          birthDate: date
+        );
+      }else{
+        isUsed=true;
+        customToast(title: AppLocalizations.of(context)!.translate('phoneToastError').toString() , color: Colors.red);
+      }
 
       emit(CheckPhoneSuccessState());
-    }).catchError((error) {
-      isUsed = false;
+    }).catchError((error){
+      isUsed=false;
       debugPrint("error in getting user info: $error");
       emit(CheckPhoneErrorState());
       return;

@@ -632,28 +632,41 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                             ),
                                           )
                                     : cubit.doneOccasions.isNotEmpty
-                                        ? GridView.builder(
-                                            physics:
-                                                NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            padding: const EdgeInsets.all(15),
-                                            gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    mainAxisSpacing: 15,
-                                                    crossAxisSpacing: 15,
-                                                    crossAxisCount: 2,
-                                                    childAspectRatio: 1 / 1.1),
-                                            itemBuilder: (context, index) {
-                                              return InkWell(
-                                                  onTap: () {},
-                                                  child: OccasionCard(
-                                                    occasionEntity: cubit
-                                                        .doneOccasions[index],
-                                                  ));
-                                            },
-                                            itemCount:
-                                                cubit.doneOccasions.length,
-                                          )
+                                        ? Column(
+                                           crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  horizontal: 15,
+                                              ),
+                                              child: Text('اضغط على الصورة لتكبيرها، واسحب لليمين او اليسار لمشاهدة الصور الأخرى',
+                                                textAlign: TextAlign.center,
+                                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue,fontWeight: FontWeight.bold,fontSize: 12),),
+                                            ),
+                                            GridView.builder(
+                                                physics:
+                                                    NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                padding: const EdgeInsets.all(15),
+                                                gridDelegate:
+                                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                                        mainAxisSpacing: 15,
+                                                        crossAxisSpacing: 15,
+                                                        crossAxisCount: 2,
+                                                        childAspectRatio: 1 / 1.1),
+                                                itemBuilder: (context, index) {
+                                                  return InkWell(
+                                                      onTap: () {},
+                                                      child: OccasionCard(
+                                                        occasionEntity: cubit
+                                                            .doneOccasions[index],
+                                                      ));
+                                                },
+                                                itemCount:
+                                                    cubit.doneOccasions.length,
+                                              ),
+                                          ],
+                                        )
                                         : SizedBox(
                                             height: SizeConfig.height * 0.25,
                                             child: Center(

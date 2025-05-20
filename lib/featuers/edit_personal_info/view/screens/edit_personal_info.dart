@@ -417,33 +417,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                     .translate('save')
                                     .toString(),
                                 onPressed: () async {
-
+                                  if(formKey.currentState!.validate()){
                                     print('phone ${phoneController.text}');
-                                    await context
-                                        .read<EditProfileCubit>()
-                                        .editProfile(
-                                            birthDate: dateController.text,
-                                            phone: phoneController.text,
-                                            context: context,
-                                            gender: context
-                                                .read<EditProfileCubit>()
-                                                .genderValue,
-                                            name: nameController.text)
-                                        .then((value) async {
-                                          UserDataFromStorage.genderFromStorage=
-                                              context
-                                                  .read<EditProfileCubit>()
-                                                  .genderValue;
-                                     context .read<EditProfileCubit>()
-                                          .getUserInfo(
-                                      birthDate: dateController.text,
-                                      phone: phoneController.text,
-                                      context: context,
-                                      gender: context
-                                          .read<EditProfileCubit>()
-                                          .genderValue,
-                                      name: nameController.text);
-                                    });
+                                    context.read<EditProfileCubit>().getUserInfo(
+                                        date: dateController.text,
+                                        phone: phoneController.text,
+                                        context: context,
+                                        gender: context.read<EditProfileCubit>().genderValue,
+                                        name: nameController.text);
+                                  }
+
+                                    // await context
+                                    //     .read<EditProfileCubit>()
+                                    //     .editProfile(
+                                    //         birthDate: dateController.text,
+                                    //         phone: phoneController.text,
+                                    //         context: context,
+                                    //         gender: context
+                                    //             .read<EditProfileCubit>()
+                                    //             .genderValue,
+                                    //         name: nameController.text)
+                                    //     .then((value) async {
+                                    //
+                                    // });
                                 },
                                 buttonColor: ColorManager.primaryBlue,
                               ),

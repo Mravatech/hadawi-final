@@ -38,7 +38,7 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
           padding: const EdgeInsets.all(15.0),
           child: Text(
             AppLocalizations.of(context)!
-                .translate('closedOccasions')
+                .translate('deleteEvents')
                 .toString(),
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),

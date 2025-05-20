@@ -52,6 +52,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   Future<void> getOccasions() async {
     closeCount=0;
     openCount=0;
+    doneOccasions=[];
     emit(GetOccasionsLoadingState());
     final result = await OccasionRepoImp().getOccasions();
     result.fold((failure) {

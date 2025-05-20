@@ -36,7 +36,7 @@ class _OthersOccasionsState extends State<OthersOccasions> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            AppLocalizations.of(context)!.translate('otherOccasions').toString(),
+            AppLocalizations.of(context)!.translate('lastEvents').toString(),
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),

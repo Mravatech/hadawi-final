@@ -38,7 +38,7 @@ class _PastOccasionsState extends State<PastOccasions> {
           padding: const EdgeInsets.all(15.0),
           child: Text(
             AppLocalizations.of(context)!
-                .translate('previousOccasionsMenu')
+                .translate('closedOccasions')
                 .toString(),
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),

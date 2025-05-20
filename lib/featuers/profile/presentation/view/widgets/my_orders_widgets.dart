@@ -13,6 +13,7 @@ import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_card.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class MyOrdersWidgets extends StatefulWidget {
   const MyOrdersWidgets({super.key});
@@ -55,52 +56,59 @@ class _MyOrdersWidgetsState extends State<MyOrdersWidgets> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(SizeConfig.height * 0.02),
-        child: BlocConsumer<VisitorsCubit, VisitorsState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                var cubit = context.read<VisitorsCubit>();
-                return cubit.myOrderOccasions.isEmpty?
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(AssetsManager.noData),
-                      Text(
-                        AppLocalizations.of(context)!
-                            .translate('noOccasions')
-                            .toString(),
-                        style: TextStyles.textStyle18Bold
-                            .copyWith(
-                            color: ColorManager.primaryBlue),
-                      ),
-                    ],
-                  ),
-                 ) :  GridView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(15),
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisSpacing: 15,
-                      crossAxisSpacing: 15,
-                      crossAxisCount: 2,
-                      childAspectRatio: 1 / 1.1),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                        onTap: () {
-                        },
-                        child: OccasionCard(
-                          occasionEntity: cubit.myOrderOccasions[index],
-                          isOrders: true,
-                        ));
-                  },
-                  itemCount: cubit.myOrderOccasions.length,
-                );
-              },
+      body: BlocBuilder<VisitorsCubit, VisitorsState>(
+        builder:(context, state) {
+          return ModalProgressHUD(
+            inAsyncCall: state is GetOccasionsLoadingState || state is GetOccasionsStillLoadingState,
+            child: Padding(
+              padding: EdgeInsets.all(SizeConfig.height * 0.02),
+              child: BlocConsumer<VisitorsCubit, VisitorsState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  var cubit = context.read<VisitorsCubit>();
+                  return cubit.myOrderOccasions.isEmpty && state is GetOccasionsSuccessState?
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(AssetsManager.noData),
+                        Text(
+                          AppLocalizations.of(context)!
+                              .translate('noOccasions')
+                              .toString(),
+                          style: TextStyles.textStyle18Bold
+                              .copyWith(
+                              color: ColorManager.primaryBlue),
+                        ),
+                      ],
+                    ),
+                  ) :  GridView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(15),
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisSpacing: 15,
+                        crossAxisSpacing: 15,
+                        crossAxisCount: 2,
+                        childAspectRatio: 1 / 1.1),
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                          onTap: () {
+                          },
+                          child: OccasionCard(
+                            occasionEntity: cubit.myOrderOccasions[index],
+                            isOrders: true,
+                          ));
+                    },
+                    itemCount: cubit.myOrderOccasions.length,
+                  );
+                },
+              ),
             ),
-      ),
+          );
+        },
+      )
     );
   }
 }
