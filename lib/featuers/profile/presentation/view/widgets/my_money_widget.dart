@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
@@ -34,28 +35,27 @@ class _MyMoneyWidgetState extends State<MyMoneyWidget> {
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
-        backgroundColor: ColorManager.gray,
-        title: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            AppLocalizations.of(context)!.translate("myContributions").toString(),
-            style: TextStyles.textStyle18Bold
-                .copyWith(color: ColorManager.primaryBlue),
+          backgroundColor: ColorManager.gray,
+          leading: IconButton(
+              onPressed: (){
+                setState(() {
+                  context.read<HomeCubit>().currentIndex=2;
+                });
+                Navigator.pop(context);
+              }, icon: Icon(Icons.arrow_back)),
+          title: Text(
+            AppLocalizations.of(context)!.translate('myContributions').toString(),
+            style: TextStyles.textStyle18Bold.copyWith(
+                color: ColorManager.black),
           ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              customPushReplacement(context, HomeLayout());
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child:
-              Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image(
+                  image: AssetImage(AssetsManager.logoWithoutBackground)),
             ),
-          ),
-        ],
-      ),
+
+          ]),
       body: Padding(
         padding: EdgeInsets.all(SizeConfig.height * 0.02),
         child: BlocConsumer<VisitorsCubit, VisitorsState>(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
@@ -33,29 +34,28 @@ class _MyOrdersWidgetsState extends State<MyOrdersWidgets> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      appBar: AppBar(
-        backgroundColor: ColorManager.gray,
-        title: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            AppLocalizations.of(context)!.translate("myRequests").toString(),
-            style: TextStyles.textStyle18Bold
-                .copyWith(color: ColorManager.primaryBlue),
-          ),
-        ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              customPushReplacement(context, HomeLayout());
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child:
-              Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
+        appBar: AppBar(
+            backgroundColor: ColorManager.gray,
+            leading: IconButton(
+                onPressed: (){
+                  setState(() {
+                    context.read<HomeCubit>().currentIndex=2;
+                  });
+                  Navigator.pop(context);
+                }, icon: Icon(Icons.arrow_back)),
+            title: Text(
+              AppLocalizations.of(context)!.translate('myRequests').toString(),
+              style: TextStyles.textStyle18Bold.copyWith(
+                  color: ColorManager.black),
             ),
-          ),
-        ],
-      ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image(
+                    image: AssetImage(AssetsManager.logoWithoutBackground)),
+              ),
+
+            ]),
       body: BlocBuilder<VisitorsCubit, VisitorsState>(
         builder:(context, state) {
           return ModalProgressHUD(

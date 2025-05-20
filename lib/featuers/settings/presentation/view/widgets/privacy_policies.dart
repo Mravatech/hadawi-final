@@ -15,9 +15,14 @@ import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class PrivacyPoliciesScreen extends StatelessWidget {
+class PrivacyPoliciesScreen extends StatefulWidget {
   const PrivacyPoliciesScreen({super.key,});
 
+  @override
+  State<PrivacyPoliciesScreen> createState() => _PrivacyPoliciesScreenState();
+}
+
+class _PrivacyPoliciesScreenState extends State<PrivacyPoliciesScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
@@ -33,6 +38,9 @@ class PrivacyPoliciesScreen extends StatelessWidget {
                 backgroundColor: ColorManager.gray,
                 leading: IconButton(
                     onPressed: (){
+                      setState(() {
+                        cubit.currentIndex=3;
+                      });
                       Navigator.pop(context);
                     }, icon: Icon(Icons.arrow_back)),
                 title: Text(

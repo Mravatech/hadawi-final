@@ -7,6 +7,7 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dar
 import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_profile_cubit.dart';
 import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_profile_states.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/widgets/logo_image.dart';
+import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
@@ -22,6 +23,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../auth/presentation/view/register/widgets/country_code_widget.dart';
 import '../../../auth/presentation/view/register/widgets/select_gender_widget.dart';
+import '../../../home_layout/presentation/controller/home_cubit.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -54,11 +56,29 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: defaultAppBarWidget(
-          context: context,
-          appBarTitle:
-              AppLocalizations.of(context)!.translate('info').toString())
-      ,
+      appBar: AppBar(
+          backgroundColor: ColorManager.gray,
+          leading: IconButton(
+              onPressed: (){
+                setState(() {
+                  context.read<HomeCubit>().currentIndex=2;
+                });
+                Navigator.pop(context);
+              }, icon: Icon(Icons.arrow_back)),
+          title: Text(
+            AppLocalizations.of(context)!.translate('info').toString(),
+            style: TextStyles.textStyle18Bold.copyWith(
+                color: ColorManager.black),
+          ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Image(
+                  image: AssetImage(AssetsManager.logoWithoutBackground)),
+            ),
+
+          ]),
+
       body: BlocConsumer<EditProfileCubit, EditProfileStates>(
           builder: (context, state) {
 

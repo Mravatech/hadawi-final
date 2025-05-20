@@ -122,7 +122,6 @@ class SettingViewBody extends StatelessWidget {
                       child: Divider(color: ColorManager.white,),
                     ),
 
-                    // الاشعارات
                     InkWell(
                       onTap: (){
                         customPushNavigator(context, PrivacyPoliciesScreen());
