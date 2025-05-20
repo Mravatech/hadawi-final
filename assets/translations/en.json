@@ -345,7 +345,7 @@
   "phoneError": "Phone number not valid",
   "validateGiftType": "Gift type is required",
   "occasionClosedMessage": "This occasion has been cancelled.",
-  "occasionsListEmpty": "Occasion List Empty, Let's add your first occasion",
+  "occasionsListEmpty": "List of public occasions for users",
   "deliveryDataValidate": "Please ser all Delivery data (City, District, Receiver Phone Number)",
   "confirm_phone_number": "Confirm phone number",
   "enter_verification_code": "Enter verification code",

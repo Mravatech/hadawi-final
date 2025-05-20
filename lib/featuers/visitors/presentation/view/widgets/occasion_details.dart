@@ -43,6 +43,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
   final GlobalKey qrKey = GlobalKey();
   late Future<void> _initializationFuture;
   bool isLoading = false;
+  bool isActive = false;
 
 
 
@@ -65,7 +66,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
     // Now it's safe to access occasionDetailsModel
     final cubit = context.read<VisitorsCubit>();
     final model = cubit.occasionDetailsModel;
-
+    isActive = model.isActive;
     cubit.editOccasionNameController.text = model.type;
     cubit.editGiftNameController.text = model.giftName;
     cubit.editPersonNameController.text = model.personName;
@@ -77,16 +78,17 @@ class _OccasionDetailsState extends State<OccasionDetails>{
 
   @override
   void dispose() {
-    final cubit = context.read<VisitorsCubit>();
-    cubit.editOccasionNameController.dispose();
-    cubit.editGiftNameController.dispose();
-    cubit.editPersonNameController.dispose();
+    // final cubit = context.read<VisitorsCubit>();
+    context.read<VisitorsCubit>().editOccasionNameController.dispose();
+    context.read<VisitorsCubit>().editGiftNameController.dispose();
+    context.read<VisitorsCubit>().editPersonNameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     _initializationFuture = _initializeData();
+    debugPrint("occasionId: ${widget.occasionId}");
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
@@ -324,7 +326,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
                   SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
 
                   /// share and pay
-                  _buildActionButtons(cubit, state),
+                  _buildActionButtons(cubit, state,isActive),
                 ],
               ),
             ),
@@ -485,11 +487,12 @@ class _OccasionDetailsState extends State<OccasionDetails>{
     );
   }
 
-  Widget _buildActionButtons(VisitorsCubit cubit, VisitorsState state) {
+  Widget _buildActionButtons(VisitorsCubit cubit, VisitorsState state,bool isActiveOccasion) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         /// share button
+        isActiveOccasion==true?
         GestureDetector(
           onTap: () async {
             String link = await cubit.createDynamicLink(widget.occasionId);
@@ -522,10 +525,11 @@ class _OccasionDetailsState extends State<OccasionDetails>{
               ),
             ),
           ),
-        ),
+        ):Container(),
         SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// pay button
+        isActiveOccasion==true?
         GestureDetector(
           onTap: () {
             if (double.parse(cubit.remainingBalanceController.text) > 0 || cubit.occasionDetailsModel.giftPrice > cubit.occasionDetailsModel.moneyGiftAmount) {
@@ -568,14 +572,15 @@ class _OccasionDetailsState extends State<OccasionDetails>{
               ),
             ),
           ),
-        ),
+        ):SizedBox(),
         SizedBox(width: MediaQuery.sizeOf(context).width * .02),
 
         /// edit button
         if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId)
           state is EditOccasionLoadingState
               ? LoadingAnimationWidget()
-              : GestureDetector(
+              :  isActive == true?
+          GestureDetector(
             onTap: () {
               customPushNavigator(
                 context,
@@ -609,7 +614,7 @@ class _OccasionDetailsState extends State<OccasionDetails>{
                 ),
               ),
             ),
-          ),
+          ):Container(),
       ],
     );
   }

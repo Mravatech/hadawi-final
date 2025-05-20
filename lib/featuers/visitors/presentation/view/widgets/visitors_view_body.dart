@@ -41,9 +41,8 @@ class VisitorsViewBody extends StatefulWidget {
   State<VisitorsViewBody> createState() => _VisitorsViewBodyState();
 }
 
-class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBindingObserver{
-
-
+class _VisitorsViewBodyState extends State<VisitorsViewBody>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -80,9 +79,11 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               height: SizeConfig.height * 0.045,
                             ),
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: mediaQuery.width * 0.05),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: mediaQuery.width * 0.05),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Row(
@@ -91,72 +92,123 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                                         padding: const EdgeInsets.all(8.0),
                                         child: Image.asset(
                                           Assets.imagesLogoWithoutBackground,
-                                          height: MediaQuery.sizeOf(context).height * 0.05,
+                                          height: MediaQuery.sizeOf(context)
+                                                  .height *
+                                              0.05,
                                         ),
                                       ),
                                       Column(
-                                        crossAxisAlignment: CashHelper.languageKey == 'ar'
-                                            ? CrossAxisAlignment.end
-                                            : CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CashHelper.languageKey == 'ar'
+                                                ? CrossAxisAlignment.end
+                                                : CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             "${AppLocalizations.of(context)!.translate('welcome').toString()},",
                                             style: TextStyles.textStyle18Bold
-                                                .copyWith(color: ColorManager.black),
+                                                .copyWith(
+                                                    color: ColorManager.black),
                                           ),
                                           Visibility(
-                                            visible: UserDataFromStorage.userIsGuest == false? true:false,
+                                            visible: UserDataFromStorage
+                                                        .userIsGuest ==
+                                                    false
+                                                ? true
+                                                : false,
                                             child: Text(
-                                              UserDataFromStorage.userNameFromStorage,
-                                              style: TextStyles.textStyle18Medium
-                                                  .copyWith(color: ColorManager.black),
+                                              UserDataFromStorage
+                                                  .userNameFromStorage,
+                                              style: TextStyles
+                                                  .textStyle18Medium
+                                                  .copyWith(
+                                                      color:
+                                                          ColorManager.black),
                                             ),
                                           ),
                                         ],
                                       ),
                                     ],
                                   ),
-
                                   Spacer(),
-                                  BlocBuilder<LocalizationCubit,LocalizationStates>(
-                                    builder: (context,state){
+                                  BlocBuilder<LocalizationCubit,
+                                      LocalizationStates>(
+                                    builder: (context, state) {
                                       return GestureDetector(
-                                        onTap: (){
-                                          CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                          context.read<LocalizationCubit>().changeLanguage(code: 'ar'):
-                                          context.read<LocalizationCubit>().changeLanguage(code: 'en');
+                                        onTap: () {
+                                          CashHelper.getData(
+                                                          key: CashHelper
+                                                              .languageKey)
+                                                      .toString() ==
+                                                  'en'
+                                              ? context
+                                                  .read<LocalizationCubit>()
+                                                  .changeLanguage(code: 'ar')
+                                              : context
+                                                  .read<LocalizationCubit>()
+                                                  .changeLanguage(code: 'en');
                                         },
                                         child: Container(
-                                            padding:EdgeInsets.symmetric(
-                                              horizontal: MediaQuery.sizeOf(context).width*0.04,
-                                              vertical: MediaQuery.sizeOf(context).width*0.01,
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal:
+                                                  MediaQuery.sizeOf(context)
+                                                          .width *
+                                                      0.04,
+                                              vertical:
+                                                  MediaQuery.sizeOf(context)
+                                                          .width *
+                                                      0.01,
                                             ),
-                                            decoration:BoxDecoration(
+                                            decoration: BoxDecoration(
                                               color: Colors.transparent,
-                                              borderRadius: BorderRadius.circular(10),
-                                            ) ,
-                                            child:CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?
-                                            Text('English',style: TextStyles.textStyle18Bold.copyWith(
-                                                color: ColorManager.black,
-                                                fontSize:MediaQuery.sizeOf(context).height*0.018
-                                            ),):
-                                            Text('عربي',style: TextStyles.textStyle18Bold.copyWith(
-                                                color: ColorManager.black,
-                                                fontSize:MediaQuery.sizeOf(context).height*0.018
-                                            ))
-                                        ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: CashHelper.getData(
+                                                            key: CashHelper
+                                                                .languageKey)
+                                                        .toString() ==
+                                                    'en'
+                                                ? Text(
+                                                    'English',
+                                                    style: TextStyles
+                                                        .textStyle18Bold
+                                                        .copyWith(
+                                                            color: ColorManager
+                                                                .black,
+                                                            fontSize: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.018),
+                                                  )
+                                                : Text('عربي',
+                                                    style: TextStyles
+                                                        .textStyle18Bold
+                                                        .copyWith(
+                                                            color: ColorManager
+                                                                .black,
+                                                            fontSize: MediaQuery
+                                                                        .sizeOf(
+                                                                            context)
+                                                                    .height *
+                                                                0.018))),
                                       );
-                                    } ,
+                                    },
                                   ),
-
                                   Visibility(
-                                    visible: UserDataFromStorage.userIsGuest == true? true:false,
+                                    visible:
+                                        UserDataFromStorage.userIsGuest == true
+                                            ? true
+                                            : false,
                                     child: IconButton(
-                                      onPressed: (){
-                                        customPushReplacement(context, LoginScreen());
+                                      onPressed: () {
+                                        customPushReplacement(
+                                            context, LoginScreen());
                                       },
-                                      icon: const Icon(Icons.login_outlined),color: ColorManager.black,
+                                      icon: const Icon(Icons.login_outlined),
+                                      color: ColorManager.black,
                                     ),
                                   ),
                                 ],
@@ -170,94 +222,170 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                               width: SizeConfig.width,
                               decoration: BoxDecoration(
                                 color: ColorManager.gray,
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
+                              ),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   InkWell(
                                     onTap: () async {
-                                      if(UserDataFromStorage.userIsGuest==false){
-                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-                                        if(UserDataFromStorage.uIdFromStorage=='') {
-                                          toastificationWidget(context: context,
-                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                      if (UserDataFromStorage.userIsGuest ==
+                                          false) {
+                                        await AuthCubit.get(context)
+                                            .getUserInfo(
+                                                uId: UserDataFromStorage
+                                                    .uIdFromStorage,
+                                                context: context);
+                                        if (UserDataFromStorage
+                                                .uIdFromStorage ==
+                                            '') {
+                                          toastificationWidget(
+                                              context: context,
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('errorOccurred')
+                                                  .toString(),
+                                              body: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('deleteMessage')
+                                                  .toString(),
                                               type: ToastificationType.error);
-                                          customPushReplacement(context, LoginScreen());
-
-                                        }else{
-                                          if(UserDataFromStorage.isUserBlocked==true){
+                                          customPushReplacement(
+                                              context, LoginScreen());
+                                        } else {
+                                          if (UserDataFromStorage
+                                                  .isUserBlocked ==
+                                              true) {
                                             AuthCubit.get(context).logout();
-                                            customPushReplacement(context, LoginScreen());
-                                            toastificationWidget(context: context,
-                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                            customPushReplacement(
+                                                context, LoginScreen());
+                                            toastificationWidget(
+                                                context: context,
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockOccurred')
+                                                    .toString(),
+                                                body: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockMessage')
+                                                    .toString(),
                                                 type: ToastificationType.error);
-                                          }else{
+                                          } else {
                                             cubit.changeActiveOrders(true);
                                           }
                                         }
-                                      }else{
+                                      } else {
                                         cubit.changeActiveOrders(true);
                                       }
                                     },
                                     child: Container(
                                       height: SizeConfig.height * 0.06,
-                                      width: SizeConfig.width*0.5,
+                                      width: SizeConfig.width * 0.5,
                                       decoration: BoxDecoration(
-                                        color: cubit.isActiveOrders?ColorManager.primaryBlue:ColorManager.gray,
-                                        borderRadius: CashHelper.getData(key: CashHelper.languageKey).toString()=='en'?BorderRadius.only(
-                                          topLeft: Radius.circular(20),
-                                        ):BorderRadius.only( topRight: Radius.circular(20)),
+                                        color: cubit.isActiveOrders
+                                            ? ColorManager.primaryBlue
+                                            : ColorManager.gray,
+                                        borderRadius: CashHelper.getData(
+                                                        key: CashHelper
+                                                            .languageKey)
+                                                    .toString() ==
+                                                'en'
+                                            ? BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                              )
+                                            : BorderRadius.only(
+                                                topRight: Radius.circular(20)),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          AppLocalizations.of(context)!.translate('activeOrders').toString(),
-                                          style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                                          AppLocalizations.of(context)!
+                                              .translate('activeOrders')
+                                              .toString(),
+                                          style: TextStyles.textStyle18Medium
+                                              .copyWith(
+                                                  color: ColorManager.black),
                                         ),
                                       ),
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: ()async {
-                                      if(UserDataFromStorage.userIsGuest==false){
-                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-                                        if(UserDataFromStorage.uIdFromStorage==''){
-                                          toastificationWidget(context: context,
-                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                    onTap: () async {
+                                      if (UserDataFromStorage.userIsGuest ==
+                                          false) {
+                                        await AuthCubit.get(context)
+                                            .getUserInfo(
+                                                uId: UserDataFromStorage
+                                                    .uIdFromStorage,
+                                                context: context);
+                                        if (UserDataFromStorage
+                                                .uIdFromStorage ==
+                                            '') {
+                                          toastificationWidget(
+                                              context: context,
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('errorOccurred')
+                                                  .toString(),
+                                              body: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('deleteMessage')
+                                                  .toString(),
                                               type: ToastificationType.error);
-                                          customPushReplacement(context, LoginScreen());
-                                        }else{
-                                          if(UserDataFromStorage.isUserBlocked==true){
+                                          customPushReplacement(
+                                              context, LoginScreen());
+                                        } else {
+                                          if (UserDataFromStorage
+                                                  .isUserBlocked ==
+                                              true) {
                                             AuthCubit.get(context).logout();
-                                            customPushReplacement(context, LoginScreen());
-                                            toastificationWidget(context: context,
-                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                            customPushReplacement(
+                                                context, LoginScreen());
+                                            toastificationWidget(
+                                                context: context,
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockOccurred')
+                                                    .toString(),
+                                                body: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockMessage')
+                                                    .toString(),
                                                 type: ToastificationType.error);
-                                          }else{
+                                          } else {
                                             cubit.changeActiveOrders(false);
                                           }
                                         }
-
-                                      }else{
+                                      } else {
                                         cubit.changeActiveOrders(false);
                                       }
-
                                     },
                                     child: Container(
                                       height: SizeConfig.height * 0.06,
-                                      width: SizeConfig.width*0.5,
+                                      width: SizeConfig.width * 0.5,
                                       decoration: BoxDecoration(
-                                        color: cubit.isActiveOrders?ColorManager.gray:ColorManager.primaryBlue,
-                                        borderRadius: CashHelper.getData(key: CashHelper.languageKey).toString()=='en' ?BorderRadius.only(topRight: Radius.circular(20)):BorderRadius.only(
-                                            topLeft: Radius.circular(20)),
+                                        color: cubit.isActiveOrders
+                                            ? ColorManager.gray
+                                            : ColorManager.primaryBlue,
+                                        borderRadius: CashHelper.getData(
+                                                        key: CashHelper
+                                                            .languageKey)
+                                                    .toString() ==
+                                                'en'
+                                            ? BorderRadius.only(
+                                                topRight: Radius.circular(20))
+                                            : BorderRadius.only(
+                                                topLeft: Radius.circular(20)),
                                       ),
                                       child: Center(
                                         child: Text(
-                                          AppLocalizations.of(context)!.translate('completedOrders').toString(),
-                                          style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),
+                                          AppLocalizations.of(context)!
+                                              .translate('completedOrders')
+                                              .toString(),
+                                          style: TextStyles.textStyle18Medium
+                                              .copyWith(
+                                                  color: ColorManager.black),
                                         ),
                                       ),
                                     ),
@@ -268,7 +396,6 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                           ],
                         )),
                   ),
-
 
                   /// body
                   Expanded(
@@ -282,40 +409,58 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                           children: [
                             /// banner carousel slider
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: SizeConfig.height * 0.02),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.height * 0.02),
                               child: CarouselSlider(
                                 items: cubit.banners.map((image) {
                                   return Builder(
                                     builder: (BuildContext context) {
                                       return GestureDetector(
-                                        onTap: ()async{
+                                        onTap: () async {
                                           cubit.lanuchToUrl(image.url);
                                         },
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 2),
                                           child: Container(
-                                            width: MediaQuery.of(context).size.width*0.9,
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.9,
                                             decoration: BoxDecoration(
                                               color: Colors.grey[300],
-                                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.height * 0.02),
                                             ),
                                             child: ClipRRect(
-                                              borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
-                                              child: CachedNetworkImage(
-                                                imageUrl: image.image,
-                                                fit: BoxFit.fill,
-                                                placeholder: (context, url) => const Center(
-                                                  child: CupertinoActivityIndicator(),
-                                                ),
-                                                errorWidget: (context, url, error) => Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.grey[300],
-                                                    borderRadius: BorderRadius.circular(SizeConfig.height * 0.02),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        SizeConfig.height *
+                                                            0.02),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: image.image,
+                                                  fit: BoxFit.fill,
+                                                  placeholder: (context, url) =>
+                                                      const Center(
+                                                    child:
+                                                        CupertinoActivityIndicator(),
                                                   ),
-                                                  child: const Icon(Icons.error),
-                                                ),
-                                              )
-                                            ),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Container(
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey[300],
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              SizeConfig
+                                                                      .height *
+                                                                  0.02),
+                                                    ),
+                                                    child:
+                                                        const Icon(Icons.error),
+                                                  ),
+                                                )),
                                           ),
                                         ),
                                       );
@@ -336,110 +481,195 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                             Padding(
                               padding: const EdgeInsets.all(15.0),
                               child: SearchBarWidget(
-                                onChanged: (value)async {
-                                    print('search value $value');
-                                    cubit.search(value);
+                                onChanged: (value) async {
+                                  print('search value $value');
+                                  cubit.search(value);
                                 },
                                 searchController: cubit.searchController,
                               ),
                             ),
 
-                            cubit.isActiveOrders? cubit.activeOccasions.isNotEmpty? GridView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(15),
-                              gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  mainAxisSpacing: 15,
-                                  crossAxisSpacing: 15,
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1 / 1.1),
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                    onTap: () async {
-                                      if(UserDataFromStorage.userIsGuest==false){
-                                        print('Uid ${UserDataFromStorage.uIdFromStorage}');
-                                        await AuthCubit.get(context).getUserInfo(uId: UserDataFromStorage.uIdFromStorage,context: context);
-                                        if(UserDataFromStorage.uIdFromStorage==''){
-                                          toastificationWidget(context: context,
-                                              title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                              body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
-                                              type: ToastificationType.error);
-                                          customPushReplacement(context, LoginScreen());
-                                        }else{
-                                          if(UserDataFromStorage.isUserBlocked==true){
-                                            customPushReplacement(context, LoginScreen());
-                                            toastificationWidget(context: context,
-                                                title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                                body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
-                                                type: ToastificationType.error);
-                                          }else{
-                                            customPushNavigator(
-                                              context,
-                                              BlocProvider.value(
-                                                value:   cubit,
-                                                child: OccasionDetails(
-                                                  occasionId: cubit.activeOccasions[index].occasionId,
-                                                  fromHome: true,
-                                                ),
+                            state is GetOccasionsStillLoadingState ||
+                                    cubit.activeOccasions.isEmpty ||
+                                    cubit.doneOccasions.isEmpty
+                                ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    Center(child: CircularProgressIndicator()),
+                                  ],
+                                )
+                                : cubit.isActiveOrders
+                                    ? cubit.activeOccasions.isNotEmpty
+                                        ? GridView.builder(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: const EdgeInsets.all(15),
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    mainAxisSpacing: 15,
+                                                    crossAxisSpacing: 15,
+                                                    crossAxisCount: 2,
+                                                    childAspectRatio: 1 / 1.1),
+                                            itemBuilder: (context, index) {
+                                              return InkWell(
+                                                  onTap: () async {
+                                                    if (UserDataFromStorage
+                                                            .userIsGuest ==
+                                                        false) {
+                                                      print(
+                                                          'Uid ${UserDataFromStorage.uIdFromStorage}');
+                                                      await AuthCubit.get(
+                                                              context)
+                                                          .getUserInfo(
+                                                              uId: UserDataFromStorage
+                                                                  .uIdFromStorage,
+                                                              context: context);
+                                                      if (UserDataFromStorage
+                                                              .uIdFromStorage ==
+                                                          '') {
+                                                        toastificationWidget(
+                                                            context: context,
+                                                            title: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'errorOccurred')
+                                                                .toString(),
+                                                            body: AppLocalizations
+                                                                    .of(
+                                                                        context)!
+                                                                .translate(
+                                                                    'deleteMessage')
+                                                                .toString(),
+                                                            type:
+                                                                ToastificationType
+                                                                    .error);
+                                                        customPushReplacement(
+                                                            context,
+                                                            LoginScreen());
+                                                      } else {
+                                                        if (UserDataFromStorage
+                                                                .isUserBlocked ==
+                                                            true) {
+                                                          customPushReplacement(
+                                                              context,
+                                                              LoginScreen());
+                                                          toastificationWidget(
+                                                              context: context,
+                                                              title: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'blockOccurred')
+                                                                  .toString(),
+                                                              body: AppLocalizations
+                                                                      .of(
+                                                                          context)!
+                                                                  .translate(
+                                                                      'blockMessage')
+                                                                  .toString(),
+                                                              type:
+                                                                  ToastificationType
+                                                                      .error);
+                                                        } else {
+                                                          customPushNavigator(
+                                                            context,
+                                                            BlocProvider(
+                                                              create: (context) => VisitorsCubit(getIt(), getIt(), getIt()),
+                                                              child:
+                                                                  OccasionDetails(
+                                                                occasionId: cubit
+                                                                    .activeOccasions[
+                                                                        index]
+                                                                    .occasionId,
+                                                                fromHome: true,
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                      }
+                                                    } else {
+                                                      customPushNavigator(
+                                                        context,
+                                                        BlocProvider.value(
+                                                          value: cubit,
+                                                          child:
+                                                              OccasionDetails(
+                                                            occasionId: cubit
+                                                                .activeOccasions[
+                                                                    index]
+                                                                .occasionId,
+                                                            fromHome: true,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    }
+                                                  },
+                                                  child: ActiveOccasionCard(
+                                                    occasionEntity: cubit
+                                                        .activeOccasions[index],
+                                                  ));
+                                            },
+                                            itemCount:
+                                                cubit.activeOccasions.length,
+                                          )
+                                        : SizedBox(
+                                            height: SizeConfig.height * 0.25,
+                                            child: Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        "occasionsListEmpty")
+                                                    .toString(),
+                                                style: TextStyles
+                                                    .textStyle18Medium
+                                                    .copyWith(
+                                                        color: ColorManager
+                                                            .primaryBlue),
                                               ),
-                                            );
-                                          }
-                                        }
-                                      }else{
-                                        customPushNavigator(
-                                          context,
-                                          BlocProvider.value(
-                                            value:  cubit,
-                                            child: OccasionDetails(
-                                              occasionId: cubit.activeOccasions[index].occasionId,
-                                              fromHome: true,
+                                            ),
+                                          )
+                                    : cubit.doneOccasions.isNotEmpty
+                                        ? GridView.builder(
+                                            physics:
+                                                NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            padding: const EdgeInsets.all(15),
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    mainAxisSpacing: 15,
+                                                    crossAxisSpacing: 15,
+                                                    crossAxisCount: 2,
+                                                    childAspectRatio: 1 / 1.1),
+                                            itemBuilder: (context, index) {
+                                              return InkWell(
+                                                  onTap: () {},
+                                                  child: OccasionCard(
+                                                    occasionEntity: cubit
+                                                        .doneOccasions[index],
+                                                  ));
+                                            },
+                                            itemCount:
+                                                cubit.doneOccasions.length,
+                                          )
+                                        : SizedBox(
+                                            height: SizeConfig.height * 0.25,
+                                            child: Center(
+                                              child: Text(
+                                                AppLocalizations.of(context)!
+                                                    .translate(
+                                                        "occasionsListEmpty")
+                                                    .toString(),
+                                                style: TextStyles
+                                                    .textStyle18Medium
+                                                    .copyWith(
+                                                        color: ColorManager
+                                                            .primaryBlue),
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      }
-                                    },
-                                    child: ActiveOccasionCard(
-                                      occasionEntity: cubit.activeOccasions[index],
-                                    ));
-                              },
-                              itemCount: cubit.activeOccasions.length,
-                            ) :SizedBox(
-                              height: SizeConfig.height*0.25,
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.translate("occasionsListEmpty").toString(),
-                                  style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue),
-                                ),
-                              ),
-                            ) : cubit.doneOccasions.isNotEmpty? GridView.builder(
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              padding: const EdgeInsets.all(15),
-                              gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                                  mainAxisSpacing: 15,
-                                  crossAxisSpacing: 15,
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 1 / 1.1),
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                    onTap: () {
-                                    },
-                                    child: OccasionCard(
-                                      occasionEntity: cubit.doneOccasions[index],
-                                    ));
-                              },
-                              itemCount: cubit.doneOccasions.length,
-                            ): SizedBox(
-                              height: SizeConfig.height*0.25,
-                              child: Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.translate("occasionsListEmpty").toString(),
-                                  style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue),
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                       ),
@@ -447,19 +677,19 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody> with WidgetsBinding
                   )
                 ],
               ),
-                cubit.searchOccasionsList.isEmpty || cubit.searchController.text.trim().isEmpty? SizedBox(): Positioned(
-                  top: mediaQuery.height * 0.55,
-                  left:  mediaQuery.width * 0.05,
-                  right:  mediaQuery.width * 0.05,
-                  child: SearchResultContainer(),
-                )
+              cubit.searchOccasionsList.isEmpty ||
+                      cubit.searchController.text.trim().isEmpty
+                  ? SizedBox()
+                  : Positioned(
+                      top: mediaQuery.height * 0.55,
+                      left: mediaQuery.width * 0.05,
+                      right: mediaQuery.width * 0.05,
+                      child: SearchResultContainer(),
+                    )
             ],
           ),
-
         );
       },
     );
   }
 }
-
-

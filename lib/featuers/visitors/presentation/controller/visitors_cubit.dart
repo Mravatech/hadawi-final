@@ -39,6 +39,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   TextEditingController remainingBalanceController = TextEditingController();
   final searchKey = GlobalKey();
 
+  bool isActive=false;
+
   convertStringToDateTime(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
     return dateTime;
@@ -73,12 +75,14 @@ class VisitorsCubit extends Cubit<VisitorsState> {
                   double.parse(element.moneyGiftAmount.toString())) {
             activeOccasions.add(element);
           } else {
+
             print('this occasion is done ${element.occasionId}');
             var res = await FirebaseFirestore.instance
                 .collection('Occasions')
                 .doc(element.occasionId)
                 .collection('receivedOccasions')
                 .get();
+            emit(GetOccasionsStillLoadingState());
             if (res.docs.isNotEmpty) {
               doneOccasions
                   .add(CompleteOccasionModel.fromJson(res.docs[0].data()));

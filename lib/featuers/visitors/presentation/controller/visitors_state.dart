@@ -5,6 +5,7 @@ sealed class VisitorsState {}
 
 final class VisitorsInitial extends VisitorsState {}
 final class GetOccasionsLoadingState extends VisitorsState {}
+final class GetOccasionsStillLoadingState extends VisitorsState {}
 final class GetOccasionsSuccessState extends VisitorsState {
   final List<OccasionEntity> activeOccasions;
   final List<CompleteOccasionModel> doneOccasions;
