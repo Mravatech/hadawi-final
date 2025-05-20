@@ -25,16 +25,6 @@ class AllOccasionsViewBody extends StatelessWidget {
           ),
 
 
-          // الاصدقاء المشاركين بهديتي
-          InkWell(
-              onTap: (){
-                customPushNavigator(context, MyOccasionsList());
-              },
-              child: ProfileRowWidget(image: '', title: AppLocalizations.of(context)!.translate('sharedGifts').toString(),)),
-
-          SizedBox(height: MediaQuery.sizeOf(context).height*0.045,),
-
-
           // المناسبات المسحله جديثا
           InkWell(
               onTap: () => customPushNavigator(context, MyOccasions()),

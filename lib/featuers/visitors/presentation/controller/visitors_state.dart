@@ -66,6 +66,9 @@ class FollowingErrorState extends VisitorsState{
   FollowingErrorState({required this.message});
 }
 
+class IsActiveLoading extends VisitorsState{}
+class IsActiveSuccess extends VisitorsState{}
+
 class FollowersLoadingState extends VisitorsState{}
 class FollowersSuccessState extends VisitorsState{}
 class FollowersErrorState extends VisitorsState{

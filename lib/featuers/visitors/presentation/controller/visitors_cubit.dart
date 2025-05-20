@@ -294,6 +294,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     emit(GetOccasionDataLoadingState());
     FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
       occasionDetailsModel = OccasionModel.fromJson(value.data()!);
+      checkIsOccasionActive(occasionDetailsModel.isActive);
       debugPrint("occasionModel: ${occasionDetailsModel!.occasionName}");
       emit(GetOccasionDataSuccessState());
     }).catchError((error){
@@ -459,5 +460,12 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       }
       emit(FollowingSuccessState());
     });
+  }
+
+  bool checkIsOccasionActive(bool value ){
+    emit(IsActiveLoading());
+    isActive = value;
+    emit(IsActiveSuccess());
+    return isActive;
   }
 }
