@@ -85,8 +85,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
                 .get();
             emit(GetOccasionsStillLoadingState());
             if (res.docs.isNotEmpty) {
-              doneOccasions
-                  .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+              // doneOccasions
+              //     .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
               if (res.docs[0].data()['personId'] ==
                   UserDataFromStorage.uIdFromStorage) {
                 myOrderOccasions
