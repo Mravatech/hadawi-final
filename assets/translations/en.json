@@ -353,5 +353,7 @@
   "we_sent_you_sms": "We have sent you an SMS to your phone number containing a six-digit verification code",
   "appFees": "App Fees",
   "packagingOpenImageNote": "You can open the packaging image by long press on it",
-  "paymentComplete": "Payment Complete for this occasion"
+  "paymentComplete": "Payment Complete for this occasion",
+  "canNotShare": "You can not share this occasion",
+  "canNotEdit": "You can not edit this occasion"
 }
