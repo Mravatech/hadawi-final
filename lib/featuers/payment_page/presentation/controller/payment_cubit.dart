@@ -148,13 +148,13 @@ class PaymentCubit extends Cubit<PaymentStates> {
       String formattedAmount = double.tryParse(convertArabicToEnglishNumbers(paymentAmountController.text.toString()))?.toStringAsFixed(2) ?? "0.00";
 
       final response = await http.post(
-        Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),
+        Uri.parse("https://eu-prod.oppwa.com/v1/checkouts"),
         headers: {
-          "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+          "Authorization": "Bearer OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=",
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: {
-          "entityId": "8ac7a4c795a0f72f0195a375b38c03f9",
+          "entityId": "8acda4ca96fcfe430197165a7a1c64df",
           "amount": formattedAmount,
           "currency": "SAR",
           "paymentType": "DB",
@@ -300,9 +300,9 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   Future<Map<String, dynamic>> checkPaymentStatus(String checkoutId, BuildContext context) async {
     final response = await http.get(
-      Uri.parse("https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4c795a0f72f0195a375b38c03f9"),
+      Uri.parse("https://eu-prod.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8acda4ca96fcfe430197165a7a1c64df"),
       headers: {
-        "Authorization": "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+        "Authorization": "Bearer OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=",
       },
     );
 

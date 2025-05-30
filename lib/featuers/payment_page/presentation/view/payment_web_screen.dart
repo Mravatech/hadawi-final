@@ -53,11 +53,11 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
     <meta http-equiv="Content-Security-Policy"
           content="
               default-src 'self';
-              script-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
-              style-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
-              frame-src 'self' https://eu-test.oppwa.com;
+              script-src 'self' https://eu-prod.oppwa.com 'unsafe-inline';
+              style-src 'self' https://eu-prod.oppwa.com 'unsafe-inline';
+              frame-src 'self' https://eu-prod.oppwa.com;
               connect-src 'self' wss://* https://p11.techlab-cdn.com;
-              img-src 'self' https://eu-test.oppwa.com data:;">
+              img-src 'self' https://eu-prod.oppwa.com data:;">
               
     <!-- Custom Styling -->
     <style>
@@ -167,7 +167,7 @@ class _PaymentWebScreenState extends State<PaymentWebScreen> {
     </div>
     
     <!-- Load Hyperpay Payment Widget -->
-    <script src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
+    <script src="https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
     
     <!-- Configuration options for payment widget -->
     <script type="text/javascript"> 
