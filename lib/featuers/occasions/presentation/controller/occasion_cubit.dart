@@ -595,10 +595,10 @@ class OccasionCubit extends Cubit<OccasionState> {
   }) async {
     try {
       // API details from your provided cURL command
-      const String baseUrl = 'https://eu-test.oppwa.com';
+      const String baseUrl = 'https://eu-prod.oppwa.com';
       const String path = '/v1/payments';
-      const String entityId = '8a8294174d0595bb014d05d829cb01cd';
-      const String authToken = 'OGE4Mjk0MTc0ZDA1OTViYjAxNGQwNWQ4MjllNzAxZDF8OVRuSlBjMm45aA==';
+      const String entityId = '8acda4ca96fcfe430197165a7a1c64df';
+      const String authToken = 'OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=';
 
       // Prepare headers
       final headers = {

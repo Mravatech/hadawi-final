@@ -337,13 +337,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
           switch (selectedPaymentMethod) {
             case PaymentMethod.mada:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage,
-                givenName: UserDataFromStorage.userNameFromStorage,
-                surname: UserDataFromStorage.userNameFromStorage,
+                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
+                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
+                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
                 street: "street",
                 city: "city",
                 state: "state",
-                postcode: "12345",
+                postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
 
@@ -352,13 +352,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.visa:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage,
-                givenName: UserDataFromStorage.userNameFromStorage,
-                surname: UserDataFromStorage.userNameFromStorage,
+                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
+                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
+                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
                 street: "street",
                 city: "city",
                 state: "state",
-                postcode: "12345",
+                postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
 
@@ -367,13 +367,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.masterCard:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage,
-                givenName: UserDataFromStorage.userNameFromStorage,
-                surname: UserDataFromStorage.userNameFromStorage,
+                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
+                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
+                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
                 street: "street",
                 city: "city",
                 state: "state",
-                postcode: "12345",
+                postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
 
@@ -382,13 +382,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.stcPay:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage,
-                givenName: UserDataFromStorage.userNameFromStorage,
-                surname: UserDataFromStorage.userNameFromStorage,
+                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
+                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
+                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
                 street: "street",
                 city: "city",
                 state: "state",
-                postcode: "12345",
+                postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
 
@@ -397,13 +397,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.applePay:
               final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
-                  email: UserDataFromStorage.emailFromStorage,
-                  givenName: UserDataFromStorage.userNameFromStorage,
-                  surname: UserDataFromStorage.userNameFromStorage,
+                  email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
+                  givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
+                  surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
                   street: "street",
                   city: "city",
                   state: "state",
-                  postcode: "12345",
+                  postcode: "12211",
                   merchantTransactionId: merchantTransactionId
               );
 
