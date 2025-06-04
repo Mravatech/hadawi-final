@@ -151,7 +151,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
         Uri.parse("https://eu-prod.oppwa.com/v1/checkouts"),
         headers: {
           "Authorization": "Bearer OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=",
-          "Content-Type": "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
         },
         body: {
           "entityId": "8acda4ca96fcfe430197165a7a1c64df",
