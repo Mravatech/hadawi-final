@@ -337,12 +337,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
           switch (selectedPaymentMethod) {
             case PaymentMethod.mada:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
-                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                street: "street",
-                city: "city",
-                state: "state",
+                email: "nouralsaid09@gmail.com",
+                givenName: "Nour",
+                surname: "Elsaid",
+                street: "King Fahd Rd",
+                city: "Riyadh",
+                state: "Riyadh",
                 postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
@@ -352,12 +352,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.visa:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
-                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                street: "street",
-                city: "city",
-                state: "state",
+                email: "nouralsaid09@gmail.com",
+                givenName: "Nour",
+                surname: "Elsaid",
+                street: "King Fahd Rd",
+                city: "Riyadh",
+                state: "Riyadh",
                 postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
@@ -367,12 +367,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.masterCard:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
-                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                street: "street",
-                city: "city",
-                state: "state",
+                email: "nouralsaid09@gmail.com",
+                givenName: "Nour",
+                surname: "Elsaid",
+                street: "King Fahd Rd",
+                city: "Riyadh",
+                state: "Riyadh",
                 postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
@@ -382,12 +382,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.stcPay:
               final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
-                givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                street: "street",
-                city: "city",
-                state: "state",
+                email: "nouralsaid09@gmail.com",
+                givenName: "Nour",
+                surname: "Elsaid",
+                street: "King Fahd Rd",
+                city: "Riyadh",
+                state: "Riyadh",
                 postcode: "12211",
                 merchantTransactionId: merchantTransactionId,
               );
@@ -397,12 +397,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
             case PaymentMethod.applePay:
               final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
-                  email: UserDataFromStorage.emailFromStorage??"HadawiUser@hadawi.com",
-                  givenName: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                  surname: UserDataFromStorage.userNameFromStorage?? "Hadawi",
-                  street: "street",
-                  city: "city",
-                  state: "state",
+                  email: "nouralsaid09@gmail.com",
+                  givenName: "Nour",
+                  surname: "Elsaid",
+                  street: "King Fahd Rd",
+                  city: "Riyadh",
+                  state: "Riyadh",
                   postcode: "12211",
                   merchantTransactionId: merchantTransactionId
               );
