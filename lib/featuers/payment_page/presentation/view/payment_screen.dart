@@ -332,7 +332,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       buttonText: "Next",
       onPressed: () async {
         if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
-          String merchantTransactionId = "ORDER-${DateTime.now().millisecondsSinceEpoch}";
+          String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
 
           switch (selectedPaymentMethod) {
             case PaymentMethod.mada:
