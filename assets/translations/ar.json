@@ -356,5 +356,9 @@
   "packagingOpenImageNote": "اضغط مطولاً لتكبير صورة التغليف",
   "paymentComplete": "تم اكمال الدفع لهذه المناسبة",
   "canNotShare": "لا يمكنك مشاركة مناسبة مكتملة",
-  "canNotEdit": "لا يمكنك تعديل مناسبة مكتملة"
+  "canNotEdit": "لا يمكنك تعديل مناسبة مكتملة",
+  "createPaymentLink": "إنشاء رابط دفع",
+  "createPaymentLinkMessage": "أدخل بيانات الشخص الذى تريد مشاركة الرابط معه",
+  "successPaymentLink": "تم إنشاء رابط الدفع بنجاح",
+  "errorPaymentLink": "حدث خطأ أثناء إنشاء رابط الدفع"
 }

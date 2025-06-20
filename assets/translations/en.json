@@ -210,7 +210,7 @@
   "shareQr": "Share Qr Code",
   "shareNames": "Share Names",
   "moneyAmount": "Money Amount",
-  "rsa": "RSA",
+  "rsa": "SAR",
   "addAnother": "Add Another",
   "privateUser": "Private Account",
   "myRequests": "My Requests",
@@ -355,5 +355,9 @@
   "packagingOpenImageNote": "You can open the packaging image by long press on it",
   "paymentComplete": "Payment Complete for this occasion",
   "canNotShare": "You can not share this occasion",
-  "canNotEdit": "You can not edit this occasion"
+  "canNotEdit": "You can not edit this occasion",
+  "createPaymentLink": "Create Payment Link",
+  "createPaymentLinkMessage": "Enter the details of the person you want to share the link with",
+  "successPaymentLink": "Payment link created successfully",
+  "errorPaymentLink": "Error creating payment link"
 }

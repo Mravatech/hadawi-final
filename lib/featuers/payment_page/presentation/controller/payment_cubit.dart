@@ -364,4 +364,79 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
     return data;
   }
+
+
+  Future<void> loginAndCreateInvoice({
+    required String amount,
+    required String name,
+    required String email,
+    required String phone,
+    required String personName,
+    required String occasionType,
+  }) async {
+    final loginUrl = Uri.parse('https://hyperbill-sandbox.hyperpay.com/api/login');
+    final invoiceUrl = Uri.parse('https://hyperbill-sandbox.hyperpay.com/api/simpleInvoice');
+
+    emit(PaymentCreateLinkLoadingState());
+
+    final loginBody = {
+      "email": "mohamed.mmdouh.dev@gmail.com",
+      "password": "Mmmmmmmm156**"
+    };
+
+    try {
+      final loginResponse = await http.post(
+        loginUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: jsonEncode(loginBody),
+      );
+
+      final loginData = jsonDecode(loginResponse.body);
+      if (loginData['status'] != true) {
+        debugPrint("Login failed: ${loginData['message']}");
+        return;
+      }
+
+      final accessToken = loginData['data']['accessToken'];
+      debugPrint("Login successful. Access token: $accessToken");
+
+      final invoiceBody = {
+        "amount": amount,
+        "vat": "0.00",
+        "currency": "SAR",
+        "payment_type": "DB",
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "lang": "ar"
+      };
+
+      final invoiceResponse = await http.post(
+        invoiceUrl,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(invoiceBody),
+      );
+
+      final invoiceData = jsonDecode(invoiceResponse.body);
+      String link = invoiceData['url'] ?? '';
+      debugPrint("Invoice Response: ${jsonEncode(invoiceData)}");
+      Share.share(
+          'قام صديقك ${personName} بدعوتك للمشاركة في مناسبة له ${occasionType} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+      emit(PaymentCreateLinkSuccessState());
+
+    } catch (e) {
+      debugPrint("Error in creating payment link: $e");
+      emit(PaymentCreateLinkErrorState());
+    }
+  }
+
+
+
 }
