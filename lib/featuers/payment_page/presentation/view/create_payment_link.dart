@@ -47,7 +47,7 @@ class _CreatePaymentLinkScreenState extends State<CreatePaymentLinkScreen> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            "Payment ${widget.occasionEntity.occasionType} (${widget.occasionEntity.personName})",
+            "Payment ${widget.occasionEntity.type} (${widget.occasionEntity.personName})",
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),
@@ -111,11 +111,11 @@ class _CreatePaymentLinkScreenState extends State<CreatePaymentLinkScreen> {
                               .validate()) {
                             PaymentCubit.get(context).loginAndCreateInvoice(
                               amount:paymentAmountController.text,
-                              name:"${paymentNameController.text} - ${widget.occasionEntity.occasionType} (${widget.occasionEntity.personName}) - ${widget.occasionEntity.occasionId}",
+                              name:"${paymentNameController.text} - ${widget.occasionEntity.type} (${widget.occasionEntity.personName}) - ${widget.occasionEntity.occasionId}",
                               email:paymentEmailController.text,
                               phone:paymentPhoneController.text,
                               personName: widget.occasionEntity.personName,
-                              occasionType: widget.occasionEntity.occasionType,
+                              occasionType: widget.occasionEntity.type,
                             );
                           }
                         },
