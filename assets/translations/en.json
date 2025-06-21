@@ -359,5 +359,12 @@
   "createPaymentLink": "Create Payment Link",
   "createPaymentLinkMessage": "Enter the details of the person you want to share the link with",
   "successPaymentLink": "Payment link created successfully",
-  "errorPaymentLink": "Error creating payment link"
+  "errorPaymentLink": "Error creating payment link",
+  "paymentMethod": "Payment Method",
+  "paymentMethodHint": "Select one of the payment methods",
+  "madaHint": "Pay with Mada card",
+  "visaHint": "Pay with Visa card",
+  "masterHint": "Pay with MasterCard",
+  "stcHint": "Pay with STC Pay",
+  "applePayHint": "Pay with Apple Pay"
 }

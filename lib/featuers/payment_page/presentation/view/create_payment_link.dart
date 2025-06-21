@@ -21,15 +21,15 @@ import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
-class PaymentScreen extends StatefulWidget {
+class CreatePaymentLinkScreen extends StatefulWidget {
   final OccasionEntity occasionEntity;
-  const PaymentScreen({super.key, required this.occasionEntity});
+  const CreatePaymentLinkScreen({super.key, required this.occasionEntity});
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<CreatePaymentLinkScreen> createState() => _CreatePaymentLinkScreenState();
 }
 
-class _PaymentScreenState extends State<PaymentScreen> {
+class _CreatePaymentLinkScreenState extends State<CreatePaymentLinkScreen> {
   TextEditingController paymentAmountController = TextEditingController();
   TextEditingController paymentNameController = TextEditingController();
   TextEditingController paymentEmailController = TextEditingController();
@@ -94,13 +94,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                       // Name field
                       buildNameField(context),
-                      SizedBox(height: SizeConfig.height * 0.04),
+                      SizedBox(height: SizeConfig.height * 0.02),
 
                       buildPhoneField(context),
                       SizedBox(height: SizeConfig.height * 0.02),
 
                       buildEmailField(context),
-                      SizedBox(height: SizeConfig.height * 0.02),
+                      SizedBox(height: SizeConfig.height * 0.04),
 
 
                       // Payment button

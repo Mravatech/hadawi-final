@@ -7,12 +7,14 @@ import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_c
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/create_payment_link.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_web_screen.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
@@ -40,7 +42,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         title: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Text(
-            "Payment ${widget.occasionEntity.occasionType} (${widget.occasionEntity.personName})",
+            "${AppLocalizations.of(context)!.translate('payment').toString()} ${widget.occasionEntity.type} (${widget.occasionEntity.personName})",
             style: TextStyles.textStyle18Bold
                 .copyWith(color: ColorManager.primaryBlue),
           ),
@@ -72,7 +74,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                       // Payment progress bar
                       buildProgressIndicator(),
-                      SizedBox(height: SizeConfig.height * 0.04),
+                      SizedBox(height: SizeConfig.height * 0.02),
 
                       // Amount field
                       buildAmountField(context),
@@ -80,7 +82,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                       // Name field
                       buildNameField(context),
-                      SizedBox(height: SizeConfig.height * 0.04),
+                      SizedBox(height: SizeConfig.height * 0.02),
 
                       // Payment Method Selection
                       buildPaymentMethodSection(context),
@@ -88,6 +90,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                       // Payment button
                       buildPaymentButton(context),
+                      SizedBox(height: SizeConfig.height * 0.02),
+                      buildCreatePaymentLinkButton(context),
 
                       SizedBox(height: SizeConfig.height * 0.04),
                     ],
@@ -128,7 +132,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Amount",
+          AppLocalizations.of(context)!.translate("amount").toString(),
           style: TextStyles.textStyle16Bold.copyWith(color: ColorManager.black),
         ),
         SizedBox(height: 8),
@@ -137,10 +141,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
             Expanded(
               child: DefaultTextField(
                 controller: PaymentCubit.get(context).paymentAmountController,
-                hintText: "Enter amount",
+                hintText: "",
                 validator: (value) {
                   if (value!.trim().isEmpty) {
-                    return "Please enter an amount";
+                    return AppLocalizations.of(context)!.translate("amountValidate").toString();
                   }
                   return null;
                 },
@@ -151,7 +155,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             ),
             SizedBox(width: 10),
             Text(
-              "SAR",
+              AppLocalizations.of(context)!.translate("rsa").toString(),
               style: TextStyles.textStyle16Regular,
             )
           ],
@@ -165,7 +169,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Name",
+          AppLocalizations.of(context)!.translate("fullName").toString(),
           style: TextStyles.textStyle16Bold.copyWith(color: ColorManager.black),
         ),
         SizedBox(height: 8),
@@ -174,7 +178,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           hintText: '',
           validator: (value) {
             if (value.isEmpty) {
-              return "Please enter your name";
+              return AppLocalizations.of(context)!.translate("fullNameHint").toString();
             }
             return null;
           },
@@ -191,11 +195,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Payment Method",
+          AppLocalizations.of(context)!.translate("paymentMethod").toString(),
           style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
         ),
         Text(
-          "Select one of the payment methods",
+          AppLocalizations.of(context)!.translate("paymentMethodHint").toString(),
           style: TextStyles.textStyle16Regular.copyWith(color: Colors.grey),
         ),
         SizedBox(height: SizeConfig.height * 0.02),
@@ -204,7 +208,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         buildPaymentMethodTile(
           imagePath: 'assets/images/mada_pay.png',
           title: 'Mada',
-          subtitle: "Pay with Mada card",
+          subtitle: AppLocalizations.of(context)!.translate("madaHint").toString(),
           value: PaymentMethod.mada,
         ),
         SizedBox(height: 10),
@@ -213,7 +217,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         buildPaymentMethodTile(
           imagePath: 'assets/images/visa_card.png',
           title: 'Visa',
-          subtitle: "Pay with Visa card",
+          subtitle: AppLocalizations.of(context)!.translate("visaHint").toString(),
           value: PaymentMethod.visa,
         ),
         SizedBox(height: 10),
@@ -222,7 +226,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         buildPaymentMethodTile(
           imagePath: 'assets/images/mastercard.png',
           title: 'MasterCard',
-          subtitle: "Pay with MasterCard",
+          subtitle: AppLocalizations.of(context)!.translate("masterHint").toString(),
           value: PaymentMethod.masterCard,
         ),
         SizedBox(height: 10),
@@ -231,10 +235,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
         buildPaymentMethodTile(
           imagePath: 'assets/images/stc_pay.jpg',
           title: 'STC Pay',
-          subtitle: "Pay with STC Pay",
+          subtitle: AppLocalizations.of(context)!.translate("stcHint").toString(),
           value: PaymentMethod.stcPay,
         ),
-        SizedBox(height: 10),
+        // SizedBox(height: 10),
 
         //Apple Pay Option
         // Platform.isIOS? buildPaymentMethodTile(
@@ -329,7 +333,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget buildPaymentButton(BuildContext context) {
     return DefaultButton(
-      buttonText: "Next",
+      buttonText: AppLocalizations.of(context)!.translate('next').toString(),
       onPressed: () async {
         if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
           String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
@@ -430,6 +434,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
+  Widget buildCreatePaymentLinkButton(BuildContext context) {
+    return DefaultButton(
+      buttonText: AppLocalizations.of(context)!.translate('createPaymentLink').toString(),
+      onPressed: () async {
+        customPushNavigator(context, CreatePaymentLinkScreen(
+          occasionEntity: widget.occasionEntity,
+        ));
+      },
+      buttonColor: ColorManager.primaryBlue,
+    );
+  }
+
   void processPayment(BuildContext context, Map checkoutData, String merchantTransactionId, String paymentMethod) {
     customPushNavigator(
         context,
@@ -438,7 +454,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           integrity: checkoutData["integrity"],
           paymentMethod: paymentMethod,
           occasionId: widget.occasionEntity.occasionId,
-          occasionName: widget.occasionEntity.occasionType,
+          occasionName: widget.occasionEntity.type,
           transactionId: merchantTransactionId,
           remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
               double.parse(widget.occasionEntity.moneyGiftAmount.toString()),

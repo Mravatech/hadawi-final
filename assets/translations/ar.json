@@ -360,5 +360,11 @@
   "createPaymentLink": "إنشاء رابط دفع",
   "createPaymentLinkMessage": "أدخل بيانات الشخص الذى تريد مشاركة الرابط معه",
   "successPaymentLink": "تم إنشاء رابط الدفع بنجاح",
-  "errorPaymentLink": "حدث خطأ أثناء إنشاء رابط الدفع"
+  "errorPaymentLink": "حدث خطأ أثناء إنشاء رابط الدفع",
+  "paymentMethod": "طريقة الدفع",
+  "paymentMethodHint": "اختر طريقة الدفع",
+  "madaHint": "ادفع باستخدام بطاقة مدى",
+  "visaHint": "ادفع باستخدام بطاقة فيزا",
+  "masterHint": "ادفع باستخدام بطاقة ماستركارد",
+  "stcHint": "ادفع باستخدام STC Pay"
 }

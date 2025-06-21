@@ -403,8 +403,11 @@ class PaymentCubit extends Cubit<PaymentStates> {
       final accessToken = loginData['data']['accessToken'];
       debugPrint("Login successful. Access token: $accessToken");
 
+      String amountFormatted = double.tryParse(
+            convertArabicToEnglishNumbers(amount))?.toStringAsFixed(2) ?? "0.00";
+
       final invoiceBody = {
-        "amount": amount,
+        "amount": amountFormatted,
         "vat": "0.00",
         "currency": "SAR",
         "payment_type": "DB",
@@ -428,7 +431,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
       String link = invoiceData['url'] ?? '';
       debugPrint("Invoice Response: ${jsonEncode(invoiceData)}");
       Share.share(
-          'قام صديقك ${personName} بدعوتك للمشاركة في مناسبة له ${occasionType} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+          'قام صديقك ${UserDataFromStorage.userNameFromStorage} بدعوتك للمشاركة في مناسبة له ${occasionType} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
       emit(PaymentCreateLinkSuccessState());
 
     } catch (e) {
