@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
@@ -213,6 +214,43 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   }
 }
 
+void setupDynamicLinkReceiver() {
+  const MethodChannel _channel = MethodChannel('app/dynamic_links');
+
+  _channel.setMethodCallHandler((call) async {
+    if (call.method == "dynamicLinkReceived") {
+      final Map<dynamic, dynamic> arguments = call.arguments;
+
+      final String url = arguments["url"] ?? "";
+      final List<dynamic> path = arguments["path"] ?? [];
+      final Map<dynamic, dynamic> params = arguments["params"] ?? {};
+
+      debugPrint("📲 Received dynamic link via platform channel:");
+      debugPrint("URL: $url");
+      debugPrint("Path: $path");
+      debugPrint("Params: $params");
+
+      String? occasionId;
+      if (path.contains('occasion-details')) {
+        int idx = path.indexOf('occasion-details');
+        if (idx < path.length - 1) {
+          occasionId = path[idx + 1];
+        }
+      }
+
+      if (occasionId != null && occasionId.isNotEmpty) {
+        MyApp.navigatorKey.currentState?.pushNamed(
+          AppRoutes.occasionDetails,
+          arguments: {
+            'occasionId': occasionId,
+            'fromHome': true,
+          },
+        );
+      }
+    }
+  });
+}
+
 class MyApp extends StatefulWidget {
   // Keep the navigator key for global navigation access
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -229,6 +267,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+    setupDynamicLinkReceiver();
     _initAppLinksHandling();
   }
 

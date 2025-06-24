@@ -520,7 +520,6 @@ class OccasionCubit extends Cubit<OccasionState> {
     try {
       final DynamicLinkParameters parameters = DynamicLinkParameters(
         uriPrefix: 'https://hadawiapp.page.link',
-        // Make this path consistent with how you're handling it
         link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId'),
         androidParameters: const AndroidParameters(
           packageName: 'com.app.hadawi_app',
