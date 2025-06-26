@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:app_links/app_links.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
 import 'package:hadawi_app/featuers/splash/preentation/view/widgets/logo_image.dart';
@@ -30,7 +31,9 @@ class _SplashScreenState extends State<SplashBodyView>
     super.initState();
     UserDataFromStorage.getData();
     _initAppLinksHandling();
-    timeDelay(context: context);
+    if(!kIsWeb){
+      timeDelay(context: context);
+    }
     animationController =
         AnimationController(vsync: this, duration: const Duration(seconds: 1));
     slideAnimation =
@@ -64,6 +67,16 @@ class _SplashScreenState extends State<SplashBodyView>
 
     // Extract occasion ID from app link
     String? occasionId;
+
+    // ✅ جديد: دعم روابط Firebase Hosting مثل hadawi-payment.web.app
+    if (uri.host == 'hadawi-payment.web.app') {
+      if (uri.pathSegments.contains('occasion-details')) {
+        int idx = uri.pathSegments.indexOf('occasion-details');
+        if (idx < uri.pathSegments.length - 1) {
+          occasionId = uri.pathSegments[idx + 1];
+        }
+      }
+    }
 
     // Handle various URI formats
     if (uri.scheme == 'hadawi' || uri.scheme == 'com.app.hadawiapp') {
@@ -106,7 +119,7 @@ class _SplashScreenState extends State<SplashBodyView>
       // Use WidgetsBinding to ensure the navigation happens after the widget tree is built
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Navigate using the standard Navigator and the navigatorKey
-        MyApp.navigatorKey.currentState?.pushNamed(
+        HadawiApp.navigatorKey.currentState?.pushNamed(
             AppRoutes.occasionDetails,
             arguments: {
               'occasionId': occasionId,
@@ -116,12 +129,12 @@ class _SplashScreenState extends State<SplashBodyView>
       });
     } else {
       // Default navigation if no occasion ID is found
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final isLoggedIn = UserDataFromStorage.userIsGuest;
-        MyApp.navigatorKey.currentState?.pushReplacementNamed(
-            isLoggedIn ? AppRoutes.home : AppRoutes.login
-        );
-      });
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   final isLoggedIn = UserDataFromStorage.userIsGuest;
+      //   HadawiApp.navigatorKey.currentState?.pushReplacementNamed(
+      //       isLoggedIn ? AppRoutes.home : AppRoutes.login
+      //   );
+      // });
     }
   }
 

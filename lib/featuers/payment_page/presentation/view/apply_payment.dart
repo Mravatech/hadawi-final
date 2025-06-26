@@ -63,11 +63,11 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
     <meta http-equiv="Content-Security-Policy"
           content="
               default-src 'self';
-              script-src 'self' https://eu-test.oppwa.com https://applepay.cdn-apple.com 'unsafe-inline';
-              style-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
-              frame-src 'self' https://eu-test.oppwa.com;
+              script-src 'self' https://eu-prod.oppwa.com https://applepay.cdn-apple.com 'unsafe-inline';
+              style-src 'self' https://eu-prod.oppwa.com 'unsafe-inline';
+              frame-src 'self' https://eu-prod.oppwa.com;
               connect-src 'self' wss://* https://p11.techlab-cdn.com https://*.apple.com;
-              img-src 'self' https://eu-test.oppwa.com data:;">
+              img-src 'self' https://eu-prod.oppwa.com data:;">
               
     <!-- Custom Styling -->
     <style>
@@ -166,7 +166,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
     </div>
     
     <!-- Load Hyperpay Payment Widget -->
-    <script src="https://eu-test.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
+    <script src="https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
     
     <!-- Apple Pay Container -->
     <div class="apple-pay-container">

@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,6 +26,7 @@ import 'package:hadawi_app/firebase_options.dart';
 import 'package:hadawi_app/styles/theme_manger/theme_manager.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
 import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
@@ -32,7 +34,6 @@ import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/services/notification_service.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
@@ -59,9 +60,9 @@ class AppRoutes {
         final args = settings.arguments as Map<String, dynamic>;
         final occasionId = args['occasionId'] as String;
         final fromHome = args['fromHome'] as bool;
-        debugPrint('Opening occasion details for ID: $occasionId, fromHome: $fromHome');
+        debugPrint('Opening occasion details for ID: $occasionId, fromHome: true');
         return MaterialPageRoute(
-            builder: (_) => OccasionDetails(occasionId: occasionId, fromHome: fromHome)
+            builder: (_) => OccasionDetails(occasionId: occasionId, fromHome: true)
         );
 
       case home:
@@ -95,59 +96,47 @@ class AppRoutes {
 }
 
 Future<void> main() async {
-  await SentryFlutter.init(
-        (options) {
-      options.dsn = 'https://84d149a4ed2f407b023cd9ca435bab0c@o4509321210494981.ingest.de.sentry.io/4509321270788176';
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () async {
-      WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized();
 
-      ServiceLocator().init();
-      await SharedPreferences.getInstance();
-      await CashHelper.init();
-      UserDataFromStorage.getData();
-      DioHelper.dioInit();
-      Bloc.observer = MyBlocObserver();
+  ServiceLocator().init();
+  await SharedPreferences.getInstance();
+  await CashHelper.init();
+  UserDataFromStorage.getData();
+  DioHelper.dioInit();
+  Bloc.observer = MyBlocObserver();
 
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-
-      // Initialize Firebase Dynamic Links
-      final PendingDynamicLinkData? initialLink =
-      await FirebaseDynamicLinks.instance.getInitialLink();
-
-      if (initialLink != null) {
-        debugPrint('Initial dynamic link: ${initialLink.link}');
-        _handleDynamicLink(initialLink);
-      }
-
-      // Listen for dynamic links while the app is running
-      FirebaseDynamicLinks.instance.onLink.listen(
-            (dynamicLinkData) {
-          debugPrint('Dynamic link received while app running: ${dynamicLinkData.link}');
-          _handleDynamicLink(dynamicLinkData);
-        },
-        onError: (error) {
-          debugPrint('Dynamic link error: $error');
-        },
-      );
-
-      FlutterError.onError = (details) {
-        if (details.exception.toString().contains('HttpException') &&
-            details.exception.toString().contains('Invalid statusCode: 404')) {
-          return;
-        }
-        Sentry.captureException(details.exception, stackTrace: details.stack);
-        FlutterError.presentError(details);
-      };
-
-      await NotificationService().initRemoteNotification();
-
-      runApp(const MyApp());
-    },
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Initialize Firebase Dynamic Links
+  if (!kIsWeb) {
+    final PendingDynamicLinkData? initialLink =
+    await FirebaseDynamicLinks.instance.getInitialLink();
+
+    if (initialLink != null) {
+      debugPrint('Initial dynamic link: ${initialLink.link}');
+      _handleDynamicLink(initialLink);
+    }
+
+    // Listen for dynamic links while the app is running
+    FirebaseDynamicLinks.instance.onLink.listen(
+          (dynamicLinkData) {
+        debugPrint('Dynamic link received while app running: ${dynamicLinkData.link}');
+        _handleDynamicLink(dynamicLinkData);
+      },
+      onError: (error) {
+        debugPrint('Dynamic link error: $error');
+      },
+    );
+  }
+
+  if(!kIsWeb) {
+    await NotificationService().initRemoteNotification();
+  }
+
+
+  runApp(const HadawiApp());
 }
 
 // Function to handle dynamic links
@@ -203,7 +192,7 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   if (occasionId != null && occasionId.isNotEmpty) {
     // Navigate to occasion details using standard Navigator
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      MyApp.navigatorKey.currentState?.pushNamed(
+      HadawiApp.navigatorKey.currentState?.pushNamed(
           AppRoutes.occasionDetails,
           arguments: {
             'occasionId': occasionId,
@@ -215,6 +204,7 @@ void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
 }
 
 void setupDynamicLinkReceiver() {
+  if (kIsWeb) return;
   const MethodChannel _channel = MethodChannel('app/dynamic_links');
 
   _channel.setMethodCallHandler((call) async {
@@ -239,7 +229,7 @@ void setupDynamicLinkReceiver() {
       }
 
       if (occasionId != null && occasionId.isNotEmpty) {
-        MyApp.navigatorKey.currentState?.pushNamed(
+        HadawiApp.navigatorKey.currentState?.pushNamed(
           AppRoutes.occasionDetails,
           arguments: {
             'occasionId': occasionId,
@@ -251,24 +241,26 @@ void setupDynamicLinkReceiver() {
   });
 }
 
-class MyApp extends StatefulWidget {
+class HadawiApp extends StatefulWidget {
   // Keep the navigator key for global navigation access
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-  const MyApp({super.key});
+  const HadawiApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<HadawiApp> createState() => _HadawiAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _HadawiAppState extends State<HadawiApp> {
   final _appLinks = AppLinks();
   StreamSubscription? _linkSubscription;
 
   @override
   void initState() {
     super.initState();
-    setupDynamicLinkReceiver();
-    _initAppLinksHandling();
+    if (!kIsWeb) {
+      setupDynamicLinkReceiver();
+      _initAppLinksHandling();
+    }
   }
 
   @override
@@ -279,6 +271,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initAppLinksHandling() async {
     // Handle app links (for universal links and custom schemes)
+    if (kIsWeb) return;
     _linkSubscription = _appLinks.uriLinkStream.listen(
       _handleAppLink,
       onError: (error) {
@@ -297,7 +290,7 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _handleAppLink(Uri uri) {
+  void _handleAppLink(Uri uri) async {
     debugPrint('Received app link: $uri');
 
     // Extract occasion ID from app link
@@ -344,7 +337,7 @@ class _MyAppState extends State<MyApp> {
       // Use WidgetsBinding to ensure the navigation happens after the widget tree is built
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // Navigate using the standard Navigator and the navigatorKey
-        MyApp.navigatorKey.currentState?.pushNamed(
+        HadawiApp.navigatorKey.currentState?.pushNamed(
             AppRoutes.occasionDetails,
             arguments: {
               'occasionId': occasionId,
@@ -354,9 +347,10 @@ class _MyAppState extends State<MyApp> {
       });
     } else {
       // Default navigation if no occasion ID is found
+      await UserDataFromStorage.getData();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final isLoggedIn = UserDataFromStorage.userIsGuest;
-        MyApp.navigatorKey.currentState?.pushReplacementNamed(
+        HadawiApp.navigatorKey.currentState?.pushReplacementNamed(
             isLoggedIn ? AppRoutes.home : AppRoutes.login
         );
       });
@@ -385,7 +379,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Hadawi',
             theme: getApplicationTheme(context),
-            navigatorKey: MyApp.navigatorKey,
+            navigatorKey: HadawiApp.navigatorKey,
             initialRoute: AppRoutes.splash,
             onGenerateRoute: AppRoutes.generateRoute,
             localizationsDelegates: [

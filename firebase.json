@@ -1,28 +1,18 @@
 {
-  "flutter": {
-    "platforms": {
-      "android": {
-        "default": {
-          "projectId": "transport-app-d662f",
-          "appId": "1:1698335350:android:8d2c58625fd69ca08aed57",
-          "fileOutput": "android/app/google-services.json"
+  "hosting": [
+    {"target": "hadawiweb",
+      "public": "build/web",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
         }
-      },
-      "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "transport-app-d662f",
-          "configurations": {
-            "android": "1:1698335350:android:8d2c58625fd69ca08aed57",
-            "ios": "1:1698335350:ios:76209b1f710d416c8aed57",
-            "web": "1:1698335350:web:39721f7276effbf98aed57"
-          }
-        }
-      }
+      ]
     }
-  },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint"
-    ]
-  }
+  ]
 }

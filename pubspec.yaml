@@ -77,7 +77,7 @@ dependencies:
   uuid: ^4.5.1
   saver_gallery: 3.0.6
   dots_indicator: ^4.0.1
-  sentry_flutter: ^8.14.2
+  pay: ^1.1.1
 
 dev_dependencies:
   sentry_dart_plugin: ^2.4.1

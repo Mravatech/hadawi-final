@@ -261,29 +261,26 @@ class PaymentCubit extends Cubit<PaymentStates> {
           "0.00";
 
       final response = await http.post(
-        Uri.parse("https://eu-test.oppwa.com/v1/checkouts"),
+        Uri.parse("https://eu-prod.oppwa.com/v1/checkouts"),
         headers: {
           "Authorization":
-              "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+              "Bearer OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=",
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: {
-          "entityId": "8ac7a4ca969f7e8d01969ff847030111",
+          "entityId": " 8ac9a4cc975e0e500197a11dc5f0124d",
           "amount": formattedAmount,
           "currency": "SAR",
           "paymentType": "DB",
-          "customParameters[3DS2_enrolled]": "true",
-          "customParameters[3DS2.challengeIndicator]": "04",
-          "customParameters[3DS2.authenticationFlow]": "challenge",
           "merchantTransactionId": merchantTransactionId,
-          "customer.email": email,
-          "customer.givenName": givenName,
-          "customer.surname": surname,
-          "billing.street1": street,
-          "billing.city": city,
-          "billing.state": state,
+          "customer.email": email.trim(),
+          "customer.givenName": givenName.trim(),
+          "customer.surname": surname.trim(),
+          "billing.street1": street.trim(),
+          "billing.city": city.trim(),
+          "billing.state": state.trim(),
           "billing.country": "SA",
-          "billing.postcode": postcode,
+          "billing.postcode": postcode.trim(),
           "shopperResultUrl": "https://hadawi.netlify.app/payment-result",
         },
       );
@@ -347,10 +344,10 @@ class PaymentCubit extends Cubit<PaymentStates> {
       String checkoutId, BuildContext context) async {
     final response = await http.get(
       Uri.parse(
-          "https://eu-test.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8ac7a4ca969f7e8d01969ff847030111"),
+          "https://eu-prod.oppwa.com/v1/checkouts/$checkoutId/payment?entityId= 8ac9a4cc975e0e500197a11dc5f0124d"),
       headers: {
         "Authorization":
-            "Bearer OGFjN2E0Yzc5NWEwZjcyZjAxOTVhMzc1MjY1NjAzZjV8Sz9DcD9QeFV4PTVGUWJ1S2MlUHU=",
+            "Bearer OGFjZGE0Y2E5NmZjZmU0MzAxOTcxNjVhMGE2YzY0ZDd8cWRuOVIzekxiWFFvY0JScks5Kzo=",
       },
     );
 

@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "transport-app-d662f"
-  }
+  },
+  "targets": {
+    "transport-app-d662f": {
+      "hosting": {
+        "hadawiweb": [
+          "hadawi-payment"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
