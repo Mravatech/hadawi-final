@@ -377,7 +377,7 @@ class _HadawiAppState extends State<HadawiApp> {
         builder: (context, state) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'Hadawi',
+            title: 'Hadawi-هداوي',
             theme: getApplicationTheme(context),
             navigatorKey: HadawiApp.navigatorKey,
             initialRoute: AppRoutes.splash,
