@@ -735,6 +735,9 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                 width: MediaQuery.sizeOf(context).width,
               )
             : SizedBox(),
+        SizedBox(
+          height: MediaQuery.sizeOf(context).height * 0.04,
+        ),
       ],
     );
   }

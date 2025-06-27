@@ -268,7 +268,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: {
-          "entityId": " 8ac9a4cc975e0e500197a11dc5f0124d",
+          "entityId": "8ac9a4cc975e0e500197a11dc5f0124d",
           "amount": formattedAmount,
           "currency": "SAR",
           "paymentType": "DB",

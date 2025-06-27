@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
@@ -19,6 +20,7 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
+import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pay/pay.dart';
 
@@ -90,40 +92,54 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       SizedBox(height: SizeConfig.height * 0.04),
 
                       // Payment button
-                      RawApplePayButton(
-                        style: ApplePayButtonStyle.black, // or .white, .whiteOutline
-                        type: ApplePayButtonType.buy, // or .donate, .book, .checkout etc.
-                        onPressed: () async {
-                          String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
-                          final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
-                              email: "nouralsaid09@gmail.com",
-                              givenName: "Nour",
-                              surname: "Elsaid",
-                              street: "King Fahd Rd",
-                              city: "Riyadh",
-                              state: "Riyadh",
-                              postcode: "12211",
-                              merchantTransactionId: merchantTransactionId
-                          );
+                      !Platform.isAndroid ?Container(
+                        width: double.infinity,
+                        height: SizeConfig.height * 0.05,
+                        child: RawApplePayButton(
+                          style: ApplePayButtonStyle.black, // or .white, .whiteOutline
+                          type: ApplePayButtonType.buy, // or .donate, .book, .checkout etc.
+                          onPressed: () async {
+                            if(PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
+                              if(PaymentCubit.get(context).paymentAmountController.text == "0") {
+                                customToast(
+                                  title: AppLocalizations.of(context)!.translate("amountValidate").toString(),
+                                  color: ColorManager.red,
+                                );
+                                return;
+                              }else{
+                                String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
+                                final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
+                                    email: "nouralsaid09@gmail.com",
+                                    givenName: "Nour",
+                                    surname: "Elsaid",
+                                    street: "King Fahd Rd",
+                                    city: "Riyadh",
+                                    state: "Riyadh",
+                                    postcode: "12211",
+                                    merchantTransactionId: merchantTransactionId
+                                );
 
-                          customPushNavigator(
-                              context,
-                              ApplePayWebView(
-                                checkoutId: checkoutData["checkoutId"],
-                                integrity: checkoutData["integrity"],
-                                paymentMethod: "APPLEPAY",
-                                occasionId: widget.occasionEntity.occasionId,
-                                occasionName: widget.occasionEntity.type,
-                                transactionId: merchantTransactionId,
-                                occasionEntity: widget.occasionEntity,
-                                remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
-                                    double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
-                                paymentAmount: double.parse(context.read<OccasionCubit>().convertArabicToEnglishNumbers(context.read<PaymentCubit>().paymentAmountController.text.toString())),
-                              )
-                          );
-                        },
-                        cornerRadius: 10,
-                      ),
+                                customPushNavigator(
+                                    context,
+                                    ApplePayWebView(
+                                      checkoutId: checkoutData["checkoutId"],
+                                      integrity: checkoutData["integrity"],
+                                      paymentMethod: "APPLEPAY",
+                                      occasionId: widget.occasionEntity.occasionId,
+                                      occasionName: widget.occasionEntity.type,
+                                      transactionId: merchantTransactionId,
+                                      occasionEntity: widget.occasionEntity,
+                                      remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
+                                          double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+                                      paymentAmount: double.parse(context.read<OccasionCubit>().convertArabicToEnglishNumbers(context.read<PaymentCubit>().paymentAmountController.text.toString())),
+                                    )
+                                );
+                              }
+                            }
+                          },
+                          cornerRadius: 10,
+                        ),
+                      ):SizedBox(),
                       SizedBox(height: SizeConfig.height * 0.02),
                       buildPaymentButton(context),
                       // SizedBox(height: SizeConfig.height * 0.02),
