@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/friends/presentation/controller/firends_states.dart';
@@ -8,9 +7,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
@@ -23,91 +20,194 @@ class _FollowingScreenState extends State<FollowingScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<FriendsCubit>()
-        .getFollowers(userId: UserDataFromStorage.uIdFromStorage);
+    context.read<FriendsCubit>().getFollowers(userId: UserDataFromStorage.uIdFromStorage);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: ColorManager.white,
-        appBar: defaultAppBarWidget(
-            context: context,
-            appBarTitle: AppLocalizations.of(context)!
-                .translate('friendsIFollow')
-                .toString()),
-        body: BlocConsumer<FriendsCubit, FriendsStates>(
-          listener: (context, state) {
-            if (state is GetFollowersErrorState) {
-              customToast(title: state.message, color: ColorManager.error);
-            }
-          },
-          builder: (context, state) {
-            var cubit = context.read<FriendsCubit>();
-            return ModalProgressHUD(
-              inAsyncCall: state is GetFollowersLoadingState,
-              child: state is GetFollowersLoadingState
-                  ? const Center(child: CircularProgressIndicator())
-                  : cubit.followers.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                                child: Text(
-                                  AppLocalizations.of(context)!.translate('noFriends').toString(),
-                              style: TextStyles.textStyle18Medium
-                                  .copyWith(color: ColorManager.black),
-                            )),
-                          ],
-                        )
-                      : ListView.separated(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: cubit.followers.length,
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: 0,
-                            );
-                          },
-                          itemBuilder: (context, index) => Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal:
-                                    MediaQuery.sizeOf(context).height * 0.02,
-                                vertical:
-                                    MediaQuery.sizeOf(context).height * 0.01),
-                            height: MediaQuery.sizeOf(context).height * 0.1,
-                            decoration: BoxDecoration(
-                              color: ColorManager.gray,
-                              borderRadius: BorderRadius.circular(10),
+    return BlocConsumer<FriendsCubit, FriendsStates>(
+      listener: (context, state) {
+        if (state is GetFollowersErrorState) {
+          customToast(title: state.message, color: ColorManager.error);
+        }
+      },
+      builder: (context, state) {
+        var cubit = context.read<FriendsCubit>();
+
+        if (state is GetFollowersLoadingState) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B7BA8)),
+                  strokeWidth: 3,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'Loading following...',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF8B7BA8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        if (cubit.followers.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 140,
+                  height: 140,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF8B7BA8).withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      AssetsManager.noData,
+                      width: 80,
+                      height: 80,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 24),
+                Text(
+                  AppLocalizations.of(context)!.translate('noFriends').toString(),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF8B7BA8),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32),
+                  child: Text(
+                    'Start following people to see them here',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black54,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return ListView.builder(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          physics: AlwaysScrollableScrollPhysics(),
+          itemCount: cubit.followers.length,
+          itemBuilder: (context, index) {
+            final following = cubit.followers[index];
+            return Container(
+              margin: EdgeInsets.only(bottom: 12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Color(0xFF8B7BA8).withOpacity(0.08),
+                    blurRadius: 15,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    // Handle user tap - show profile or actions
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Color(0xFF8B7BA8).withOpacity(0.2),
+                                Color(0xFF8B7BA8).withOpacity(0.1),
+                              ],
                             ),
-                            padding: const EdgeInsets.all(10),
-                            child: Row(children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 25,
-                                child: CircleAvatar(
-                                  radius: 23,
-                                  child: Image(
-                                    image: const AssetImage(
-                                        AssetsManager.userIcon),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.sizeOf(context).height * 0.02,
-                              ),
-                              Expanded(
-                                child: Text(cubit.followers[index].userName,
-                                    style: TextStyles.textStyle18Medium
-                                        .copyWith(color: ColorManager.black)),
-                              )
-                            ]),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(28),
+                            child: Image.asset(
+                              AssetsManager.userIcon,
+                              width: 32,
+                              height: 32,
+                              color: Color(0xFF8B7BA8),
+                            ),
                           ),
                         ),
+                        SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                following.userName,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                'You follow',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Color(0xFF8B7BA8),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF8B7BA8).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            'Following',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF8B7BA8),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             );
           },
-        ));
+        );
+      },
+    );
   }
 }

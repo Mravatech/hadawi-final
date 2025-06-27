@@ -49,1068 +49,900 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
+        
         return GestureDetector(
-          onTap: (){
-            FocusScope.of(context).unfocus();
-          },
-          child: (state is GetOccasionTaxesLoadingState) || (state is GetAllCityLoadingState) ? Center(child: LoadingAnimationWidget()) :SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.width * 0.02, vertical: SizeConfig.height * 0.02),
-            child: Form(
-              key: forMeFormKey,
-              child: Column(
-                crossAxisAlignment: CashHelper.languageKey == 'ar'
-                    ? CrossAxisAlignment.end
-                    : CrossAxisAlignment.start,
-                children: [
-                  /// Public or Private Switch
-                  _buildSectionCard(
-                    context,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.translate('public').toString(),
-                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(width: SizeConfig.width * 0.03),
-                        AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          child: Switch(
-                            value: cubit.isPublicValue,
-                            onChanged: (value) => cubit.switchIsPublic(),
-                            activeColor: ColorManager.primaryBlue,
-                            inactiveThumbColor: ColorManager.gray,
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig.width * 0.03),
-                        Text(
-                          AppLocalizations.of(context)!.translate('private').toString(),
-                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                        ),
-                      ],
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+            ),
+            child: (state is GetOccasionTaxesLoadingState) || (state is GetAllCityLoadingState) 
+              ? const Center(child: LoadingAnimationWidget()) 
+              : SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: mediaQuery.width * 0.05,
+                      vertical: mediaQuery.height * 0.02,
                     ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Person Name
-                  Visibility(
-                    visible: !cubit.isForMe,
-                    child: _buildSectionCard(
-                      context,
+                    child: Form(
+                      key: forMeFormKey,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          Text(
-                            AppLocalizations.of(context)!.translate('personName').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          DefaultTextField(
-                            controller: cubit.nameController,
-                            hintText: AppLocalizations.of(context)!.translate('personNameHint').toString(),
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                customToast(
-                                  title: AppLocalizations.of(context)!.translate('validatePersonName').toString(),
-                                  color: Colors.red,
-                                );
-                                return AppLocalizations.of(context)!.translate('validatePersonName').toString();
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray.withOpacity(0.5),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Occasion Type
-                  _buildSectionCard(
-                    context,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppLocalizations.of(context)!.translate('occasionType').toString(),
-                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.01),
-                        state is GetOccasionTaxesLoadingState
-                            ? const LoadingAnimationWidget()
-                            : Container(
-                          height: SizeConfig.height * 0.06,
-                          decoration: BoxDecoration(
-                            color: ColorManager.gray.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
-                              hint: Text(AppLocalizations.of(context)!.translate('occasionTypeHint').toString()),
-                              icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
-                              elevation: 16,
-                              style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
-                              isExpanded: true,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  cubit.dropdownOccasionType = newValue!;
-                                });
-                              },
-                              items: cubit.occasionTypeItems.map<DropdownMenuItem<String>>((dynamic value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Gift Type
-                  _buildSectionCard(
-                    context,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "${AppLocalizations.of(context)!.translate('giftType').toString()}: ",
-                          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                        ),
-                        SizedBox(height: SizeConfig.height * 0.01),
-                        Row(
-                          mainAxisAlignment: CashHelper.languageKey == 'ar' ? MainAxisAlignment.end : MainAxisAlignment.start,
-                          children: [
-                            _buildGiftTypeButton(
-                              context,
-                              title: AppLocalizations.of(context)!.translate('gift').toString(),
-                              isActive: cubit.isPresent,
-                              onTap: () {
-                                // cubit.giftType = 'هدية';
-                                // cubit.isPresent = true;
-                                // cubit.isMoney = false;
-                                UserDataFromStorage.giftType = cubit.giftType;
-                                cubit.switchGiftType(present: true);
-                              },
-                            ),
-                            SizedBox(width: SizeConfig.width * 0.05),
-                            _buildGiftTypeButton(
-                              context,
-                              title: AppLocalizations.of(context)!.translate('money').toString(),
-                              isActive: cubit.isMoney,
-                              onTap: () {
-                                // cubit.giftType = 'مبلغ مالي';
-                                // cubit.isPresent = false;
-                                // cubit.isMoney = true;
-                                UserDataFromStorage.giftType = cubit.giftType;
-                                cubit.switchGiftType(present: false);
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Gift Section
-                  Visibility(
-                    visible: cubit.isPresent,
-                    child: _buildSectionCard(
-                      context,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.translate('giftName').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          DefaultTextField(
-                            controller: cubit.giftNameController,
-                            hintText: AppLocalizations.of(context)!.translate('giftNameHint').toString(),
-                            validator: (value) {
-                              if (value!.trim().isEmpty) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('validateGiftName').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
-
-                          Text(
-                            AppLocalizations.of(context)!.translate('link').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          DefaultTextField(
-                            controller: cubit.linkController,
-                            hintText: AppLocalizations.of(context)!.translate('linkHint').toString(),
-                           validator: (value) {
-                              if (value!.trim().isEmpty) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('validateLink').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              final uri = Uri.tryParse(value);
-                              if (uri == null || !(uri.isScheme('http') || uri.isScheme('https')) || uri.host.isEmpty || !uri.host.contains('.')) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('vaildLink').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
-
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context)!.translate('gifPicture').toString()} ",
-                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                              ),
-                              const Spacer(),
-                              IconButton(
-                                onPressed: cubit.pickGiftImage,
-                                icon: Icon(
-                                  Icons.file_upload_outlined,
-                                  size: mediaQuery.height * 0.04,
-                                  color: ColorManager.primaryBlue,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          cubit.images.isEmpty
-                              ? Container(
-                            height: mediaQuery.height * 0.1,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: ColorManager.gray.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: const Center(child: Icon(Icons.image, color: ColorManager.primaryBlue)),
-                          )
-                              : SizedBox(
-                            height: mediaQuery.height * 0.12,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: cubit.images.length,
-                              itemBuilder: (context, index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(right: SizeConfig.width * 0.02),
-                                  child: Stack(
-                                    children: [
-                                      Container(
-                                        height: mediaQuery.height * 0.1,
-                                        width: mediaQuery.height * 0.1,
-                                        decoration: BoxDecoration(
-                                          color: ColorManager.gray.withOpacity(0.5),
-                                          borderRadius: BorderRadius.circular(12),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.05),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(12),
-                                          child: Image.file(
-                                            cubit.images[index],
-                                            fit: BoxFit.cover,
-                                            height: mediaQuery.height * 0.1,
-                                            width: mediaQuery.height * 0.1,
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 0,
-                                        right: 0,
-                                        child: GestureDetector(
-                                          onTap: () => cubit.removeImage(index),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              color: ColorManager.primaryBlue,
-                                              shape: BoxShape.circle,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black.withOpacity(0.2),
-                                                  blurRadius: 4,
-                                                  offset: const Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            child: Icon(
-                                              Icons.close,
-                                              size: mediaQuery.height * 0.02,
-                                              color: ColorManager.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
-
-                          Text(
-                            "${AppLocalizations.of(context)!.translate('giftAmount').toString()} ",
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: DefaultTextField(
-                                  controller: cubit.moneyAmountController,
-                                  hintText: AppLocalizations.of(context)!.translate('giftAmountHint').toString(),
-                                  validator: (value) {
-                                    if (value!.trim().isEmpty) {
-                                      final validationMessage = AppLocalizations.of(context)!.translate('validateGiftAmount').toString();
-                                      customToast(
-                                        title: validationMessage,
-                                        color: Colors.red,
-                                      );
-                                      return validationMessage;
-                                    }
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  fillColor: ColorManager.gray.withOpacity(0.5),
-                                ),
-                              ),
-                              SizedBox(width: SizeConfig.width * 0.03),
-                              Text(
-                                AppLocalizations.of(context)!.translate('rsa').toString(),
-                                style: TextStyles.textStyle18Regular,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
-
-                          /// Packaging Options
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
-                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                              ),
-                            ],
-                          ),
-
-                          /// Package Selection
-                          Visibility(
-                            visible: cubit.giftWithPackage,
+                          _buildSectionCard(
+                            context: context,
                             child: Column(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
-                                  style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
-                                ),
-                                SizedBox(height: SizeConfig.height * 0.02),
-                                state is GetOccasionTaxesLoadingState
-                                    ? const LoadingAnimationWidget()
-                                    : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    _buildPackageOption(
-                                      context,
-                                      price: cubit.giftPackageListPrice[0].toString(),
-                                      imageUrl: cubit.giftPackageListImage[0].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[0].toString()),
-                                      onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.giftPackageListPrice[0].toString()),
-                                        cubit.giftPackageListImage[0].toString(),
-                                      ),
-                                    ),
-                                    _buildPackageOption(
-                                      context,
-                                      price: cubit.giftPackageListPrice[1].toString(),
-                                      imageUrl: cubit.giftPackageListImage[1].toString(),
-                                      isSelected: cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[1].toString()),
-                                      onTap: () => cubit.switchGiftWithPackageType(
-                                        int.parse(cubit.giftPackageListPrice[1].toString()),
-                                        cubit.giftPackageListImage[1].toString(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Money Section
-                  Visibility(
-                    visible: cubit.isMoney,
-                    child: _buildSectionCard(
-                      context,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "${AppLocalizations.of(context)!.translate('moneyAmount').toString()} ",
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: DefaultTextField(
-                                  controller: cubit.moneyAmountController,
-                                  hintText: AppLocalizations.of(context)!.translate('moneyAmountHint').toString(),
-                                  validator: (value) {
-                                    if (value!.trim().isEmpty) {
-                                      final validationMessage = AppLocalizations.of(context)!.translate('validateMoneyAmount').toString();
-                                      customToast(
-                                        title: validationMessage,
-                                        color: Colors.red,
-                                      );
-                                      return validationMessage;
-                                    }
-                                    return null;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  fillColor: ColorManager.gray.withOpacity(0.5),
-                                ),
-                              ),
-                              SizedBox(width: SizeConfig.width * 0.03),
-                              Text(
-                                AppLocalizations.of(context)!.translate('rsa').toString(),
-                                style: TextStyles.textStyle18Regular,
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
-
-                          /// Packaging Options
-                          Row(
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
-                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                              ),
-                            ],
-                          ),
-
-                          Visibility(
-                            visible: cubit.giftWithPackage,
-                            child: Column(
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
-                                  style: TextStyles.textStyle12Regular.copyWith(color: ColorManager.gray, fontStyle: FontStyle.italic),
-                                ),
-                                SizedBox(height: SizeConfig.height * 0.02),
-                                state is GetOccasionTaxesLoadingState
-                                    ? const LoadingAnimationWidget()
-                                    : Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    _buildPackageOption(
-                                      context,
-                                      price: cubit.moneyPackageListPrice[0].toString(),
-                                      imageUrl: cubit.moneyPackageListImage[0].toString(),
-                                      isSelected: cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[0].toString()),
-                                      onTap: () => cubit.switchMoneyWithPackageType(
-                                        int.parse(cubit.moneyPackageListPrice[0].toString()),
-                                        cubit.moneyPackageListImage[0].toString(),
-                                      ),
-                                    ),
-                                    _buildPackageOption(
-                                      context,
-                                      price: cubit.moneyPackageListPrice[1].toString(),
-                                      imageUrl: cubit.moneyPackageListImage[1].toString(),
-                                      isSelected: cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[1].toString()),
-                                      onTap: () => cubit.switchMoneyWithPackageType(
-                                        int.parse(cubit.moneyPackageListPrice[1].toString()),
-                                        cubit.moneyPackageListImage[1].toString(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          SizedBox(height: SizeConfig.height * 0.02),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Delivery Data Button
-                  InkWell(
-                    onTap: cubit.switchShowDeliveryData,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context)!.translate('receivingData').toString(),
-                        style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: SizeConfig.height * 0.02),
-
-                  /// Delivery Data
-                  Visibility(
-                    visible: cubit.showDeliveryData && (cubit.isPresent || (!cubit.isPresent && cubit.giftWithPackage)),
-                    child: _buildSectionCard(
-                      context,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.translate('City').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          Container(
-                            height: SizeConfig.height * 0.06,
-                            decoration: BoxDecoration(
-                              color: ColorManager.gray.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(12),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: DropdownButtonHideUnderline(
-                              child: DropdownButton<String>(
-                                value: cubit.dropdownCity.isEmpty ? null : cubit.dropdownCity,
-                                hint: Text(AppLocalizations.of(context)!.translate('enterYourCity').toString()),
-                                icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
-                                elevation: 16,
-                                style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
-                                isExpanded: true,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    cubit.dropdownCity = newValue!;
-                                    cubit.getQuarters(city: newValue);
-                                  });
-                                },
-                                items: cubit.allCity.map<DropdownMenuItem<String>>((dynamic value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
-                                  );
-                                }).toList(),
-                              ),
-                            ),
-                          ),
-
-                          Visibility(
-                            visible: cubit.dropdownCity.isNotEmpty,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: SizeConfig.height * 0.01),
-
                                 Text(
-                                  AppLocalizations.of(context)!.translate('theDistrict').toString(),
-                                  style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+                                  AppLocalizations.of(context)!.translate('occasionDetails').toString(),
+                                  style: TextStyles.textStyle18Bold.copyWith(
+                                    color: ColorManager.primaryBlue,
+                                    fontSize: mediaQuery.height * 0.022,
+                                  ),
                                 ),
-                                SizedBox(height: SizeConfig.height * 0.01),
-                                state is GetAllQuartersLoadingState? LoadingAnimationWidget() :Container(
-                                  height: SizeConfig.height * 0.06,
-                                  decoration: BoxDecoration(
-                                    color: ColorManager.gray.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(12),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.05),
-                                        blurRadius: 8,
-                                        offset: const Offset(0, 2),
+                                SizedBox(height: mediaQuery.height * 0.02),
+                                
+                                // Public/Private Switch
+                                _buildToggleRow(
+                                  context: context,
+                                  title: AppLocalizations.of(context)!.translate('visibility').toString(),
+                                  value: cubit.isPublicValue,
+                                  onChanged: (value) => cubit.switchIsPublic(),
+                                  leftLabel: AppLocalizations.of(context)!.translate('public').toString(),
+                                  rightLabel: AppLocalizations.of(context)!.translate('private').toString(),
+                                ),
+                                
+                                SizedBox(height: mediaQuery.height * 0.02),
+                                
+                                // Occasion Type Dropdown
+                                _buildDropdownField(
+                                  context: context,
+                                  label: AppLocalizations.of(context)!.translate('occasionType').toString(),
+                                  value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
+                                  hint: AppLocalizations.of(context)!.translate('occasionTypeHint').toString(),
+                                  items: cubit.occasionTypeItems.map((value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value.toString(),
+                                      child: Text(
+                                        value.toString(),
+                                        style: TextStyles.textStyle12Regular.copyWith(
+                                          color: ColorManager.black.withOpacity(0.8),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      cubit.dropdownOccasionType = value!;
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          SizedBox(height: mediaQuery.height * 0.02),
+                          
+                          // Gift Type Selection
+                          _buildSectionCard(
+                            context: context,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.translate('giftType').toString(),
+                                  style: TextStyles.textStyle16Bold.copyWith(
+                                    color: ColorManager.primaryBlue,
+                                  ),
+                                ),
+                                SizedBox(height: mediaQuery.height * 0.02),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildGiftTypeButton(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!.translate('gift').toString(),
+                                      isActive: cubit.isPresent,
+                                      onTap: () {
+                                        UserDataFromStorage.giftType = cubit.giftType;
+                                        cubit.switchGiftType(present: true);
+                                      },
+                                    ),
+                                    _buildGiftTypeButton(
+                                      context: context,
+                                      title: AppLocalizations.of(context)!.translate('money').toString(),
+                                      isActive: cubit.isMoney,
+                                      onTap: () {
+                                        UserDataFromStorage.giftType = cubit.giftType;
+                                        cubit.switchGiftType(present: false);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          
+                          SizedBox(height: mediaQuery.height * 0.02),
+                          
+                          // Gift Details Section
+                          Visibility(
+                            visible: cubit.isPresent,
+                            child: _buildSectionCard(
+                              context: context,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.translate('giftDetails').toString(),
+                                    style: TextStyles.textStyle18Bold.copyWith(
+                                      color: ColorManager.primaryBlue,
+                                    ),
+                                  ),
+                                  SizedBox(height: mediaQuery.height * 0.02),
+                                  
+                                  // Gift Name Field
+                                  _buildTextField(
+                                    context: context,
+                                    controller: cubit.giftNameController,
+                                    label: AppLocalizations.of(context)!.translate('giftName').toString(),
+                                    hint: AppLocalizations.of(context)!.translate('giftNameHint').toString(),
+                                    validator: (value) {
+                                      if (value!.trim().isEmpty) {
+                                        return AppLocalizations.of(context)!.translate('validateGiftName').toString();
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  
+                                  SizedBox(height: mediaQuery.height * 0.02),
+                                  
+                                  // Gift Link Field
+                                  _buildTextField(
+                                    context: context,
+                                    controller: cubit.linkController,
+                                    label: AppLocalizations.of(context)!.translate('link').toString(),
+                                    hint: AppLocalizations.of(context)!.translate('linkHint').toString(),
+                                    validator: (value) {
+                                      if (value!.trim().isEmpty) {
+                                        return AppLocalizations.of(context)!.translate('validateLink').toString();
+                                      }
+                                      final uri = Uri.tryParse(value);
+                                      if (uri == null || !(uri.isScheme('http') || uri.isScheme('https')) || uri.host.isEmpty || !uri.host.contains('.')) {
+                                        return AppLocalizations.of(context)!.translate('vaildLink').toString();
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  
+                                  SizedBox(height: mediaQuery.height * 0.02),
+                                  
+                                  // Gift Images
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            AppLocalizations.of(context)!.translate('gifPicture').toString(),
+                                            style: TextStyles.textStyle16Bold.copyWith(color: ColorManager.black),
+                                          ),
+                                          IconButton(
+                                            onPressed: cubit.pickGiftImage,
+                                            icon: Icon(
+                                              Icons.add_photo_alternate_outlined,
+                                              color: ColorManager.primaryBlue,
+                                              size: 28,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 8),
+                                      Container(
+                                        height: mediaQuery.height * 0.15,
+                                        decoration: BoxDecoration(
+                                          color: ColorManager.gray.withOpacity(0.1),
+                                          borderRadius: BorderRadius.circular(12),
+                                          border: Border.all(
+                                            color: ColorManager.gray.withOpacity(0.3),
+                                            width: 1,
+                                          ),
+                                        ),
+                                        child: cubit.images.isEmpty
+                                          ? Center(
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.image_outlined,
+                                                    color: ColorManager.gray,
+                                                    size: 32,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    AppLocalizations.of(context)!.translate('addImages').toString(),
+                                                    style: TextStyles.textStyle12Regular.copyWith(
+                                                      color: ColorManager.gray,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: cubit.images.length,
+                                              padding: EdgeInsets.all(8),
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  margin: EdgeInsets.only(right: 8),
+                                                  width: mediaQuery.height * 0.15,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.black.withOpacity(0.1),
+                                                        blurRadius: 4,
+                                                        offset: Offset(0, 2),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: Stack(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        child: Image.file(
+                                                          cubit.images[index],
+                                                          fit: BoxFit.cover,
+                                                          width: double.infinity,
+                                                          height: double.infinity,
+                                                        ),
+                                                      ),
+                                                      Positioned(
+                                                        top: 4,
+                                                        right: 4,
+                                                        child: GestureDetector(
+                                                          onTap: () => cubit.removeImage(index),
+                                                          child: Container(
+                                                            padding: EdgeInsets.all(4),
+                                                            decoration: BoxDecoration(
+                                                              color: Colors.white,
+                                                              shape: BoxShape.circle,
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors.black.withOpacity(0.1),
+                                                                  blurRadius: 4,
+                                                                  offset: Offset(0, 2),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color: ColorManager.error,
+                                                              size: 16,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                       ),
                                     ],
                                   ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: cubit.dropdownQuarter.isEmpty ? null : cubit.dropdownQuarter,
-                                      hint: Text(AppLocalizations.of(context)!.translate('theDistrictHint').toString()),
-                                      icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
-                                      elevation: 16,
-                                      style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
-                                      isExpanded: true,
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          cubit.dropdownQuarter = newValue!;
-                                          cubit.giftDeliveryStreetController.text = newValue;
-                                        });
-                                      },
-                                      items: cubit.allQuarters.map<DropdownMenuItem<String>>((dynamic value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value, style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black)),
-                                        );
-                                      }).toList(),
+                                  
+                                  SizedBox(height: mediaQuery.height * 0.02),
+                                  
+                                  // Gift Amount Field
+                                  _buildTextField(
+                                    context: context,
+                                    controller: cubit.moneyAmountController,
+                                    label: AppLocalizations.of(context)!.translate('giftAmount').toString(),
+                                    hint: AppLocalizations.of(context)!.translate('giftAmountHint').toString(),
+                                    keyboardType: TextInputType.number,
+                                    suffix: Text(
+                                      AppLocalizations.of(context)!.translate('rsa').toString(),
+                                      style: TextStyles.textStyle16Regular.copyWith(
+                                        color: ColorManager.primaryBlue,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value!.trim().isEmpty) {
+                                        return AppLocalizations.of(context)!.translate('validateGiftAmount').toString();
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: mediaQuery.height * 0.02),
+
+                          // Money Details Section
+                          Visibility(
+                            visible: cubit.isMoney,
+                            child: _buildSectionCard(
+                              context: context,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Text(
+                                  //   AppLocalizations.of(context)!.translate('moneyDetails').toString(),
+                                  //   style: TextStyles.textStyle18Bold.copyWith(
+                                  //     color: ColorManager.primaryBlue,
+                                  //   ),
+                                  // ),
+                                  SizedBox(height: mediaQuery.height * 0.02),
+                                  
+                                  // Money Amount Field
+                                  _buildTextField(
+                                    context: context,
+                                    controller: cubit.moneyAmountController,
+                                    label: AppLocalizations.of(context)!.translate('moneyAmount').toString(),
+                                    hint: AppLocalizations.of(context)!.translate('moneyAmountHint').toString(),
+                                    keyboardType: TextInputType.number,
+                                    suffix: Text(
+                                      AppLocalizations.of(context)!.translate('rsa').toString(),
+                                      style: TextStyles.textStyle16Regular.copyWith(
+                                        color: ColorManager.primaryBlue,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value!.trim().isEmpty) {
+                                        return AppLocalizations.of(context)!.translate('validateMoneyAmount').toString();
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          SizedBox(height: mediaQuery.height * 0.02),
+
+                          // Delivery Data Section
+                          Visibility(
+                            visible: cubit.showDeliveryData && (cubit.isPresent || (!cubit.isPresent && cubit.giftWithPackage)),
+                            child: _buildSectionCard(
+                              context: context,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    AppLocalizations.of(context)!.translate('deliveryDetails').toString(),
+                                    style: TextStyles.textStyle18Bold.copyWith(
+                                      color: ColorManager.primaryBlue,
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                  SizedBox(height: mediaQuery.height * 0.02),
 
+                                  // City Dropdown
+                                  _buildDropdownField(
+                                    context: context,
+                                    label: AppLocalizations.of(context)!.translate('City').toString(),
+                                    value: cubit.dropdownCity.isEmpty ? null : cubit.dropdownCity,
+                                    hint: AppLocalizations.of(context)!.translate('enterYourCity').toString(),
+                                    items: cubit.allCity.map((value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value.toString(),
+                                        child: Text(
+                                          value.toString(),
+                                          style: TextStyles.textStyle12Regular.copyWith(
+                                            color: ColorManager.black.withOpacity(0.8),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        cubit.dropdownCity = value!;
+                                        cubit.getQuarters(city: value);
+                                      });
+                                    },
+                                  ),
 
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          // DefaultTextField(
-                          //   controller: cubit.giftDeliveryStreetController,
-                          //   hintText: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
-                          //   validator: (value) {
-                          //     if (value!.isEmpty) {
-                          //       final validationMessage = AppLocalizations.of(context)!.translate('validateTheDistrict').toString();
-                          //       customToast(
-                          //         title: validationMessage,
-                          //         color: Colors.red,
-                          //       );
-                          //       return validationMessage;
-                          //     }
-                          //     return null;
-                          //   },
-                          //   keyboardType: TextInputType.text,
-                          //   textInputAction: TextInputAction.next,
-                          //   fillColor: ColorManager.gray.withOpacity(0.5),
-                          // ),
-                          // SizedBox(height: SizeConfig.height * 0.02),
+                                  SizedBox(height: mediaQuery.height * 0.02),
 
-                          Text(
-                            AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.01),
-                          DefaultTextField(
-                            controller: cubit.giftReceiverNumberController,
-                            hintText: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
-                           validator: (value) {
-                              if (value!.isEmpty) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              if (value.length != 10) {
-                                final validationMessage = AppLocalizations.of(context)!.translate('validatePhone2').toString();
-                                customToast(
-                                  title: validationMessage,
-                                  color: Colors.red,
-                                );
-                                return validationMessage;
-                              }
-                              return null;
-                            },
-                            keyboardType: TextInputType.phone,
-                            textInputAction: TextInputAction.next,
-                            fillColor: ColorManager.gray.withOpacity(0.5),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
+                                  // District Dropdown
+                                  Visibility(
+                                    visible: cubit.dropdownCity.isNotEmpty,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        state is GetAllQuartersLoadingState
+                                          ? Center(child: LoadingAnimationWidget())
+                                          : _buildDropdownField(
+                                              context: context,
+                                              label: AppLocalizations.of(context)!.translate('theDistrict').toString(),
+                                              value: cubit.dropdownQuarter.isEmpty ? null : cubit.dropdownQuarter,
+                                              hint: AppLocalizations.of(context)!.translate('theDistrictHint').toString(),
+                                              items: cubit.allQuarters.map((value) {
+                                                return DropdownMenuItem<String>(
+                                                  value: value.toString(),
+                                                  child: Text(
+                                                    value.toString(),
+                                                    style: TextStyles.textStyle12Regular.copyWith(
+                                                      color: ColorManager.black.withOpacity(0.8),
+                                                    ),
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  cubit.dropdownQuarter = value!;
+                                                  cubit.giftDeliveryStreetController.text = value;
+                                                });
+                                              },
+                                            ),
+                                      ],
+                                    ),
+                                  ),
 
-                          Row(
-                            mainAxisAlignment: CashHelper.languageKey == 'ar' ? MainAxisAlignment.end : MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${AppLocalizations.of(context)!.translate('isContainsNames').toString()} ",
-                                style: TextStyles.textStyle12Bold.copyWith(color: ColorManager.black),
-                              ),
-                              AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 300),
-                                child: Switch(
-                                  value: cubit.giftContainsNameValue,
-                                  onChanged: (value) => cubit.switchGiftContainsName(),
-                                  activeColor: ColorManager.primaryBlue,
-                                  inactiveThumbColor: ColorManager.gray,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
+                                  SizedBox(height: mediaQuery.height * 0.02),
 
-                          InkWell(
-                            onTap: cubit.switchShowGiftCard,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
+                                  // Phone Number Field
+                                  _buildTextField(
+                                    context: context,
+                                    controller: cubit.giftReceiverNumberController,
+                                    label: AppLocalizations.of(context)!.translate('moneyReceiverPhone').toString(),
+                                    hint: AppLocalizations.of(context)!.translate('moneyReceiverPhoneHint').toString(),
+                                    keyboardType: TextInputType.phone,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return AppLocalizations.of(context)!.translate('validateMoneyReceiverPhone').toString();
+                                      }
+                                      if (value.length != 10) {
+                                        return AppLocalizations.of(context)!.translate('validatePhone2').toString();
+                                      }
+                                      return null;
+                                    },
+                                  ),
+
+                                  SizedBox(height: mediaQuery.height * 0.02),
+
+                                  // Contains Names Switch
+                                  _buildToggleRow(
+                                    context: context,
+                                    title: AppLocalizations.of(context)!.translate('isContainsNames').toString(),
+                                    value: cubit.giftContainsNameValue,
+                                    onChanged: (value) => cubit.switchGiftContainsName(),
+                                    leftLabel: AppLocalizations.of(context)!.translate('yes').toString(),
+                                    rightLabel: AppLocalizations.of(context)!.translate('no').toString(),
+                                  ),
+
+                                  SizedBox(height: mediaQuery.height * 0.02),
+
+                                  // Gift Card Section
+                                  _buildExpandableSection(
+                                    context: context,
+                                    title: AppLocalizations.of(context)!.translate('giftCard').toString(),
+                                    isExpanded: cubit.showGiftCard,
+                                    onTap: cubit.switchShowGiftCard,
+                                    child: _buildTextField(
+                                      context: context,
+                                      controller: cubit.moneyGiftMessageController,
+                                      label: '',
+                                      hint: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
+                                      keyboardType: TextInputType.multiline,
+                                      validator: (value) => null,
+                                    ),
+                                  ),
+
+                                  SizedBox(height: mediaQuery.height * 0.02),
+
+                                  // Notes Section
+                                  _buildExpandableSection(
+                                    context: context,
+                                    title: AppLocalizations.of(context)!.translate('note').toString(),
+                                    isExpanded: cubit.showNote,
+                                    onTap: cubit.switchShowNote,
+                                    child: _buildTextField(
+                                      context: context,
+                                      controller: cubit.giftDeliveryNoteController,
+                                      label: '',
+                                      hint: AppLocalizations.of(context)!.translate('noteHint').toString(),
+                                      keyboardType: TextInputType.multiline,
+                                      validator: (value) => null,
+                                    ),
                                   ),
                                 ],
                               ),
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('giftCard').toString(),
-                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),
-                              ),
                             ),
                           ),
-                          Visibility(
-                            visible: cubit.showGiftCard,
-                            child: Column(
-                              children: [
-                                SizedBox(height: SizeConfig.height * 0.01),
-                                DefaultTextField(
-                                  controller: cubit.moneyGiftMessageController,
-                                  maxLines: 3,
-                                  hintText: AppLocalizations.of(context)!.translate('giftCardHint').toString(),
-                                  keyboardType: TextInputType.multiline,
-                                  textInputAction: TextInputAction.newline,
-                                  fillColor: ColorManager.gray.withOpacity(0.5),
-                                  validator: (value) =>null,
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.height * 0.02),
 
-                          InkWell(
-                            onTap: cubit.switchShowNote,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('note').toString(),
-                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: cubit.showNote,
-                            child: Column(
-                              children: [
-                                SizedBox(height: SizeConfig.height * 0.01),
-                                DefaultTextField(
-                                  controller: cubit.giftDeliveryNoteController,
-                                  maxLines: 3,
-                                  hintText: AppLocalizations.of(context)!.translate('noteHint').toString(),
-                                  keyboardType: TextInputType.multiline,
-                                  textInputAction: TextInputAction.newline,
-                                  fillColor: ColorManager.gray.withOpacity(0.5),
-                                  validator: (value) =>null,
-                                ),
-                              ],
+                          SizedBox(height: mediaQuery.height * 0.04),
+
+                          // Continue Button
+                          Center(
+                            child: _buildActionButton(
+                              context: context,
+                              label: AppLocalizations.of(context)!.translate('continue').toString(),
+                              icon: Icons.arrow_forward,
+                              onTap: () async {
+                                if (cubit.dropdownOccasionType.isEmpty) {
+                                  customToast(
+                                    title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
+                                    color: Colors.red,
+                                  );
+                                  return;
+                                }
+                                if (!forMeFormKey.currentState!.validate()) {
+                                  return;
+                                }
+                                if (cubit.isPresent == false && cubit.isMoney == false) {
+                                  customToast(
+                                    title: AppLocalizations.of(context)!.translate('validateGiftType').toString(),
+                                    color: Colors.red,
+                                  );
+                                  return;
+                                }
+                                if (cubit.images.isEmpty && cubit.isPresent) {
+                                  customToast(
+                                    title: AppLocalizations.of(context)!.translate('validateImage').toString(),
+                                    color: Colors.red,
+                                  );
+                                  return;
+                                }
+                                if (cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty) {
+                                  customToast(
+                                    title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
+                                    color: Colors.red,
+                                  );
+                                  return;
+                                }
+                                cubit.getTotalGiftPrice();
+                                customPushNavigator(context, OccasionSummary());
+                              },
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-
-                  SizedBox(height: SizeConfig.height * 0.03),
-
-                  /// Continue Button
-                  Center(
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (cubit.dropdownOccasionType.isEmpty) {
-                          customToast(
-                            title: AppLocalizations.of(context)!.translate('validateOccasionType').toString(),
-                            color: Colors.red,
-                          );
-                          return;
-                        }
-                        if (!forMeFormKey.currentState!.validate()) {
-                          return;
-                        }
-                        if (cubit.isPresent== false && cubit.isMoney== false){
-                          customToast(
-                            title: AppLocalizations.of(context)!.translate('validateGiftType').toString(),
-                            color: Colors.red,
-                          );
-                          return;
-                        }
-
-                        if (cubit.images.isEmpty && cubit.isPresent) {
-                          customToast(
-                            title: AppLocalizations.of(context)!.translate('validateImage').toString(),
-                            color: Colors.red,
-                          );
-                          return;
-                        }
-                        if(cubit.dropdownCity.isEmpty || cubit.giftDeliveryStreetController.text.isEmpty || cubit.giftReceiverNumberController.text.isEmpty){
-                          customToast(
-                            title: AppLocalizations.of(context)!.translate('deliveryDataValidate').toString(),
-                            color: Colors.red,
-                          );
-                          return;
-                        }
-                        cubit.getTotalGiftPrice();
-                        customPushNavigator(context, OccasionSummary());
-                      },
-                      child: Container(
-                        height: mediaQuery.height * 0.06,
-                        width: mediaQuery.width * 0.5,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: ColorManager.primaryBlue.withOpacity(0.3),
-                              blurRadius: 8,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.of(context)!.translate('continue').toString(),
-                            style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: SizeConfig.height * 0.03),
-                ],
-              ),
-            ),
+                ),
           ),
         );
       },
     );
   }
 
-  Widget _buildSectionCard(BuildContext context, {required Widget child}) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: EdgeInsets.all(SizeConfig.height * 0.02),
-        decoration: BoxDecoration(
-          color: ColorManager.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: child,
+  Widget _buildSectionCard({
+    required BuildContext context,
+    required Widget child,
+  }) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: ColorManager.primaryBlue.withOpacity(0.08),
+            blurRadius: 15,
+            offset: Offset(0, 5),
+          ),
+        ],
       ),
+      child: child,
     );
   }
 
-  Widget _buildGiftTypeButton(
-      BuildContext context, {
-        required String title,
-        required bool isActive,
-        required VoidCallback onTap,
-        double? width,
-      }) {
-    final mediaQuery = MediaQuery.sizeOf(context);
+  Widget _buildToggleRow({
+    required BuildContext context,
+    required String title,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+    required String leftLabel,
+    required String rightLabel,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyles.textStyle12Bold.copyWith(
+            color: ColorManager.black.withOpacity(0.7),
+          ),
+        ),
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: ColorManager.gray.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: ColorManager.gray.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                leftLabel,
+                style: TextStyles.textStyle12Regular.copyWith(
+                  color: value ? ColorManager.primaryBlue : ColorManager.black.withOpacity(0.5),
+                ),
+              ),
+              Switch(
+                value: value,
+                onChanged: onChanged,
+                activeColor: ColorManager.primaryBlue,
+                inactiveThumbColor: ColorManager.gray,
+              ),
+              Text(
+                rightLabel,
+                style: TextStyles.textStyle12Regular.copyWith(
+                  color: !value ? ColorManager.primaryBlue : ColorManager.black.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDropdownField({
+    required BuildContext context,
+    required String label,
+    required String? value,
+    required String hint,
+    required List<DropdownMenuItem<String>> items,
+    required ValueChanged<String?> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyles.textStyle12Bold.copyWith(
+            color: ColorManager.black.withOpacity(0.7),
+          ),
+        ),
+        SizedBox(height: 8),
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          decoration: BoxDecoration(
+            color: ColorManager.gray.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: ColorManager.gray.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: value,
+              hint: Text(
+                hint,
+                style: TextStyles.textStyle12Regular.copyWith(
+                  color: ColorManager.gray,
+                ),
+              ),
+              icon: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: ColorManager.primaryBlue,
+                size: 24,
+              ),
+              isExpanded: true,
+              items: items,
+              onChanged: onChanged,
+              dropdownColor: Colors.white,
+              elevation: 3,
+              style: TextStyles.textStyle12Regular.copyWith(
+                color: ColorManager.black.withOpacity(0.8),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGiftTypeButton({
+    required BuildContext context,
+    required String title,
+    required bool isActive,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        height: mediaQuery.height * 0.055,
-        width: width ?? mediaQuery.width * 0.25,
+        duration: Duration(milliseconds: 300),
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
           gradient: isActive
-              ? LinearGradient(
-            colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          )
-              : null,
-          color: isActive ? null : ColorManager.gray.withOpacity(0.5),
+            ? LinearGradient(
+                colors: [
+                  ColorManager.primaryBlue,
+                  ColorManager.primaryBlue.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+          color: isActive ? null : ColorManager.gray.withOpacity(0.05),
           borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isActive ? Colors.transparent : ColorManager.gray.withOpacity(0.1),
+            width: 1,
+          ),
           boxShadow: isActive
-              ? [
-            BoxShadow(
-              color: ColorManager.primaryBlue.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ]
-              : null,
+            ? [
+                BoxShadow(
+                  color: ColorManager.primaryBlue.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ]
+            : null,
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: TextStyles.textStyle16Bold.copyWith(color: isActive ? ColorManager.white : ColorManager.black),
+        child: Text(
+          title,
+          style: TextStyles.textStyle12Bold.copyWith(
+            color: isActive ? Colors.white : ColorManager.black.withOpacity(0.6),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildPackageOption(
-      BuildContext context, {
-        required String price,
-        required String imageUrl,
-        required bool isSelected,
-        required VoidCallback onTap,
-      }) {
-    final mediaQuery = MediaQuery.sizeOf(context);
-    return InkWell(
-      onTap: onTap,
-      onLongPress: (){
-        customPushNavigator(context, ImageViewerScreen(imageUrl: imageUrl,));
-      },
-      child: SizedBox(
-        height: mediaQuery.height * 0.1,
-        width: mediaQuery.height * 0.1,
-        child: Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              decoration: BoxDecoration(
-                color: isSelected ? ColorManager.primaryBlue.withOpacity(0.2) : ColorManager.gray.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(12),
-                border: isSelected ? Border.all(color: ColorManager.primaryBlue, width: 2) : null,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+  Widget _buildTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    TextInputType keyboardType = TextInputType.text,
+    Widget? suffix,
+    String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (label.isNotEmpty) ...[
+          Text(
+            label,
+            style: TextStyles.textStyle12Bold.copyWith(
+              color: ColorManager.black.withOpacity(0.7),
+            ),
+          ),
+          SizedBox(height: 8),
+        ],
+        Container(
+          decoration: BoxDecoration(
+            color: ColorManager.gray.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: ColorManager.gray.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            style: TextStyles.textStyle12Regular.copyWith(
+              color: ColorManager.black.withOpacity(0.8),
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyles.textStyle12Regular.copyWith(
+                color: ColorManager.gray,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(SizeConfig.height * 0.01),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
-                    height: mediaQuery.height * 0.08,
-                    width: mediaQuery.height * 0.08,
-                  ),
-                ),
+              suffixIcon: suffix != null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: suffix,
+                  )
+                : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              errorStyle: TextStyles.textStyle10Regular.copyWith(
+                color: ColorManager.error,
               ),
             ),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              height: mediaQuery.height * 0.04,
-              width: mediaQuery.height * 0.04,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: isSelected ? ColorManager.primaryBlue : ColorManager.white,
-                borderRadius: BorderRadius.circular(500),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 4,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+            validator: validator,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildExpandableSection({
+    required BuildContext context,
+    required String title,
+    required bool isExpanded,
+    required VoidCallback onTap,
+    required Widget child,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Text(
-                price,
-                style: TextStyles.textStyle12Bold.copyWith(
-                  color: isSelected ? ColorManager.white : ColorManager.black,
-                ),
-              ),
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: TextStyles.textStyle16Bold.copyWith(
+                    color: ColorManager.primaryBlue,
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  color: ColorManager.primaryBlue,
+                ),
+              ],
+            ),
+          ),
+        ),
+        if (isExpanded) ...[
+          SizedBox(height: 12),
+          child,
+        ],
+      ],
+    );
+  }
+
+  Widget _buildActionButton({
+    required BuildContext context,
+    required String label,
+    required IconData icon,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: ColorManager.primaryBlue.withOpacity(0.3),
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                label,
+                style: TextStyles.textStyle18Bold.copyWith(color: Colors.white),
+              ),
+              SizedBox(width: 8),
+              Icon(icon, color: Colors.white),
+            ],
+          ),
         ),
       ),
     );

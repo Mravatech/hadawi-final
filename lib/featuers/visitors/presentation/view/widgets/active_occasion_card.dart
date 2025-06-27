@@ -8,66 +8,175 @@ import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/progr
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class ActiveOccasionCard extends StatelessWidget {
   final OccasionEntity occasionEntity;
 
   const ActiveOccasionCard({super.key, required this.occasionEntity});
 
+  int _getDaysLeft() {
+    final occasionDate = DateTime.parse(occasionEntity.occasionDate);
+    final now = DateTime.now();
+    final difference = occasionDate.difference(now);
+    return difference.inDays + 1; // +1 to include today
+  }
+
   @override
   Widget build(BuildContext context) {
+    final double progress = occasionEntity.moneyGiftAmount == 0 
+      ? 0.0 
+      : double.parse(occasionEntity.moneyGiftAmount.toString()) / double.parse(occasionEntity.giftPrice.toString());
+    
+    final daysLeft = _getDaysLeft();
+    
     return BlocBuilder<VisitorsCubit, VisitorsState>(
       builder: (context, state) {
-        final cubit = context.read<VisitorsCubit>();
         return Container(
-          height: MediaQuery.sizeOf(context).height * 0.25,
           decoration: BoxDecoration(
-            color: ColorManager.white,
+            color: Color(0xFF8B7BA8), // Purple background color
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: ColorManager.gray.withOpacity(0.5),
-                spreadRadius: 2,
-                blurRadius: 5,
-                offset: const Offset(0, 3),
-              ),
-            ],
           ),
+          padding: EdgeInsets.all(16),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                height: MediaQuery.sizeOf(context).height * 0.06,
-                decoration: BoxDecoration(
-                  color: ColorManager.primaryBlue,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    topRight: Radius.circular(15),
+              // Top row with gift icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    occasionEntity.type,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text(
-                    occasionEntity.type.toString(),
-                    style: TextStyles.textStyle18Regular
-                        .copyWith(color: ColorManager.white),
+                  Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Icon(
+                      Icons.card_giftcard,
+                      color: Colors.white,
+                      size: 24,
+                    ),
                   ),
+                ],
+              ),
+              SizedBox(height: 4),
+              // Subtitle
+              Text(
+                "${AppLocalizations.of(context)!.translate('for').toString()} ${occasionEntity.personName}'s ${occasionEntity.occasionName}",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.8),
+                  fontSize: 14,
                 ),
               ),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.02,
+              SizedBox(height: 16),
+              // Goal and Collected amounts
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.translate('goal').toString(),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)!.translate('rsa').toString()} ${occasionEntity.giftPrice.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.translate('collected').toString(),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.8),
+                          fontSize: 14,
+                        ),
+                      ),
+                      Text(
+                        '${AppLocalizations.of(context)!.translate('rsa').toString()} ${occasionEntity.moneyGiftAmount.toStringAsFixed(0)}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-              CircularPercentIndicator(
-                radius: 50.0,
-                lineWidth: 10.0,
+              SizedBox(height: 12),
+              // Progress bar
+              LinearPercentIndicator(
+                padding: EdgeInsets.zero,
+                lineHeight: 8.0,
+                percent: progress.clamp(0.0, 1.0),
+                backgroundColor: Colors.white.withOpacity(0.2),
+                progressColor: Colors.white,
+                barRadius: Radius.circular(4),
                 animation: true,
-                percent: occasionEntity.moneyGiftAmount==0?0.0: double.parse((occasionEntity.moneyGiftAmount.toString()))/double.parse((occasionEntity.giftPrice.toString())),
-                center:  Text(
-                  "${((occasionEntity.moneyGiftAmount==0?0.0: double.parse((occasionEntity.moneyGiftAmount.toString()))/double.parse((occasionEntity.giftPrice.toString())))*100).toStringAsFixed(2)}%",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
-                ),
-                circularStrokeCap: CircularStrokeCap.round,
-                progressColor: ColorManager.primaryBlue,
+              ),
+              SizedBox(height: 12),
+              // Bottom row with contributors and days left
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.people_outline,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        "25 ${AppLocalizations.of(context)!.translate('contributors').toString()}", // Hardcoded for now
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.access_time,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      SizedBox(width: 4),
+                      Text(
+                        daysLeft < 1 
+                          ? AppLocalizations.of(context)!.translate('expired').toString()
+                          : "$daysLeft ${AppLocalizations.of(context)!.translate('daysLeft').toString()}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),

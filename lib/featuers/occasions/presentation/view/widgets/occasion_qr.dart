@@ -31,7 +31,7 @@ class OccasionQr extends StatefulWidget {
   State<OccasionQr> createState() => _OccasionQrState();
 }
 
-class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
+class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver {
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -45,19 +45,16 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
 
   @override
   void dispose() {
-    // TODO: implement dispose
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  // Cache the image provider to prevent multiple loads
   final ImageProvider _logoProvider = AssetImage(AssetsManager.logoWithoutBackground);
   final GlobalKey qrKey = GlobalKey();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Precache the image to prevent repeated loading
     precacheImage(_logoProvider, context);
   }
 
@@ -68,201 +65,217 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver{
       builder: (context, state) {
         final cubit = context.read<OccasionCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
+        
         return Scaffold(
           backgroundColor: ColorManager.white,
           appBar: AppBar(
-              backgroundColor: ColorManager.gray,
-              leading: IconButton(
-                  onPressed: () {
-                    customPushNavigator(context, HomeLayout());
-                  },
-                  icon: Icon(Icons.arrow_back)),
-              title: Text(
-                AppLocalizations.of(context)!
-                    .translate('occasionQr')
-                    .toString(),
-                style: TextStyles.textStyle18Bold
-                    .copyWith(color: ColorManager.black),
-              ),
-              actions: [
-                InkWell(
-                  onTap: () {
-                    customPushReplacement(context, HomeLayout());
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image(image: _logoProvider),
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            leading: IconButton(
+              onPressed: () => customPushNavigator(context, HomeLayout()),
+              icon: Icon(Icons.arrow_back, color: ColorManager.black),
+            ),
+            title: Text(
+              AppLocalizations.of(context)!.translate('occasionQr').toString(),
+              style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Hero(
+                  tag: 'logo',
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () => customPushReplacement(context, HomeLayout()),
+                      child: Image(image: _logoProvider),
+                    ),
                   ),
                 ),
-              ]),
+              ),
+            ],
+          ),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.all(15.0),
+              padding: EdgeInsets.all(mediaQuery.width * 0.05),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: mediaQuery.height * 0.02,
-                  ),
-                  Text(
-                    widget.occasionModel.occasionType.toString(),
-                    style: TextStyles.textStyle12Bold
-                        .copyWith(color: ColorManager.black),
-                  ),
-
-                  SizedBox(
-                    height: mediaQuery.height * 0.02,
-                  ),
-                  state is CreateOccasionLinkLoadingState
-                      ? LoadingAnimationWidget()
-                      : cubit.occasionLink.isNotEmpty
-                      ? RepaintBoundary(
-                    key: qrKey,
-                    child: QrImageView(
-                      data: cubit.occasionLink,
-                      version: QrVersions.auto,
-                      size: SizeConfig.height * 0.3,
-                      backgroundColor: Colors.white,
-                      embeddedImage: _logoProvider,
-                      embeddedImageStyle: QrEmbeddedImageStyle(
-                        size: Size(100, 100),
+                  // Occasion Type with animation
+                  AnimatedOpacity(
+                    duration: Duration(milliseconds: 500),
+                    opacity: 1.0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(15),
                       ),
-                    ),
-                  )
-                      : SizedBox(
-                    height: SizeConfig.height * 0.3,
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: ColorManager.primaryBlue,
+                      child: Text(
+                        widget.occasionModel.occasionType.toString(),
+                        style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
                       ),
                     ),
                   ),
 
-                  SizedBox(height: mediaQuery.height * 0.05),
+                  SizedBox(height: mediaQuery.height * 0.04),
 
-                  /// share and save
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  // QR Code Container
+                  AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 20,
+                          offset: Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    child: state is CreateOccasionLinkLoadingState
+                        ? LoadingAnimationWidget()
+                        : cubit.occasionLink.isNotEmpty
+                            ? RepaintBoundary(
+                                key: qrKey,
+                                child: QrImageView(
+                                  data: cubit.occasionLink,
+                                  version: QrVersions.auto,
+                                  size: mediaQuery.width * 0.7,
+                                  backgroundColor: Colors.white,
+                                  embeddedImage: _logoProvider,
+                                  embeddedImageStyle: QrEmbeddedImageStyle(
+                                    size: Size(mediaQuery.width * 0.15, mediaQuery.width * 0.15),
+                                  ),
+                                ),
+                              )
+                            : SizedBox(
+                                height: mediaQuery.width * 0.7,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: ColorManager.primaryBlue,
+                                  ),
+                                ),
+                              ),
+                  ),
+
+                  SizedBox(height: mediaQuery.height * 0.06),
+
+                  // Action Buttons
+                  Wrap(
+                    spacing: 15,
+                    runSpacing: 15,
+                    alignment: WrapAlignment.center,
                     children: [
-                      /// share
-                      GestureDetector(
+                      _buildActionButton(
+                        context: context,
+                        icon: Icons.share,
+                        label: AppLocalizations.of(context)!.translate('share').toString(),
                         onTap: () async {
-                          String link = await cubit
-                              .createDynamicLink(widget.occasionModel.occasionId);
+                          String link = await cubit.createDynamicLink(widget.occasionModel.occasionId);
                           Share.share(
-                              'قام صديقك ${widget.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة له ${widget.occasionModel.type} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+                            'قام صديقك ${widget.occasionModel.personName??""} بدعوتك للمشاركة في مناسبة له ${widget.occasionModel.type} للمساهمة بالدفع اضغط ع الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                          );
                         },
-                        child: state is CreateOccasionLinkLoadingState
-                            ? LoadingAnimationWidget()
-                            : Container(
-                          height:
-                          MediaQuery.sizeOf(context).height *
-                              .055,
-                          decoration: BoxDecoration(
-                            color: ColorManager.primaryBlue,
-                            borderRadius: BorderRadius.circular(
-                                MediaQuery.sizeOf(context).height *
-                                    0.05),
-                          ),
-                          child: Padding(
-                           padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                            child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('share')
-                                      .toString(),
-                                  style: TextStyles.textStyle18Bold
-                                      .copyWith(
-                                      color:
-                                      ColorManager.white),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        isLoading: state is CreateOccasionLinkLoadingState,
                       ),
 
-
-                      /// pay
-                      GestureDetector(
+                      _buildActionButton(
+                        context: context,
+                        icon: Icons.payment,
+                        label: AppLocalizations.of(context)!.translate('payNow').toString(),
                         onTap: () => customPushNavigator(
-                            context,
-                            PaymentScreen(
-                              occasionEntity: widget.occasionModel,
-                            )),
-                        child: Container(
-                          height:
-                          MediaQuery.sizeOf(context).height * .055,
-                          decoration: BoxDecoration(
-                            color: ColorManager.primaryBlue,
-                            borderRadius: BorderRadius.circular(
-                                MediaQuery.sizeOf(context).height * 0.05),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('payNow')
-                                      .toString(),
-                                  style: TextStyles.textStyle18Bold
-                                      .copyWith(
-                                      color: ColorManager.white),
-                                ),
-                              ],
-                            ),
-                          ),
+                          context,
+                          PaymentScreen(occasionEntity: widget.occasionModel),
                         ),
                       ),
 
-
-                      /// share qr
-                      GestureDetector(
+                      _buildActionButton(
+                        context: context,
+                        icon: Icons.qr_code,
+                        label: AppLocalizations.of(context)!.translate('shareQr').toString(),
                         onTap: () async {
                           if (cubit.occasionLink.isNotEmpty) {
                             await cubit.captureAndShareQr(
                               qrKey: qrKey,
-                                occasionName: widget.occasionModel.occasionType.toString(),
-                                personName: UserDataFromStorage.userNameFromStorage);
+                              occasionName: widget.occasionModel.occasionType.toString(),
+                              personName: UserDataFromStorage.userNameFromStorage,
+                            );
                           }
                         },
-                        child: Container(
-                          height: mediaQuery.height * .055,
-                          decoration: BoxDecoration(
-                            color: ColorManager.primaryBlue,
-                            borderRadius:
-                            BorderRadius.circular(mediaQuery.height * 0.05),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8.0),
-                            child: Center(
-                              child: Text(
-                                AppLocalizations.of(context)!
-                                    .translate('shareQr')
-                                    .toString(),
-                                style: TextStyles.textStyle12Bold
-                                    .copyWith(color: ColorManager.white),
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                     ],
                   ),
-                  SizedBox(height: mediaQuery.height * 0.05),
                 ],
               ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildActionButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    bool isLoading = false,
+  }) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 300),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(15),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [ColorManager.primaryBlue, ColorManager.primaryBlue.withOpacity(0.8)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: ColorManager.primaryBlue.withOpacity(0.3),
+                  blurRadius: 8,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: isLoading
+                ? SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: Colors.white, size: 20),
+                      SizedBox(width: 8),
+                      Text(
+                        label,
+                        style: TextStyles.textStyle16Bold.copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }

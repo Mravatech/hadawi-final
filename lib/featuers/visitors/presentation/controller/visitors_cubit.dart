@@ -147,7 +147,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     });
   }
 
-  Future<void> openExerciseLink(String url) async {
+  Future<void> lanuchToUrl(String url) async {
     try {
       final Uri uri = Uri.parse(Uri.encodeFull(url)); // Ensure proper encoding
 
@@ -206,16 +206,23 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   Future<void> getBannerData() async {
     banners.clear();
     emit(GetBannerDataLoadingState());
+    debugPrint('Getting banner data...');
 
-    FirebaseFirestore.instance.collection('Banners').get().then((value) {
-      value.docs.forEach((element) {
-        banners.add(BannerModel.fromMap(element.data()));
-      });
+    try {
+      final querySnapshot = await FirebaseFirestore.instance.collection('Banners').get();
+      debugPrint('Got ${querySnapshot.docs.length} banners from Firebase');
+      
+      for (var doc in querySnapshot.docs) {
+        debugPrint('Banner data: ${doc.data()}');
+        banners.add(BannerModel.fromMap(doc.data()));
+      }
+      
+      debugPrint('Processed ${banners.length} banners');
       emit(GetBannerDataSuccessState());
-    }).catchError((error) {
-      debugPrint("error in getting banner data: $error");
+    } catch (error) {
+      debugPrint("Error in getting banner data: $error");
       emit(GetBannerDataErrorState());
-    });
+    }
   }
 
   OccasionModel emptyOccasionModel = OccasionModel(
@@ -386,11 +393,6 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         print(e.toString());
       }
     }
-  }
-
-  Future<void> lanuchToUrl(String url) async {
-    final Uri uri = Uri.parse(url);
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
   }
 
   List<PaymentModel> myPaymentsList = [];

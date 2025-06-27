@@ -72,7 +72,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
 
                 DefaultTextField(
                     prefix: CountryCodeWidget(
-                      color: ColorManager.gray,
+                      color: ColorManager.white,
                     ),
                     controller: widget.emailController,
                     hintText: AppLocalizations.of(context)!
@@ -93,35 +93,35 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                     },
                     keyboardType: TextInputType.phone,
                     textInputAction: TextInputAction.next,
-                    fillColor: ColorManager.gray
+                    fillColor: ColorManager.white
                 ),
 
 
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                // Remember Me and Forget Password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    BlocBuilder<AuthCubit, AuthStates>(
-                      builder: (context, state) {
-                        return RememberMeButton(
-                          initialValue: UserDataFromStorage.rememberMe,
-                          onChanged: (value) {
-                            context.read<AuthCubit>().rememberMeFunction(
-                                emailController: widget.emailController.text,
-                                passController: widget.passController.text,
-                                value: value);
-                          },
-                        );
-                      },
-                    ),
-                    // const ForgetPasswordButton(),
-                  ],
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                // // Remember Me and Forget Password
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     BlocBuilder<AuthCubit, AuthStates>(
+                //       builder: (context, state) {
+                //         return RememberMeButton(
+                //           initialValue: UserDataFromStorage.rememberMe,
+                //           onChanged: (value) {
+                //             context.read<AuthCubit>().rememberMeFunction(
+                //                 emailController: widget.emailController.text,
+                //                 passController: widget.passController.text,
+                //                 value: value);
+                //           },
+                //         );
+                //       },
+                //     ),
+                //     // const ForgetPasswordButton(),
+                //   ],
+                // ),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
                 // Login Button
-                const LoginWithSocialButton(),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                // const LoginWithSocialButton(),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
 
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
@@ -166,43 +166,43 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                   },
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                const DonotHaveAnAccount(),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                DefaultButton(
-                  buttonText: AppLocalizations.of(context)!
-                      .translate('loginAsGuest')
-                      .toString(),
-                  onPressed: () {
-                    UserDataFromStorage.setUserIsGuest(true);
-                    customPushReplacement(context, VisitorsScreen());
-                  },
-                  buttonColor: ColorManager.primaryBlue,
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                GestureDetector(
-                  onTap: () {
-                    context.read<AuthCubit>().launchWhatsApp(
-                        phoneNumber: "+966564940300",
-                        message: AppLocalizations.of(context)!.translate('whatsapp').toString());
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.translate('support').toString(),
-                        style: TextStyles.textStyle18Bold.copyWith(
-                            fontSize: 11
-                        ),
-                      ),
-                      SizedBox(width: MediaQuery.sizeOf(context).width * 0.015),
-                      Image(
-                        image: const AssetImage("assets/images/whatsapp.png"),
-                        width: MediaQuery.sizeOf(context).width * 0.08,
-                        height: MediaQuery.sizeOf(context).height * 0.05,
-                      )
-                    ],
-                  ),
-                ),
+                // const DonotHaveAnAccount(),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+                // DefaultButton(
+                //   buttonText: AppLocalizations.of(context)!
+                //       .translate('loginAsGuest')
+                //       .toString(),
+                //   onPressed: () {
+                //     UserDataFromStorage.setUserIsGuest(true);
+                //     customPushReplacement(context, VisitorsScreen());
+                //   },
+                //   buttonColor: ColorManager.primaryBlue,
+                // ),
+                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
+                // GestureDetector(
+                //   onTap: () {
+                //     context.read<AuthCubit>().launchWhatsApp(
+                //         phoneNumber: "+966564940300",
+                //         message: AppLocalizations.of(context)!.translate('whatsapp').toString());
+                //   },
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Text(
+                //         AppLocalizations.of(context)!.translate('support').toString(),
+                //         style: TextStyles.textStyle18Bold.copyWith(
+                //             fontSize: 11
+                //         ),
+                //       ),
+                //       SizedBox(width: MediaQuery.sizeOf(context).width * 0.015),
+                //       Image(
+                //         image: const AssetImage("assets/images/whatsapp.png"),
+                //         width: MediaQuery.sizeOf(context).width * 0.08,
+                //         height: MediaQuery.sizeOf(context).height * 0.05,
+                //       )
+                //     ],
+                //   ),
+                // ),
               ],
             ),
           ),

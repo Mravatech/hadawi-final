@@ -22,52 +22,94 @@ class BottomNavigationBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit,HomeStates>(
+    return BlocBuilder<HomeCubit, HomeStates>(
       builder: (context, state) {
         var cubit = context.read<HomeCubit>();
-        return SalomonBottomBar(
-          backgroundColor: ColorManager.gray.withOpacity(0.5),
-          currentIndex: cubit.currentIndex,
-          onTap: (index)async{
-            cubit.changeIndex(index: index);
-            context.read<OccasionCubit>().resetData();
-          },
-          items: [
-
-            /// Profile
-            SalomonBottomBarItem(
-              unselectedColor: Colors.black38,
-              icon: Icon(Icons.home),
-              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
-              selectedColor: ColorManager.primaryBlue,
+        return Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: ColorManager.primaryBlue.withOpacity(0.1),
+                blurRadius: 20,
+                offset: Offset(0, -5),
+              ),
+            ],
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24),
+              topRight: Radius.circular(24),
             ),
-
-            /// Occaisons
-            SalomonBottomBarItem(
-              unselectedColor: Colors.black38,
-              icon: Icon(Icons.add_circle_rounded),
-              title:  Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
-              selectedColor: ColorManager.primaryBlue,
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: SalomonBottomBar(
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                margin: EdgeInsets.zero,
+                itemPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                currentIndex: cubit.currentIndex,
+                onTap: (index) async {
+                  cubit.changeIndex(index: index);
+                  context.read<OccasionCubit>().resetData();
+                },
+                items: [
+                  _buildNavItem(
+                    context: context,
+                    icon: Icons.home_rounded,
+                    index: 0,
+                    currentIndex: cubit.currentIndex,
+                  ),
+                  _buildNavItem(
+                    context: context,
+                    icon: Icons.add_circle_rounded,
+                    index: 1,
+                    currentIndex: cubit.currentIndex,
+                  ),
+                  _buildNavItem(
+                    context: context,
+                    icon: Icons.people_rounded,
+                    index: 2,
+                    currentIndex: cubit.currentIndex,
+                  ),
+                  _buildNavItem(
+                    context: context,
+                    icon: Icons.settings_rounded,
+                    index: 3,
+                    currentIndex: cubit.currentIndex,
+                  ),
+                ],
+              ),
             ),
-
-            /// Friends
-            SalomonBottomBarItem(
-              unselectedColor: Colors.black38,
-              icon: Icon(Icons.people),
-              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
-              selectedColor: ColorManager.primaryBlue,
-            ),
-
-            /// Settings
-            SalomonBottomBarItem(
-              unselectedColor: Colors.black38,
-              icon: Icon(Icons.settings),
-              title: Text(AppLocalizations.of(context)!.translate(AppConstants().homeLayoutTitles[cubit.currentIndex]).toString()),
-              selectedColor: ColorManager.primaryBlue,
-            ),
-          ],
+          ),
         );
       },
+    );
+  }
+
+  SalomonBottomBarItem _buildNavItem({
+    required BuildContext context,
+    required IconData icon,
+    required int index,
+    required int currentIndex,
+  }) {
+    final bool isSelected = index == currentIndex;
+    return SalomonBottomBarItem(
+      icon: Icon(
+        icon,
+        size: isSelected ? 28 : 24,
+      ),
+      title: Text(
+        AppLocalizations.of(context)!
+            .translate(AppConstants().homeLayoutTitles[index])
+            .toString(),
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      selectedColor: ColorManager.primaryBlue,
+      unselectedColor: Colors.grey.shade400,
     );
   }
 }

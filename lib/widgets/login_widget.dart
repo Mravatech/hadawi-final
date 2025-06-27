@@ -9,7 +9,7 @@ class LogoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: ColorManager.gray,
+        color: ColorManager.white,
       ),
       alignment: Alignment.center,
       height: MediaQuery.sizeOf(context).height*0.2,

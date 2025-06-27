@@ -366,5 +366,16 @@
   "madaHint": "ادفع باستخدام بطاقة مدى",
   "visaHint": "ادفع باستخدام بطاقة فيزا",
   "masterHint": "ادفع باستخدام بطاقة ماستركارد",
-  "stcHint": "ادفع باستخدام STC Pay"
+  "stcHint": "ادفع باستخدام STC Pay",
+  "for": "لـ",
+  "goal": "الهدف",
+  "collected": "تم جمع",
+  "contributors": "مشارك",
+  "daysLeft": "يوم متبقي",
+  "expired": "منتهي",
+  "following": "التالي",
+  "followers": "المتابعون",
+  "requests": "الطلبات",
+  "visibility": "الظهور"
+
 }

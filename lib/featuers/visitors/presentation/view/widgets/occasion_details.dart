@@ -33,8 +33,7 @@ class OccasionDetails extends StatefulWidget {
   final String occasionId;
   final bool fromHome;
 
-  const OccasionDetails(
-      {super.key, required this.occasionId, required this.fromHome});
+  const OccasionDetails({super.key, required this.occasionId, required this.fromHome});
 
   @override
   State<OccasionDetails> createState() => _OccasionDetailsState();
@@ -53,28 +52,35 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
 
   Future<void> _initializeData() async {
-    isLoading = true;
-    await UserDataFromStorage.getData();
+    if (mounted) {
+      setState(() => isLoading = true);
+    }
+    try {
+      await UserDataFromStorage.getData();
+      await context.read<VisitorsCubit>().getOccasionData(occasionId: widget.occasionId);
+      await context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
 
-    // Fetch occasion data
-    await context
-        .read<VisitorsCubit>()
-        .getOccasionData(occasionId: widget.occasionId);
-
-    // Create dynamic link
-    await context.read<OccasionCubit>().createDynamicLink(widget.occasionId);
-
-    // Now it's safe to access occasionDetailsModel
-    final cubit = context.read<VisitorsCubit>();
-    final model = cubit.occasionDetailsModel;
-    // isActive = model.isActive;
-    cubit.editOccasionNameController.text = model.type;
-    cubit.editGiftNameController.text = model.giftName;
-    cubit.editPersonNameController.text = model.personName;
-    cubit.remainingBalanceController.text =
-        model.moneyGiftAmount > model.giftPrice
-            ? "0.0"
-            : (model.giftPrice - model.moneyGiftAmount).toString();
+      final cubit = context.read<VisitorsCubit>();
+      final model = cubit.occasionDetailsModel;
+      cubit.editOccasionNameController.text = model.type;
+      cubit.editGiftNameController.text = model.giftName;
+      cubit.editPersonNameController.text = model.personName;
+      cubit.remainingBalanceController.text = model.moneyGiftAmount > model.giftPrice
+          ? "0.0"
+          : (model.giftPrice - model.moneyGiftAmount).toString();
+    } catch (e) {
+      debugPrint('Error initializing data: $e');
+      if (mounted) {
+        customToast(
+          title: AppLocalizations.of(context)!.translate('error').toString(),
+          color: ColorManager.error
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
+    }
   }
 
   @override
@@ -88,19 +94,15 @@ class _OccasionDetailsState extends State<OccasionDetails> {
 
   @override
   Widget build(BuildContext context) {
-    _initializationFuture = _initializeData();
-    debugPrint("occasionId: ${widget.occasionId}");
     return Scaffold(
-      backgroundColor: ColorManager.white,
+      backgroundColor: Color(0xFFF8F7FB), // Light purple background
       appBar: AppBar(
-        backgroundColor: ColorManager.gray,
-        surfaceTintColor: ColorManager.gray,
+        backgroundColor: Colors.white,
+        elevation: 0,
         leading: !kIsWeb
             ? IconButton(
                 icon: Icon(
-                  CashHelper.languageKey == 'ar'
-                      ? Icons.arrow_forward
-                      : Icons.arrow_back,
+                  CashHelper.languageKey == 'ar' ? Icons.arrow_forward : Icons.arrow_back,
                   color: ColorManager.black,
                 ),
                 onPressed: () {
@@ -114,14 +116,18 @@ class _OccasionDetailsState extends State<OccasionDetails> {
             : SizedBox(),
         title: Text(
           AppLocalizations.of(context)!.translate('occasionDetails').toString(),
-          style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.black),
+          style: TextStyles.textStyle18Bold.copyWith(
+            color: ColorManager.black,
+            fontSize: 20,
+          ),
         ),
+        centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Image.asset(
               Assets.imagesLogoWithoutBackground,
-              height: MediaQuery.sizeOf(context).height * 0.05,
+              height: 32,
             ),
           )
         ],
@@ -138,237 +144,340 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         },
         builder: (context, state) {
           final cubit = context.read<VisitorsCubit>();
-          return FutureBuilder<void>(
-            future: _initializationFuture,
-            builder: (context, snapshot) {
-              if (state is GetOccasionDataLoadingState) {
-                isLoading = true;
-                return Center(child: LoadingAnimationWidget());
-              }
+          
+          if (state is GetOccasionDataLoadingState || isLoading) {
+            return Center(child: LoadingAnimationWidget());
+          }
 
-              if (state is GetOccasionDataErrorState) {
-                isLoading = false;
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          if (state is GetOccasionDataErrorState) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!.translate('error').toString(),
+                    style: TextStyles.textStyle18Bold,
+                  ),
+                  SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () => setState(() => _initializationFuture = _initializeData()),
+                    icon: Icon(Icons.refresh),
+                    label: Text(AppLocalizations.of(context)!.translate('retry').toString()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF8B7BA8),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          if (cubit.occasionDetailsModel == null) {
+            return Center(child: LoadingAnimationWidget());
+          }
+
+          final model = cubit.occasionDetailsModel;
+
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              child: Column(
+                children: [
+                  // Person Card
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: Color(0xFFF0EEF5),
+                          child: Icon(Icons.person, color: Color(0xFF8B7BA8), size: 28),
+                        ),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                model.personName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              Text(
+                                model.type,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!UserDataFromStorage.userIsGuest && 
+                            UserDataFromStorage.uIdFromStorage != model.personId)
+                          ElevatedButton(
+                            onPressed: () => cubit.sendFollowRequest(
+                              userId: model.personId,
+                              followerId: UserDataFromStorage.uIdFromStorage,
+                              userName: model.personName,
+                              image: "",
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.person_add, size: 18, color: Colors.white),
+                                SizedBox(width: 4),
+                                Text(AppLocalizations.of(context)!.translate('follow').toString()),
+                              ],
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF8B7BA8),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+
+                  // Progress Card
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.translate('goal').toString(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Text(
+                                  '${model.giftPrice.toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.translate('collected').toString(),
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                                Text(
+                                  '${model.moneyGiftAmount.toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 16),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 12,
+                                color: Color(0xFFF0EEF5),
+                              ),
+                              FractionallySizedBox(
+                                widthFactor: (model.moneyGiftAmount / model.giftPrice).clamp(0.0, 1.0),
+                                child: Container(
+                                  height: 12,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF8B7BA8),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          '${((model.moneyGiftAmount / model.giftPrice) * 100).toStringAsFixed(2)}%',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF8B7BA8),
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        if (model.giftPrice > model.moneyGiftAmount)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
+                              '${AppLocalizations.of(context)!.translate('remainingBalance').toString()}: ${(model.giftPrice - model.moneyGiftAmount).toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 16),
+
+                  // QR Code Card
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: EdgeInsets.all(24),
+                    child: Column(
+                      children: [
+                        RepaintBoundary(
+                          key: qrKey,
+                          child: Container(
+                            padding: EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: QrImageView(
+                              data: context.read<OccasionCubit>().occasionLink,
+                              version: QrVersions.auto,
+                              size: 200,
+                              embeddedImage: AssetImage(AssetsManager.logoWithoutBackground),
+                              embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40, 40)),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16),
+                        if (state is! CreateOccasionLinkLoadingState)
+                          ElevatedButton.icon(
+                            onPressed: () => context.read<OccasionCubit>().captureAndShareQr(
+                              qrKey: qrKey,
+                              occasionName: model.type,
+                              personName: UserDataFromStorage.userNameFromStorage,
+                            ),
+                            icon: Icon(Icons.share, color: Colors.white),
+                            label: Text(AppLocalizations.of(context)!.translate('shareQr').toString()),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Color(0xFF8B7BA8),
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                              minimumSize: Size(200, 48),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24),
+
+                  // Action Buttons
+                  Row(
                     children: [
-                      Text('Error loading data: ${snapshot.error}'),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _initializationFuture = _initializeData();
-                          });
-                        },
-                        child: Text('Retry'),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () async {
+                            String link = await cubit.createDynamicLink(widget.occasionId);
+                            Share.share(
+                              'قام صديقك ${model.personName} بدعوتك للمشاركة في مناسبة له ${model.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                            );
+                          },
+                          icon: Icon(Icons.share, color: Colors.white),
+                          label: Text(AppLocalizations.of(context)!.translate('share').toString()),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF8B7BA8),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            customPushNavigator(
+                              context,
+                              PaymentScreen(occasionEntity: model),
+                            );
+                          },
+                          icon: Icon(Icons.payment, color: Colors.white),
+                          label: Text(AppLocalizations.of(context)!.translate('payNow').toString()),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF8B7BA8),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                );
-              }
-
-              if (state is GetOccasionDataSuccessState) {
-                isLoading = true;
-                final cubit = context.read<VisitorsCubit>();
-                final model = cubit.occasionDetailsModel;
-
-                cubit.editOccasionNameController.text = model.type;
-                cubit.editGiftNameController.text = model.giftName;
-                cubit.editPersonNameController.text = model.personName;
-                cubit.remainingBalanceController.text =
-                    model.moneyGiftAmount > model.giftPrice
-                        ? "0.0"
-                        : (model.giftPrice - model.moneyGiftAmount).toString();
-                isLoading = false;
-              }
-
-              return isLoading
-                  ? Center(
-                      child: LoadingAnimationWidget(),
-                    )
-                  : SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Column(
-                          crossAxisAlignment: CashHelper.languageKey == 'ar'
-                              ? CrossAxisAlignment.end
-                              : CrossAxisAlignment.start,
-                          children: [
-                            /// person name
-                            Row(
-                              children: [
-                                CircleAvatar(
-                                  child: Container(
-                                    clipBehavior: Clip.antiAlias,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.person,
-                                      color: ColorManager.primaryBlue,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.sizeOf(context).width * 0.02,
-                                ),
-                                Text(
-                                  AppLocalizations.of(context)!
-                                      .translate('personName')
-                                      .toString(),
-                                  style: TextStyles.textStyle18Bold.copyWith(),
-                                ),
-                                Spacer(),
-                                (UserDataFromStorage.userIsGuest == true) ||
-                                        (UserDataFromStorage.uIdFromStorage ==
-                                            cubit.occasionDetailsModel.personId)
-                                    ? Container()
-                                    : SizedBox(
-                                        width:
-                                            MediaQuery.sizeOf(context).width *
-                                                0.3,
-                                        child: DefaultButton(
-                                          buttonText:
-                                              AppLocalizations.of(context)!
-                                                  .translate('follow')
-                                                  .toString(),
-                                          onPressed: () {
-                                            context
-                                                .read<VisitorsCubit>()
-                                                .sendFollowRequest(
-                                                  userId: cubit
-                                                      .occasionDetailsModel
-                                                      .personId,
-                                                  followerId:
-                                                      UserDataFromStorage
-                                                          .uIdFromStorage,
-                                                  userName: cubit
-                                                      .occasionDetailsModel
-                                                      .personName,
-                                                  image: "",
-                                                )
-                                                .then((value) {
-                                              customToast(
-                                                  title: 'تم الارسال',
-                                                  color:
-                                                      ColorManager.primaryBlue);
-                                            });
-                                          },
-                                          buttonColor: ColorManager.primaryBlue,
-                                        ),
-                                      ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.01,
-                            ),
-                            DefaultTextField(
-                              controller: cubit.editPersonNameController,
-                              hintText: '',
-                              validator: (value) {
-                                return null;
-                              },
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              fillColor: ColorManager.gray,
-                              enable: false,
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.02,
-                            ),
-
-                            /// gift
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('gift')
-                                  .toString(),
-                              style: TextStyles.textStyle18Bold.copyWith(),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.01,
-                            ),
-                            DefaultTextField(
-                              controller: cubit.editGiftNameController,
-                              hintText: '',
-                              validator: (value) {
-                                return null;
-                              },
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              fillColor: ColorManager.gray,
-                              enable: false,
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.02,
-                            ),
-
-                            /// gift image
-                            _buildGiftImageSection(cubit),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.02,
-                            ),
-
-                            /// gift link and progress indicator
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ProgressIndicatorWidget(
-                                    value: (double.parse(cubit
-                                            .occasionDetailsModel
-                                            .moneyGiftAmount
-                                            .toString()) /
-                                        double.parse(cubit
-                                            .occasionDetailsModel.giftPrice
-                                            .toString())),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.02,
-                            ),
-
-                            /// remaining balance
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('remainingBalance')
-                                  .toString(),
-                              style: TextStyles.textStyle18Bold.copyWith(),
-                            ),
-                            SizedBox(
-                              height: MediaQuery.sizeOf(context).height * 0.01,
-                            ),
-                            DefaultTextField(
-                              controller: cubit.remainingBalanceController,
-                              hintText: '',
-                              validator: (value) {
-                                return null;
-                              },
-                              keyboardType: TextInputType.text,
-                              textInputAction: TextInputAction.next,
-                              fillColor: ColorManager.gray,
-                              enable: false,
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.01),
-
-                            _buildQrCodeSection(cubit, state),
-                            SizedBox(
-                                height:
-                                    MediaQuery.sizeOf(context).height * 0.05),
-
-                            /// share and pay
-
-                            state is IsActiveLoading
-                                ? LoadingAnimationWidget()
-                                : _buildActionButtons(
-                                    cubit, state, cubit.isActive),
-                          ],
-                        ),
+                  SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      String link = "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
+                      Share.share(
+                        'قام صديقك بدعوتك للمشاركة في مناسبة ${model.personName} ${model.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                      );
+                    },
+                    icon: Icon(Icons.link, color: Colors.white),
+                    label: Text(AppLocalizations.of(context)!.translate('createPaymentLink').toString()),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF8B7BA8),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      minimumSize: Size(double.infinity, 48),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
                       ),
-                    );
-            },
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
@@ -376,96 +485,45 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
 
   Widget _buildGiftImageSection(VisitorsCubit cubit) {
-    // Skip if it's a money gift with no images
     if (cubit.occasionDetailsModel.giftImage.isEmpty &&
         cubit.occasionDetailsModel.giftType == 'مبلغ مالى') {
       return SizedBox();
     }
 
     return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: ColorManager.white,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: ColorManager.gray.withOpacity(0.5),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
+      height: MediaQuery.of(context).size.height * 0.35,
       child: Stack(
         children: [
           CarouselSlider(
             options: CarouselOptions(
-              padEnds: false,
-              viewportFraction: .99,
-              height: MediaQuery.sizeOf(context).height * 0.378,
-              aspectRatio: 16 / 6,
-              enlargeCenterPage: true,
-              enlargeFactor: 0.1,
+              height: MediaQuery.of(context).size.height * 0.35,
+              viewportFraction: 1,
               enableInfiniteScroll: false,
-              initialPage: 0,
-              pageSnapping: false,
-              autoPlay: false,
-              disableCenter: true,
-              onPageChanged: (index, _) {
-                setState(() {
-                  _currentIndex = index;
-                });
-              },
+              onPageChanged: (index, _) => setState(() => _currentIndex = index),
             ),
-            items: [
-              ...cubit.occasionDetailsModel.giftImage.map((item) => Container(
-                    clipBehavior: Clip.antiAlias,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-                    child: CachedNetworkImage(
-                      imageUrl: item,
-                      placeholder: (context, url) => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      errorWidget: (context, url, error) {
-                        return cubit.occasionDetailsModel.giftImage.isEmpty &&
-                                cubit.occasionDetailsModel.giftType ==
-                                    'مبلغ مالي'
-                            ? Image.asset(
-                                'assets/images/money_bag.png',
-                                fit: BoxFit.contain,
-                              )
-                            : const Icon(
-                                Icons.error,
-                                color: Colors.red,
-                              );
-                      },
-                      height: MediaQuery.sizeOf(context).height * 0.3,
-                      width: double.infinity,
-                      fit: BoxFit.fill,
-                    ),
-                  ))
-            ],
+            items: cubit.occasionDetailsModel.giftImage.map((item) => Container(
+              width: double.infinity,
+              child: CachedNetworkImage(
+                imageUrl: item,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+            )).toList(),
           ),
           Positioned(
-            bottom: 23,
+            bottom: 16,
             left: 0,
             right: 0,
             child: DotsIndicator(
-              dotsCount: cubit.occasionDetailsModel.giftImage.isEmpty
-                  ? 1
-                  : cubit.occasionDetailsModel.giftImage.length,
+              dotsCount: cubit.occasionDetailsModel.giftImage.length,
               position: _currentIndex.toDouble(),
               decorator: DotsDecorator(
-                spacing: EdgeInsets.symmetric(vertical: 0, horizontal: 4),
-                color: Colors.white,
-                size: Size(8, 8),
-                activeSize: Size(24, 6),
-                activeShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
                 activeColor: ColorManager.primaryBlue,
+                color: Colors.white.withOpacity(0.5),
+                activeSize: Size(24, 8),
+                size: Size(8, 8),
+                activeShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
               ),
             ),
           ),
@@ -475,266 +533,119 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   }
 
   Widget _buildQrCodeSection(VisitorsCubit cubit, VisitorsState state) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
       children: [
         RepaintBoundary(
           key: qrKey,
-          child: QrImageView(
-            data: context.read<OccasionCubit>().occasionLink,
-            version: QrVersions.auto,
-            size: SizeConfig.height * 0.25,
-            backgroundColor: Colors.white,
-            embeddedImage: AssetImage(AssetsManager.logoWithoutBackground),
-            embeddedImageStyle: QrEmbeddedImageStyle(
-              size: Size(100, 100),
+          child: Container(
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: QrImageView(
+              data: context.read<OccasionCubit>().occasionLink,
+              version: QrVersions.auto,
+              size: 200,
+              embeddedImage: AssetImage(AssetsManager.logoWithoutBackground),
+              embeddedImageStyle: QrEmbeddedImageStyle(size: Size(40, 40)),
             ),
           ),
         ),
-        state is CreateOccasionLinkLoadingState
-            ? LoadingAnimationWidget()
-            : GestureDetector(
-                onTap: () async {
-                  context.read<OccasionCubit>().captureAndShareQr(
-                      qrKey: qrKey,
-                      occasionName: cubit.occasionDetailsModel.type,
-                      personName: UserDataFromStorage.userNameFromStorage);
-                },
-                child: Container(
-                  height: MediaQuery.sizeOf(context).height * .055,
-                  width: MediaQuery.sizeOf(context).width * .3,
-                  decoration: BoxDecoration(
-                    color: ColorManager.primaryBlue,
-                    borderRadius: BorderRadius.circular(
-                        MediaQuery.sizeOf(context).height * 0.05),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Text(
-                        AppLocalizations.of(context)!
-                            .translate('shareQr')
-                            .toString(),
-                        style: TextStyles.textStyle12Bold
-                            .copyWith(color: ColorManager.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+        SizedBox(height: 16),
+        if (state is! CreateOccasionLinkLoadingState)
+          ElevatedButton.icon(
+            onPressed: () => context.read<OccasionCubit>().captureAndShareQr(
+              qrKey: qrKey,
+              occasionName: cubit.occasionDetailsModel.type,
+              personName: UserDataFromStorage.userNameFromStorage,
+            ),
+            icon: Icon(Icons.share, color: Colors.white),
+            label: Text(AppLocalizations.of(context)!.translate('shareQr').toString()),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF8B7BA8),
+              foregroundColor: Colors.white,
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            ),
+          ),
       ],
     );
   }
 
-  Widget _buildActionButtons(
-      VisitorsCubit cubit, VisitorsState state, bool isActiveOccasion) {
+  Widget _buildActionButtons(VisitorsCubit cubit, VisitorsState state, bool isActiveOccasion) {
+    if (!isActiveOccasion) return SizedBox();
+
+    final bool canInteract = cubit.occasionDetailsModel.giftPrice > cubit.occasionDetailsModel.moneyGiftAmount;
+    final buttonStyle = ElevatedButton.styleFrom(
+      backgroundColor: canInteract ? ColorManager.primaryBlue : Colors.grey,
+      foregroundColor: Colors.white,
+      padding: EdgeInsets.symmetric(vertical: 16),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            /// share button
-            isActiveOccasion == true
-                ? GestureDetector(
-                    onTap: () async {
-                      if (double.parse(cubit.remainingBalanceController.text) >
-                              0 ||
-                          cubit.occasionDetailsModel.giftPrice >
-                              cubit.occasionDetailsModel.moneyGiftAmount) {
-                        String link =
-                            await cubit.createDynamicLink(widget.occasionId);
-                        Share.share(
-                            'قام صديقك ${cubit.occasionDetailsModel.personName} بدعوتك للمشاركة في مناسبة له ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
-                      } else {
-                        customToast(
-                            title: AppLocalizations.of(context)!
-                                .translate('canNotShare')
-                                .toString(),
-                            color: ColorManager.warning);
-                      }
-                    },
-                    child: state is CreateOccasionLinkLoadingState
-                        ? LoadingAnimationWidget()
-                        : Container(
-                            height: MediaQuery.sizeOf(context).height * .055,
-                            width: MediaQuery.sizeOf(context).width * .25,
-                            decoration: BoxDecoration(
-                              color: double.parse(cubit
-                                              .remainingBalanceController
-                                              .text) >
-                                          0 ||
-                                      cubit.occasionDetailsModel.giftPrice >
-                                          cubit.occasionDetailsModel
-                                              .moneyGiftAmount
-                                  ? ColorManager.primaryBlue
-                                  : ColorManager.gray,
-                              borderRadius: BorderRadius.circular(
-                                  MediaQuery.sizeOf(context).height * 0.05),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('share')
-                                        .toString(),
-                                    style: TextStyles.textStyle18Bold
-                                        .copyWith(color: ColorManager.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                  )
-                : Container(),
-            SizedBox(width: MediaQuery.sizeOf(context).width * .02),
-
-            /// pay button
-            isActiveOccasion == true
-                ? GestureDetector(
-                    onTap: () {
-                      if (double.parse(cubit.remainingBalanceController.text) >
-                              0 ||
-                          cubit.occasionDetailsModel.giftPrice >
-                              cubit.occasionDetailsModel.moneyGiftAmount) {
-                        customPushNavigator(
-                            context,
-                            PaymentScreen(
-                              occasionEntity: cubit.occasionDetailsModel,
-                            ));
-                      } else {
-                        customToast(
-                            title: AppLocalizations.of(context)!
-                                .translate('paymentComplete')
-                                .toString(),
-                            color: ColorManager.warning);
-                      }
-                    },
-                    child: Container(
-                      height: MediaQuery.sizeOf(context).height * .055,
-                      width: MediaQuery.sizeOf(context).width * .25,
-                      decoration: BoxDecoration(
-                        color: double.parse(
-                                        cubit.remainingBalanceController.text) >
-                                    0 ||
-                                cubit.occasionDetailsModel.giftPrice >
-                                    cubit.occasionDetailsModel.moneyGiftAmount
-                            ? ColorManager.primaryBlue
-                            : ColorManager.gray,
-                        borderRadius: BorderRadius.circular(
-                            MediaQuery.sizeOf(context).height * 0.05),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              AppLocalizations.of(context)!
-                                  .translate('payNow')
-                                  .toString(),
-                              style: TextStyles.textStyle18Bold
-                                  .copyWith(color: ColorManager.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox(),
-            SizedBox(width: MediaQuery.sizeOf(context).width * .02),
-
-            /// edit button
-            if (UserDataFromStorage.uIdFromStorage ==
-                cubit.occasionDetailsModel.personId)
-              state is EditOccasionLoadingState
-                  ? LoadingAnimationWidget()
-                  : isActiveOccasion == true
-                      ? GestureDetector(
-                          onTap: () {
-                            if (double.parse(
-                                        cubit.remainingBalanceController.text) >
-                                    0 ||
-                                cubit.occasionDetailsModel.giftPrice >
-                                    cubit
-                                        .occasionDetailsModel.moneyGiftAmount) {
-                              customPushNavigator(
-                                context,
-                                EditOccasion(
-                                  occasionModel: cubit.occasionDetailsModel,
-                                  fromHome: widget.fromHome,
-                                ),
-                              );
-                            } else {
-                              customToast(
-                                  title: AppLocalizations.of(context)!
-                                      .translate('canNotEdit')
-                                      .toString(),
-                                  color: ColorManager.warning);
-                            }
-                          },
-                          child: Container(
-                            height: MediaQuery.sizeOf(context).height * .055,
-                            width: MediaQuery.sizeOf(context).width * .25,
-                            decoration: BoxDecoration(
-                              color: double.parse(cubit
-                                              .remainingBalanceController
-                                              .text) >
-                                          0 ||
-                                      cubit.occasionDetailsModel.giftPrice >
-                                          cubit.occasionDetailsModel
-                                              .moneyGiftAmount
-                                  ? ColorManager.primaryBlue
-                                  : ColorManager.gray,
-                              borderRadius: BorderRadius.circular(
-                                  MediaQuery.sizeOf(context).height * 0.05),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    AppLocalizations.of(context)!
-                                        .translate('edit')
-                                        .toString(),
-                                    style: TextStyles.textStyle18Bold
-                                        .copyWith(color: ColorManager.white),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      : Container(),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: canInteract ? () async {
+                  String link = await cubit.createDynamicLink(widget.occasionId);
+                  Share.share(
+                    'قام صديقك ${cubit.occasionDetailsModel.personName} بدعوتك للمشاركة في مناسبة له ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                  );
+                } : null,
+                icon: Icon(Icons.share, color: Colors.white),
+                label: Text(AppLocalizations.of(context)!.translate('share').toString()),
+                style: buttonStyle,
+              ),
+            ),
+            SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: canInteract ? () {
+                  customPushNavigator(
+                    context,
+                    PaymentScreen(occasionEntity: cubit.occasionDetailsModel),
+                  );
+                } : null,
+                icon: Icon(Icons.payment, color: Colors.white),
+                label: Text(AppLocalizations.of(context)!.translate('payNow').toString()),
+                style: buttonStyle,
+              ),
+            ),
           ],
         ),
-        SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.02,
+        if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId && canInteract)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ElevatedButton.icon(
+              onPressed: () {
+                customPushNavigator(
+                  context,
+                  EditOccasion(
+                    occasionModel: cubit.occasionDetailsModel,
+                    fromHome: widget.fromHome,
+                  ),
+                );
+              },
+              icon: Icon(Icons.edit, color: Colors.white),
+              label: Text(AppLocalizations.of(context)!.translate('edit').toString()),
+              style: buttonStyle,
+            ),
+          ),
+        SizedBox(height: 8),
+        ElevatedButton.icon(
+          onPressed: canInteract ? () async {
+            String link = "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
+            Share.share(
+              'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+            );
+          } : null,
+          icon: Icon(Icons.link, color: Colors.white),
+          label: Text(AppLocalizations.of(context)!.translate('createPaymentLink').toString()),
+          style: buttonStyle,
         ),
-        isActiveOccasion == true
-            ? DefaultButton(
-                buttonText: AppLocalizations.of(context)!
-                    .translate('createPaymentLink')
-                    .toString(),
-                onPressed: () async {
-                  String link =
-                      "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
-                  Share.share(
-                      'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
-                },
-                buttonColor:
-                    double.parse(cubit.remainingBalanceController.text) > 0 ||
-                            cubit.occasionDetailsModel.giftPrice >
-                                cubit.occasionDetailsModel.moneyGiftAmount
-                        ? ColorManager.primaryBlue
-                        : ColorManager.gray,
-                width: MediaQuery.sizeOf(context).width,
-              )
-            : SizedBox(),
       ],
     );
   }
