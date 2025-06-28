@@ -712,29 +712,29 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                       : Container(),
           ],
         ),
-        SizedBox(
-          height: MediaQuery.sizeOf(context).height * 0.02,
-        ),
-        isActiveOccasion == true
-            ? DefaultButton(
-                buttonText: AppLocalizations.of(context)!
-                    .translate('createPaymentLink')
-                    .toString(),
-                onPressed: () async {
-                  String link =
-                      "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
-                  Share.share(
-                      'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
-                },
-                buttonColor:
-                    double.parse(cubit.remainingBalanceController.text) > 0 ||
-                            cubit.occasionDetailsModel.giftPrice >
-                                cubit.occasionDetailsModel.moneyGiftAmount
-                        ? ColorManager.primaryBlue
-                        : ColorManager.gray,
-                width: MediaQuery.sizeOf(context).width,
-              )
-            : SizedBox(),
+        // SizedBox(
+        //   height: MediaQuery.sizeOf(context).height * 0.02,
+        // ),
+        // isActiveOccasion == true
+        //     ? DefaultButton(
+        //         buttonText: AppLocalizations.of(context)!
+        //             .translate('createPaymentLink')
+        //             .toString(),
+        //         onPressed: () async {
+        //           String link =
+        //               "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
+        //           Share.share(
+        //               'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link');
+        //         },
+        //         buttonColor:
+        //             double.parse(cubit.remainingBalanceController.text) > 0 ||
+        //                     cubit.occasionDetailsModel.giftPrice >
+        //                         cubit.occasionDetailsModel.moneyGiftAmount
+        //                 ? ColorManager.primaryBlue
+        //                 : ColorManager.gray,
+        //         width: MediaQuery.sizeOf(context).width,
+        //       )
+        //     : SizedBox(),
         SizedBox(
           height: MediaQuery.sizeOf(context).height * 0.04,
         ),
