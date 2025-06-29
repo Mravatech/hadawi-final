@@ -3,38 +3,47 @@ import 'package:flutter/material.dart';
 class ApplePayButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const ApplePayButton({Key? key, required this.onPressed}) : super(key: key);
+  const ApplePayButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 50,
-      child: ElevatedButton(
+      height: MediaQuery.sizeOf(context).height*0.05,
+      width: MediaQuery.sizeOf(context).width,
+      child: OutlinedButton(
         onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black,
+        style: OutlinedButton.styleFrom(
+          side: BorderSide(color: Colors.black, width: 1.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          backgroundColor: Colors.black,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Text(
+              'Pay with ',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'SF Pro',
+              ),
+            ),
             Icon(
               Icons.apple,
-              size: 24,
               color: Colors.white,
+              size: 20,
             ),
-            SizedBox(width: 8),
             Text(
               'Pay',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'Roboto',
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'SF Pro',
               ),
             ),
           ],
