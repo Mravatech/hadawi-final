@@ -6,7 +6,6 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseMessaging
 import FirebaseDynamicLinks
-import GoogleSignIn
 import UserNotifications
 
 @main
