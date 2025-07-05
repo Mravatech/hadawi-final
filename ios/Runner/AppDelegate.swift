@@ -56,10 +56,6 @@ import UserNotifications
     override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         print("AppDelegate received open URL: \(url.absoluteString)")
 
-        // Google Sign-In
-        if GIDSignIn.sharedInstance.handle(url) {
-            return true
-        }
 
         // Firebase Dynamic Link from custom scheme
         if let dynamicLink = DynamicLinks.dynamicLinks().dynamicLink(fromCustomSchemeURL: url) {
