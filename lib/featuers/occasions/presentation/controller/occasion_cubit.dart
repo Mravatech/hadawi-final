@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -378,7 +379,8 @@ class OccasionCubit extends Cubit<OccasionState> {
 
       final shareResult = await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+        text: CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend $personName invited you to their $occasionName. To contribute, scan the QR code to see the gift details.'
+            :'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
       // Check if sharing completed or was canceled

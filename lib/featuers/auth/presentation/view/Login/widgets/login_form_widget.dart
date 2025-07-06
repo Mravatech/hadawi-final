@@ -166,18 +166,18 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                   },
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                // const DonotHaveAnAccount(),
-                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
-                // DefaultButton(
-                //   buttonText: AppLocalizations.of(context)!
-                //       .translate('loginAsGuest')
-                //       .toString(),
-                //   onPressed: () {
-                //     UserDataFromStorage.setUserIsGuest(true);
-                //     customPushReplacement(context, VisitorsScreen());
-                //   },
-                //   buttonColor: ColorManager.primaryBlue,
-                // ),
+                const DonotHaveAnAccount(),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.035),
+                DefaultButton(
+                  buttonText: AppLocalizations.of(context)!
+                      .translate('loginAsGuest')
+                      .toString(),
+                  onPressed: () {
+                    UserDataFromStorage.setUserIsGuest(true);
+                    customPushReplacement(context, VisitorsScreen());
+                  },
+                  buttonColor: ColorManager.primaryBlue,
+                ),
                 // SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
                 // GestureDetector(
                 //   onTap: () {

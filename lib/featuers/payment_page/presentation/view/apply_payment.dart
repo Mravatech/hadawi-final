@@ -66,7 +66,7 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
               script-src 'self' https://eu-prod.oppwa.com https://applepay.cdn-apple.com 'unsafe-inline';
               style-src 'self' https://eu-prod.oppwa.com 'unsafe-inline';
               frame-src 'self' https://eu-prod.oppwa.com;
-              connect-src 'self' wss://* https://p11.techlab-cdn.com https://*.apple.com;
+              connect-src 'self' wss://* https://p11.techlab-cdn.com https://*.apple.com https://eu-prod.oppwa.com;
               img-src 'self' https://eu-prod.oppwa.com data:;">
               
     <!-- Custom Styling -->
@@ -149,14 +149,38 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         #apple-pay-not-available {
             text-align: center;
             padding: 30px 20px;
+            color: #666;
         }
         #apple-pay-not-available p {
             margin-bottom: 20px;
-            color: #666;
         }
         #apple-pay-not-available .wpwl-button {
             max-width: 300px;
             margin: 0 auto;
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #${primaryBlueHex};
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .paymentWidgets {
+            margin-top: 20px;
+        }
+        /* Override default Apple Pay button styles */
+        .wpwl-wrapper-brand-APPLEPAY {
+            width: 100% !important;
+        }
+        .wpwl-button-brand-APPLEPAY {
+            width: 100% !important;
+            margin: 0 !important;
         }
     </style>
 </head>
@@ -165,54 +189,25 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         <h3>Complete your payment with Apple Pay</h3>
     </div>
     
-    <!-- Load Hyperpay Payment Widget -->
-    <script src="https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
-    
     <!-- Apple Pay Container -->
     <div class="apple-pay-container">
+        <div class="apple-pay-details">
+            <div class="apple-pay-amount">${widget.paymentAmount} SAR</div>
+            <div class="apple-pay-description">${widget.occasionName}</div>
+        </div>
+
+        <div id="loading-container">
+            <div class="loading-spinner"></div>
+            <p>Loading Apple Pay...</p>
+        </div>
+        
         <div id="apple-pay-not-available" style="display: none;">
             <p>Apple Pay is not available on this device or browser.</p>
             <p>Please try using a different device or payment method.</p>
         </div>
         
-        <div id="apple-pay-available">
-            <div class="apple-pay-details">
-                <div class="apple-pay-amount">${widget.paymentAmount} SAR</div>
-                <div class="apple-pay-description">${widget.occasionName}</div>
-            </div>
-
-            <script>
-                // Configure Apple Pay options
-                var wpwlOptions = {
-                    paymentTarget:"_top",
-                    applePay: {
-                        merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
-                        supportedNetworks: ['masterCard', 'visa', 'mada'],
-                        supportedCountries: ["SA"],
-                        currencyCode: 'SAR',
-                        buttonStyle: 'black',
-                        buttonType: 'buy',
-                        total: { label: "COMPANY, INC." },
-                    },
-                    
-                    onReady: function() {
-                        console.log("Payment widget is ready");
-                        
-                        // Check if Apple Pay is available
-                        if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-                            document.getElementById('apple-pay-not-available').style.display = 'none';
-                            document.getElementById('apple-pay-button-container').style.display = 'block';
-                        } else {
-                            document.getElementById('apple-pay-not-available').style.display = 'block';
-                            document.getElementById('apple-pay-button-container').style.display = 'none';
-                        }
-                    }
-                };
-            </script>
-            
-            <div id="apple-pay-button-container">
-                <form class="paymentWidgets" data-brands="APPLEPAY"></form>
-            </div>
+        <div id="apple-pay-available" style="display: none;">
+            <form class="paymentWidgets" data-brands="APPLEPAY"></form>
         </div>
         
         <!-- Secure payment badge -->
@@ -228,19 +223,82 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
         </div>
     </div>
     
+    <!-- Load Hyperpay Payment Widget -->
+    <script src="https://eu-prod.oppwa.com/v1/paymentWidgets.js?checkoutId=${widget.checkoutId}"></script>
+    
     <script>
-        // Check Apple Pay availability when the page loads
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
-                    document.getElementById('apple-pay-not-available').style.display = 'none';
-                    document.getElementById('apple-pay-button-container').style.display = 'block';
+        console.log('Starting Apple Pay initialization...');
+        
+        // Configure Apple Pay options
+        var wpwlOptions = {
+            paymentTarget: "_top",
+            locale: "en",
+            applePay: {
+                merchantCapabilities: ['supports3DS', 'supportsDebit', 'supportsCredit'],
+                supportedNetworks: ['visa', 'masterCard', 'mada'],
+                supportedCountries: ["SA"],
+                currencyCode: 'SAR',
+                buttonStyle: 'black',
+                buttonType: 'buy',
+                total: { 
+                    label: "${widget.occasionName}",
+                    amount: "${widget.paymentAmount}"
+                },
+                requiredBillingContactFields: ['postalAddress'],
+                requiredShippingContactFields: []
+            },
+            
+            onReady: function() {
+                console.log("Payment widget is ready");
+                document.getElementById('loading-container').style.display = 'none';
+                
+                // Check if Apple Pay is available
+                setTimeout(function() {
+                    if (window.ApplePaySession && ApplePaySession.canMakePayments()) {
+                        console.log("Apple Pay is available");
+                        document.getElementById('apple-pay-available').style.display = 'block';
+                        document.getElementById('apple-pay-not-available').style.display = 'none';
+                    } else {
+                        console.log("Apple Pay is not available");
+                        document.getElementById('apple-pay-available').style.display = 'none';
+                        document.getElementById('apple-pay-not-available').style.display = 'block';
+                    }
+                }, 1000);
+            },
+            
+            onError: function(error) {
+                console.error('Payment widget error:', error);
+                document.getElementById('loading-container').style.display = 'none';
+                document.getElementById('apple-pay-available').style.display = 'none';
+                document.getElementById('apple-pay-not-available').style.display = 'block';
+            }
+        };
+        
+        // Initialize after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing payment widgets...');
+            
+            // Additional check for Apple Pay availability
+            if (window.ApplePaySession) {
+                console.log('ApplePaySession is available');
+                if (ApplePaySession.canMakePayments()) {
+                    console.log('Apple Pay can make payments');
                 } else {
-                    document.getElementById('apple-pay-not-available').style.display = 'block';
-                    document.getElementById('apple-pay-button-container').style.display = 'none';
+                    console.log('Apple Pay cannot make payments');
                 }
-            }, 500);
+            } else {
+                console.log('ApplePaySession is not available');
+            }
         });
+        
+        // Fallback initialization
+        setTimeout(function() {
+            if (document.getElementById('loading-container').style.display !== 'none') {
+                console.log('Fallback: Hiding loading and showing not available');
+                document.getElementById('loading-container').style.display = 'none';
+                document.getElementById('apple-pay-not-available').style.display = 'block';
+            }
+        }, 10000); // 10 second timeout
     </script>
 </body>
 </html>
@@ -261,6 +319,16 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
               isLoading = false;
             });
             debugPrint("Page finished loading: $url");
+
+            // Inject additional JavaScript to debug Apple Pay
+            controller.runJavaScript("""
+              console.log('Page finished loading, checking Apple Pay...');
+              if (window.ApplePaySession) {
+                console.log('ApplePaySession available: ' + ApplePaySession.canMakePayments());
+              } else {
+                console.log('ApplePaySession not available');
+              }
+            """);
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint("WebView error: ${error.description}");
@@ -268,11 +336,14 @@ class _ApplePayWebViewState extends State<ApplePayWebView> {
           onUrlChange: (UrlChange change) async {
             debugPrint("URL changed to: ${change.url}");
 
-            await context.read<PaymentCubit>().checkApplePaymentStatus(widget.checkoutId, context);
-
             if (change.url != null && change.url!.contains("https://hadawi.netlify.app/payment-result")) {
+              await context.read<PaymentCubit>().checkApplePaymentStatus(widget.checkoutId, context);
               Navigator.pop(context);
-              handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last);
+              handlePaymentResult(
+                  context.read<PaymentCubit>().paymentStatusList.last['result']['code'],
+                  context.read<PaymentCubit>().paymentStatusList.last['result']['description'],
+                  context.read<PaymentCubit>().paymentStatusList.last
+              );
             }
           },
         ),
