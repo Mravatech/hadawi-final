@@ -340,6 +340,7 @@
   "closeOccasionMessage": "Contributions will be stopped immediately, and the paid amounts will be refunded to participants within 3 to 7 business days.\n\nAn administrative fee of 5% or 15 SAR (whichever is higher) will be deducted to cover collection and transfer fees.\n\nThis action is final and cannot be undone.",
   "confirmClosure": "Confirm Closure",
   "no": "No",
+  "yes": "Yes",
   "occasionClosed": "Occasion Cancelled",
   "phoneToastError": "Phone number is already registered",
   "phoneError": "Phone number not valid",

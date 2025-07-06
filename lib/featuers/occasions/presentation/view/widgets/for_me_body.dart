@@ -407,6 +407,33 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
 
                           SizedBox(height: mediaQuery.height * 0.02),
 
+                          /// Delivery Data Button
+                          InkWell(
+                            onTap: cubit.switchShowDeliveryData,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [ColorManager.primaryBlue.withOpacity(0.1), ColorManager.primaryBlue.withOpacity(0.3)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.05),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('receivingData').toString(),
+                                style: TextStyles.textStyle18Bold.copyWith(color: ColorManager.primaryBlue),
+                              ),
+                            ),
+                          ),
+
                           // Delivery Data Section
                           Visibility(
                             visible: cubit.showDeliveryData && (cubit.isPresent || (!cubit.isPresent && cubit.giftWithPackage)),
