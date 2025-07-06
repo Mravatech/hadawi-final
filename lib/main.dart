@@ -97,17 +97,15 @@ class AppRoutes {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   ServiceLocator().init();
   await SharedPreferences.getInstance();
   await CashHelper.init();
   UserDataFromStorage.getData();
   DioHelper.dioInit();
   Bloc.observer = MyBlocObserver();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   // Initialize Firebase Dynamic Links
   if (!kIsWeb) {
