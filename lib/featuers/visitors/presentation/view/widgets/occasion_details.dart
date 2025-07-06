@@ -414,7 +414,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           onPressed: () async {
                             String link = await cubit.createDynamicLink(widget.occasionId);
                             Share.share(
-                              'قام صديقك ${model.personName} بدعوتك للمشاركة في مناسبة له ${model.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                                CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend invited you to join the occasion of ${cubit.occasionDetailsModel.personName} (${cubit.occasionDetailsModel.type}). To contribute, click the link below to view the gift details: $link'
+                                    :'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
                             );
                           },
                           icon: Icon(Icons.share, color: Colors.white),
@@ -459,7 +460,8 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                     onPressed: () async {
                       String link = "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
                       Share.share(
-                        'قام صديقك بدعوتك للمشاركة في مناسبة ${model.personName} ${model.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                          CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend invited you to join the occasion of ${cubit.occasionDetailsModel.personName} (${cubit.occasionDetailsModel.type}). To contribute, click the link below to view the gift details: $link'
+                              :'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
                       );
                     },
                     icon: Icon(Icons.link, color: Colors.white),
