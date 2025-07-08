@@ -359,7 +359,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       context,
                                       ApplePayWebView(
                                         checkoutId: checkoutData["checkoutId"],
-                                        integrity: checkoutData["integrity"],
+                                        // integrity: checkoutData["integrity"],
                                         paymentMethod: "APPLEPAY",
                                         occasionId: widget.occasionEntity.occasionId,
                                         occasionName: widget.occasionEntity.type,
@@ -454,7 +454,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                         context,
                                         ApplePayWebView(
                                           checkoutId: checkoutData["checkoutId"],
-                                          integrity: checkoutData["integrity"],
+                                          // integrity: checkoutData["integrity"],
                                           paymentMethod: "APPLEPAY",
                                           occasionId: widget.occasionEntity.occasionId,
                                           occasionName: widget.occasionEntity.type,
