@@ -340,6 +340,33 @@ class PaymentCubit extends Cubit<PaymentStates> {
     return data;
   }
 
+  Future<void> sendApplePayTokenToBackend(String checkoutId, Map<String, dynamic> token) async {
+    emit(SendAppleTokenLoadingState());
+    try {
+      final response = await http.post(
+        Uri.parse("https://7e58658857e9.ngrok-free.app/applepay/charge"),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode({
+          "checkoutId": checkoutId,
+          "token": token,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("✅ Token sent to backend");
+        emit(SendAppleTokenSuccessState());
+      } else {
+        debugPrint("❌ Backend error: ${response.body}");
+        emit(SendAppleTokenErrorState());
+      }
+    } catch (e) {
+      debugPrint("❌ Exception sending token: $e");
+      emit(SendAppleTokenErrorState());
+    }
+  }
+
   Future<Map<String, dynamic>> checkApplePaymentStatus(
       String checkoutId, BuildContext context) async {
     final response = await http.get(

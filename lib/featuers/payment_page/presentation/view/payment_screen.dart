@@ -32,6 +32,19 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   PaymentMethod selectedPaymentMethod = PaymentMethod.mada;
+  static String applePayConfig = '''
+{
+  "provider": "apple_pay",
+  "data": {
+    "merchantIdentifier": "merchant.com.app.hadawiapp",
+    "displayName": "Hadawi",
+    "merchantCapabilities": ["3DS", "debit", "credit"],
+    "supportedNetworks": ["visa", "masterCard", "amex"],
+    "countryCode": "SA",
+    "currencyCode": "SAR"
+  }
+}
+''';
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +172,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ],
                     ),
                   ),
-                  
+
                   Padding(
                     padding: EdgeInsets.all(20),
                     child: Form(
@@ -338,13 +351,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   ),
                                 ],
                               ),
-                              child: RawApplePayButton(
+                              child: ApplePayButton(
+                                paymentItems: [
+                                  PaymentItem(
+                                    label: "Total",
+                                    amount: double.tryParse(PaymentCubit.get(context).convertArabicToEnglishNumbers(
+                                        PaymentCubit.get(context).paymentAmountController.text.toString()))
+                                        ?.toStringAsFixed(2) ??
+                                        "0.00",
+                                    status: PaymentItemStatus.final_price,
+                                  )
+                                ],
                                 style: ApplePayButtonStyle.black,
-                                type: ApplePayButtonType.plain,
-                                onPressed: () async {
+                                type: ApplePayButtonType.buy,
+                                onPaymentResult: (result) async {
+                                  final cubit = PaymentCubit.get(context);
+
                                   if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
-                                    String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
-                                    final checkoutData = await PaymentCubit.get(context).getCheckoutIdApplePay(
+                                    final merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
+                                    final checkoutData = await cubit.getCheckoutIdApplePay(
                                       email: "nouralsaid09@gmail.com",
                                       givenName: "Nour",
                                       surname: "Elsaid",
@@ -352,26 +377,17 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       city: "Riyadh",
                                       state: "Riyadh",
                                       postcode: "12211",
-                                      merchantTransactionId: merchantTransactionId
+                                      merchantTransactionId: merchantTransactionId,
                                     );
 
-                                    customPushNavigator(
-                                      context,
-                                      ApplePayWebView(
-                                        checkoutId: checkoutData["checkoutId"],
-                                        // integrity: checkoutData["integrity"],
-                                        paymentMethod: "APPLEPAY",
-                                        occasionId: widget.occasionEntity.occasionId,
-                                        occasionName: widget.occasionEntity.type,
-                                        transactionId: merchantTransactionId,
-                                        occasionEntity: widget.occasionEntity,
-                                        remainingPrice: double.parse(widget.occasionEntity.giftPrice.toString()) -
-                                            double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
-                                        paymentAmount: double.parse(context.read<OccasionCubit>().convertArabicToEnglishNumbers(context.read<PaymentCubit>().paymentAmountController.text.toString())),
-                                      )
-                                    );
+                                    final checkoutId = checkoutData['checkoutId'];
+                                    final token = result['token'];
+
+                                    await cubit.sendApplePayTokenToBackend(checkoutId, token);
+                                    await cubit.checkApplePaymentStatus(checkoutId, context);
                                   }
                                 },
+                                paymentConfiguration: PaymentConfiguration.fromJsonString(applePayConfig),
                               ),
                             ),
                             SizedBox(height: 24),
