@@ -455,29 +455,29 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
-                  ElevatedButton.icon(
-                    onPressed: () async {
-                      String link = "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
-                      Share.share(
-                          CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend invited you to join the occasion of ${cubit.occasionDetailsModel.personName} (${cubit.occasionDetailsModel.type}). To contribute, click the link below to view the gift details: $link'
-                              :'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
-                      );
-                    },
-                    icon: Icon(Icons.link, color: Colors.white),
-                    label: Text(AppLocalizations.of(context)!.translate('createPaymentLink').toString()),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF8B7BA8),
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      minimumSize: Size(double.infinity, 48),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                  ),
                   SizedBox(height: 20),
+                  // ElevatedButton.icon(
+                  //   onPressed: () async {
+                  //     String link = "https://hadawi-payment.web.app/occasion-details/${widget.occasionId}";
+                  //     Share.share(
+                  //         CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend invited you to join the occasion of ${cubit.occasionDetailsModel.personName} (${cubit.occasionDetailsModel.type}). To contribute, click the link below to view the gift details: $link'
+                  //             :'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
+                  //     );
+                  //   },
+                  //   icon: Icon(Icons.link, color: Colors.white),
+                  //   label: Text(AppLocalizations.of(context)!.translate('createPaymentLink').toString()),
+                  //   style: ElevatedButton.styleFrom(
+                  //     backgroundColor: Color(0xFF8B7BA8),
+                  //     foregroundColor: Colors.white,
+                  //     elevation: 0,
+                  //     padding: EdgeInsets.symmetric(vertical: 16),
+                  //     minimumSize: Size(double.infinity, 48),
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius: BorderRadius.circular(24),
+                  //     ),
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20),
                 ],
               ),
             ),
