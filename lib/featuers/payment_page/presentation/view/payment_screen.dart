@@ -9,6 +9,7 @@ import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment
 import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/create_payment_link.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_web_screen.dart';
+import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
@@ -384,7 +385,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     final token = result['token'];
 
                                     await cubit.sendApplePayTokenToBackend(checkoutId, token);
-                                    await cubit.checkApplePaymentStatus(checkoutId, context);
+                                    if(state is SendAppleTokenSuccessState){
+                                      await cubit.checkApplePaymentStatus(checkoutId, context);
+                                      handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last, merchantTransactionId);
+                                    }else{
+                                      showPaymentError(AppLocalizations.of(context)!.translate("applePayError").toString());
+                                      return;
+                                    }
                                   }
                                 },
                                 paymentConfiguration: PaymentConfiguration.fromJsonString(applePayConfig),
@@ -621,7 +628,127 @@ class _PaymentScreenState extends State<PaymentScreen> {
         )
     );
   }
+
+  void handlePaymentResult(String resultCode, String description, Map<String, dynamic> fullData, String transactionId) {
+    // Success codes typically start with 000.000., 000.100., or 000.200.
+    if (resultCode.startsWith('000.000.') ||
+        resultCode.startsWith('000.100.') ||
+        resultCode.startsWith('000.200.')){
+      debugPrint("✅ Payment Successful");
+      showPaymentSuccess(description, transactionId);
+    }
+    // Pending codes typically start with 000.200.
+    else if (resultCode.startsWith('000.200.')) {
+      debugPrint("⏳ Payment Pending");
+      showPaymentPending(description, transactionId);
+    }
+    // Failure codes can vary
+    else {
+      debugPrint("❌ Payment Failed: $resultCode - $description");
+      showPaymentFailure(resultCode, description);
+    }
+  }
+
+  void showPaymentSuccess(String description, String transactionId) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentSuccess').toString()),
+        content: Text(AppLocalizations.of(context)!.translate('paymentSuccessMessage').toString()),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionEntity.occasionId, fromHome: true,));
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                transactionId: transactionId,
+                occasionId: widget.occasionEntity.occasionId,
+                remainingPrince: (double.parse(widget.occasionEntity.giftPrice.toString()) -
+                    double.parse(widget.occasionEntity.moneyGiftAmount.toString())).toString(),
+                paymentAmount: double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+                status: "success",
+                occasionName: widget.occasionEntity.type,
+              );
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentPending(String description, String transactionId) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentPending').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentPendingMessage').toString()}\n\n$description"),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+              customPushReplacement(context, OccasionDetails(occasionId: widget.occasionEntity.occasionId, fromHome: true,));
+              await PaymentCubit.get(context).addPaymentData(
+                context: context,
+                transactionId: transactionId,
+                occasionId: widget.occasionEntity.occasionId,
+                remainingPrince: (double.parse(widget.occasionEntity.giftPrice.toString()) -
+                    double.parse(widget.occasionEntity.moneyGiftAmount.toString())).toString(),
+                paymentAmount: double.parse(widget.occasionEntity.moneyGiftAmount.toString()),
+                status: "pending",
+                occasionName: widget.occasionEntity.type,
+              );
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentFailure(String resultCode, String description) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.translate('paymentFailed').toString()),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentFailedMessage').toString()}\n\n$description"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void showPaymentError(String message) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: Text("Payment Error"),
+        content: Text("An error occurred: $message"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("OK"),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+
 
 // Enum for payment methods
 enum PaymentMethod {

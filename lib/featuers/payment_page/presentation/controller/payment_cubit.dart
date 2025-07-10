@@ -320,6 +320,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   Future<Map<String, dynamic>> checkPaymentStatus(
       String checkoutId, BuildContext context) async {
+    paymentStatusList = [];
     final response = await http.get(
       Uri.parse(
           "https://eu-prod.oppwa.com/v1/checkouts/$checkoutId/payment?entityId=8acda4ca96fcfe430197165a7a1c64df"),
@@ -344,7 +345,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
     emit(SendAppleTokenLoadingState());
     try {
       final response = await http.post(
-        Uri.parse("https://7e58658857e9.ngrok-free.app/applepay/charge"),
+        Uri.parse("https://hyperpay.hadawi.sa/applepay/charge"),
         headers: {
           "Content-Type": "application/json",
         },
@@ -369,6 +370,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
   Future<Map<String, dynamic>> checkApplePaymentStatus(
       String checkoutId, BuildContext context) async {
+    paymentStatusList = [];
     final response = await http.get(
       Uri.parse(
           "https://eu-prod.oppwa.com/v1/checkouts/$checkoutId/payment?entityId= 8ac9a4cc975e0e500197a11dc5f0124d"),
