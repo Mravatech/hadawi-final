@@ -40,6 +40,7 @@ class OccasionRepoImp extends OccasionRepo {
       required type,
       required packageImage,
       required packagePrice,
+      required amountForEveryone,
 
       }) async {
     final result = await OccasionDataSource().addOccasion(
@@ -75,6 +76,7 @@ class OccasionRepoImp extends OccasionRepo {
         type: type,
         packageImage: packageImage,
         packagePrice: packagePrice,
+        amountForEveryone: amountForEveryone,
     );
     try {
       return Right(result);

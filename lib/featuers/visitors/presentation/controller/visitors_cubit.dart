@@ -259,6 +259,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     type: '',
     packageImage: '',
     packagePrice: '',
+    amountForEveryone: '0',
   );
 
   OccasionModel occasionDetailsModel = OccasionModel(
@@ -295,6 +296,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     type: '',
     packageImage: '',
     packagePrice: '',
+    amountForEveryone: '0',
   );
 
   Future<void> getOccasionData({required String occasionId})async{

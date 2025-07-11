@@ -46,6 +46,14 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 }
 ''';
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<PaymentCubit>().paymentAmountController = TextEditingController(
+      text: widget.occasionEntity.amountForEveryone.toString(),
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +223,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                           ),
                                           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                         ),
+                                        enabled: false,
                                         validator: (value) {
                                           if (value!.trim().isEmpty) {
                                             return AppLocalizations.of(context)!.translate("amountValidate").toString();

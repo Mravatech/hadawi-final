@@ -53,6 +53,7 @@ class OccasionDataSource {
     required String type,
     required String packageImage,
     required String packagePrice,
+    required amountForEveryone,
   }) async {
     final docRef = fireStore.collection('Occasions').doc();
     final occasionId = docRef.id;
@@ -91,6 +92,7 @@ class OccasionDataSource {
       type: type,
       packageImage: packageImage,
       packagePrice: packagePrice,
+      amountForEveryone: amountForEveryone,
     );
 
     try {

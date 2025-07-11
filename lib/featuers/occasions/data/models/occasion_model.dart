@@ -36,6 +36,7 @@ class OccasionModel extends OccasionEntity {
         required super.type,
       required super.packageImage,
       required super.packagePrice,
+      required super.amountForEveryone,
       });
 
   factory OccasionModel.fromJson(Map<String, dynamic> json) => OccasionModel(
@@ -72,6 +73,7 @@ class OccasionModel extends OccasionEntity {
         type: json['type']??"",
         packageImage: json['packageImage']??'',
         packagePrice: json['packagePrice']??'',
+        amountForEveryone: json['amountForEveryone']??"0",
       );
 
   Map<String, dynamic> toJson() => {
@@ -108,5 +110,6 @@ class OccasionModel extends OccasionEntity {
         'type': type,
         'packageImage': packageImage,
         'packagePrice': packagePrice,
+        'amountForEveryone': amountForEveryone,
       };
 }

@@ -377,5 +377,8 @@
   "following": "Following",
   "followers": "Followers",
   "requests": "Requests",
-  "visibility": "Visibility"
+  "visibility": "Visibility",
+  "amountToPayForEveryOne": "Amount to pay for every one sharing the occasion",
+  "amountToPayForEveryOneHint": "Enter amount here",
+  "validateAmountToPayForEveryOne": "Amount to pay for every one sharing the occasion is required"
 }

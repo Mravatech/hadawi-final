@@ -57,6 +57,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryStreetController = TextEditingController();
   TextEditingController discountCodeController = TextEditingController();
   TextEditingController giftPriceController = TextEditingController();
+  TextEditingController moneyAmountForPayController = TextEditingController();
   String dropdownOccasionType = '';
 
   // List of items in our dropdown menu
@@ -337,6 +338,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         type: dropdownOccasionType??'',
         packageImage: isPresent? selectedGiftPackageImage : selectedMoneyPackageImage,
         packagePrice: isPresent? giftWithPackageType.toString() : moneyWithPackageType.toString(),
+        amountForEveryone: convertArabicToEnglishNumbers(moneyAmountForPayController.text)?? '0.0',
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
