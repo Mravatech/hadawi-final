@@ -60,7 +60,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   String dropdownOccasionType = '';
 
   // List of items in our dropdown menu
-  List occasionTypeItems = [];
+  List<Map<String, dynamic>> occasionTypeItems = [];
 
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
@@ -419,12 +419,13 @@ class OccasionCubit extends Cubit<OccasionState> {
       moneyPackageListImage = value.docs[0]['pakaging_image'];
       giftPackageListPrice = value.docs[0]['packaging_gift_tax'];
       giftPackageListImage = value.docs[0]['pakaging_gift_image'];
-      occasionTypeItems = value.docs[0]['occasionType'];
+      occasionTypeItems = List<Map<String, dynamic>>.from(value.docs[0]['occasionType']);
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
       selectedGiftPackageImage = giftPackageListImage[0].toString();
       giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
       moneyWithPackageType = int.parse(moneyPackageListPrice[0].toString());
+      print('giftPackageListImage: $giftPackageListImage');
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');

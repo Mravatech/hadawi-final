@@ -42,6 +42,8 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  String total='';
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<OccasionCubit, OccasionState>(
@@ -103,10 +105,11 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                   value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
                                   hint: AppLocalizations.of(context)!.translate('occasionTypeHint').toString(),
                                   items: cubit.occasionTypeItems.map((value) {
+                                    total = '${value.values.first} - ${value.values.last}';
                                     return DropdownMenuItem<String>(
-                                      value: value.toString(),
+                                      value: '${value.values.first} - ${value.values.last}',
                                       child: Text(
-                                        value.toString(),
+                                        '${value.values.first} - ${value.values.last}',
                                         style: TextStyles.textStyle12Regular.copyWith(
                                           color: ColorManager.black.withOpacity(0.8),
                                         ),
@@ -115,7 +118,9 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                   }).toList(),
                                   onChanged: (value) {
                                     setState(() {
+                                      print('(: $value');
                                       cubit.dropdownOccasionType = value!;
+                                      print(cubit.dropdownOccasionType);
                                     });
                                   },
                                 ),
@@ -361,6 +366,205 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
+
+                          SizedBox(height: mediaQuery.height * 0.02),
+
+                          Row(
+                            mainAxisAlignment: CashHelper.languageKey == 'ar'
+                                ? MainAxisAlignment.end
+                                : MainAxisAlignment.start,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+
+                                  /// with packaging
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
+                                        style: TextStyles.textStyle18Bold
+                                            .copyWith(color: ColorManager.black),
+                                      ),
+                                      /// with packaging
+                                      GestureDetector(
+                                        onTap: () {
+                                          cubit.switchGiftWithPackage(true);
+                                        },
+                                        child: Container(
+                                          height: mediaQuery.height * .055,
+                                          width: mediaQuery.height * .1,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: cubit.giftWithPackage
+                                                ? ColorManager.primaryBlue
+                                                : ColorManager.gray,
+                                            borderRadius:
+                                            BorderRadius.circular(mediaQuery.height * 0.05),
+                                          ),
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate('withPackaging')
+                                                .toString(),
+                                            style: TextStyles.textStyle12Bold
+                                                .copyWith(color: ColorManager.white),
+                                            textAlign: TextAlign.center,
+                                          ),
+
+                                        ),
+                                      ),
+                                      SizedBox(width: mediaQuery.width * .05),
+
+                                      /// without packaging
+                                      GestureDetector(
+                                        onTap: () {
+                                          cubit.switchGiftWithPackage(false);
+
+                                        },
+                                        child: Container(
+                                          height: mediaQuery.height * .055,
+                                          width: mediaQuery.height * .1,
+                                          alignment: Alignment.center,
+                                          decoration: BoxDecoration(
+                                            color: cubit.giftWithPackage
+                                                ? ColorManager.gray
+                                                : ColorManager.primaryBlue,
+                                            borderRadius:
+                                            BorderRadius.circular(mediaQuery.height * 0.05),
+                                          ),
+                                          child: Text(
+                                            textAlign: TextAlign.center,
+                                            AppLocalizations.of(context)!
+                                                .translate('withoutPackaging')
+                                                .toString(),
+                                            style: TextStyles.textStyle12Bold
+                                                .copyWith(color: ColorManager.white),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+
+
+                          SizedBox(height: mediaQuery.height * 0.02),
+                          // show gift image and price
+                          Visibility(
+                            visible: cubit.giftWithPackage== true? true : false,
+                            child: Column(
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.translate('giftNotePackage').toString(),
+                                  style: TextStyles.textStyle18Bold
+                                      .copyWith(color: ColorManager.black.withOpacity(.5)),
+                                ),
+                                SizedBox(height: mediaQuery.height * 0.02),
+                                state is GetOccasionTaxesLoadingState? LoadingAnimationWidget() :Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InkWell(
+                                      onTap: (){
+                                        cubit.switchGiftWithPackageType(int.parse(cubit.giftPackageListPrice[0].toString()), cubit.giftPackageListImage[0].toString());
+                                      },
+                                      child: SizedBox(
+                                        height: mediaQuery.height * 0.1,
+                                        width: mediaQuery.height * 0.1,
+                                        child: Stack(
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                            Container(
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                color: cubit.giftWithPackageType==int.parse(cubit.giftPackageListPrice[0].toString())
+                                                    ? ColorManager.primaryBlue
+                                                    : ColorManager.gray,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                                                child:  Image.network(
+                                                  cubit.isMoney? cubit.moneyPackageListImage[0].toString() : cubit.giftPackageListImage[0].toString(),
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    return const Icon(Icons.broken_image); // لو حصل خطأ في التحميل
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: mediaQuery.height * 0.04,
+                                              width: mediaQuery.height * 0.04,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: ColorManager.white,
+                                                borderRadius: BorderRadius.circular(500),
+                                              ),
+                                              child: Text(
+                                                cubit.giftPackageListPrice[0].toString(),
+                                                style: TextStyles.textStyle12Bold
+                                                    .copyWith(color: ColorManager.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: (){
+                                        cubit.switchGiftWithPackageType(int.parse(cubit.giftPackageListPrice[1].toString()), cubit.giftPackageListImage[1].toString());
+                                      },
+                                      child: SizedBox(
+                                        height: mediaQuery.height * 0.1,
+                                        width: mediaQuery.height * 0.1,
+                                        child: Stack(
+                                          alignment: Alignment.bottomCenter,
+                                          children: [
+                                            Container(
+                                              clipBehavior: Clip.antiAlias,
+                                              decoration: BoxDecoration(
+                                                color: cubit.giftWithPackageType== int.parse(cubit.giftPackageListPrice[1].toString())
+                                                    ? ColorManager.primaryBlue
+                                                    : ColorManager.gray,
+                                                borderRadius: BorderRadius.circular(10),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                                                child: Image.network(
+                                                  cubit.isMoney? cubit.moneyPackageListImage[1].toString(): cubit.giftPackageListImage[1].toString(),
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return const Icon(Icons.broken_image); // لو حصل خطأ في التحميل
+                                                },
+                                              ),
+                                              ),
+                                            ),
+                                            Container(
+                                              height: mediaQuery.height * 0.04,
+                                              width: mediaQuery.height * 0.04,
+                                              alignment: Alignment.center,
+                                              decoration: BoxDecoration(
+                                                color: ColorManager.white,
+                                                borderRadius: BorderRadius.circular(500),
+                                              ),
+                                              child: Text(
+                                                cubit.giftPackageListPrice[1].toString(),
+                                                style: TextStyles.textStyle12Bold
+                                                    .copyWith(color: ColorManager.black),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+
 
                           SizedBox(height: mediaQuery.height * 0.02),
 
