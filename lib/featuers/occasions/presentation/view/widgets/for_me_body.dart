@@ -828,6 +828,81 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
     );
   }
 
+  Widget _buildPackageOption(
+      BuildContext context, {
+        required String price,
+        required String imageUrl,
+        required bool isSelected,
+        required VoidCallback onTap,
+      }) {
+    final mediaQuery = MediaQuery.sizeOf(context);
+    return InkWell(
+      onTap: onTap,
+      onLongPress: (){
+        customPushNavigator(context, ImageViewerScreen(imageUrl: imageUrl,));
+      },
+      child: SizedBox(
+        height: mediaQuery.height * 0.1,
+        width: mediaQuery.height * 0.1,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              decoration: BoxDecoration(
+                color: isSelected ? ColorManager.primaryBlue.withOpacity(0.2) : ColorManager.gray.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+                border: isSelected ? Border.all(color: ColorManager.primaryBlue, width: 2) : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(SizeConfig.height * 0.01),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                    height: mediaQuery.height * 0.08,
+                    width: mediaQuery.height * 0.08,
+                  ),
+                ),
+              ),
+            ),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: mediaQuery.height * 0.04,
+              width: mediaQuery.height * 0.04,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: isSelected ? ColorManager.primaryBlue : ColorManager.white,
+                borderRadius: BorderRadius.circular(500),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Text(
+                price,
+                style: TextStyles.textStyle12Bold.copyWith(
+                  color: isSelected ? ColorManager.white : ColorManager.black,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDropdownField({
     required BuildContext context,
     required String label,
