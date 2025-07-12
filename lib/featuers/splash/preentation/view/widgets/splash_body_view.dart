@@ -152,7 +152,7 @@ class _SplashScreenState extends State<SplashBodyView>
             animation: slideAnimation,
             builder: (context, _) {
               return SlideTransition(
-                  position: slideAnimation,
+                position: slideAnimation,
                 child: LogoImage(),
               );
             },
