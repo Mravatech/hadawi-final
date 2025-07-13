@@ -32,6 +32,7 @@ class OccasionEntity {
   final String type;
   final String packageImage;
   final String packagePrice;
+  final String amountForEveryone;
 
   OccasionEntity(
   {
@@ -68,5 +69,6 @@ class OccasionEntity {
     required this.type,
     required this.packageImage,
     required this.packagePrice,
+    required this.amountForEveryone,
   });
 }

@@ -23,3 +23,7 @@ class ApplyPaymentErrorState extends PaymentStates{}
 class PaymentCreateLinkLoadingState extends PaymentStates{}
 class PaymentCreateLinkSuccessState extends PaymentStates{}
 class PaymentCreateLinkErrorState extends PaymentStates{}
+
+class SendAppleTokenLoadingState extends PaymentStates{}
+class SendAppleTokenSuccessState extends PaymentStates{}
+class SendAppleTokenErrorState extends PaymentStates{}

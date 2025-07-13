@@ -250,7 +250,7 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
                                       value: widget.occasionModel.type.isEmpty
-                                          ? cubit.occasionTypeItems[0]
+                                          ? '${cubit.occasionTypeItems[0].values.first} / ${cubit.occasionTypeItems[0].values.last}'
                                           : widget.occasionModel.type,
                                       hint: Text(AppLocalizations.of(context)!
                                           .translate('occasionTypeHint')
@@ -268,17 +268,11 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                               newValue!;
                                         });
                                       },
-                                      items: cubit.occasionTypeItems
-                                          .map<DropdownMenuItem<String>>(
-                                              (dynamic value) {
+                                      items: cubit.occasionTypeItems.map<DropdownMenuItem<String>>((dynamic value) {
                                         return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value,
-                                              style: TextStyles
-                                                  .textStyle16Regular
-                                                  .copyWith(
-                                                      color:
-                                                          ColorManager.black)),
+                                          value:  value.values.first,
+                                          child: Text(value, style: TextStyles.textStyle16Regular
+                                                  .copyWith(color: ColorManager.black)),
                                         );
                                       }).toList(),
                                     ),

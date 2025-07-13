@@ -33,6 +33,7 @@ class SelectGenderWidget extends StatelessWidget {
                   child: RadioListTile(
                     title: Text(AppLocalizations.of(context)!.translate('male').toString(),
                       style: TextStyles.textStyle18Medium,),
+                    activeColor: ColorManager.primaryBlue,
                     value: 'Male',
                     groupValue: cubit.genderValue,
                     onChanged: (String? value) {
@@ -78,7 +79,7 @@ class SelectGenderWidget extends StatelessWidget {
                   child: RadioListTile(
                     title: Text(AppLocalizations.of(context)!.translate('male').toString(),
                       style: TextStyles.textStyle18Medium.copyWith(
-                        color: ColorManager.white
+                        color: Color(0xFF8B7BA8)
                       ),),
                     value: 'Male',
                     groupValue: cubit.genderValue,
@@ -93,7 +94,7 @@ class SelectGenderWidget extends StatelessWidget {
                     value: 'Female',
                     title: Text(AppLocalizations.of(context)!.translate('female').toString(),
                       style: TextStyles.textStyle18Medium.copyWith(
-                        color: ColorManager.white
+                        color: Color(0xFF8B7BA8)
                       ),),
                     groupValue: cubit.genderValue,
                     onChanged: (String? value) {

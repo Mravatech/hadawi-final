@@ -29,108 +29,149 @@ class _OthersOccasionsState extends State<OthersOccasions> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorManager.white,
-      appBar: AppBar(
-        backgroundColor: ColorManager.gray,
-        title: Padding(
-          padding: const EdgeInsets.all(15.0),
-          child: Text(
-            AppLocalizations.of(context)!.translate('lastEvents').toString(),
-            style: TextStyles.textStyle18Bold
-                .copyWith(color: ColorManager.primaryBlue),
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child:
-                Image(image: AssetImage(AssetsManager.logoWithoutBackground)),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(SizeConfig.height * 0.02),
-        child: Column(
-          children: [
-            // DefaultButtonWithImage(
-            //   buttonText: "مشاركة القائمة",
-            //   image: AssetsManager.shareIcon,
-            //   onTap: () {},
-            // ),
-            SizedBox(
-              height: SizeConfig.height * 0.02,
+    return BlocConsumer<OccasionsListCubit, OccasionsListStates>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if (state is GetOthersOccasionListLoadingState) {
+          return Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B7BA8)),
             ),
-            BlocConsumer<OccasionsListCubit, OccasionsListStates>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                return state is GetOthersOccasionListLoadingState
-                    ? Expanded(
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )
-                    : Expanded(
-                        child: state is GetOthersOccasionListSuccessState &&
-                                OccasionsListCubit.get(context)
-                                    .othersOccasionsList
-                                    .isNotEmpty
-                            ? RefreshIndicator(
-                                onRefresh: () async {
-                                  await OccasionsListCubit.get(context)
-                                      .getOthersOccasionsList();
-                                },
-                                child: GridView.builder(
-                                  physics: BouncingScrollPhysics(),
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2, // Number of columns
-                                    crossAxisSpacing: 10.0,
-                                    mainAxisSpacing: 10.0,
-                                    childAspectRatio: 0.9,
+          );
+        }
+
+        final occasions = OccasionsListCubit.get(context).othersOccasionsList;
+        
+        if (state is GetOthersOccasionListSuccessState && occasions.isNotEmpty) {
+          return RefreshIndicator(
+            color: Color(0xFF8B7BA8),
+            onRefresh: () async {
+              await OccasionsListCubit.get(context).getOthersOccasionsList();
+            },
+            child: GridView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              physics: AlwaysScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16.0,
+                mainAxisSpacing: 16.0,
+                childAspectRatio: 0.85,
+              ),
+              itemCount: occasions.length,
+              itemBuilder: (context, index) {
+                final occasion = occasions[index];
+                return Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () {
+                        customPushNavigator(
+                          context,
+                          OccasionDetails(
+                            occasionId: occasion.occasionId,
+                            fromHome: false,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Expanded(
+                            flex: 3,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                                image: DecorationImage(
+                                  image: NetworkImage(
+                                    occasion.giftType == "مبلغ مالى"
+                                        ? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa"
+                                        : occasion.giftImage[0],
                                   ),
-                                  itemCount: OccasionsListCubit.get(context)
-                                      .othersOccasionsList
-                                      .length,
-                                  itemBuilder: (context, index) {
-                                    final occasionItem =
-                                    OccasionsListCubit.get(context).othersOccasionsList[index];
-                                    return OccasionCard(
-                                        onTap: () {
-                                          customPushNavigator(context, OccasionDetails(
-                                            occasionId: occasionItem.occasionId,
-                                            fromHome: false,
-                                          ));
-                                        },
-                                        forOthers: true,
-                                        occasionName:
-                                            occasionItem.type,
-                                        personName: occasionItem.personName,
-                                        imageUrl: occasionItem.giftType== "مبلغ مالى"? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa":
-                                        occasionItem.giftImage[0],);
-                                  },
-                                ),
-                              )
-                            : Center(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(AssetsManager.noData),
-                                    Text(
-                                      AppLocalizations.of(context)!.translate('noOccasions').toString(),
-                                      style: TextStyles.textStyle18Bold
-                                          .copyWith(
-                                              color:
-                                                  ColorManager.primaryBlue),
-                                    ),
-                                  ],
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                      );
+                            ),
+                          ),
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    occasion.type,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Color(0xFF8B7BA8),
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  if (occasion.personName?.isNotEmpty ?? false) ...[
+                                    SizedBox(height: 4),
+                                    Text(
+                                      occasion.personName!,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
             ),
-          ],
-        ),
-      ),
+          );
+        }
+
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                AssetsManager.noData,
+                width: 120,
+                height: 120,
+                fit: BoxFit.contain,
+              ),
+              SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.translate('noOccasions').toString(),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF8B7BA8),
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

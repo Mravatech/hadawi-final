@@ -18,6 +18,7 @@ class OccasionSummary extends StatelessWidget {
   OccasionSummary({super.key});
 
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> amountToPayKey = GlobalKey<FormState>();
   // Cached logo image provider to prevent repeated loading
   final ImageProvider _logoProvider = AssetImage(AssetsManager.logoWithoutBackground);
 
@@ -382,6 +383,32 @@ class OccasionSummary extends StatelessWidget {
                               valueColor: ColorManager.primaryBlue,
                               isTotal: true,
                             ),
+
+                            Text(
+                              AppLocalizations.of(context)!.translate('amountToPayForEveryOne').toString(),
+                              style: TextStyles.textStyle12Bold.copyWith(
+                                color: ColorManager.black,
+                              ),
+                            ),
+
+                            SizedBox(height: 5,),
+
+                            Form(
+                              key: amountToPayKey,
+                              child: DefaultTextField(
+                                controller: cubit.moneyAmountForPayController,
+                                hintText: AppLocalizations.of(context)!.translate('amountToPayForEveryOneHint').toString(),
+                                validator: (value) {
+                                  if (value!.trim().isEmpty) {
+                                    return AppLocalizations.of(context)!.translate('validateAmountToPayForEveryOne').toString();
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.done,
+                                fillColor: ColorManager.gray.withOpacity(0.3),
+                              ),
+                            ),
                           ],
                         ),
 
@@ -464,8 +491,11 @@ class OccasionSummary extends StatelessWidget {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: state is AddOccasionLoadingState
-                                    ? null
-                                    : () => context.read<OccasionCubit>().addOccasion(),
+                              ? null: (){
+                                  if (amountToPayKey.currentState!.validate()) {
+                                    context.read<OccasionCubit>().addOccasion();
+                                  }
+                                },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: ColorManager.primaryBlue,
                                   foregroundColor: Colors.white,
@@ -579,6 +609,65 @@ class OccasionSummary extends StatelessWidget {
     );
   }
 
+  Widget _buildTextField({
+    required BuildContext context,
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    TextInputType keyboardType = TextInputType.text,
+    Widget? suffix,
+    String? Function(String?)? validator,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (label.isNotEmpty) ...[
+          Text(
+            label,
+            style: TextStyles.textStyle12Bold.copyWith(
+              color: ColorManager.black.withOpacity(0.7),
+            ),
+          ),
+          SizedBox(height: 8),
+        ],
+        Container(
+          decoration: BoxDecoration(
+            color: ColorManager.gray.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: ColorManager.gray.withOpacity(0.1),
+              width: 1,
+            ),
+          ),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            style: TextStyles.textStyle12Regular.copyWith(
+              color: ColorManager.black.withOpacity(0.8),
+            ),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: TextStyles.textStyle12Regular.copyWith(
+                color: ColorManager.gray,
+              ),
+              suffixIcon: suffix != null
+                  ? Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: suffix,
+              )
+                  : null,
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              errorStyle: TextStyles.textStyle10Regular.copyWith(
+                color: ColorManager.error,
+              ),
+            ),
+            validator: validator,
+          ),
+        ),
+      ],
+    );
+  }
   Widget _buildInfoRow(
       BuildContext context,
       {required String label,

@@ -22,7 +22,7 @@ class _AllOccasionsScreenState extends State<AllOccasionsScreen> {
     return Scaffold(
       backgroundColor: ColorManager.white,
       appBar: AppBar(
-          backgroundColor: ColorManager.gray,
+          backgroundColor: ColorManager.white,
           leading: IconButton(
               onPressed: (){
                 setState(() {

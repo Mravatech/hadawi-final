@@ -43,7 +43,6 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> with Wi
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorManager.white,
-      appBar: defaultAppBarWidget(appBarTitle:AppLocalizations.of(context)!.translate('followRequests').toString(),context: context,),
       body: BlocConsumer<FriendsCubit, FriendsStates>(
         listener: (context, state) {
           if(state is AcceptFollowRequestErrorState){
@@ -55,95 +54,224 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> with Wi
         },
         builder: (context, state) {
           var cubit = context.read<FriendsCubit>();
-          return ModalProgressHUD(
-            inAsyncCall: state is AcceptFollowRequestLoadingState || state is RejectFollowRequestLoadingState,
-            child: state is GetFollowingLoadingState? const Center(child: CircularProgressIndicator()):
-            cubit.followersRequest.isNotEmpty? ListView.separated(
-              shrinkWrap: true,
-              physics: BouncingScrollPhysics(),
-              itemCount: cubit.followersRequest.length,
-              separatorBuilder: (context, index) {
-                return SizedBox(height: 0,);
-              },
-              itemBuilder: (context, index) => Container(
-                margin: EdgeInsets.symmetric(
-                    horizontal: MediaQuery.sizeOf(context).height*0.02,
-                    vertical: MediaQuery.sizeOf(context).height*0.01
-                ),
-                height:  MediaQuery.sizeOf(context).height*0.13,
-                decoration: BoxDecoration(
-                  color: ColorManager.gray,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.all(10),
-                child: Row(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 25,
-                        child: CircleAvatar(
-                          radius: 23,
-                          child: Image(
-                            image: const AssetImage(AssetsManager.userIcon),
-                          ),),
-                      ),
 
-                      SizedBox(width: MediaQuery.sizeOf(context).height*0.02,),
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(cubit.followersRequest[index].userName,style:TextStyles.textStyle18Medium.copyWith(
-                                color: ColorManager.black
-                            )),
-                            SizedBox(height: 5,),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: DefaultButton(
-                                    buttonText: AppLocalizations.of(context)!.translate('follow').toString(),
-                                    onPressed: () async {
-                                      cubit.acceptFollowRequest(
-                                          userId: UserDataFromStorage.uIdFromStorage,
-                                          followerId: cubit.followersRequest[index].userId,
-                                        userName: cubit.followersRequest[index].userName,
-                                      );
-                                    },
-                                    buttonColor: ColorManager.primaryBlue,
-                                  ),
-                                ),
-                                SizedBox(width: MediaQuery.sizeOf(context).height*0.02,),
-                                Expanded(
-                                  child: DefaultButton(
-                                    buttonText: AppLocalizations.of(context)!.translate('decline').toString(),
-                                    onPressed: () async {
-                                      cubit.rejectFollowRequest(
-                                          userId: UserDataFromStorage.uIdFromStorage,
-                                          followerId: cubit.followersRequest[index].userId
-                                      );
-                                    },
-                                    buttonColor: ColorManager.error,
-                                  ),
-                                ),
-                                SizedBox(width: MediaQuery.sizeOf(context).height*0.02,),
-                              ],
-                            )
-                          ],
-                        ),
-                      )
-                    ]),
+          if (state is GetFollowingLoadingState) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B7BA8)),
+                    strokeWidth: 3,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Loading requests...',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Color(0xFF8B7BA8),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-            ): Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Center(child: Text(AppLocalizations.of(context)!.translate('noFollowRequests').toString(),style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.black),)),
-              ],
-            ),
+            );
+          }
+
+          if (cubit.followersRequest.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 140,
+                    height: 140,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF8B7BA8).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Center(
+                      child: Image.asset(
+                        AssetsManager.noData,
+                        width: 80,
+                        height: 80,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Text(
+                    AppLocalizations.of(context)!.translate('noFollowRequests').toString(),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Color(0xFF8B7BA8),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 8),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      'When someone wants to follow you, their request will appear here',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            physics: AlwaysScrollableScrollPhysics(),
+            itemCount: cubit.followersRequest.length,
+            itemBuilder: (context, index) {
+              final request = cubit.followersRequest[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFF8B7BA8).withOpacity(0.08),
+                      blurRadius: 15,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 56,
+                            height: 56,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  Color(0xFF8B7BA8).withOpacity(0.2),
+                                  Color(0xFF8B7BA8).withOpacity(0.1),
+                                ],
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(28),
+                              child: Image.asset(
+                                AssetsManager.userIcon,
+                                width: 32,
+                                height: 32,
+                                color: Color(0xFF8B7BA8),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  request.userName,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Wants to follow you',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Color(0xFF8B7BA8),
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 16),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () async {
+                                await cubit.acceptFollowRequest(
+                                  userId: UserDataFromStorage.uIdFromStorage,
+                                  followerId: request.userId,
+                                  userName: request.userName,
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: Color(0xFF8B7BA8),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                elevation: 0,
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('follow').toString(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 12),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () async {
+                                await cubit.rejectFollowRequest(
+                                  userId: UserDataFromStorage.uIdFromStorage,
+                                  followerId: request.userId,
+                                );
+                              },
+                              style: TextButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: ColorManager.error,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  side: BorderSide(
+                                    color: ColorManager.error.withOpacity(0.5),
+                                    width: 1,
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                                elevation: 0,
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.translate('decline').toString(),
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
           );
         },
-
       )
     );
   }

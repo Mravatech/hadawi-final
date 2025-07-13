@@ -6,63 +6,80 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 
-AppBar defaultAppBarWidget({required String appBarTitle,required BuildContext context, bool isHomeLayout = false}) {
-  return isHomeLayout ? AppBar(
-    backgroundColor: ColorManager.gray,
-    titleSpacing: 0.0,
+PreferredSizeWidget defaultAppBarWidget({
+  required String appBarTitle,
+  required BuildContext context,
+  bool isHomeLayout = false,
+}) {
+  return AppBar(
+    elevation: 0,
+    scrolledUnderElevation: 2,
+    shadowColor: ColorManager.primaryBlue.withOpacity(0.1),
+    backgroundColor: Colors.white,
+    surfaceTintColor: Colors.white,
+    titleSpacing: 0,
+    leading: isHomeLayout
+        ? null
+        : Hero(
+            tag: 'back_button',
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => Navigator.pop(context),
+                customBorder: CircleBorder(),
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  padding: EdgeInsets.all(12),
+                  child: Icon(
+                    Icons.arrow_back_ios_new_rounded,
+                    color: ColorManager.darkGrey,
+                    size: 24,
+                  ),
+                ),
+              ),
+            ),
+          ),
     title: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(width:  SizeConfig.height*0.02,),
-        Text(
-          appBarTitle, style: TextStyles.textStyle18Bold.copyWith(
-            color: ColorManager.darkGrey,
-            fontSize: SizeConfig.height*0.023
-        ),),
-        Spacer(),
-        Image(
-            height: SizeConfig.height*0.05,
-            image: AssetImage(AssetsManager.logoWithoutBackground
-            )
+        SizedBox(width: 16),
+        Expanded(
+          child: Text(
+            appBarTitle,
+            style: TextStyles.textStyle18Bold.copyWith(
+              color: ColorManager.black,
+              fontSize: isHomeLayout ? 24 : 20,
+              letterSpacing: -0.5,
+            ),
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
-
-        SizedBox(width:  SizeConfig.height*0.02,)
-
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Hero(
+            tag: 'app_logo',
+            child: Image.asset(
+              AssetsManager.logoWithoutBackground,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+        ),
       ],
     ),
-  ) :AppBar(
-    leading:InkWell(
-      onTap: () {
-        print('fdf ${context.read<HomeCubit>().currentIndex}');
-        Navigator.pop(context);
-      },
-      child: Icon(
-        Icons.arrow_back_ios,
-        color: ColorManager.darkGrey,
-        size: SizeConfig.height*0.03,
+    bottom: PreferredSize(
+      preferredSize: Size.fromHeight(1),
+      child: Container(
+        height: 1,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              ColorManager.primaryBlue.withOpacity(0.05),
+              ColorManager.primaryBlue.withOpacity(0.1),
+              ColorManager.primaryBlue.withOpacity(0.05),
+            ],
+          ),
+        ),
       ),
     ),
-      backgroundColor: ColorManager.gray,
-      titleSpacing: 0.0,
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          SizedBox(width:  SizeConfig.height*0.02,),
-          Text(
-            appBarTitle, style: TextStyles.textStyle18Bold.copyWith(
-              color: ColorManager.darkGrey,
-              fontSize: SizeConfig.height*0.023
-          ),),
-          Spacer(),
-          Image(
-              height: SizeConfig.height*0.05,
-              image: AssetImage(AssetsManager.logoWithoutBackground
-              )
-          ),
-
-          SizedBox(width:  SizeConfig.height*0.02,)
-
-        ],
-      ),
   );
 }

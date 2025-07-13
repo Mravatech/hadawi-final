@@ -20,77 +20,97 @@ class _ForWhomRowState extends State<ForWhomRow> {
     final mediaQuery = MediaQuery.sizeOf(context);
     return BlocBuilder<OccasionCubit, OccasionState>(
       builder: (context, state) {
-        final cubit= context.read<OccasionCubit>();
+        final cubit = context.read<OccasionCubit>();
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          height: mediaQuery.height * .06,
-          width: mediaQuery.width * .75,
+          margin: EdgeInsets.symmetric(
+            horizontal: mediaQuery.width * 0.05,
+            vertical: mediaQuery.height * 0.01,
+          ),
+          height: mediaQuery.height * 0.06,
           decoration: BoxDecoration(
-            color: ColorManager.gray,
-            borderRadius: BorderRadius.circular(25),
+            color: ColorManager.gray.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: ColorManager.gray.withOpacity(0.1),
+              width: 1,
+            ),
           ),
           child: Row(
             children: [
-              Container(
-                height: mediaQuery.height * .06,
-                width: mediaQuery.width * .375,
-                decoration: BoxDecoration(
-                  color: cubit.isForMe == false
-                      ? ColorManager.primaryBlue
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: GestureDetector(
+              Expanded(
+                child: _buildSegment(
+                  context: context,
+                  isSelected: !cubit.isForMe,
                   onTap: () {
                     cubit.resetData();
                     cubit.switchForWhomOccasion();
                   },
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .translate('forOthers')
-                          .toString(),
-                      style: TextStyles.textStyle18Bold.copyWith(
-                        color: cubit.isForMe==false
-                            ? ColorManager.white
-                            : ColorManager.black,
-                      ),
-                    ),
-                  ),
+                  label: AppLocalizations.of(context)!.translate('forOthers').toString(),
                 ),
               ),
-              Container(
-                height: mediaQuery.height * .06,
-                width: mediaQuery.width * .375,
-                decoration: BoxDecoration(
-                  color: cubit.isForMe
-                      ? ColorManager.primaryBlue
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: GestureDetector(
+              Expanded(
+                child: _buildSegment(
+                  context: context,
+                  isSelected: cubit.isForMe,
                   onTap: () {
                     cubit.resetData();
                     cubit.switchForWhomOccasion();
                   },
-                  child: Center(
-                    child: Text(
-                      AppLocalizations.of(context)!
-                          .translate('forMe')
-                          .toString(),
-                      style: TextStyles.textStyle18Bold.copyWith(
-                        color: cubit.isForMe
-                            ? ColorManager.white
-                            : ColorManager.black,
-                      ),
-                    ),
-                  ),
+                  label: AppLocalizations.of(context)!.translate('forMe').toString(),
                 ),
               ),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSegment({
+    required BuildContext context,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required String label,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          gradient: isSelected
+            ? LinearGradient(
+                colors: [
+                  ColorManager.primaryBlue,
+                  ColorManager.primaryBlue.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: isSelected
+            ? [
+                BoxShadow(
+                  color: ColorManager.primaryBlue.withOpacity(0.2),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ]
+            : null,
+        ),
+        margin: EdgeInsets.all(4),
+        child: Center(
+          child: Text(
+            label,
+            style: TextStyles.textStyle16Bold.copyWith(
+              color: isSelected 
+                ? ColorManager.white 
+                : ColorManager.black.withOpacity(0.6),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

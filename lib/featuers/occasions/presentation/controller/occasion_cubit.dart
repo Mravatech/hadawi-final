@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/occasions/data/models/analysis_model.dart';
 import 'package:hadawi_app/featuers/occasions/data/repo_imp/occasion_repo_imp.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,10 +57,11 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftDeliveryStreetController = TextEditingController();
   TextEditingController discountCodeController = TextEditingController();
   TextEditingController giftPriceController = TextEditingController();
+  TextEditingController moneyAmountForPayController = TextEditingController();
   String dropdownOccasionType = '';
 
   // List of items in our dropdown menu
-  List occasionTypeItems = [];
+  List<Map<String, dynamic>> occasionTypeItems = [];
 
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
@@ -336,6 +338,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         type: dropdownOccasionType??'',
         packageImage: isPresent? selectedGiftPackageImage : selectedMoneyPackageImage,
         packagePrice: isPresent? giftWithPackageType.toString() : moneyWithPackageType.toString(),
+        amountForEveryone: convertArabicToEnglishNumbers(moneyAmountForPayController.text)?? '0.0',
       );
       result.fold((failure) {
         emit(AddOccasionErrorState(error: failure.message));
@@ -378,7 +381,8 @@ class OccasionCubit extends Cubit<OccasionState> {
 
       final shareResult = await Share.shareXFiles(
         [XFile(file.path)],
-        text: 'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
+        text: CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend $personName invited you to their $occasionName. To contribute, scan the QR code to see the gift details.'
+            :'قام صديقك $personName بدعوتك للمشاركة في مناسبة له $occasionName للمساهمة بالدفع امسح الباركود لرؤية تفاصيل عن الهدية',
       );
 
       // Check if sharing completed or was canceled
@@ -417,12 +421,13 @@ class OccasionCubit extends Cubit<OccasionState> {
       moneyPackageListImage = value.docs[0]['pakaging_image'];
       giftPackageListPrice = value.docs[0]['packaging_gift_tax'];
       giftPackageListImage = value.docs[0]['pakaging_gift_image'];
-      occasionTypeItems = value.docs[0]['occasionType'];
+      occasionTypeItems = List<Map<String, dynamic>>.from(value.docs[0]['occasionType']);
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
       selectedGiftPackageImage = giftPackageListImage[0].toString();
       giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
       moneyWithPackageType = int.parse(moneyPackageListPrice[0].toString());
+      print('giftPackageListImage: $giftPackageListImage');
       emit(GetOccasionTaxesSuccessState());
     }).catchError((error){
       debugPrint('error when get occasion taxes: $error');
