@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -465,6 +467,75 @@ class PaymentCubit extends Cubit<PaymentStates> {
       emit(PaymentCreateLinkErrorState());
     }
   }
+
+
+  /// Click pay
+
+  String generateOrderId() {
+    final now = DateTime.now();
+    final random = Random();
+    final randomNumber = random.nextInt(99999); // رقم من 0 إلى 99999
+
+    return 'order-${now.millisecondsSinceEpoch}-$randomNumber';
+  }
+
+
+  String? redirectUrl;
+  bool isLoading = false;
+
+  Future<void> makePaymentRequest({
+        required String orderId,
+        required String amount,
+    }) async {
+    isLoading = true;
+    emit(PaymentCreateLinkLoadingState());
+
+    const String url = 'https://secure.clickpay.com.sa/payment/request';
+
+    const String serverKey = 'S6JNMHT266-JLKZGRLRRM-JWBGNMLLJM'; // ضع Test Server Key هنا
+
+    print('amount: $amount');
+    final Map<String, dynamic> body = {
+      "profile_id": 46773,
+      "tran_type": "sale",
+      "tran_class": "ecom",
+      "cart_id": orderId,
+      "cart_description": "Test order with Visa/MasterCard",
+      "cart_currency": "SAR",
+      "cart_amount": double.parse(amount), // تأكد من تحويل المبلغ إلى نوع double
+      "callback": "https://yourdomain.com/callback",
+      "return": "https://yourdomain.com/return",
+      "payment_method": "card",
+    };
+
+    final headers = {
+      'Authorization': serverKey,
+      'Content-Type': 'application/json',
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        print('Response: $jsonResponse');
+        redirectUrl = jsonResponse['redirect_url'];
+        emit(PaymentCreateLinkSuccessState());
+      } else {
+        print('HTTP Error: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        emit(PaymentCreateLinkErrorState());
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      emit(PaymentCreateLinkErrorState());
+    }
+  }
+
 
 
 
