@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
+import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -15,8 +17,8 @@ class ClickPayWebView extends StatefulWidget {
 
 class _ClickPayWebViewState extends State<ClickPayWebView> {
   late final WebViewController _controller;
+  bool _hasNavigated = false;
 
-  bool isLoad=false;
   @override
   void initState() {
     super.initState();
@@ -25,32 +27,34 @@ class _ClickPayWebViewState extends State<ClickPayWebView> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
-
           onPageStarted: (url) {
-            // if(isLoad) {
-            //   debugPrint('WebView is already loading, ignoring new request.');
-            //   // Navigator.pop(context); // يرجع المستخدم من الويب فيو
-            //   return;
-            // }
             debugPrint('WebView started loading: $url');
-            isLoad=true;
-            // ✅ لما يرجع على صفحة return URL
-            if (url.contains('/return')) {
+
+            if (url.contains('/return') && !_hasNavigated) {
+              _hasNavigated = true;
+
+              if (!mounted) return;
+
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.translate('paymentDoneSuccessfully').toString(),style: TextStyle(
-                    color: ColorManager.white,
-                  ),),
+                  content: Text(
+                    AppLocalizations.of(context)!
+                        .translate('paymentDoneSuccessfully')
+                        .toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
                   backgroundColor: ColorManager.primaryBlue,
-                  duration: Duration(seconds: 3),
+                  duration: const Duration(seconds: 3),
                 ),
               );
-              Navigator.pop(context); // يرجع المستخدم من الويب فيو
+
+              customPushNavigator(context, HomeLayout());
             }
           },
           onPageFinished: (url) {
             debugPrint('WebView finished loading: $url');
-            // Navigator.pop(context); // يرجع المستخدم من الويب فيو
           },
           onWebResourceError: (error) {
             debugPrint('WebView error: $error');
@@ -68,36 +72,34 @@ class _ClickPayWebViewState extends State<ClickPayWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          title: Text(
-            AppLocalizations.of(context)!.translate('payment').toString(),
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF8B7BA8),
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          AppLocalizations.of(context)!.translate('payment').toString(),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF8B7BA8),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Color(0xFF8B7BA8)),
-            onPressed: () => Navigator.pop(context),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                AssetsManager.logoWithoutBackground,
-                height: 32,
-              ),
-            ),
-          ],
         ),
-        body: WebViewWidget(controller: _controller),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF8B7BA8)),
+          onPressed: () => Navigator.pop(context),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.asset(
+              AssetsManager.logoWithoutBackground,
+              height: 32,
+            ),
+          ),
+        ],
       ),
+      body: WebViewWidget(controller: _controller),
     );
   }
 }
