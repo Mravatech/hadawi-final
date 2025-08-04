@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/create_payment_link.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/open_web_view_payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_web_screen.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
@@ -85,11 +86,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
           ),
         ],
       ),
-      body: BlocBuilder<PaymentCubit, PaymentStates>(
+      body: BlocConsumer<PaymentCubit, PaymentStates>(
+        listener: (context, state) {
+          if(state is PaymentCreateLinkSuccessState){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ClickPayWebView(
+                  url: PaymentCubit.get(context).redirectUrl!,
+                ),
+              ),
+            );
+          }
+        },
         builder: (context, state) {
           return ModalProgressHUD(
             inAsyncCall: (state is PaymentHyperPayLoadingState) ||
                 (state is PaymentAddLoadingState) ||
+                (state is PaymentCreateLinkLoadingState) ||
                 (state is ApplyPaymentLoadingState),
             progressIndicator: LoadingAnimationWidget(),
             child: SingleChildScrollView(
@@ -433,30 +447,38 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       processPayment(context, checkoutData, merchantTransactionId, "MADA");
                                       break;
                                     case PaymentMethod.visa:
-                                      final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                                        email: "nouralsaid09@gmail.com",
-                                        givenName: "Nour",
-                                        surname: "Elsaid",
-                                        street: "King Fahd Rd",
-                                        city: "Riyadh",
-                                        state: "Riyadh",
-                                        postcode: "12211",
-                                        merchantTransactionId: merchantTransactionId,
+                                      PaymentCubit.get(context).makePaymentRequest(
+                                        amount: PaymentCubit.get(context).paymentAmountController.text,
+                                        orderId: PaymentCubit.get(context).generateOrderId(),
                                       );
-                                      processPayment(context, checkoutData, merchantTransactionId, "VISA");
+                                      // final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                                      //   email: "nouralsaid09@gmail.com",
+                                      //   givenName: "Nour",
+                                      //   surname: "Elsaid",
+                                      //   street: "King Fahd Rd",
+                                      //   city: "Riyadh",
+                                      //   state: "Riyadh",
+                                      //   postcode: "12211",
+                                      //   merchantTransactionId: merchantTransactionId,
+                                      // );
+                                      // processPayment(context, checkoutData, merchantTransactionId, "VISA");
                                       break;
                                     case PaymentMethod.masterCard:
-                                      final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                                        email: "nouralsaid09@gmail.com",
-                                        givenName: "Nour",
-                                        surname: "Elsaid",
-                                        street: "King Fahd Rd",
-                                        city: "Riyadh",
-                                        state: "Riyadh",
-                                        postcode: "12211",
-                                        merchantTransactionId: merchantTransactionId,
+                                      PaymentCubit.get(context).makePaymentRequest(
+                                        amount: PaymentCubit.get(context).paymentAmountController.text,
+                                        orderId: PaymentCubit.get(context).generateOrderId(),
                                       );
-                                      processPayment(context, checkoutData, merchantTransactionId, "MASTER");
+                                      // final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                                      //   email: "nouralsaid09@gmail.com",
+                                      //   givenName: "Nour",
+                                      //   surname: "Elsaid",
+                                      //   street: "King Fahd Rd",
+                                      //   city: "Riyadh",
+                                      //   state: "Riyadh",
+                                      //   postcode: "12211",
+                                      //   merchantTransactionId: merchantTransactionId,
+                                      // );
+                                      // processPayment(context, checkoutData, merchantTransactionId, "MASTER");
                                       break;
                                     case PaymentMethod.stcPay:
                                       final checkoutData = await PaymentCubit.get(context).getCheckoutId(

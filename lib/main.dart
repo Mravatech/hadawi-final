@@ -36,7 +36,10 @@ import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_links/app_links.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:async';
+
+import 'package:webview_flutter_android/webview_flutter_android.dart';
 
 class AppRoutes {
   static const String splash = '/';
