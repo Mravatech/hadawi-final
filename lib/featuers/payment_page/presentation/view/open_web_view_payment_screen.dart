@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
+import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -37,8 +38,10 @@ class _ClickPayWebViewState extends State<ClickPayWebView> {
             if (url.contains('/return')) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(AppLocalizations.of(context)!.translate('paymentDoneSuccessfully').toString(),),
-                  backgroundColor: Colors.green,
+                  content: Text(AppLocalizations.of(context)!.translate('paymentDoneSuccessfully').toString(),style: TextStyle(
+                    color: ColorManager.white,
+                  ),),
+                  backgroundColor: ColorManager.primaryBlue,
                   duration: Duration(seconds: 3),
                 ),
               );
