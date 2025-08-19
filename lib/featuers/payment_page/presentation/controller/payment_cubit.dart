@@ -506,6 +506,16 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "callback": "https://yourdomain.com/callback",
       "return": "https://yourdomain.com/return",
       "payment_method": "card",
+      "customer_details": {
+        "name": "Mahmoud Reda",
+        "email": "mahmoud@example.com",
+        "phone": "0501234567",
+        "street1": "Al Olaya Street",
+        "city": "Riyadh",
+        "state": "Riyadh",
+        "country": "SA",
+        "zip": "12345"
+      }
     };
 
     final headers = {
