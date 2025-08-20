@@ -28,6 +28,8 @@
     <false/>
     <key>NSLocalNetworkUsageDescription</key>
     <string>This app requires access to the local network to function properly.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>This app requires camera access to allow users to scan cards and upload profile images.</string>
     <key>FlutterDeepLinkingEnabled</key>
     <true/>
     <key>LSRequiresIPhoneOS</key>
