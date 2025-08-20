@@ -574,7 +574,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "callback": "https://yourdomain.com/callback",
       "return": "https://yourdomain.com/return",
       "framed": true,
-      "payment_method": "applepay",
+      "payment_method": ["applepay"],
       "customer_details": {
         "name": paymentPayerNameController.text,
         "email": "nouralsaid09@gmail.com",

@@ -438,6 +438,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.4.1"
+  flutter_clickpay_bridge:
+    dependency: "direct main"
+    description:
+      name: flutter_clickpay_bridge
+      sha256: c79ba925b398c1f3a2d180980b9f4e0f326dadbcfba93995f144141d3561e724
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.3"
   flutter_lints:
     dependency: "direct dev"
     description:
