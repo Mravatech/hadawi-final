@@ -38,8 +38,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   PaymentSdkConfigurationDetails generateApplePayConfig() {
     final configuration = PaymentSdkConfigurationDetails(
       profileId: "46864", // Replace with your profile ID
-      serverKey: "SRJNMHT2LJ-JLM696LNK9-NDGDNTHTN9", // Replace with your server key
-      clientKey: "CDKMTR-6DN66B-NGPGBQ-HQQ9BB", // Replace with your client key
+      serverKey: "SZJNMHT2WH-JLM696LNMW-ZRTWDT62R9", // Replace with your server key
+      clientKey: "C9KMTR-6DNQ6B-NGPGBQ-T2GNM9", // Replace with your client key
       cartId: PaymentCubit.get(context).generateOrderId(),
       cartDescription: widget.occasionEntity.type,
       merchantName: "Hadawi",
