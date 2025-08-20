@@ -10,6 +10,7 @@ import 'package:hadawi_app/featuers/payment_page/presentation/view/apply_payment
 import 'package:hadawi_app/featuers/payment_page/presentation/view/create_payment_link.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/open_web_view_payment_screen.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/view/payment_web_screen.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/view/widgets/apple_pay_button.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -22,7 +23,6 @@ import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:pay/pay.dart';
 
 class PaymentScreen extends StatefulWidget {
   final OccasionEntity occasionEntity;
@@ -351,74 +351,24 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             subtitle: AppLocalizations.of(context)!.translate("masterHint").toString(),
                             value: PaymentMethod.masterCard,
                           ),
-                          SizedBox(height: 12),
-                          buildPaymentMethodTile(
-                            imagePath: 'assets/images/stc_pay.jpg',
-                            title: 'STC Pay',
-                            subtitle: AppLocalizations.of(context)!.translate("stcHint").toString(),
-                            value: PaymentMethod.stcPay,
-                          ),
+                          // SizedBox(height: 12),
+                          // buildPaymentMethodTile(
+                          //   imagePath: 'assets/images/stc_pay.jpg',
+                          //   title: 'STC Pay',
+                          //   subtitle: AppLocalizations.of(context)!.translate("stcHint").toString(),
+                          //   value: PaymentMethod.stcPay,
+                          // ),
                           SizedBox(height: 24),
 
                           // Apple Pay Button (if iOS)
                           if (Platform.isIOS) ...[
-                            Container(
-                              width: double.infinity,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.05),
-                                    blurRadius: 10,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: ApplePayButton(
-                                paymentItems: [
-                                  PaymentItem(
-                                    label: "Total",
-                                    amount: double.tryParse(PaymentCubit.get(context).convertArabicToEnglishNumbers(
-                                        PaymentCubit.get(context).paymentAmountController.text.toString()))
-                                        ?.toStringAsFixed(2) ??
-                                        "0.00",
-                                    status: PaymentItemStatus.final_price,
-                                  )
-                                ],
-                                style: ApplePayButtonStyle.black,
-                                type: ApplePayButtonType.buy,
-                                onPaymentResult: (result) async {
-                                  final cubit = PaymentCubit.get(context);
-
-                                  if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
-                                    final merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
-                                    final checkoutData = await cubit.getCheckoutIdApplePay(
-                                      email: "nouralsaid09@gmail.com",
-                                      givenName: "Nour",
-                                      surname: "Elsaid",
-                                      street: "King Fahd Rd",
-                                      city: "Riyadh",
-                                      state: "Riyadh",
-                                      postcode: "12211",
-                                      merchantTransactionId: merchantTransactionId,
-                                    );
-
-                                    final checkoutId = checkoutData['checkoutId'];
-                                    final token = result['token'];
-
-                                    await cubit.sendApplePayTokenToBackend(checkoutId, token);
-                                    if(state is SendAppleTokenSuccessState){
-                                      await cubit.checkApplePaymentStatus(checkoutId, context);
-                                      handlePaymentResult(context.read<PaymentCubit>().paymentStatusList.last['result']['code'], context.read<PaymentCubit>().paymentStatusList.last['result']['description'], context.read<PaymentCubit>().paymentStatusList.last, merchantTransactionId);
-                                    }else{
-                                      showPaymentError(AppLocalizations.of(context)!.translate("applePayError").toString());
-                                      return;
-                                    }
-                                  }
-                                },
-                                paymentConfiguration: PaymentConfiguration.fromJsonString(applePayConfig),
-                              ),
+                            ApplePayButton(
+                              onPressed: (){
+                                PaymentCubit.get(context).makeApplePayPaymentRequest(
+                                    amount: PaymentCubit.get(context).paymentAmountController.text,
+                                    orderId: PaymentCubit.get(context).generateOrderId(),
+                                );
+                              },
                             ),
                             SizedBox(height: 24),
                           ],
@@ -434,22 +384,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
                                   switch (selectedPaymentMethod) {
                                     case PaymentMethod.mada:
-                                      final checkoutData = await PaymentCubit.get(context).getCheckoutId(
-                                        email: "nouralsaid09@gmail.com",
-                                        givenName: "Nour",
-                                        surname: "Elsaid",
-                                        street: "King Fahd Rd",
-                                        city: "Riyadh",
-                                        state: "Riyadh",
-                                        postcode: "12211",
-                                        merchantTransactionId: merchantTransactionId,
+                                      PaymentCubit.get(context).makePaymentRequest(
+                                        amount: PaymentCubit.get(context).paymentAmountController.text,
+                                        orderId: PaymentCubit.get(context).generateOrderId(),
+                                        paymentMethod: 0
                                       );
-                                      processPayment(context, checkoutData, merchantTransactionId, "MADA");
+                                      // final checkoutData = await PaymentCubit.get(context).getCheckoutId(
+                                      //   email: "nouralsaid09@gmail.com",
+                                      //   givenName: "Nour",
+                                      //   surname: "Elsaid",
+                                      //   street: "King Fahd Rd",
+                                      //   city: "Riyadh",
+                                      //   state: "Riyadh",
+                                      //   postcode: "12211",
+                                      //   merchantTransactionId: merchantTransactionId,
+                                      // );
+                                      // processPayment(context, checkoutData, merchantTransactionId, "MADA");
                                       break;
                                     case PaymentMethod.visa:
                                       PaymentCubit.get(context).makePaymentRequest(
                                         amount: PaymentCubit.get(context).paymentAmountController.text,
                                         orderId: PaymentCubit.get(context).generateOrderId(),
+                                        paymentMethod: 1
                                       );
                                       // final checkoutData = await PaymentCubit.get(context).getCheckoutId(
                                       //   email: "nouralsaid09@gmail.com",
@@ -467,6 +423,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                       PaymentCubit.get(context).makePaymentRequest(
                                         amount: PaymentCubit.get(context).paymentAmountController.text,
                                         orderId: PaymentCubit.get(context).generateOrderId(),
+                                        paymentMethod: 2
                                       );
                                       // final checkoutData = await PaymentCubit.get(context).getCheckoutId(
                                       //   email: "nouralsaid09@gmail.com",

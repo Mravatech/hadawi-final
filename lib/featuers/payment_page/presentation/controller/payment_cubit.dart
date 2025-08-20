@@ -474,53 +474,52 @@ class PaymentCubit extends Cubit<PaymentStates> {
   String generateOrderId() {
     final now = DateTime.now();
     final random = Random();
-    final randomNumber = random.nextInt(99999); // رقم من 0 إلى 99999
-
-    return 'order-${now.millisecondsSinceEpoch}-$randomNumber';
+    final randomNumber = random.nextInt(99999).toString().padLeft(5, '0');
+    return 'order${now.millisecondsSinceEpoch}$randomNumber';
   }
-
 
   String? redirectUrl;
   bool isLoading = false;
 
   Future<void> makePaymentRequest({
-        required String orderId,
-        required String amount,
-    }) async {
+    required String orderId,
+    required String amount,
+    required int paymentMethod,
+  }) async {
     isLoading = true;
     emit(PaymentCreateLinkLoadingState());
 
     const String url = 'https://secure.clickpay.com.sa/payment/request';
 
-    const String serverKey = 'S6JNMHT266-JLKZGRLRRM-JWBGNMLLJM'; // ضع Test Server Key هنا
+    const String serverKey = 'SRJNMHT2LJ-JLM696LNK9-NDGDNTHTN9'; // ⚠️ ضع live Server Key هنا
 
-    print('amount: $amount');
     final Map<String, dynamic> body = {
-      "profile_id": 46773,
+      "profile_id": 46864,
       "tran_type": "sale",
       "tran_class": "ecom",
       "cart_id": orderId,
-      "cart_description": "Test order with Visa/MasterCard",
+      "cart_description": "Payment for order $orderId",
       "cart_currency": "SAR",
-      "cart_amount": double.parse(amount), // تأكد من تحويل المبلغ إلى نوع double
+      "cart_amount": double.parse(amount),
       "callback": "https://yourdomain.com/callback",
       "return": "https://yourdomain.com/return",
-      "payment_method": "card",
+      "payment_methods": paymentMethod == 0 ? ["mada"]: ["creditcard"],
+      "framed": true, // مهم مع ClickPay
       "customer_details": {
-        "name": "Mahmoud Reda",
-        "email": "mahmoud@example.com",
+        "name": paymentPayerNameController.text,
+        "email": "nouralsaid09@gmail.com",
         "phone": "0501234567",
         "street1": "Al Olaya Street",
         "city": "Riyadh",
         "state": "Riyadh",
         "country": "SA",
-        "zip": "12345"
+        "zip": "12211"
       }
     };
 
     final headers = {
-      'Authorization': serverKey,
-      'Content-Type': 'application/json',
+      'authorization': serverKey,
+      'content-type': 'application/json',
     };
 
     try {
@@ -532,9 +531,15 @@ class PaymentCubit extends Cubit<PaymentStates> {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print('Response: $jsonResponse');
-        redirectUrl = jsonResponse['redirect_url'];
-        emit(PaymentCreateLinkSuccessState());
+        debugPrint('Response: $jsonResponse');
+
+        redirectUrl = jsonResponse['redirect_url'] ?? jsonResponse['payment_url'];
+
+        if (redirectUrl != null) {
+          emit(PaymentCreateLinkSuccessState());
+        } else {
+          emit(PaymentCreateLinkErrorState());
+        }
       } else {
         print('HTTP Error: ${response.statusCode}');
         print('Response body: ${response.body}');
@@ -545,6 +550,77 @@ class PaymentCubit extends Cubit<PaymentStates> {
       emit(PaymentCreateLinkErrorState());
     }
   }
+
+
+
+  Future<void> makeApplePayPaymentRequest({
+    required String orderId,
+    required String amount,
+  }) async {
+    isLoading = true;
+    emit(PaymentCreateLinkLoadingState());
+
+    const String url = 'https://secure.clickpay.com.sa/payment/request';
+    const String serverKey = 'SRJNMHT2LJ-JLM696LNK9-NDGDNTHTN9'; // Live server key
+
+    final Map<String, dynamic> body = {
+      "profile_id": 46864,
+      "tran_type": "sale",
+      "tran_class": "ecom",
+      "cart_id": orderId,
+      "cart_description": "Payment for order $orderId",
+      "cart_currency": "SAR",
+      "cart_amount": double.parse(amount),
+      "callback": "https://yourdomain.com/callback",
+      "return": "https://yourdomain.com/return",
+      "framed": true,
+      "payment_method": "applepay",
+      "customer_details": {
+        "name": paymentPayerNameController.text,
+        "email": "nouralsaid09@gmail.com",
+        "phone": "0501234567",
+        "street1": "Al Olaya Street",
+        "city": "Riyadh",
+        "state": "Riyadh",
+        "country": "SA",
+        "zip": "12211"
+      }
+    };
+
+    final headers = {
+      'authorization': serverKey,
+      'content-type': 'application/json',
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body);
+        print('ApplePay Response: $jsonResponse');
+
+        redirectUrl = jsonResponse['redirect_url'] ?? jsonResponse['payment_url'];
+
+        if (redirectUrl != null) {
+          emit(PaymentCreateLinkSuccessState());
+        } else {
+          emit(PaymentCreateLinkErrorState());
+        }
+      } else {
+        print('HTTP Error: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        emit(PaymentCreateLinkErrorState());
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      emit(PaymentCreateLinkErrorState());
+    }
+  }
+
 
 
 

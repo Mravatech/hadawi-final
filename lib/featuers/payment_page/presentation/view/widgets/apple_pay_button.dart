@@ -8,7 +8,7 @@ class ApplePayButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: MediaQuery.sizeOf(context).height*0.05,
+      height: MediaQuery.sizeOf(context).height*0.06,
       width: MediaQuery.sizeOf(context).width,
       child: OutlinedButton(
         onPressed: onPressed,
