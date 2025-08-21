@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clickpay_bridge/IOSThemeConfiguration.dart';
 import 'package:flutter_clickpay_bridge/flutter_clickpay_bridge.dart';
 import 'package:flutter_clickpay_bridge/PaymentSdkConfigurationDetails.dart';
 import 'package:flutter_clickpay_bridge/BaseBillingShippingInfo.dart';
@@ -68,6 +69,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
       forceShippingInfo: false,
       linkBillingNameWithCardHolderName: true,
     );
+
+    var theme = IOSThemeConfigurations();
+    theme.backgroundColor = "ffffff";
+    theme.buttonColor = "907aa0";
+    theme.titleFontColor = "907aa0";
+    theme.logoImage= "assets/images/light_logo.jpg";
+    theme.secondaryColor = "907aa0";
+    theme.primaryColor = "ffffff";
+
+    configuration.iOSThemeConfigurations = theme;
 
     return configuration;
   }
