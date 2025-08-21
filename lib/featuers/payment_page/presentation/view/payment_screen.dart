@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clickpay_bridge/flutter_clickpay_bridge.dart';
 import 'package:flutter_clickpay_bridge/PaymentSdkConfigurationDetails.dart';
+import 'package:flutter_clickpay_bridge/BaseBillingShippingInfo.dart';
+import 'package:flutter_clickpay_bridge/PaymentSdkApms.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
@@ -25,6 +27,7 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   PaymentMethod selectedPaymentMethod = PaymentMethod.mada;
+  bool isClickPayLoading = false;
 
   @override
   void initState() {
@@ -32,6 +35,41 @@ class _PaymentScreenState extends State<PaymentScreen> {
       text: widget.occasionEntity.amountForEveryone.toString(),
     );
     super.initState();
+  }
+
+  // Generate ClickPay configuration for card payments
+  PaymentSdkConfigurationDetails generateCardPaymentConfig() {
+    // Create billing details from the payer name
+    final payerName = PaymentCubit.get(context).paymentPayerNameController.text.trim();
+    final billingDetails = BillingDetails(
+        payerName.isNotEmpty ? payerName : "Customer",
+        "customer@example.com", // You might want to add an email field
+        "+966500000000", // You might want to add a phone field
+        "Riyadh Street", // Default address
+        "SA",
+        "Riyadh",
+        "Riyadh",
+        "12345"
+    );
+
+    final configuration = PaymentSdkConfigurationDetails(
+      profileId: "46864", // Replace with your profile ID
+      serverKey: "SZJNMHT2WH-JLM696LNMW-ZRTWDT62R9", // Replace with your server key
+      clientKey: "C9KMTR-6DNQ6B-NGPGBQ-T2GNM9", // Replace with your client key
+      cartId: PaymentCubit.get(context).generateOrderId(),
+      cartDescription: widget.occasionEntity.type,
+      merchantName: "Hadawi",
+      screentTitle: "Pay with Card",
+      amount: double.parse(PaymentCubit.get(context).paymentAmountController.text),
+      currencyCode: "SAR",
+      merchantCountryCode: "SA",
+      billingDetails: billingDetails,
+      showBillingInfo: true,
+      forceShippingInfo: false,
+      linkBillingNameWithCardHolderName: true,
+    );
+
+    return configuration;
   }
 
   // Generate ClickPay configuration for Apple Pay
@@ -52,6 +90,58 @@ class _PaymentScreenState extends State<PaymentScreen> {
     return configuration;
   }
 
+  // Card payment method using ClickPay Bridge
+  Future<void> processCardPayment() async {
+    if (!PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      isClickPayLoading = true;
+    });
+
+    try {
+      final configuration = generateCardPaymentConfig();
+
+      FlutterPaymentSdkBridge.startCardPayment(configuration, (event) {
+        setState(() {
+          isClickPayLoading = false;
+
+          if (event["status"] == "success") {
+            // Handle successful transaction response
+            var transactionDetails = Map<String, dynamic>.from(event["data"] as Map);
+            print("Card Payment Transaction Details: $transactionDetails");
+
+            if (transactionDetails["isSuccess"] == true) {
+              print("✅ Card payment successful transaction");
+              handlePaymentSuccess(transactionDetails);
+            } else if (transactionDetails["isPending"] == true) {
+              print("⏳ Card payment transaction pending");
+              handlePaymentPending(transactionDetails);
+            } else {
+              print("❌ Card payment failed transaction");
+              handlePaymentFailure(transactionDetails);
+            }
+          } else if (event["status"] == "error") {
+            // Handle error
+            print("Card Payment Error: ${event["message"]}");
+            showPaymentError("Card Payment Error: ${event["message"]}");
+          } else if (event["status"] == "event") {
+            // Handle events (keep loading state)
+            print("Card Payment Event: ${event["message"]}");
+            isClickPayLoading = true;
+          }
+        });
+      });
+    } catch (e) {
+      setState(() {
+        isClickPayLoading = false;
+      });
+      print("Card Payment Exception: $e");
+      showPaymentError("Card payment failed: $e");
+    }
+  }
+
   // Apple Pay payment method using ClickPay
   Future<void> processApplePayPayment() async {
     if (!PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
@@ -63,31 +153,28 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
       FlutterPaymentSdkBridge.startApplePayPayment(configuration, (event) {
         setState(() {
+
           if (event["status"] == "success") {
-            // Handle successful transaction
-            var transactionDetails = event["data"];
+            // Handle successful transaction response
+            var transactionDetails = Map<String, dynamic>.from(event["data"] as Map);
             print("Apple Pay Transaction Details: $transactionDetails");
 
-            if (transactionDetails["isSuccess"]) {
-              print("Apple Pay successful transaction");
-
-              // Handle success
-              handleApplePaySuccess(transactionDetails);
-
-              if (transactionDetails["isPending"]) {
-                print("Apple Pay transaction pending");
-                handleApplePayPending(transactionDetails);
-              }
+            if (transactionDetails["isSuccess"] == true) {
+              print("✅ Apple Pay successful transaction");
+              handlePaymentSuccess(transactionDetails);
+            } else if (transactionDetails["isPending"] == true) {
+              print("⏳ Apple Pay transaction pending");
+              handlePaymentPending(transactionDetails);
             } else {
-              print("Apple Pay failed transaction");
-              handleApplePayFailure(transactionDetails);
+              print("❌ Apple Pay failed transaction");
+              handlePaymentFailure(transactionDetails);
             }
           } else if (event["status"] == "error") {
             // Handle error
             print("Apple Pay Error: ${event["message"]}");
             showPaymentError("Apple Pay Error: ${event["message"]}");
           } else if (event["status"] == "event") {
-            // Handle events
+            // Handle events (keep loading state)
             print("Apple Pay Event: ${event["message"]}");
           }
         });
@@ -98,7 +185,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
   }
 
-  void handleApplePaySuccess(Map<String, dynamic> transactionDetails) {
+  void handlePaymentSuccess(Map<String, dynamic> transactionDetails) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -117,7 +204,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               // Add payment data
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
-                transactionId: transactionDetails["transactionReference"] ?? "APPLE_PAY_${DateTime.now().millisecondsSinceEpoch}",
+                transactionId: transactionDetails["transactionReference"] ??
+                    "CLICKPAY_${DateTime.now().millisecondsSinceEpoch}",
                 occasionId: widget.occasionEntity.occasionId,
                 remainingPrince: (double.parse(widget.occasionEntity.giftPrice.toString()) -
                     double.parse(widget.occasionEntity.moneyGiftAmount.toString())).toString(),
@@ -133,7 +221,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  void handleApplePayPending(Map<String, dynamic> transactionDetails) {
+  void handlePaymentPending(Map<String, dynamic> transactionDetails) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -152,7 +240,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
               // Add payment data
               await PaymentCubit.get(context).addPaymentData(
                 context: context,
-                transactionId: transactionDetails["transactionReference"] ?? "APPLE_PAY_${DateTime.now().millisecondsSinceEpoch}",
+                transactionId: transactionDetails["transactionReference"] ??
+                    "CLICKPAY_${DateTime.now().millisecondsSinceEpoch}",
                 occasionId: widget.occasionEntity.occasionId,
                 remainingPrince: (double.parse(widget.occasionEntity.giftPrice.toString()) -
                     double.parse(widget.occasionEntity.moneyGiftAmount.toString())).toString(),
@@ -168,13 +257,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 
-  void handleApplePayFailure(Map<String, dynamic> transactionDetails) {
+  void handlePaymentFailure(Map<String, dynamic> transactionDetails) {
+    // Extract error message from ClickPay response
+    String errorMessage = "Unknown error";
+
+    if (transactionDetails["paymentResult"] != null) {
+      var paymentResult = transactionDetails["paymentResult"] as Map<String, dynamic>;
+      errorMessage = paymentResult["responseMessage"]?.toString() ?? "Payment declined";
+    } else {
+      errorMessage = transactionDetails["responseMessage"]?.toString() ??
+          transactionDetails["message"]?.toString() ??
+          "Payment failed";
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context)!.translate('paymentFailed').toString()),
-        content: Text("${AppLocalizations.of(context)!.translate('paymentFailedMessage').toString()}\n\n${transactionDetails["responseMessage"] ?? "Unknown error"}"),
+        content: Text("${AppLocalizations.of(context)!.translate('paymentFailedMessage').toString()}\n\n$errorMessage"),
         actions: [
           TextButton(
             onPressed: () {
@@ -235,7 +336,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
             inAsyncCall: (state is PaymentHyperPayLoadingState) ||
                 (state is PaymentAddLoadingState) ||
                 (state is PaymentCreateLinkLoadingState) ||
-                (state is ApplyPaymentLoadingState),
+                (state is ApplyPaymentLoadingState) ||
+                isClickPayLoading, // Added ClickPay loading state
             progressIndicator: LoadingAnimationWidget(),
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -518,36 +620,21 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             SizedBox(height: 24),
                           ],
 
-                          // Next Button
+                          // Next Button - Updated to use ClickPay for card payments
                           SizedBox(
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: () async {
+                              onPressed: isClickPayLoading ? null : () async {
                                 if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
                                   String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
 
                                   switch (selectedPaymentMethod) {
                                     case PaymentMethod.mada:
-                                      PaymentCubit.get(context).makePaymentRequest(
-                                          amount: PaymentCubit.get(context).paymentAmountController.text,
-                                          orderId: PaymentCubit.get(context).generateOrderId(),
-                                          paymentMethod: 0
-                                      );
-                                      break;
                                     case PaymentMethod.visa:
-                                      PaymentCubit.get(context).makePaymentRequest(
-                                          amount: PaymentCubit.get(context).paymentAmountController.text,
-                                          orderId: PaymentCubit.get(context).generateOrderId(),
-                                          paymentMethod: 1
-                                      );
-                                      break;
                                     case PaymentMethod.masterCard:
-                                      PaymentCubit.get(context).makePaymentRequest(
-                                          amount: PaymentCubit.get(context).paymentAmountController.text,
-                                          orderId: PaymentCubit.get(context).generateOrderId(),
-                                          paymentMethod: 2
-                                      );
+                                    // Use ClickPay Bridge for all card payments
+                                      await processCardPayment();
                                       break;
                                     case PaymentMethod.stcPay:
                                       final checkoutData = await PaymentCubit.get(context).getCheckoutId(
@@ -577,7 +664,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
-                              child: Text(
+                              child: isClickPayLoading
+                                  ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                                  : Text(
                                 AppLocalizations.of(context)!.translate('next').toString(),
                                 style: TextStyle(
                                   fontSize: 18,
@@ -824,8 +920,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
     );
   }
 }
-
-
 
 // Enum for payment methods
 enum PaymentMethod {
