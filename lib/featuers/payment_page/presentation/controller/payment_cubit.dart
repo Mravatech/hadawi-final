@@ -504,7 +504,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "callback": "https://yourdomain.com/callback",
       "return": "https://yourdomain.com/return",
       "payment_methods": paymentMethod == 0 ? ["mada"]: ["creditcard"],
-      "framed": true, // مهم مع ClickPay
+      "framed": true,
       "customer_details": {
         "name": paymentPayerNameController.text,
         "email": "nouralsaid09@gmail.com",
@@ -550,79 +550,5 @@ class PaymentCubit extends Cubit<PaymentStates> {
       emit(PaymentCreateLinkErrorState());
     }
   }
-
-
-
-  Future<void> makeApplePayPaymentRequest({
-    required String orderId,
-    required String amount,
-  }) async {
-    isLoading = true;
-    emit(PaymentCreateLinkLoadingState());
-
-    const String url = 'https://secure.clickpay.com.sa/payment/request';
-    const String serverKey = 'SRJNMHT2LJ-JLM696LNK9-NDGDNTHTN9'; // Live server key
-
-    final Map<String, dynamic> body = {
-      "profile_id": 46864,
-      "tran_type": "sale",
-      "tran_class": "ecom",
-      "cart_id": orderId,
-      "cart_description": "Payment for order $orderId",
-      "cart_currency": "SAR",
-      "cart_amount": double.parse(amount),
-      "callback": "https://yourdomain.com/callback",
-      "return": "https://yourdomain.com/return",
-      "framed": true,
-      "payment_method": ["applepay"],
-      "customer_details": {
-        "name": paymentPayerNameController.text,
-        "email": "nouralsaid09@gmail.com",
-        "phone": "0501234567",
-        "street1": "Al Olaya Street",
-        "city": "Riyadh",
-        "state": "Riyadh",
-        "country": "SA",
-        "zip": "12211"
-      }
-    };
-
-    final headers = {
-      'authorization': serverKey,
-      'content-type': 'application/json',
-    };
-
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: json.encode(body),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = json.decode(response.body);
-        print('ApplePay Response: $jsonResponse');
-
-        redirectUrl = jsonResponse['redirect_url'] ?? jsonResponse['payment_url'];
-
-        if (redirectUrl != null) {
-          emit(PaymentCreateLinkSuccessState());
-        } else {
-          emit(PaymentCreateLinkErrorState());
-        }
-      } else {
-        print('HTTP Error: ${response.statusCode}');
-        print('Response body: ${response.body}');
-        emit(PaymentCreateLinkErrorState());
-      }
-    } catch (e) {
-      print('Error occurred: $e');
-      emit(PaymentCreateLinkErrorState());
-    }
-  }
-
-
-
-
 
 }
