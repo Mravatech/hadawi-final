@@ -614,7 +614,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           SizedBox(height: 24),
 
                           // Apple Pay Button (if iOS) - Updated to use ClickPay
-                          if (Platform.isIOS) ...[
+                          // if (Platform.isIOS) ...[
                             Container(
                               width: double.infinity,
                               height: 56,
@@ -631,12 +631,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.apple, size: 24),
-                                    SizedBox(width: 8),
+                                    Icon(Icons.apple, size: 30,color: Colors.white,),
                                     Text(
-                                      'Pay with Apple Pay',
+                                      'Pay',
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: 24,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -645,7 +644,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               ),
                             ),
                             SizedBox(height: 24),
-                          ],
+                          // ],
 
                           // Next Button - Updated to use ClickPay for card payments
                           SizedBox(
