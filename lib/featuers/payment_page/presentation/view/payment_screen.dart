@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clickpay_bridge/IOSThemeConfiguration.dart';
 import 'package:flutter_clickpay_bridge/flutter_clickpay_bridge.dart';
@@ -36,6 +37,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
       text: widget.occasionEntity.amountForEveryone.toString(),
     );
     super.initState();
+  }
+
+  void forceSystemLightMode() {
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
   }
 
   // Generate ClickPay configuration for card payments
@@ -77,6 +90,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
     theme.logoImage= "assets/images/light_logo.jpg";
     theme.secondaryColor = "907aa0";
     theme.primaryColor = "ffffff";
+    theme.primaryFontColor = "907aa0";
 
     configuration.iOSThemeConfigurations = theme;
 
@@ -113,6 +127,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
     try {
       final configuration = generateCardPaymentConfig();
+
+      forceSystemLightMode();
 
       FlutterPaymentSdkBridge.startCardPayment(configuration, (event) {
         setState(() {

@@ -382,6 +382,8 @@ class _HadawiAppState extends State<HadawiApp> {
             debugShowCheckedModeBanner: false,
             title: 'Hadawi-هداوي',
             theme: getApplicationTheme(context),
+            darkTheme: ThemeData.light(), // حتى لو النظام Dark هيتجاهله
+            themeMode: ThemeMode.light,
             navigatorKey: HadawiApp.navigatorKey,
             initialRoute: AppRoutes.splash,
             onGenerateRoute: AppRoutes.generateRoute,
