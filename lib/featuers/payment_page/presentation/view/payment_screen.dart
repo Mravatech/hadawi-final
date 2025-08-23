@@ -6,7 +6,6 @@ import 'package:flutter_clickpay_bridge/IOSThemeConfiguration.dart';
 import 'package:flutter_clickpay_bridge/flutter_clickpay_bridge.dart';
 import 'package:flutter_clickpay_bridge/PaymentSdkConfigurationDetails.dart';
 import 'package:flutter_clickpay_bridge/BaseBillingShippingInfo.dart';
-import 'package:flutter_clickpay_bridge/PaymentSdkApms.dart';
 import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
@@ -16,6 +15,7 @@ import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/loading_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -28,8 +28,7 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  PaymentMethod selectedPaymentMethod = PaymentMethod.mada;
-  bool isClickPayLoading = false;
+  PaymentMethod selectedPaymentMethod = PaymentMethod.none;
 
   @override
   void initState() {
@@ -54,7 +53,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   // Generate ClickPay configuration for card payments
   PaymentSdkConfigurationDetails generateCardPaymentConfig() {
     // Create billing details from the payer name
-    final payerName = PaymentCubit.get(context).paymentPayerNameController.text.trim();
+    final payerName = UserDataFromStorage.userNameFromStorage;
     final billingDetails = BillingDetails(
         payerName.isNotEmpty ? payerName : "Customer",
         "customer@example.com", // You might want to add an email field
@@ -121,10 +120,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
       return;
     }
 
-    setState(() {
-      isClickPayLoading = true;
-    });
-
     try {
       final configuration = generateCardPaymentConfig();
 
@@ -132,8 +127,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
       FlutterPaymentSdkBridge.startCardPayment(configuration, (event) {
         setState(() {
-          isClickPayLoading = false;
-
           if (event["status"] == "success") {
             // Handle successful transaction response
             var transactionDetails = Map<String, dynamic>.from(event["data"] as Map);
@@ -156,14 +149,16 @@ class _PaymentScreenState extends State<PaymentScreen> {
           } else if (event["status"] == "event") {
             // Handle events (keep loading state)
             print("Card Payment Event: ${event["message"]}");
-            isClickPayLoading = true;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(event["message"]),
+                duration: Duration(seconds: 2),
+              ),
+            );
           }
         });
       });
     } catch (e) {
-      setState(() {
-        isClickPayLoading = false;
-      });
       print("Card Payment Exception: $e");
       showPaymentError("Card payment failed: $e");
     }
@@ -363,8 +358,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
             inAsyncCall: (state is PaymentHyperPayLoadingState) ||
                 (state is PaymentAddLoadingState) ||
                 (state is PaymentCreateLinkLoadingState) ||
-                (state is ApplyPaymentLoadingState) ||
-                isClickPayLoading, // Added ClickPay loading state
+                (state is ApplyPaymentLoadingState), // Added ClickPay loading state
             progressIndicator: LoadingAnimationWidget(),
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -527,48 +521,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 16),
-
-                          // Name field
-                          Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.all(16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  AppLocalizations.of(context)!.translate("fullName").toString(),
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: 12),
-                                TextFormField(
-                                  controller: PaymentCubit.get(context).paymentPayerNameController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: Color(0xFFF0EEF5),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                      borderSide: BorderSide.none,
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.isEmpty) {
-                                      return AppLocalizations.of(context)!.translate("fullNameHint").toString();
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
                           SizedBox(height: 24),
 
                           // Payment Method Section
@@ -588,33 +540,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               color: Colors.grey[600],
                             ),
                           ),
-                          SizedBox(height: 16),
-
-                          // Payment Methods
-                          buildPaymentMethodTile(
-                            imagePath: 'assets/images/mada_pay.png',
-                            title: 'Mada',
-                            subtitle: AppLocalizations.of(context)!.translate("madaHint").toString(),
-                            value: PaymentMethod.mada,
-                          ),
-                          SizedBox(height: 12),
-                          buildPaymentMethodTile(
-                            imagePath: 'assets/images/visa_card.png',
-                            title: 'Visa',
-                            subtitle: AppLocalizations.of(context)!.translate("visaHint").toString(),
-                            value: PaymentMethod.visa,
-                          ),
-                          SizedBox(height: 12),
-                          buildPaymentMethodTile(
-                            imagePath: 'assets/images/mastercard.png',
-                            title: 'MasterCard',
-                            subtitle: AppLocalizations.of(context)!.translate("masterHint").toString(),
-                            value: PaymentMethod.masterCard,
-                          ),
-                          SizedBox(height: 24),
+                          SizedBox(height: 20),
 
                           // Apple Pay Button (if iOS) - Updated to use ClickPay
-                          // if (Platform.isIOS) ...[
+                          if (Platform.isIOS) ...[
                             Container(
                               width: double.infinity,
                               height: 56,
@@ -643,15 +572,39 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: 24),
-                          // ],
+                            SizedBox(height: 12),
+                          ],
+
+
+                          // Payment Methods
+                          buildPaymentMethodTile(
+                            imagePath: 'assets/images/mada_pay.png',
+                            title: 'Mada',
+                            subtitle: AppLocalizations.of(context)!.translate("madaHint").toString(),
+                            value: PaymentMethod.mada,
+                          ),
+                          SizedBox(height: 12),
+                          buildPaymentMethodTile(
+                            imagePath: 'assets/images/visa_card.png',
+                            title: 'Visa',
+                            subtitle: AppLocalizations.of(context)!.translate("visaHint").toString(),
+                            value: PaymentMethod.visa,
+                          ),
+                          SizedBox(height: 12),
+                          buildPaymentMethodTile(
+                            imagePath: 'assets/images/mastercard.png',
+                            title: 'MasterCard',
+                            subtitle: AppLocalizations.of(context)!.translate("masterHint").toString(),
+                            value: PaymentMethod.masterCard,
+                          ),
+                          SizedBox(height: 20),
 
                           // Next Button - Updated to use ClickPay for card payments
                           SizedBox(
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: isClickPayLoading ? null : () async {
+                              onPressed:() async {
                                 if (PaymentCubit.get(context).paymentFormKey.currentState!.validate()) {
                                   String merchantTransactionId = "ORDER${DateTime.now().millisecondsSinceEpoch}";
 
@@ -679,6 +632,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                     // This case is now handled by the separate Apple Pay button above
                                       await processApplePayPayment();
                                       break;
+                                    case PaymentMethod.none:
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text(AppLocalizations.of(context)!.translate("selectPaymentMethod").toString()),
+                                        ),
+                                      );
+                                      break;
                                   }
                                 }
                               },
@@ -690,16 +650,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               ),
-                              child: isClickPayLoading
-                                  ? SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                                  : Text(
+                              child: Text(
                                 AppLocalizations.of(context)!.translate('next').toString(),
                                 style: TextStyle(
                                   fontSize: 18,
@@ -949,6 +900,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
 // Enum for payment methods
 enum PaymentMethod {
+  none,
   mada,
   visa,
   masterCard,

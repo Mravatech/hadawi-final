@@ -380,5 +380,6 @@
   "yes": "نعم",
   "amountToPayForEveryOne": "المبلغ المطلوب دفعه من كل شخص يشارك في المناسبة",
   "amountToPayForEveryOneHint": "أدخل المبلغ هنا",
-  "validateAmountToPayForEveryOne": "المبلغ المطلوب من كل مشارك في المناسبة مطلوب"
+  "validateAmountToPayForEveryOne": "المبلغ المطلوب من كل مشارك في المناسبة مطلوب",
+  "selectPaymentMethod": "اختر طريقة الدفع"
 }

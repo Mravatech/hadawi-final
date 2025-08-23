@@ -78,7 +78,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "date": DateTime.now().toString(),
       "occasionId": occasionId,
       "occasionName": occasionName,
-      "payerName": paymentPayerNameController.text,
+      "payerName": UserDataFromStorage.userNameFromStorage,
       "personId": UserDataFromStorage.uIdFromStorage,
       "personName": UserDataFromStorage.userNameFromStorage,
       "personPhone": UserDataFromStorage.phoneNumberFromStorage,
@@ -102,7 +102,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
         "transactionId": transactionId,
         "date": DateTime.now().toString(),
         "occasionId": occasionId,
-        "payerName": paymentPayerNameController.text,
+        "payerName": UserDataFromStorage.userNameFromStorage,
         "occasionName": occasionName,
         "personId": UserDataFromStorage.uIdFromStorage,
         "personName": UserDataFromStorage.userNameFromStorage,
@@ -117,7 +117,6 @@ class PaymentCubit extends Cubit<PaymentStates> {
         emit(PaymentAddErrorState());
       });
       paymentAmountController.clear();
-      paymentPayerNameController.clear();
       paymentStatusList.clear();
       debugPrint("payment added");
       emit(PaymentAddSuccessState());
@@ -506,7 +505,7 @@ class PaymentCubit extends Cubit<PaymentStates> {
       "payment_methods": paymentMethod == 0 ? ["mada"]: ["creditcard"],
       "framed": true,
       "customer_details": {
-        "name": paymentPayerNameController.text,
+        "name": UserDataFromStorage.userNameFromStorage,
         "email": "nouralsaid09@gmail.com",
         "phone": "0501234567",
         "street1": "Al Olaya Street",

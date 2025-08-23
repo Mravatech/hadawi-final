@@ -380,5 +380,6 @@
   "visibility": "Visibility",
   "amountToPayForEveryOne": "Amount to pay for every one sharing the occasion",
   "amountToPayForEveryOneHint": "Enter amount here",
-  "validateAmountToPayForEveryOne": "Amount to pay for every one sharing the occasion is required"
+  "validateAmountToPayForEveryOne": "Amount to pay for every one sharing the occasion is required",
+  "selectPaymentMethod": "Select payment method"
 }
