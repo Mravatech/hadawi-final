@@ -32,6 +32,7 @@ class EditOccasion extends StatefulWidget {
   @override
   State<EditOccasion> createState() => _EditOccasionState();
 }
+String total='';
 
 class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver{
   @override
@@ -249,30 +250,32 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                       horizontal: 16),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
-                                      value: widget.occasionModel.type.isEmpty
-                                          ? '${cubit.occasionTypeItems[0].values.first} / ${cubit.occasionTypeItems[0].values.last}'
-                                          : widget.occasionModel.type,
-                                      hint: Text(AppLocalizations.of(context)!
-                                          .translate('occasionTypeHint')
-                                          .toString()),
+                                      value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
+                                      hint: Text(
+                                        AppLocalizations.of(context)!.translate('occasionTypeHint').toString(),
+                                      ),
                                       icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: ColorManager.primaryBlue),
+                                        Icons.keyboard_arrow_down,
+                                        color: ColorManager.primaryBlue,
+                                      ),
                                       elevation: 16,
-                                      style: TextStyles.textStyle16Regular
-                                          .copyWith(color: ColorManager.black),
+                                      style: TextStyles.textStyle16Regular.copyWith(color: ColorManager.black),
                                       isExpanded: true,
                                       onChanged: (String? newValue) {
                                         setState(() {
-                                          cubit.dropdownOccasionType =
-                                              newValue!;
+                                          cubit.dropdownOccasionType = newValue!;
                                         });
                                       },
-                                      items: cubit.occasionTypeItems.map<DropdownMenuItem<String>>((dynamic value) {
+                                      items: cubit.occasionTypeItems.map((value) {
+                                        total = '${value.values.first} - ${value.values.last}';
                                         return DropdownMenuItem<String>(
-                                          value:  value.values.first,
-                                          child: Text(value, style: TextStyles.textStyle16Regular
-                                                  .copyWith(color: ColorManager.black)),
+                                          value: '${value.values.first} - ${value.values.last}',
+                                          child: Text(
+                                            '${value.values.first} - ${value.values.last}',
+                                            style: TextStyles.textStyle12Regular.copyWith(
+                                              color: ColorManager.black.withOpacity(0.8),
+                                            ),
+                                          ),
                                         );
                                       }).toList(),
                                     ),

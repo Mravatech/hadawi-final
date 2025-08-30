@@ -100,13 +100,22 @@ class _MyOccasionsListState extends State<MyOccasionsList> {
                                             .myOccasionsList[index];
                                     return OccasionCard(
                                       onTap: () {
-                                        customPushNavigator(context, MyGiftPaymentsList(occasionId: occasionItem.occasionId,occasionName:  occasionItem.occasionName,));
+                                        customPushNavigator(
+                                            context,
+                                            MyGiftPaymentsList(
+                                              occasionId:
+                                                  occasionItem.occasionId,
+                                              occasionName:
+                                                  occasionItem.occasionName,
+                                            ));
                                       },
                                       forOthers: false,
                                       occasionName: occasionItem.occasionType,
                                       personName: "",
-                                      imageUrl: occasionItem.giftType=="مبلغ مالى"
-                                          ? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa" : occasionItem.giftImage[0],
+                                      imageUrl: occasionItem.giftType ==
+                                              "مبلغ مالى"
+                                          ? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa"
+                                          : '',
                                     );
                                   },
                                 ),
@@ -117,11 +126,12 @@ class _MyOccasionsListState extends State<MyOccasionsList> {
                                   children: [
                                     Image.asset(AssetsManager.noData),
                                     Text(
-                                      AppLocalizations.of(context)!.translate('noOccasions').toString(),
+                                      AppLocalizations.of(context)!
+                                          .translate('noOccasions')
+                                          .toString(),
                                       style: TextStyles.textStyle18Bold
                                           .copyWith(
-                                              color:
-                                                  ColorManager.primaryBlue),
+                                              color: ColorManager.primaryBlue),
                                     ),
                                   ],
                                 ),

@@ -40,47 +40,47 @@ abstract class VisitorsDataSource {
 }
 
 class VisitorsDataSourceImplement implements VisitorsDataSource {
-  @override
-  Future<void> sendFollowRequest({
-    required String userId,
-    required String followerId,
-    required String userName,
-    required String image,
-  }) async {
-    FollowersModel followersModel = FollowersModel(
-      userId: userId,
-      userName: userName,
-      image: image,
-      follow: false,
-    );
+    @override
+    Future<void> sendFollowRequest({
+      required String userId,
+      required String followerId,
+      required String userName,
+      required String image,
+    }) async {
+      FollowersModel followersModel = FollowersModel(
+        userId: userId,
+        userName: userName,
+        image: image,
+        follow: false,
+      );
 
-    FollowersModel toFollowing = FollowersModel(
-      userId: followerId,
-      userName: UserDataFromStorage.userNameFromStorage,
-      image: image,
-      follow: false,
-    );
+      FollowersModel toFollowing = FollowersModel(
+        userId: followerId,
+        userName: UserDataFromStorage.userNameFromStorage,
+        image: image,
+        follow: false,
+      );
 
-    try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(followerId)
-          .collection('followers')
-          .doc(userId)
-          .set(followersModel.toMap());
+      try {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(followerId)
+            .collection('followers')
+            .doc(userId)
+            .set(followersModel.toMap());
 
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('following')
-          .doc(followerId)
-          .set(toFollowing.toMap());
-    } on FirebaseException catch (e) {
-      throw FireStoreException(firebaseException: e);
-    } on Exception catch (e) {
-      throw Exception(e.toString());
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('following')
+            .doc(followerId)
+            .set(toFollowing.toMap());
+      } on FirebaseException catch (e) {
+        throw FireStoreException(firebaseException: e);
+      } on Exception catch (e) {
+        throw Exception(e.toString());
+      }
     }
-  }
 
   @override
   Future<Either<Faliure, bool>> updateOccasion({

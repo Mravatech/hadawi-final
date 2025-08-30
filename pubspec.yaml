@@ -78,7 +78,7 @@ dependencies:
   saver_gallery: 3.0.6
   dots_indicator: ^4.0.1
   pay: ^3.2.1
-  flutter_clickpay_bridge: ^2.4.3
+  flutter_clickpay_bridge: ^2.4.4
 
 dev_dependencies:
   sentry_dart_plugin: ^2.4.1
