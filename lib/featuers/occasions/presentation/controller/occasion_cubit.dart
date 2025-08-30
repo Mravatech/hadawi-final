@@ -59,6 +59,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   TextEditingController giftPriceController = TextEditingController();
   TextEditingController moneyAmountForPayController = TextEditingController();
   String dropdownOccasionType = '';
+  DateTime selectedDate = DateTime.now();
 
   // List of items in our dropdown menu
   List<Map<String, dynamic>> occasionTypeItems = [];
@@ -309,7 +310,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         isForMe: isForMe,
         isActive: true,
         occasionName: "",
-        occasionDate: DateTime.now().toString(),
+        occasionDate: occasionDateController.text,
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,

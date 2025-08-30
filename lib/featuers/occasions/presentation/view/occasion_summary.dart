@@ -94,6 +94,11 @@ class OccasionSummary extends StatelessWidget {
                               label: AppLocalizations.of(context)!.translate('occasionType').toString(),
                               value: cubit.dropdownOccasionType,
                             ),
+                            _buildInfoRow(
+                              context,
+                              label: AppLocalizations.of(context)!.translate('occasionDate').toString(),
+                              value: "${cubit.selectedDate.day}/${cubit.selectedDate.month}/${cubit.selectedDate.year}",
+                            ),
                             if (cubit.isForMe == false)
                               _buildInfoRow(
                                 context,

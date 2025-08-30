@@ -26,6 +26,7 @@ class ForMeBody extends StatefulWidget {
 
 class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
   GlobalKey<FormState> forMeFormKey = GlobalKey<FormState>();
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -43,6 +44,39 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
   }
 
   String total='';
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: ColorManager.primaryBlue,
+              onPrimary: Colors.white,
+              onSurface: ColorManager.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: ColorManager.primaryBlue,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        context.read<OccasionCubit>().occasionDateController.text = picked.toString();
+        context.read<OccasionCubit>().selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +157,16 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
                                       print(cubit.dropdownOccasionType);
                                     });
                                   },
+                                ),
+
+                                SizedBox(height: mediaQuery.height * 0.02),
+
+                                // Occasion Date Picker
+                                _buildDatePickerField(
+                                  context: context,
+                                  label: AppLocalizations.of(context)!.translate('occasionDate').toString(),
+                                  selectedDate: selectedDate,
+                                  onTap: () => _selectDate(context),
                                 ),
                               ],
                             ),
@@ -769,6 +813,62 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
         ],
       ),
       child: child,
+    );
+  }
+
+  Widget _buildDatePickerField({
+    required BuildContext context,
+    required String label,
+    required DateTime? selectedDate,
+    required VoidCallback onTap,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: TextStyles.textStyle12Bold.copyWith(
+            color: ColorManager.black.withOpacity(0.7),
+          ),
+        ),
+        SizedBox(height: 8),
+        InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: ColorManager.gray.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: ColorManager.gray.withOpacity(0.1),
+                width: 1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    selectedDate != null
+                        ? "${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}"
+                        : AppLocalizations.of(context)!.translate('selectOccasionDate').toString(),
+                    style: TextStyles.textStyle12Regular.copyWith(
+                      color: selectedDate != null
+                          ? ColorManager.black.withOpacity(0.8)
+                          : ColorManager.gray,
+                    ),
+                  ),
+                ),
+                Icon(
+                  Icons.calendar_today,
+                  color: ColorManager.primaryBlue,
+                  size: 20,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
