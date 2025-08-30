@@ -359,182 +359,182 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                             SizedBox(
                               height: SizeConfig.height * 0.02,
                             ),
-                            // Container(
-                            //   height: SizeConfig.height * 0.06,
-                            //   width: SizeConfig.width,
-                            //   decoration: BoxDecoration(
-                            //     color: ColorManager.gray,
-                            //     borderRadius: BorderRadius.only(
-                            //         topLeft: Radius.circular(20),
-                            //         topRight: Radius.circular(20)),
-                            //   ),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.start,
-                            //     children: [
-                            //       InkWell(
-                            //         onTap: () async {
-                            //           if (UserDataFromStorage.userIsGuest ==
-                            //               false) {
-                            //             await AuthCubit.get(context)
-                            //                 .getUserInfo(
-                            //                     uId: UserDataFromStorage
-                            //                         .uIdFromStorage,
-                            //                     context: context);
-                            //             if (UserDataFromStorage
-                            //                     .uIdFromStorage ==
-                            //                 '') {
-                            //               toastificationWidget(
-                            //                   context: context,
-                            //                   title: AppLocalizations.of(
-                            //                           context)!
-                            //                       .translate('errorOccurred')
-                            //                       .toString(),
-                            //                   body: AppLocalizations.of(
-                            //                           context)!
-                            //                       .translate('deleteMessage')
-                            //                       .toString(),
-                            //                   type: ToastificationType.error);
-                            //               customPushReplacement(
-                            //                   context, LoginScreen());
-                            //             } else {
-                            //               if (UserDataFromStorage
-                            //                       .isUserBlocked ==
-                            //                   true) {
-                            //                 AuthCubit.get(context).logout();
-                            //                 customPushReplacement(
-                            //                     context, LoginScreen());
-                            //                 toastificationWidget(
-                            //                     context: context,
-                            //                     title: AppLocalizations.of(
-                            //                             context)!
-                            //                         .translate('blockOccurred')
-                            //                         .toString(),
-                            //                     body: AppLocalizations.of(
-                            //                             context)!
-                            //                         .translate('blockMessage')
-                            //                         .toString(),
-                            //                     type: ToastificationType.error);
-                            //               } else {
-                            //                 cubit.changeActiveOrders(true);
-                            //               }
-                            //             }
-                            //           } else {
-                            //             cubit.changeActiveOrders(true);
-                            //           }
-                            //         },
-                            //         child: Container(
-                            //           height: SizeConfig.height * 0.06,
-                            //           width: SizeConfig.width * 0.5,
-                            //           decoration: BoxDecoration(
-                            //             color: cubit.isActiveOrders
-                            //                 ? ColorManager.primaryBlue
-                            //                 : ColorManager.gray,
-                            //             borderRadius: CashHelper.getData(
-                            //                             key: CashHelper
-                            //                                 .languageKey)
-                            //                         .toString() ==
-                            //                     'en'
-                            //                 ? BorderRadius.only(
-                            //                     topLeft: Radius.circular(20),
-                            //                   )
-                            //                 : BorderRadius.only(
-                            //                     topRight: Radius.circular(20)),
-                            //           ),
-                            //           child: Center(
-                            //             child: Text(
-                            //               AppLocalizations.of(context)!
-                            //                   .translate('activeOrders')
-                            //                   .toString(),
-                            //               style: TextStyles.textStyle18Medium
-                            //                   .copyWith(
-                            //                       color: ColorManager.black),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //       InkWell(
-                            //         onTap: () async {
-                            //           if (UserDataFromStorage.userIsGuest ==
-                            //               false) {
-                            //             await AuthCubit.get(context)
-                            //                 .getUserInfo(
-                            //                     uId: UserDataFromStorage
-                            //                         .uIdFromStorage,
-                            //                     context: context);
-                            //             if (UserDataFromStorage
-                            //                     .uIdFromStorage ==
-                            //                 '') {
-                            //               toastificationWidget(
-                            //                   context: context,
-                            //                   title: AppLocalizations.of(
-                            //                           context)!
-                            //                       .translate('errorOccurred')
-                            //                       .toString(),
-                            //                   body: AppLocalizations.of(
-                            //                           context)!
-                            //                       .translate('deleteMessage')
-                            //                       .toString(),
-                            //                   type: ToastificationType.error);
-                            //               customPushReplacement(
-                            //                   context, LoginScreen());
-                            //             } else {
-                            //               if (UserDataFromStorage
-                            //                       .isUserBlocked ==
-                            //                   true) {
-                            //                 AuthCubit.get(context).logout();
-                            //                 customPushReplacement(
-                            //                     context, LoginScreen());
-                            //                 toastificationWidget(
-                            //                     context: context,
-                            //                     title: AppLocalizations.of(
-                            //                             context)!
-                            //                         .translate('blockOccurred')
-                            //                         .toString(),
-                            //                     body: AppLocalizations.of(
-                            //                             context)!
-                            //                         .translate('blockMessage')
-                            //                         .toString(),
-                            //                     type: ToastificationType.error);
-                            //               } else {
-                            //                 cubit.changeActiveOrders(false);
-                            //               }
-                            //             }
-                            //           } else {
-                            //             cubit.changeActiveOrders(false);
-                            //           }
-                            //         },
-                            //         child: Container(
-                            //           height: SizeConfig.height * 0.06,
-                            //           width: SizeConfig.width * 0.5,
-                            //           decoration: BoxDecoration(
-                            //             color: cubit.isActiveOrders
-                            //                 ? ColorManager.gray
-                            //                 : ColorManager.primaryBlue,
-                            //             borderRadius: CashHelper.getData(
-                            //                             key: CashHelper
-                            //                                 .languageKey)
-                            //                         .toString() ==
-                            //                     'en'
-                            //                 ? BorderRadius.only(
-                            //                     topRight: Radius.circular(20))
-                            //                 : BorderRadius.only(
-                            //                     topLeft: Radius.circular(20)),
-                            //           ),
-                            //           child: Center(
-                            //             child: Text(
-                            //               AppLocalizations.of(context)!
-                            //                   .translate('completedOrders')
-                            //                   .toString(),
-                            //               style: TextStyles.textStyle18Medium
-                            //                   .copyWith(
-                            //                       color: ColorManager.black),
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
+                            Container(
+                              height: SizeConfig.height * 0.06,
+                              width: SizeConfig.width,
+                              decoration: BoxDecoration(
+                                color: ColorManager.gray,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20)),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  InkWell(
+                                    onTap: () async {
+                                      if (UserDataFromStorage.userIsGuest ==
+                                          false) {
+                                        await AuthCubit.get(context)
+                                            .getUserInfo(
+                                                uId: UserDataFromStorage
+                                                    .uIdFromStorage,
+                                                context: context);
+                                        if (UserDataFromStorage
+                                                .uIdFromStorage ==
+                                            '') {
+                                          toastificationWidget(
+                                              context: context,
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('errorOccurred')
+                                                  .toString(),
+                                              body: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('deleteMessage')
+                                                  .toString(),
+                                              type: ToastificationType.error);
+                                          customPushReplacement(
+                                              context, LoginScreen());
+                                        } else {
+                                          if (UserDataFromStorage
+                                                  .isUserBlocked ==
+                                              true) {
+                                            AuthCubit.get(context).logout();
+                                            customPushReplacement(
+                                                context, LoginScreen());
+                                            toastificationWidget(
+                                                context: context,
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockOccurred')
+                                                    .toString(),
+                                                body: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockMessage')
+                                                    .toString(),
+                                                type: ToastificationType.error);
+                                          } else {
+                                            cubit.changeActiveOrders(true);
+                                          }
+                                        }
+                                      } else {
+                                        cubit.changeActiveOrders(true);
+                                      }
+                                    },
+                                    child: Container(
+                                      height: SizeConfig.height * 0.06,
+                                      width: SizeConfig.width * 0.5,
+                                      decoration: BoxDecoration(
+                                        color: cubit.isActiveOrders
+                                            ? ColorManager.primaryBlue
+                                            : ColorManager.gray,
+                                        borderRadius: CashHelper.getData(
+                                                        key: CashHelper
+                                                            .languageKey)
+                                                    .toString() ==
+                                                'en'
+                                            ? BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                              )
+                                            : BorderRadius.only(
+                                                topRight: Radius.circular(20)),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('activeOrders')
+                                              .toString(),
+                                          style: TextStyles.textStyle18Medium
+                                              .copyWith(
+                                                  color: ColorManager.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      if (UserDataFromStorage.userIsGuest ==
+                                          false) {
+                                        await AuthCubit.get(context)
+                                            .getUserInfo(
+                                                uId: UserDataFromStorage
+                                                    .uIdFromStorage,
+                                                context: context);
+                                        if (UserDataFromStorage
+                                                .uIdFromStorage ==
+                                            '') {
+                                          toastificationWidget(
+                                              context: context,
+                                              title: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('errorOccurred')
+                                                  .toString(),
+                                              body: AppLocalizations.of(
+                                                      context)!
+                                                  .translate('deleteMessage')
+                                                  .toString(),
+                                              type: ToastificationType.error);
+                                          customPushReplacement(
+                                              context, LoginScreen());
+                                        } else {
+                                          if (UserDataFromStorage
+                                                  .isUserBlocked ==
+                                              true) {
+                                            AuthCubit.get(context).logout();
+                                            customPushReplacement(
+                                                context, LoginScreen());
+                                            toastificationWidget(
+                                                context: context,
+                                                title: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockOccurred')
+                                                    .toString(),
+                                                body: AppLocalizations.of(
+                                                        context)!
+                                                    .translate('blockMessage')
+                                                    .toString(),
+                                                type: ToastificationType.error);
+                                          } else {
+                                            cubit.changeActiveOrders(false);
+                                          }
+                                        }
+                                      } else {
+                                        cubit.changeActiveOrders(false);
+                                      }
+                                    },
+                                    child: Container(
+                                      height: SizeConfig.height * 0.06,
+                                      width: SizeConfig.width * 0.5,
+                                      decoration: BoxDecoration(
+                                        color: cubit.isActiveOrders
+                                            ? ColorManager.gray
+                                            : ColorManager.primaryBlue,
+                                        borderRadius: CashHelper.getData(
+                                                        key: CashHelper
+                                                            .languageKey)
+                                                    .toString() ==
+                                                'en'
+                                            ? BorderRadius.only(
+                                                topRight: Radius.circular(20))
+                                            : BorderRadius.only(
+                                                topLeft: Radius.circular(20)),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          AppLocalizations.of(context)!
+                                              .translate('completedOrders')
+                                              .toString(),
+                                          style: TextStyles.textStyle18Medium
+                                              .copyWith(
+                                                  color: ColorManager.black),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
                         )),
                   ),
@@ -670,7 +670,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                                         mainAxisSpacing: 15,
                                                         crossAxisSpacing: 15,
                                                         crossAxisCount: 2,
-                                                        childAspectRatio: 1 / 1.1),
+                                                        childAspectRatio: 1 / 1.3),
                                                 itemBuilder: (context, index) {
                                                   return InkWell(
                                                       onTap: () {},

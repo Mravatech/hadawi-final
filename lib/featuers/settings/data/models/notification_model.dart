@@ -2,12 +2,14 @@ class NotificationModel {
   final String date;
   final String id;
   final String message;
+  final String body;
   final String userId;
 
   NotificationModel({
     required this.date,
     required this.id,
     required this.message,
+    required this.body,
     required this.userId,
   });
 
@@ -15,6 +17,7 @@ class NotificationModel {
     date: json["date"]??'',
     id: json["id"]??'',
     message: json["message"]??'',
+    body: json["body"]??'',
     userId: json["userId"]??'',
   );
 
@@ -22,6 +25,7 @@ class NotificationModel {
     "date": date??'',
     "id": id??'',
     "message": message??'',
+    "body": body??'',
     "userId": userId??'',
   };
 }

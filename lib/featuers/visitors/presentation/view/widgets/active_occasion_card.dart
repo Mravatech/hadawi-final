@@ -129,7 +129,7 @@ class ActiveOccasionCard extends StatelessWidget {
               LinearPercentIndicator(
                 padding: EdgeInsets.zero,
                 lineHeight: 8.0,
-                percent: progress.clamp(0.0, 1.0),
+                percent: occasionEntity.moneyGiftAmount/occasionEntity.giftPrice,
                 backgroundColor: Colors.white.withOpacity(0.2),
                 progressColor: Colors.white,
                 barRadius: Radius.circular(4),
@@ -149,7 +149,7 @@ class ActiveOccasionCard extends StatelessWidget {
                       ),
                       SizedBox(width: 4),
                       Text(
-                        "25 ${AppLocalizations.of(context)!.translate('contributors').toString()}", // Hardcoded for now
+                        "${(occasionEntity.giftPrice/double.parse(occasionEntity.amountForEveryone)).toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('contributors').toString()}", // Hardcoded for now
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14,

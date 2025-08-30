@@ -65,15 +65,17 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       getFollowing(userId: UserDataFromStorage.uIdFromStorage);
       for (var element in occasion) {
         if (element.isActive == false &&
-            (element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt()) {
+            (element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt() && DateTime.now().isAfter(DateTime.parse(element.occasionDate))) {
           closeCount = closeCount + 1;
         } else {
           openCount = openCount + 1;
         }
+        print('Occasion Date: ${DateTime.now().isBefore(DateTime.parse(element.occasionDate))}');
         if (element.isPrivate == false) {
-          if (element.isActive == true &&
-              double.parse(element.giftPrice.toString()) >
-                  double.parse(element.moneyGiftAmount.toString())) {
+          print('element.isActive ${element.isActive} - ${double.parse(element.giftPrice.toString()) >
+              double.parse(element.moneyGiftAmount.toString())} - ${DateTime.now().isAfter(DateTime.parse(element.occasionDate))}');
+          if (element.isActive == true && double.parse(element.giftPrice.toString()) >
+                  double.parse(element.moneyGiftAmount.toString()) && DateTime.now().isBefore(DateTime.parse(element.occasionDate))) {
             activeOccasions.add(element);
           } else {
 
@@ -95,8 +97,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
             }
           }
         } else if (element.isPrivate == true) {
-          if (element.isActive == true &&
-              double.parse(element.giftPrice.toString()) >
+          if (element.isActive == true && DateTime.now().isAfter(DateTime.parse(element.occasionDate)) && DateTime.now().isBefore(DateTime.parse(element.occasionDate))
+              && double.parse(element.giftPrice.toString()) >
                   double.parse(element.moneyGiftAmount.toString()) &&
               (followers
                       .where(
@@ -111,9 +113,9 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         }
 
 
-          if ( double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
+          if ( double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString()) && DateTime.now().isBefore(DateTime.parse(element.occasionDate)) ) {
           } else {
-            print('this occasion is done ${element.occasionId}');
+            print('this occasion is done ${element.occasionName}');
             var res = await FirebaseFirestore.instance
                 .collection('Occasions')
                 .doc(element.occasionId)
@@ -142,8 +144,9 @@ class VisitorsCubit extends Cubit<VisitorsState> {
 
       activeOccasions.sort((a, b) => convertStringToDateTime(b.occasionDate)
           .compareTo(convertStringToDateTime(a.occasionDate)));
-      emit(GetOccasionsSuccessState(
-          activeOccasions: activeOccasions, doneOccasions: doneOccasions));
+      emit(GetOccasionsSuccessState(activeOccasions: activeOccasions, doneOccasions: doneOccasions));
+      print('Done getting occasions ==>: ${doneOccasions.length}');
+      print('Active getting occasions ==>: ${activeOccasions.length}');
     });
   }
 

@@ -23,11 +23,20 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    context.read<HomeCubit>().getUserNotifications();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<HomeCubit, HomeStates>(
       listener: (context, state) {},
       builder: (context, state) {
+        print('Notification Screen Build ${context.read<HomeCubit>().notifications.length}');
         final cubit = context.read<HomeCubit>();
         final mediaQuery = MediaQuery.sizeOf(context);
         return ModalProgressHUD(
@@ -102,6 +111,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       color: ColorManager.black
                                   ),),
                                 ],
+                              ),
+                              SizedBox(height: mediaQuery.height * 0.01,),
+                              Align(
+                                alignment: AlignmentDirectional.topEnd,
+                                child: Text( notificationItem.body, style: TextStyles.textStyle18Medium.copyWith(
+                                    color: ColorManager.black
+                                ),),
                               ),
                             ],
                           ),

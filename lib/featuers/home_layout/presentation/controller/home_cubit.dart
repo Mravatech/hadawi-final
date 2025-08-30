@@ -47,6 +47,7 @@ class HomeCubit extends Cubit<HomeStates> {
           notifications.add(NotificationModel.fromMap(element.data()));
         }
       });
+      print("notifications length: ${notifications.length}");
       emit(GetUserNotificationsSuccessState());
     }).catchError((error){
       debugPrint("error in getting user notifications: $error");
