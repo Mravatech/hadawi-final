@@ -8,6 +8,7 @@ import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/forget_
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/login_with_social_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/widgets/remember_me_button.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/country_code_widget.dart';
+import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/verifiy_otp_code_screen.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/visitors_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
@@ -98,50 +99,80 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
 
 
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.025),
-                // // Remember Me and Forget Password
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     BlocBuilder<AuthCubit, AuthStates>(
-                //       builder: (context, state) {
-                //         return RememberMeButton(
-                //           initialValue: UserDataFromStorage.rememberMe,
-                //           onChanged: (value) {
-                //             context.read<AuthCubit>().rememberMeFunction(
-                //                 emailController: widget.emailController.text,
-                //                 passController: widget.passController.text,
-                //                 value: value);
-                //           },
-                //         );
-                //       },
-                //     ),
-                //     // const ForgetPasswordButton(),
-                //   ],
-                // ),
-                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
-                // Login Button
-                // const LoginWithSocialButton(),
-                // SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
+                // Remember Me and Forget Password
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    BlocBuilder<AuthCubit, AuthStates>(
+                      builder: (context, state) {
+                        return RememberMeButton(
+                          initialValue: UserDataFromStorage.rememberMe,
+                          onChanged: (value) {
+                            context.read<AuthCubit>().rememberMeFunction(
+                                emailController: widget.emailController.text,
+                                passController: widget.passController.text,
+                                value: value);
+                          },
+                        );
+                      },
+                    ),
+                    // const ForgetPasswordButton(),
+                  ],
+                ),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.01),
+                //Login Button
+                const LoginWithSocialButton(),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.03),
 
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
-                    if (state is UserLoginSuccessState) {
-                      saveData(
-                          rememberMe: UserDataFromStorage.rememberMe,
-                          emailController: widget.emailController,
-                          passController: widget.passController
-                      );
-                      context.read<AuthCubit>().rememberMeFunction(
-                          emailController: widget.emailController.text,
-                          passController: widget.passController.text,
-                          value: UserDataFromStorage.rememberMe);
-                      customPushReplacement(context, HomeLayout());
+                    // if (state is UserLoginSuccessState) {
+                    //   saveData(
+                    //       rememberMe: UserDataFromStorage.rememberMe,
+                    //       emailController: widget.emailController,
+                    //       passController: widget.passController
+                    //   );
+                    //   context.read<AuthCubit>().rememberMeFunction(
+                    //       emailController: widget.emailController.text,
+                    //       passController: widget.passController.text,
+                    //       value: UserDataFromStorage.rememberMe);
+                    //   customPushReplacement(context, HomeLayout());
+                    // }
+                    // if (state is UserLoginErrorState) {
+                    //   customToast(
+                    //     title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
+                    //     color: ColorManager.error,
+                    //   );
+                    // }
+
+                    if (state is GenerateCodeSuccessState) {
+                      context
+                          .read<AuthCubit>()
+                          .sendOtp(phone: '+966${widget.emailController.text}');
                     }
-                    if (state is UserLoginErrorState) {
+                    if (state is SendOtpErrorState) {
+                      debugPrint('error: ${state.message}');
                       customToast(
-                        title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
-                        color: ColorManager.error,
-                      );
+                          title: state.message, color: ColorManager.error);
+                    }
+                    if (state is SendOtpSuccessState) {
+                      debugPrint("*********************");
+                      debugPrint(context.read<AuthCubit>().otpCode);
+                      debugPrint(context.read<AuthCubit>().genderValue);
+                      debugPrint("*********************");
+                      customPushNavigator(
+                          context,
+                          VerifyPhoneScreen(
+                            verificationOtp: context.read<AuthCubit>().otpCode,
+                            gender: '',
+                            name: '',
+                            phone: '',
+                            city: '',
+                            brithDate: '',
+                            email: widget.emailController.text,
+                            password: widget.passController.text,
+                            isLogin: true,
+                          ));
                     }
                   },
                   builder: (context, state) {
@@ -154,11 +185,12 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                           .toString(),
                       onPressed: () {
                         if (loginKey.currentState!.validate()) {
-                          cubit.login(
-                            email: widget.emailController.text,
-                            password: widget.passController.text,
-                            context: context,
-                          );
+                          // cubit.login(
+                          //   email: widget.emailController.text,
+                          //   password: widget.passController.text,
+                          //   context: context,
+                          // );
+                          cubit.generateRandomCode();
                         }
                       },
                       buttonColor: ColorManager.primaryBlue,
