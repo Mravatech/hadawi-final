@@ -9,11 +9,11 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 
 class FriendsCubit extends Cubit<FriendsStates> {
   FriendsCubit(
-    this.acceptFollowRequestUseCases,
-    this.rejectFollowRequestUseCases,
-    this.getFollowingUseCases,
-    this.getFollowersUseCases
-) : super(FriendsInitialState());
+      this.acceptFollowRequestUseCases,
+      this.rejectFollowRequestUseCases,
+      this.getFollowingUseCases,
+      this.getFollowersUseCases
+      ) : super(FriendsInitialState());
   AcceptFollowRequestUseCases acceptFollowRequestUseCases;
   RejectFollowRequestUseCases rejectFollowRequestUseCases;
   GetFollowingUseCases getFollowingUseCases;
@@ -37,12 +37,12 @@ class FriendsCubit extends Cubit<FriendsStates> {
 
     response.fold(
             (l){
-              emit(AcceptFollowRequestErrorState(message: l.message));
-            },
+          emit(AcceptFollowRequestErrorState(message: l.message));
+        },
             (r){
-              getFollowing(userId: UserDataFromStorage.uIdFromStorage);
-              emit(AcceptFollowRequestSuccessState());
-            }
+          getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+          emit(AcceptFollowRequestSuccessState());
+        }
     );
 
   }
@@ -62,9 +62,9 @@ class FriendsCubit extends Cubit<FriendsStates> {
     response.fold(
             (l)=>emit(RejectFollowRequestErrorState(message: l.message)),
             (r){
-              getFollowing(userId: UserDataFromStorage.uIdFromStorage);
-              emit(RejectFollowRequestSuccessState());
-            }
+          getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+          emit(RejectFollowRequestSuccessState());
+        }
     );
 
   }
@@ -83,14 +83,14 @@ class FriendsCubit extends Cubit<FriendsStates> {
     response.fold(
             (l)=>emit(GetFollowersErrorState(message: l.message)),
             (r){
-              for(var element in r) {
-                if (element.follow == false){
-                }else{
-                  followers.add(element);
-                }
-              }
-             emit(GetFollowersSuccessState());
-            });
+          for(var element in r) {
+            if (element.follow == false){
+            }else{
+              followers.add(element);
+            }
+          }
+          emit(GetFollowersSuccessState());
+        });
   }
 
   List<FollowerEntities> following = [];
@@ -107,14 +107,14 @@ class FriendsCubit extends Cubit<FriendsStates> {
     response.fold(
             (l)=>emit(GetFollowingErrorState(message: l.message)),
             (r){
-            for(var element in r) {
-              print('Elemnet flow ${element.follow}');
-              if (element.follow == true){
-                following.add(element);
-              }else{
-                followersRequest.add(element);
-              }
+          for(var element in r) {
+            print('Elemnet flow ${element.follow}');
+            if (element.follow == true){
+              following.add(element);
+            }else{
+              followersRequest.add(element);
             }
+          }
           emit(GetFollowingSuccessState());
         });
   }

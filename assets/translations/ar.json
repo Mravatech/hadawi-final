@@ -377,6 +377,7 @@
   "followers": "المتابعون",
   "requests": "الطلبات",
   "visibility": "الظهور",
+  "followRequestSentSuccessfully": "تم ارسال طلب المتابعة",
   "yes": "نعم",
   "amountToPayForEveryOne": "المبلغ المطلوب دفعه من كل شخص يشارك في المناسبة",
   "amountToPayForEveryOneHint": "أدخل المبلغ هنا",

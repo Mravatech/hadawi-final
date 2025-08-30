@@ -134,6 +134,9 @@ class _OccasionDetailsState extends State<OccasionDetails> {
       ),
       body: BlocConsumer<VisitorsCubit, VisitorsState>(
         listener: (context, state) {
+          if(state is SendFollowRequestSuccessState){
+            customToast(title: AppLocalizations.of(context)!.translate('followRequestSentSuccessfully').toString(), color: ColorManager.success);
+          }
           if (state is SendFollowRequestErrorState) {
             customToast(title: state.message, color: ColorManager.error);
           }
@@ -144,7 +147,10 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         },
         builder: (context, state) {
           final cubit = context.read<VisitorsCubit>();
-          
+
+          debugPrint("uer id ${UserDataFromStorage.uIdFromStorage}");
+          debugPrint("person id ${cubit.occasionDetailsModel.occasionId}");
+
           if (state is GetOccasionDataLoadingState || isLoading) {
             return Center(child: LoadingAnimationWidget());
           }
@@ -221,22 +227,15 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                             ],
                           ),
                         ),
-                        if (!UserDataFromStorage.userIsGuest && 
-                            UserDataFromStorage.uIdFromStorage != model.personId)
+                        if ((UserDataFromStorage.userIsGuest == false) &&
+                      (UserDataFromStorage.uIdFromStorage !=
+                          cubit.occasionDetailsModel.personId))
                           ElevatedButton(
                             onPressed: () => cubit.sendFollowRequest(
                               userId: model.personId,
                               followerId: UserDataFromStorage.uIdFromStorage,
                               userName: model.personName,
                               image: "",
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.person_add, size: 18, color: Colors.white),
-                                SizedBox(width: 4),
-                                Text(AppLocalizations.of(context)!.translate('follow').toString()),
-                              ],
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF8B7BA8),
@@ -246,6 +245,14 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
                               ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.person_add, size: 18, color: Colors.white),
+                                SizedBox(width: 4),
+                                Text(AppLocalizations.of(context)!.translate('follow').toString()),
+                              ],
                             ),
                           ),
                       ],
@@ -411,17 +418,18 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                     children: [
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () async {
+                          onPressed:
+                              cubit.occasionDetailsModel.isActive==true ? () async {
                             String link = await cubit.createDynamicLink(widget.occasionId);
                             Share.share(
                                 CashHelper.getData(key: CashHelper.languageKey).toString()=="en"?'Your friend invited you to join the occasion of ${cubit.occasionDetailsModel.personName} (${cubit.occasionDetailsModel.type}). To contribute, click the link below to view the gift details: $link'
                                     :'قام صديقك بدعوتك للمشاركة في مناسبة ${cubit.occasionDetailsModel.personName} ${cubit.occasionDetailsModel.type} للمساهمة بالدفع اضغط على الرابط ادناه لرؤية تفاصيل عن الهدية: $link'
                             );
-                          },
-                          icon: Icon(Icons.share, color: Colors.white),
+                          }:null,
+                          icon: Icon(Icons.share, color: cubit.occasionDetailsModel.isActive==true ? Colors.white:Colors.grey),
                           label: Text(AppLocalizations.of(context)!.translate('share').toString()),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B7BA8),
+                            backgroundColor: cubit.occasionDetailsModel.isActive==true ?  Color(0xFF8B7BA8):Colors.grey,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             padding: EdgeInsets.symmetric(vertical: 16),
@@ -434,16 +442,16 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                       SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {
+                          onPressed: cubit.occasionDetailsModel.isActive==true ? () {
                             customPushNavigator(
                               context,
                               PaymentScreen(occasionEntity: model),
                             );
-                          },
-                          icon: Icon(Icons.payment, color: Colors.white),
+                          }:null,
+                          icon: Icon(Icons.payment, color: cubit.occasionDetailsModel.isActive==true ? Colors.white:Colors.grey),
                           label: Text(AppLocalizations.of(context)!.translate('payNow').toString()),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFF8B7BA8),
+                            backgroundColor:cubit.occasionDetailsModel.isActive==true ?  Color(0xFF8B7BA8):Colors.grey,
                             foregroundColor: Colors.white,
                             elevation: 0,
                             padding: EdgeInsets.symmetric(vertical: 16),
@@ -453,6 +461,32 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                           ),
                         ),
                       ),
+                      SizedBox(width: 16),
+                      if (UserDataFromStorage.uIdFromStorage == cubit.occasionDetailsModel.personId)
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            onPressed: cubit.occasionDetailsModel.isActive==true ? () {
+                              customPushNavigator(
+                                context,
+                                EditOccasion(
+                                  occasionModel: cubit.occasionDetailsModel,
+                                  fromHome: widget.fromHome,
+                                ),
+                              );
+                            }:null,
+                            icon: Icon(Icons.edit,color:  cubit.occasionDetailsModel.isActive==true ?  Colors.white:Colors.grey),
+                            label: Text(AppLocalizations.of(context)!.translate('edit').toString()),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: cubit.occasionDetailsModel.isActive==true ? Color(0xFF8B7BA8):Colors.grey,
+                              foregroundColor: Colors.white,
+                              elevation: 0,
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                   SizedBox(height: 20),

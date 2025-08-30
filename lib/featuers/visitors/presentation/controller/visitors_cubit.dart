@@ -18,6 +18,7 @@ import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
+
 part 'visitors_state.dart';
 
 class VisitorsCubit extends Cubit<VisitorsState> {
@@ -39,7 +40,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   TextEditingController remainingBalanceController = TextEditingController();
   final searchKey = GlobalKey();
 
-  bool isActive=false;
+  bool isActive = false;
 
   convertStringToDateTime(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
@@ -47,12 +48,13 @@ class VisitorsCubit extends Cubit<VisitorsState> {
   }
 
   TextEditingController searchController = TextEditingController();
-  int closeCount=0;
-  int openCount=0;
+  int closeCount = 0;
+  int openCount = 0;
+
   Future<void> getOccasions() async {
-    closeCount=0;
-    openCount=0;
-    doneOccasions=[];
+    closeCount = 0;
+    openCount = 0;
+    doneOccasions = [];
     emit(GetOccasionsLoadingState());
     final result = await OccasionRepoImp().getOccasions();
     result.fold((failure) {
@@ -76,7 +78,6 @@ class VisitorsCubit extends Cubit<VisitorsState> {
                   double.parse(element.moneyGiftAmount.toString())) {
             activeOccasions.add(element);
           } else {
-
             print('this occasion is done ${element.occasionId}');
             var res = await FirebaseFirestore.instance
                 .collection('Occasions')
@@ -110,29 +111,24 @@ class VisitorsCubit extends Cubit<VisitorsState> {
           }
         }
 
-
-          if ( double.parse(element.giftPrice.toString()) > double.parse(element.moneyGiftAmount.toString())) {
-          } else {
-            print('this occasion is done ${element.occasionId}');
-            var res = await FirebaseFirestore.instance
-                .collection('Occasions')
-                .doc(element.occasionId)
-                .collection('receivedOccasions')
-                .get();
-            if (res.docs.isNotEmpty) {
-              doneOccasions
+        if (double.parse(element.giftPrice.toString()) >
+            double.parse(element.moneyGiftAmount.toString())) {
+        } else {
+          print('this occasion is done ${element.occasionId}');
+          var res = await FirebaseFirestore.instance
+              .collection('Occasions')
+              .doc(element.occasionId)
+              .collection('receivedOccasions')
+              .get();
+          if (res.docs.isNotEmpty) {
+            doneOccasions
+                .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
+            if (element.personId == UserDataFromStorage.uIdFromStorage) {
+              myOrderOccasions
                   .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
-              if (element.personId ==
-                  UserDataFromStorage.uIdFromStorage) {
-                myOrderOccasions
-                    .add(CompleteOccasionModel.fromJson(res.docs[0].data()));
-              }
             }
-
+          }
         }
-
-
-
       }
       await FirebaseFirestore.instance
           .collection('analysis')
@@ -191,7 +187,9 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         image: image);
 
     response.fold((l) => emit(SendFollowRequestErrorState(message: l.message)),
-        (r) => emit(SendFollowRequestSuccessState()));
+        (r) {
+          emit(SendFollowRequestSuccessState());
+        });
   }
 
   bool isActiveOrders = true;
@@ -209,14 +207,15 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     debugPrint('Getting banner data...');
 
     try {
-      final querySnapshot = await FirebaseFirestore.instance.collection('Banners').get();
+      final querySnapshot =
+          await FirebaseFirestore.instance.collection('Banners').get();
       debugPrint('Got ${querySnapshot.docs.length} banners from Firebase');
-      
+
       for (var doc in querySnapshot.docs) {
         debugPrint('Banner data: ${doc.data()}');
         banners.add(BannerModel.fromMap(doc.data()));
       }
-      
+
       debugPrint('Processed ${banners.length} banners');
       emit(GetBannerDataSuccessState());
     } catch (error) {
@@ -299,14 +298,18 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     amountForEveryone: '0',
   );
 
-  Future<void> getOccasionData({required String occasionId})async{
+  Future<void> getOccasionData({required String occasionId}) async {
     emit(GetOccasionDataLoadingState());
-    FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
+    FirebaseFirestore.instance
+        .collection('Occasions')
+        .doc(occasionId)
+        .get()
+        .then((value) {
       occasionDetailsModel = OccasionModel.fromJson(value.data()!);
       checkIsOccasionActive(occasionDetailsModel.isActive);
       debugPrint("occasionModel: ${occasionDetailsModel!.occasionName}");
       emit(GetOccasionDataSuccessState());
-    }).catchError((error){
+    }).catchError((error) {
       debugPrint("error in getting occasion data: $error");
       emit(GetOccasionDataErrorState());
     });
@@ -321,7 +324,8 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       final DynamicLinkParameters parameters = DynamicLinkParameters(
         uriPrefix: 'https://hadawiapp.page.link',
         // Make this path consistent with how you're handling it
-        link: Uri.parse('https://hadawiapp.page.link/occasion-details/$occasionId'),
+        link: Uri.parse(
+            'https://hadawiapp.page.link/occasion-details/$occasionId'),
         androidParameters: const AndroidParameters(
           packageName: 'com.app.hadawi_app',
           minimumVersion: 1,
@@ -338,10 +342,12 @@ class VisitorsCubit extends Cubit<VisitorsState> {
         ),
       );
 
-      final ShortDynamicLink shortLink = await FirebaseDynamicLinks.instance.buildShortLink(parameters);
+      final ShortDynamicLink shortLink =
+          await FirebaseDynamicLinks.instance.buildShortLink(parameters);
       debugPrint("shortLink: ${shortLink.shortUrl}");
       occasionLink = shortLink.shortUrl.toString();
-      emit(CreateOccasionLinkDetailsSuccessState());return shortLink.shortUrl.toString();
+      emit(CreateOccasionLinkDetailsSuccessState());
+      return shortLink.shortUrl.toString();
     } catch (error) {
       debugPrint("Error creating dynamic link: $error");
       emit(CreateOccasionLinkDetailsErrorState());
@@ -466,7 +472,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     });
   }
 
-  bool checkIsOccasionActive(bool value ){
+  bool checkIsOccasionActive(bool value) {
     emit(IsActiveLoading());
     isActive = value;
     emit(IsActiveSuccess());

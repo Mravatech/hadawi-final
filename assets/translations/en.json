@@ -376,6 +376,7 @@
   "expired": "Expired",
   "following": "Following",
   "followers": "Followers",
+  "followRequestSentSuccessfully": "Follow request sent successfully",
   "requests": "Requests",
   "visibility": "Visibility",
   "amountToPayForEveryOne": "Amount to pay for every one sharing the occasion",

@@ -6,6 +6,7 @@ import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occas
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/delete_occasions_widget.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/occasions_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
+import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
@@ -81,7 +82,7 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                       onTap: () {
                         customPushNavigator(
                           context,
-                          DeleteOccasionsWidget(
+                          OccasionDetails(
                             occasionId: occasion.occasionId,
                             fromHome: false,
                           ),
@@ -96,12 +97,13 @@ class _ClosedOccasionsState extends State<ClosedOccasions> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                                 image: DecorationImage(
-                                  image: NetworkImage(
-                                    occasion.giftType == "مبلغ مالى"
-                                        ? "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa"
-                                        : occasion.giftImage[0],
-                                  ),
-                                  fit: BoxFit.cover,
+                                  image:
+                                  occasion.giftType == "مبلغ مالى"
+                                      ?NetworkImage(
+                                    "https://firebasestorage.googleapis.com/v0/b/transport-app-d662f.appspot.com/o/logo_without_background.png?alt=media&token=15358a2a-1e34-46c1-be4b-1ea0a1a49eaa"
+                                    ,
+                                  ):AssetImage(Assets.imagesLightLogo),
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),

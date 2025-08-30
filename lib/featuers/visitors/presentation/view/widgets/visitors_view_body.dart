@@ -193,6 +193,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("user===> ${UserDataFromStorage.uIdFromStorage}");
     return BlocBuilder<VisitorsCubit, VisitorsState>(
       builder: (context, state) {
         final mediaQuery = MediaQuery.sizeOf(context);
