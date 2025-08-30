@@ -15,6 +15,7 @@ class VerifyPhoneScreen extends StatelessWidget {
   final String brithDate;
   final String email;
   final String password;
+  final bool isLogin;
 
   const VerifyPhoneScreen({super.key,
    required  this.verificationOtp,
@@ -25,6 +26,7 @@ class VerifyPhoneScreen extends StatelessWidget {
    required  this.brithDate,
    required  this.email,
    required  this.password,
+    this.isLogin = false,
   });
 
   @override
@@ -55,6 +57,7 @@ class VerifyPhoneScreen extends StatelessWidget {
           brithDate: brithDate,
           email: email,
           password: password,
+          isLogin: isLogin,
         ),
       ),
     );

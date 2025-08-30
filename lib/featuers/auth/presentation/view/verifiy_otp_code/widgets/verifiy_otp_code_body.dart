@@ -10,6 +10,7 @@ import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -28,6 +29,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
     required this.brithDate,
     required this.email,
     required this.password,
+    this.isLogin = false,
   });
 
   final String verificationId;
@@ -38,6 +40,7 @@ class VerfiyCodeViewBody extends StatefulWidget {
   final String brithDate;
   final String email;
   final String password;
+  final bool isLogin;
 
   @override
   State<VerfiyCodeViewBody> createState() => _VerfiyCodeViewBodyState();
@@ -57,6 +60,24 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
   void dispose() {
     context.read<AuthCubit>().secondTimer!.cancel();
     super.dispose();
+  }
+
+  void saveData({
+    required bool rememberMe,
+    required String emailController,
+    required String passController,
+  }){
+
+    if(UserDataFromStorage.rememberMe!=false){
+      rememberMe = UserDataFromStorage.rememberMe;
+      emailController = UserDataFromStorage.saveEmailFromStorage;
+      passController = UserDataFromStorage.passwordFromStorage;
+    }else{
+      rememberMe = false;
+      emailController = "";
+      passController= "";
+    }
+
   }
 
   @override
@@ -153,16 +174,24 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
 
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
-                    if (state is VerifiyOtpCodeSuccessState) {
-                      context.read<AuthCubit>().register(
+                    if (state is VerifiyOtpCodeSuccessState){
+                      if(widget.isLogin){
+                        context.read<AuthCubit>().login(
                           email: widget.email,
                           password: widget.password,
-                          phone: widget.phone,
-                          name: widget.name,
                           context: context,
-                          brithDate: widget.brithDate,
-                          gender: widget.gender,
-                          city: widget.city);
+                        );
+                      }else{
+                        context.read<AuthCubit>().register(
+                            email: widget.email,
+                            password: widget.password,
+                            phone: widget.phone,
+                            name: widget.name,
+                            context: context,
+                            brithDate: widget.brithDate,
+                            gender: widget.gender,
+                            city: widget.city);
+                      }
                     }
                     if (state is VerifiyOtpCodeErrorState) {
                     }
@@ -172,6 +201,24 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                     }
                     if(state is UserRegisterSuccessState){
                       customPushReplacement(context, HomeLayout());
+                    }
+                    if (state is UserLoginSuccessState) {
+                      saveData(
+                          rememberMe: UserDataFromStorage.rememberMe,
+                          emailController: widget.email,
+                          passController: widget.password
+                      );
+                      context.read<AuthCubit>().rememberMeFunction(
+                          emailController: widget.email,
+                          passController: widget.password,
+                          value: UserDataFromStorage.rememberMe);
+                      customPushReplacement(context, HomeLayout());
+                    }
+                    if (state is UserLoginErrorState) {
+                      customToast(
+                        title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
+                        color: ColorManager.error,
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -195,4 +242,5 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
       ),
     );
   }
+
 }
