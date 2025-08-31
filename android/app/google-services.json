@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1698335350-b1eb7qmrgv0b3n7vba91j92k23rtatbt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.hadawi_app",
+            "certificate_hash": "d5ffa02ffc2c552665e09685ad0f215413b4b577"
+          }
+        },
+        {
           "client_id": "1698335350-bi53asf915hnvqk6gasi7d0klr50kavs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -64,10 +72,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1698335350-4mf0u4jj1acl8a5df2taceho7nhi2o89.apps.googleusercontent.com",
+              "client_id": "1698335350-005d61ibhbe8ofr5koc3gpadjfrsi6bd.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.hadawiDathboard"
+                "bundle_id": "com.hadawi.delivery"
               }
             }
           ]
@@ -100,10 +108,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1698335350-4mf0u4jj1acl8a5df2taceho7nhi2o89.apps.googleusercontent.com",
+              "client_id": "1698335350-005d61ibhbe8ofr5koc3gpadjfrsi6bd.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.hadawiDathboard"
+                "bundle_id": "com.hadawi.delivery"
               }
             }
           ]

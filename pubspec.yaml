@@ -65,8 +65,8 @@ dependencies:
   firebase_auth: ^5.4.0
   cloud_firestore: ^5.6.1
   firebase_storage: ^12.4.0
-  firebase_core: ^3.10.0
-  firebase_dynamic_links: 6.1.0
+  firebase_core: ^3.15.2
+  firebase_dynamic_links: ^6.1.10
   webview_flutter: ^4.7.0
   app_links: ^6.4.0
   firebase_messaging:

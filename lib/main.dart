@@ -101,6 +101,12 @@ class AppRoutes {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // ✅ Firebase لازم يكون أول حاجة
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // ✅ بعد Firebase
   ServiceLocator().init();
   await SharedPreferences.getInstance();
   await CashHelper.init();
@@ -108,11 +114,12 @@ Future<void> main() async {
   DioHelper.dioInit();
   Bloc.observer = MyBlocObserver();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // ✅ Notifications
+  if (!kIsWeb) {
+    await NotificationService().initRemoteNotification();
+  }
 
-  // Initialize Firebase Dynamic Links
+  // ✅ Dynamic Links (بعد ما Firebase يجهز)
   if (!kIsWeb) {
     final PendingDynamicLinkData? initialLink =
     await FirebaseDynamicLinks.instance.getInitialLink();
@@ -122,10 +129,10 @@ Future<void> main() async {
       _handleDynamicLink(initialLink);
     }
 
-    // Listen for dynamic links while the app is running
     FirebaseDynamicLinks.instance.onLink.listen(
           (dynamicLinkData) {
-        debugPrint('Dynamic link received while app running: ${dynamicLinkData.link}');
+        debugPrint(
+            'Dynamic link received while app running: ${dynamicLinkData.link}');
         _handleDynamicLink(dynamicLinkData);
       },
       onError: (error) {
@@ -134,14 +141,8 @@ Future<void> main() async {
     );
   }
 
-  if(!kIsWeb) {
-    await NotificationService().initRemoteNotification();
-  }
-
-
   runApp(const HadawiApp());
 }
-
 // Function to handle dynamic links
 void _handleDynamicLink(PendingDynamicLinkData dynamicLinkData) {
   final Uri deepLink = dynamicLinkData.link;
