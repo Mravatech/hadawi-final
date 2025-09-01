@@ -63,17 +63,21 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       myOrderOccasions.clear();
       getFollowers(userId: UserDataFromStorage.uIdFromStorage);
       getFollowing(userId: UserDataFromStorage.uIdFromStorage);
+
       for (var element in occasion) {
+
         if (element.isActive == false &&
             (element.giftPrice).toInt() <= (element.moneyGiftAmount).toInt() && DateTime.now().isAfter(DateTime.parse(element.occasionDate))) {
           closeCount = closeCount + 1;
         } else {
           openCount = openCount + 1;
         }
-        print('Occasion Date: ${DateTime.now().isBefore(DateTime.parse(element.occasionDate))}');
+
+
+
+        print('Element is private ${element.occasionDate}');
         if (element.isPrivate == false) {
-          print('element.isActive ${element.isActive} - ${double.parse(element.giftPrice.toString()) >
-              double.parse(element.moneyGiftAmount.toString())} - ${DateTime.now().isAfter(DateTime.parse(element.occasionDate))}');
+
           if (element.isActive == true && double.parse(element.giftPrice.toString()) >
                   double.parse(element.moneyGiftAmount.toString()) && DateTime.now().isBefore(DateTime.parse(element.occasionDate))) {
             activeOccasions.add(element);
