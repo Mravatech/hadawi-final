@@ -66,6 +66,12 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   final GlobalKey<FormState> discountCardKey = GlobalKey<FormState>();
 
+
+  void setOccasionDate(DateTime date) {
+    selectedDate = date;
+    emit(SetOccasionDateState());
+  }
+
   bool giftWithPackage = true;
   int giftWithPackageType = 0;
   int moneyWithPackageType = 0;
@@ -198,11 +204,11 @@ class OccasionCubit extends Cubit<OccasionState> {
     emit(SwitchGiftContainsNameSuccess());
   }
 
-  void setOccasionDate({required DateTime brithDateValue}) {
-    occasionDateController.text =
-        DateFormat('yyyy-MM-dd').format(brithDateValue);
-    emit(SetOccasionDateState());
-  }
+  // void setOccasionDate({required DateTime brithDateValue}) {
+  //   occasionDateController.text =
+  //       DateFormat('yyyy-MM-dd').format(brithDateValue);
+  //   emit(SetOccasionDateState());
+  // }
 
   void setMoneyReceiveDate({required DateTime brithDateValue}) {
     moneyReceiveDateController.text = DateFormat('yyyy-MM-dd').format(brithDateValue);
@@ -301,6 +307,7 @@ class OccasionCubit extends Cubit<OccasionState> {
   Future<void> addOccasion() async {
     emit(AddOccasionLoadingState());
 
+    print("occasion date =======/////========= ${selectedDate.toIso8601String()}");
     try {
       final List<String>? imageUrl = isPresent
           ? await uploadImages()
@@ -310,7 +317,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         isForMe: isForMe,
         isActive: true,
         occasionName: "",
-        occasionDate: occasionDateController.text,
+        occasionDate: selectedDate.toIso8601String(),
         occasionType: isForMe ? 'مناسبة لى' : 'مناسبة لآخر',
         moneyGiftAmount: 0,
         personId: UserDataFromStorage.uIdFromStorage,

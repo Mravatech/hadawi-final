@@ -72,8 +72,7 @@ class _ForMeBodyState extends State<ForMeBody> with WidgetsBindingObserver {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        context.read<OccasionCubit>().occasionDateController.text = picked.toString();
-        context.read<OccasionCubit>().selectedDate = picked;
+        context.read<OccasionCubit>().setOccasionDate(picked);
       });
     }
   }

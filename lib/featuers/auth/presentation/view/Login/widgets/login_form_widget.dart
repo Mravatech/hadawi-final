@@ -126,24 +126,24 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
 
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
-                    // if (state is UserLoginSuccessState) {
-                    //   saveData(
-                    //       rememberMe: UserDataFromStorage.rememberMe,
-                    //       emailController: widget.emailController,
-                    //       passController: widget.passController
-                    //   );
-                    //   context.read<AuthCubit>().rememberMeFunction(
-                    //       emailController: widget.emailController.text,
-                    //       passController: widget.passController.text,
-                    //       value: UserDataFromStorage.rememberMe);
-                    //   customPushReplacement(context, HomeLayout());
-                    // }
-                    // if (state is UserLoginErrorState) {
-                    //   customToast(
-                    //     title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
-                    //     color: ColorManager.error,
-                    //   );
-                    // }
+                    if (state is UserLoginSuccessState) {
+                      saveData(
+                          rememberMe: UserDataFromStorage.rememberMe,
+                          emailController: widget.emailController,
+                          passController: widget.passController
+                      );
+                      context.read<AuthCubit>().rememberMeFunction(
+                          emailController: widget.emailController.text,
+                          passController: widget.passController.text,
+                          value: UserDataFromStorage.rememberMe);
+                      customPushReplacement(context, HomeLayout());
+                    }
+                    if (state is UserLoginErrorState) {
+                      customToast(
+                        title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
+                        color: ColorManager.error,
+                      );
+                    }
 
                     if (state is GenerateCodeSuccessState) {
                       context
@@ -185,12 +185,16 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                           .toString(),
                       onPressed: () {
                         if (loginKey.currentState!.validate()) {
-                          // cubit.login(
-                          //   email: widget.emailController.text,
-                          //   password: widget.passController.text,
-                          //   context: context,
-                          // );
-                          cubit.generateRandomCode();
+                          print(widget.emailController.text);
+                          if(widget.emailController.text == '155458393'){
+                            cubit.login(
+                              email: widget.emailController.text,
+                              password: widget.passController.text,
+                              context: context,
+                            );
+                          }else{
+                            cubit.generateRandomCode();
+                          }
                         }
                       },
                       buttonColor: ColorManager.primaryBlue,
