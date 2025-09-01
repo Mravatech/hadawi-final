@@ -657,7 +657,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                               padding: const EdgeInsets.symmetric(
                                                   horizontal: 15,
                                               ),
-                                              child: Text('اضغط على الصورة لتكبيرها، واسحب لليمين او اليسار لمشاهدة الصور الأخرى',
+                                              child: Text(AppLocalizations.of(context)!.translate("messageDone").toString(),
                                                 textAlign: TextAlign.center,
                                                 style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue,fontWeight: FontWeight.bold,fontSize: 12),),
                                             ),
