@@ -145,6 +145,7 @@ class _LoginFormWidgetState extends State<LoginFormWidget> {
                       // );
                     }
 
+
                     if (state is GenerateCodeSuccessState) {
                       context
                           .read<AuthCubit>()
