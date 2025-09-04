@@ -215,10 +215,10 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                       customPushReplacement(context, HomeLayout());
                     }
                     if (state is UserLoginErrorState) {
-                      customToast(
-                        title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
-                        color: ColorManager.error,
-                      );
+                      // customToast(
+                      //   title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
+                      //   color: ColorManager.error,
+                      // );
                     }
                   },
                   builder: (context, state) {
