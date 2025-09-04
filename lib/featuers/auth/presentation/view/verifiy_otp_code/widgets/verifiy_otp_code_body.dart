@@ -200,7 +200,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                           title:AppLocalizations.of(context)!.translate('phoneToastError').toString(), color: ColorManager.error);
                     }
                     if(state is UserRegisterSuccessState){
-                      customPushReplacement(context, HomeLayout());
+                      customPushAndRemoveUntil(context, HomeLayout());
                     }
                     if (state is UserLoginSuccessState) {
                       saveData(
@@ -212,7 +212,7 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                           emailController: widget.email,
                           passController: widget.password,
                           value: UserDataFromStorage.rememberMe);
-                      customPushReplacement(context, HomeLayout());
+                      customPushAndRemoveUntil(context, HomeLayout());
                     }
                     if (state is UserLoginErrorState) {
                       // customToast(
@@ -226,13 +226,13 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                     return state is VerifiyOtpCodeLoadingState
                         ? const CircularProgressIndicator()
                         : DefaultButton(
-                            buttonText: AppLocalizations.of(context)!.translate('confirm').toString(),
-                            onPressed: () {
-                              cubit.verifyOtp(
-                                otp: int.parse(verifyOtpPinPutController.text),
-                              );
-                            },
-                            buttonColor: ColorManager.primaryBlue);
+                        buttonText: AppLocalizations.of(context)!.translate('confirm').toString(),
+                        onPressed: () {
+                          cubit.verifyOtp(
+                            otp: int.parse(verifyOtpPinPutController.text),
+                          );
+                        },
+                        buttonColor: ColorManager.primaryBlue);
                   },
                 )
               ],

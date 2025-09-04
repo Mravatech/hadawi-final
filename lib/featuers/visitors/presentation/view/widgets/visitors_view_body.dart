@@ -562,9 +562,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                               ),
                             ),
 
-                            state is GetOccasionsStillLoadingState ||
-                                    cubit.activeOccasions.isEmpty &&
-                                    cubit.doneOccasions.isEmpty
+                            state is GetOccasionsLoadingState || state is GetOccasionsStillLoadingState
                                 ? Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -572,6 +570,18 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                       Center(child: CircularProgressIndicator()),
                                     ],
                                   )
+                                : cubit.activeOccasions.isEmpty && cubit.doneOccasions.isEmpty
+                                    ? Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(height: 100),
+                                          Text(
+                                            AppLocalizations.of(context)!.translate('noOccasionsFound') ?? 'No occasions found',
+                                            style: TextStyles.textStyle16Regular,
+                                          ),
+                                        ],
+                                      )
                                 : cubit.isActiveOrders
                                     ? cubit.activeOccasions.isNotEmpty
                                         ? ListView.separated(

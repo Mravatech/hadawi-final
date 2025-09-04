@@ -4,6 +4,8 @@ import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart
 import 'package:hadawi_app/featuers/auth/presentation/view/register/widgets/register_view_body.dart';
 import 'package:hadawi_app/widgets/app_bar_without_height_widget.dart';
 
+import '../../../../../styles/colors/color_manager.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -22,6 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.white,
       appBar: appBarWithoutHeightWidget(),
       body: RegisterViewBody()
     );
