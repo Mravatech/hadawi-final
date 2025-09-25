@@ -45,3 +45,6 @@ app.*.map.json
 /android/app/release
 
 sentry.properties
+
+duplicate_cleanup_backups/
+scripts/transport-app-d662f-firebase-adminsdk-mwwf2-42555ac8ab.json
