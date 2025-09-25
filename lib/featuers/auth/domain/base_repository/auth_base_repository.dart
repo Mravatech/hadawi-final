@@ -1,13 +1,12 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
-import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
 
 abstract class AuthBaseRepository {
 
-  Future<Either<Faliure,void>> login({required String email, required String password,required context});
+  Future<Either<Faliure,void>> login({required String email, required String password,required context, bool isMobileLogin = false});
   Future<Either<Faliure,void>> register({
     required String email,
     required String password,
@@ -23,7 +22,8 @@ abstract class AuthBaseRepository {
   Future<Either<Faliure,void>> saveUserData({
     required String email, required String phone,
     required String password,
-    required String name, required String uId,required String brithDate,required String gender, required String city});
+    required String name, required String uId,required String brithDate,required String gender, required String city,
+    String firstName = '', String lastName = ''});
   Future<Either<Faliure,void>> logout();
   Future<Either<Faliure,void>> loginWithPhoneNumber({
     required String phone,

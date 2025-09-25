@@ -1,0 +1,17 @@
+# Firestore Backup Script Dependencies
+# Core Google Cloud libraries
+google-cloud-firestore>=2.11.0
+google-cloud-storage>=2.10.0
+
+# Additional utilities
+cryptography>=41.0.0  # For proper encryption (optional)
+schedule>=1.2.0       # For automated scheduling (optional)
+python-dotenv>=1.0.0  # For environment variable management
+
+# Development and testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.5.0
+

@@ -17,7 +17,9 @@ class SaveDataUseCases{
     required String brithDate,
     required String gender,
     required String password,
-    required String city
+    required String city,
+    String firstName = '',
+    String lastName = ''
   })async {
     return await authBaseRepository.saveUserData(
         email: email,
@@ -27,7 +29,9 @@ class SaveDataUseCases{
         uId: uId,
         brithDate: brithDate,
         gender: gender,
-        city: city
+        city: city,
+        firstName: firstName,
+        lastName: lastName
     );
   }
 

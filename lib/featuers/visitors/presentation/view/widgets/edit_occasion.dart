@@ -6,7 +6,6 @@ import 'package:hadawi_app/featuers/occasions/data/models/occasion_model.dart';
 import 'package:hadawi_app/featuers/occasions/presentation/controller/occasion_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
-import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -18,9 +17,6 @@ import '../../../../../utiles/cashe_helper/cashe_helper.dart';
 import '../../../../../utiles/localiztion/app_localization.dart';
 import '../../../../../widgets/default_text_field.dart';
 import '../../../../../widgets/loading_widget.dart';
-import '../../../../all_occasions/presentation/view/all_occasions_screen.dart';
-import '../../../../auth/presentation/controller/auth_cubit.dart';
-import '../../../../occasions_list/presentation/controller/occasions_list_cubit.dart';
 
 class EditOccasion extends StatefulWidget {
   final OccasionModel occasionModel;
@@ -35,6 +31,13 @@ class EditOccasion extends StatefulWidget {
 String total='';
 
 class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver{
+  // Local variables to hold initial data from database
+  late String _initialPackagePrice;
+  late String _initialPackageImage;
+  late bool _initialGiftWithPackage;
+  late int _initialGiftWithPackageType;
+  late String _initialSelectedGiftPackageImage;
+  
   @override
   @override
   void initState() {
@@ -61,6 +64,125 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
       cubit.dropdownCity = widget.occasionModel.city;
       cubit.urls = widget.occasionModel.giftImage;
       cubit.isPublicValue = widget.occasionModel.isPrivate;
+      
+      // Set isPresent based on gift type
+      cubit.isPresent = widget.occasionModel.giftType == 'هدية';
+      cubit.isMoney = widget.occasionModel.giftType != 'هدية';
+      debugPrint("=== GIFT TYPE INITIALIZATION ===");
+      debugPrint("giftType: '${widget.occasionModel.giftType}'");
+      debugPrint("isPresent set to: ${cubit.isPresent}");
+      debugPrint("isMoney set to: ${cubit.isMoney}");
+      
+      // Store initial packaging data in local variables
+      debugPrint("=== PACKAGING INITIALIZATION ===");
+      debugPrint("packagePrice from model: '${widget.occasionModel.packagePrice}'");
+      debugPrint("packageImage from model: '${widget.occasionModel.packageImage}'");
+      
+      _initialPackagePrice = widget.occasionModel.packagePrice;
+      _initialPackageImage = widget.occasionModel.packageImage;
+      _initialGiftWithPackage = widget.occasionModel.packagePrice.isNotEmpty;
+      
+      // Set up cubit with proper initial values
+      cubit.giftWithPackage = _initialGiftWithPackage;
+      debugPrint("giftWithPackage set to: ${cubit.giftWithPackage}");
+      
+      if (_initialGiftWithPackage && _initialPackagePrice.isNotEmpty) {
+        // Check if the saved package price matches any of the current available packages
+        int savedPackagePrice = int.parse(_initialPackagePrice);
+        bool foundMatchingPackage = false;
+        
+        // Wait for package list to be loaded, then check for match
+        Future.delayed(Duration(milliseconds: 1000), () {
+          // Check the appropriate package list based on gift type
+          List packageListPrice = (cubit.giftType == 'هدية') ? cubit.giftPackageListPrice : cubit.moneyPackageListPrice;
+          List packageListImage = (cubit.giftType == 'هدية') ? cubit.giftPackageListImage : cubit.moneyPackageListImage;
+          
+          debugPrint("=== PACKAGE MATCHING DEBUG ===");
+          debugPrint("savedPackagePrice: $savedPackagePrice");
+          debugPrint("giftType: '${cubit.giftType}'");
+          debugPrint("packageListPrice: $packageListPrice");
+          debugPrint("packageListImage: $packageListImage");
+          
+          if (packageListPrice.isNotEmpty) {
+            for (int i = 0; i < packageListPrice.length; i++) {
+              int currentPackagePrice = int.parse(packageListPrice[i].toString());
+              debugPrint("Checking package $i: $currentPackagePrice vs $savedPackagePrice");
+              if (currentPackagePrice == savedPackagePrice) {
+                // Found matching package, use it
+                _initialGiftWithPackageType = savedPackagePrice;
+                _initialSelectedGiftPackageImage = packageListImage.length > i 
+                    ? packageListImage[i].toString() 
+                    : _initialPackageImage;
+                foundMatchingPackage = true;
+                debugPrint("✅ Found matching package at index $i: ${savedPackagePrice}");
+                break;
+              }
+            }
+            
+            if (!foundMatchingPackage) {
+              // No matching package found, use the first available package
+              _initialGiftWithPackageType = int.parse(packageListPrice[0].toString());
+              _initialSelectedGiftPackageImage = packageListImage.isNotEmpty 
+                  ? packageListImage[0].toString() 
+                  : '';
+              debugPrint("❌ No matching package found, using first available: ${_initialGiftWithPackageType}");
+            }
+          } else {
+            // Fallback to saved values if package list not loaded yet
+            _initialGiftWithPackageType = savedPackagePrice;
+            _initialSelectedGiftPackageImage = _initialPackageImage;
+            debugPrint("Package list not loaded, using saved values: ${_initialGiftWithPackageType}");
+          }
+          
+          // Now set the cubit values from our local variables
+          if (cubit.giftType == 'هدية') {
+            cubit.giftWithPackageType = _initialGiftWithPackageType;
+            cubit.selectedGiftPackageImage = _initialSelectedGiftPackageImage;
+          } else {
+            cubit.moneyWithPackageType = _initialGiftWithPackageType;
+            cubit.selectedMoneyPackageImage = _initialSelectedGiftPackageImage;
+          }
+          cubit.packagingInitializedFromModel = true;
+          
+          debugPrint("Final cubit values:");
+          debugPrint("giftWithPackage: ${cubit.giftWithPackage}");
+          debugPrint("giftType: '${cubit.giftType}'");
+          if (cubit.giftType == 'هدية') {
+            debugPrint("giftWithPackageType: ${cubit.giftWithPackageType}");
+            debugPrint("selectedGiftPackageImage: '${cubit.selectedGiftPackageImage}'");
+          } else {
+            debugPrint("moneyWithPackageType: ${cubit.moneyWithPackageType}");
+            debugPrint("selectedMoneyPackageImage: '${cubit.selectedMoneyPackageImage}'");
+          }
+          
+          // Recalculate total with correct package price
+          cubit.getTotalGiftPrice();
+        });
+      } else {
+        // Reset packaging values if no packaging
+        _initialGiftWithPackageType = 0;
+        _initialSelectedGiftPackageImage = '';
+        cubit.giftWithPackageType = 0;
+        cubit.selectedGiftPackageImage = '';
+        cubit.packagingInitializedFromModel = true;
+        debugPrint("Reset packaging values - giftWithPackageType: ${cubit.giftWithPackageType}");
+        debugPrint("_packagingInitializedFromModel set to: true");
+      }
+      
+      // Debug package list after loading
+      debugPrint("=== PACKAGE LIST DEBUG ===");
+      debugPrint("giftPackageListPrice: ${cubit.giftPackageListPrice}");
+      debugPrint("giftPackageListImage: ${cubit.giftPackageListImage}");
+      debugPrint("Current giftWithPackageType: ${cubit.giftWithPackageType}");
+      debugPrint("Current selectedGiftPackageImage: '${cubit.selectedGiftPackageImage}'");
+      
+      // Calculate initial total cost after all initialization is complete
+      Future.delayed(Duration(milliseconds: 200), () {
+        cubit.getTotalGiftPrice();
+        debugPrint("=== INITIAL TOTAL CALCULATION ===");
+        debugPrint("Final giftWithPackageType: ${cubit.giftWithPackageType}");
+        debugPrint("Final total: ${cubit.giftPrice}");
+      });
     });
   }
 
@@ -109,11 +231,18 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                 },
               );
             } else {
-              context.read<OccasionsListCubit>().getClosedOccasionsList();
-              context.read<OccasionsListCubit>().getMyOccasionsList();
-              context.read<OccasionsListCubit>().getOthersOccasionsList();
-              context.read<OccasionsListCubit>().getPastOccasionsList();
-              customPushReplacement(context, AllOccasionsScreen());
+              // Navigate back to occasions list and ensure proper navigation context
+              context.read<VisitorsCubit>().getOccasions().then(
+                (value) {
+                  // Also refresh the occasion details data
+                  context.read<VisitorsCubit>().getOccasionData(occasionId: widget.occasionModel.occasionId).then(
+                    (value) {
+                      // Use pop instead of pushReplacement to maintain navigation stack
+                      Navigator.pop(context);
+                    },
+                  );
+                },
+              );
             }
           }
         },
@@ -157,6 +286,11 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                               if (UserDataFromStorage.uIdFromStorage == widget.occasionModel.personId) {
                                 cubit.switchIsPublic();
                                 debugPrint('updated isPublic: ${cubit.isPublicValue}');
+                                // Show a toast to indicate the change needs to be saved
+                                customToast(
+                                  title: "Please save changes to apply",
+                                  color: ColorManager.primaryBlue,
+                                );
                               } else {
                                 customToast(
                                   title: AppLocalizations.of(context)!
@@ -250,7 +384,7 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                       horizontal: 16),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
-                                      value: cubit.dropdownOccasionType.isEmpty ? null : cubit.dropdownOccasionType,
+                                      value: cubit.dropdownOccasionType.isEmpty || !cubit.occasionTypeItems.any((item) => '${item.values.first} - ${item.values.last}' == cubit.dropdownOccasionType) ? null : cubit.dropdownOccasionType,
                                       hint: Text(
                                         AppLocalizations.of(context)!.translate('occasionTypeHint').toString(),
                                       ),
@@ -724,6 +858,139 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                             ],
                           ),
                           SizedBox(height: SizeConfig.height * 0.02),
+                          
+                          // Packaging Options Section
+                          Text(
+                            "${AppLocalizations.of(context)!.translate('packaging').toString()}: ",
+                            style: TextStyles.textStyle18Bold
+                                .copyWith(color: ColorManager.black),
+                          ),
+                          SizedBox(height: SizeConfig.height * 0.01),
+                          
+                          // With/Without Packaging Toggle
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // With packaging
+                              GestureDetector(
+                                onTap: () {
+                                  if (UserDataFromStorage.uIdFromStorage == widget.occasionModel.personId) {
+                                    cubit.switchGiftWithPackage(true);
+                                  }
+                                },
+                                child: Container(
+                                  height: mediaQuery.height * .055,
+                                  width: mediaQuery.width * .4,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: cubit.giftWithPackage
+                                        ? ColorManager.primaryBlue
+                                        : ColorManager.gray,
+                                    borderRadius: BorderRadius.circular(mediaQuery.height * 0.05),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('withPackaging')
+                                        .toString(),
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: mediaQuery.width * .05),
+
+                              // Without packaging
+                              GestureDetector(
+                                onTap: () {
+                                  if (UserDataFromStorage.uIdFromStorage == widget.occasionModel.personId) {
+                                    cubit.switchGiftWithPackage(false);
+                                  }
+                                },
+                                child: Container(
+                                  height: mediaQuery.height * .055,
+                                  width: mediaQuery.width * .4,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: cubit.giftWithPackage
+                                        ? ColorManager.gray
+                                        : ColorManager.primaryBlue,
+                                    borderRadius: BorderRadius.circular(mediaQuery.height * 0.05),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!
+                                        .translate('withoutPackaging')
+                                        .toString(),
+                                    style: TextStyles.textStyle12Bold
+                                        .copyWith(color: ColorManager.white),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          
+                          // Package Type Selection (only show if packaging is enabled)
+                          Visibility(
+                            visible: cubit.giftWithPackage,
+                            child: Column(
+                              children: [
+                                SizedBox(height: SizeConfig.height * 0.02),
+                                Text(
+                                  AppLocalizations.of(context)!.translate('packagingOpenImageNote').toString(),
+                                  style: TextStyles.textStyle12Regular.copyWith(
+                                    color: ColorManager.gray, 
+                                    fontStyle: FontStyle.italic
+                                  ),
+                                ),
+                                SizedBox(height: SizeConfig.height * 0.02),
+                                if (state is GetOccasionTaxesLoadingState)
+                                  const LoadingAnimationWidget()
+                                else
+                                  _buildPackageSelectionRow(context, cubit, mediaQuery)
+                              ],
+                            ),
+                          ),
+                          
+                          // Total Cost Display
+                          SizedBox(height: SizeConfig.height * 0.02),
+                          BlocBuilder<OccasionCubit, OccasionState>(
+                            builder: (context, state) {
+                              final cubit = context.read<OccasionCubit>();
+                              final totalCost = cubit.getTotalGiftPrice();
+                              return Container(
+                                width: double.infinity,
+                                padding: EdgeInsets.all(SizeConfig.height * 0.02),
+                                decoration: BoxDecoration(
+                                  color: ColorManager.primaryBlue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: ColorManager.primaryBlue.withOpacity(0.3),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      AppLocalizations.of(context)!
+                                          .translate('totalCost')
+                                          .toString(),
+                                      style: TextStyles.textStyle18Bold
+                                          .copyWith(color: ColorManager.black),
+                                    ),
+                                    Text(
+                                      '${totalCost.toStringAsFixed(2)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                                      style: TextStyles.textStyle18Bold
+                                          .copyWith(color: ColorManager.primaryBlue),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          
+                          SizedBox(height: SizeConfig.height * 0.02),
                           Text(
                             AppLocalizations.of(context)!
                                 .translate('deliveryDetails')
@@ -763,9 +1030,11 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                       horizontal: 16),
                                   child: DropdownButtonHideUnderline(
                                     child: DropdownButton<String>(
-                                      value: widget.occasionModel.city != null
+                                      value: (widget.occasionModel.city != null && cubit.allCity.contains(widget.occasionModel.city))
                                           ? widget.occasionModel.city
-                                          : cubit.dropdownCity,
+                                          : (cubit.dropdownCity.isNotEmpty && cubit.allCity.contains(cubit.dropdownCity))
+                                              ? cubit.dropdownCity
+                                              : null,
                                       hint: Text(AppLocalizations.of(context)!
                                           .translate('enterYourCity')
                                           .toString()),
@@ -829,7 +1098,7 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                         padding: const EdgeInsets.symmetric(horizontal: 16),
                                         child: DropdownButtonHideUnderline(
                                           child: DropdownButton<String>(
-                                            value: cubit.dropdownQuarter,
+                                            value: cubit.dropdownQuarter.isNotEmpty && cubit.allQuarters.contains(cubit.dropdownQuarter) ? cubit.dropdownQuarter : null,
                                             hint: Text(AppLocalizations.of(context)!.translate('theDistrictHint').toString()),
                                             icon: const Icon(Icons.keyboard_arrow_down, color: ColorManager.primaryBlue),
                                             elevation: 16,
@@ -937,6 +1206,11 @@ class _EditOccasionState extends State<EditOccasion> with WidgetsBindingObserver
                                                       .uIdFromStorage ==
                                                   widget
                                                       .occasionModel.personId) {
+                                                debugPrint("=== SAVE BUTTON PRESSED ===");
+                                                debugPrint("Current giftWithPackage: ${cubit.giftWithPackage}");
+                                                debugPrint("Current giftWithPackageType: ${cubit.giftWithPackageType}");
+                                                debugPrint("Current selectedGiftPackageImage: '${cubit.selectedGiftPackageImage}'");
+                                                
                                                 cubit.updateOccasion(
                                                   occasionId: widget
                                                       .occasionModel.occasionId,
@@ -1169,70 +1443,209 @@ Widget _buildPackageOption(
   required VoidCallback onTap,
 }) {
   final mediaQuery = MediaQuery.sizeOf(context);
-  return InkWell(
+  
+  return GestureDetector(
     onTap: onTap,
-    child: SizedBox(
-      height: mediaQuery.height * 0.1,
-      width: mediaQuery.height * 0.1,
-      child: Stack(
-        alignment: Alignment.bottomCenter,
+    child: AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: mediaQuery.height * 0.12,
+      width: mediaQuery.width * 0.4,
+      decoration: BoxDecoration(
+        color: isSelected ? ColorManager.primaryBlue.withOpacity(0.1) : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isSelected ? ColorManager.primaryBlue : ColorManager.gray.withOpacity(0.3),
+          width: isSelected ? 2 : 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
+          // Package Image
+          Container(
+            height: mediaQuery.height * 0.06,
+            width: mediaQuery.height * 0.06,
             decoration: BoxDecoration(
-              color: isSelected
-                  ? ColorManager.primaryBlue.withOpacity(0.2)
-                  : ColorManager.gray.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12),
-              border: isSelected
-                  ? Border.all(color: ColorManager.primaryBlue, width: 2)
-                  : null,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              color: ColorManager.gray.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(8),
             ),
-            child: Padding(
-              padding: EdgeInsets.all(SizeConfig.height * 0.01),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
-                  height: mediaQuery.height * 0.08,
-                  width: mediaQuery.height * 0.08,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Center(
+                  child: CircularProgressIndicator(
+                    color: ColorManager.primaryBlue,
+                    strokeWidth: 2,
+                  ),
+                ),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.card_giftcard,
+                  color: ColorManager.primaryBlue,
+                  size: mediaQuery.height * 0.03,
                 ),
               ),
             ),
           ),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            height: mediaQuery.height * 0.04,
-            width: mediaQuery.height * 0.04,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: isSelected ? ColorManager.primaryBlue : ColorManager.white,
-              borderRadius: BorderRadius.circular(500),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Text(
-              price,
-              style: TextStyles.textStyle12Bold.copyWith(
-                color: isSelected ? ColorManager.white : ColorManager.black,
-              ),
+          SizedBox(height: mediaQuery.height * 0.01),
+          // Price
+          Text(
+            "$price ${AppLocalizations.of(context)!.translate('rsa').toString()}",
+            textAlign: TextAlign.center,
+            style: TextStyles.textStyle12Bold.copyWith(
+              color: isSelected ? ColorManager.primaryBlue : ColorManager.black,
             ),
           ),
         ],
       ),
     ),
   );
+}
+
+Widget _buildPackageSelectionRow(BuildContext context, OccasionCubit cubit, Size mediaQuery) {
+  // Check if it's a gift type or money type
+  bool isGiftType = cubit.giftType == 'هدية';
+  
+  if (isGiftType) {
+    // Use gift package lists
+    return cubit.giftPackageListPrice.isNotEmpty && cubit.giftPackageListImage.isNotEmpty
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (cubit.giftPackageListPrice.length > 0)
+                _buildPackageOption(
+                  context,
+                  price: cubit.giftPackageListPrice[0].toString(),
+                  imageUrl: cubit.giftPackageListImage.length > 0 
+                      ? cubit.giftPackageListImage[0].toString() 
+                      : '',
+                  isSelected: cubit.giftWithPackage && cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[0].toString()),
+                  onTap: () {
+                    debugPrint("=== GIFT PACKAGE 0 SELECTED ===");
+                    debugPrint("Price: ${cubit.giftPackageListPrice[0].toString()}");
+                    debugPrint("Image: ${cubit.giftPackageListImage.length > 0 ? cubit.giftPackageListImage[0].toString() : ''}");
+                    debugPrint("Before switch - giftWithPackageType: ${cubit.giftWithPackageType}");
+                    // First enable packaging, then set the package type
+                    cubit.switchGiftWithPackage(true);
+                    cubit.switchGiftWithPackageType(
+                      int.parse(cubit.giftPackageListPrice[0].toString()),
+                      cubit.giftPackageListImage.length > 0 
+                          ? cubit.giftPackageListImage[0].toString() 
+                          : '',
+                    );
+                    debugPrint("After switch - giftWithPackageType: ${cubit.giftWithPackageType}");
+                  },
+                ),
+              if (cubit.giftPackageListPrice.length > 1) ...[
+                SizedBox(width: mediaQuery.width * 0.05),
+                _buildPackageOption(
+                  context,
+                  price: cubit.giftPackageListPrice[1].toString(),
+                  imageUrl: cubit.giftPackageListImage.length > 1 
+                      ? cubit.giftPackageListImage[1].toString() 
+                      : '',
+                  isSelected: cubit.giftWithPackage && cubit.giftWithPackageType == int.parse(cubit.giftPackageListPrice[1].toString()),
+                  onTap: () {
+                    debugPrint("=== GIFT PACKAGE 1 SELECTED ===");
+                    debugPrint("Price: ${cubit.giftPackageListPrice[1].toString()}");
+                    debugPrint("Image: ${cubit.giftPackageListImage.length > 1 ? cubit.giftPackageListImage[1].toString() : ''}");
+                    debugPrint("Before switch - giftWithPackageType: ${cubit.giftWithPackageType}");
+                    // First enable packaging, then set the package type
+                    cubit.switchGiftWithPackage(true);
+                    cubit.switchGiftWithPackageType(
+                      int.parse(cubit.giftPackageListPrice[1].toString()),
+                      cubit.giftPackageListImage.length > 1 
+                          ? cubit.giftPackageListImage[1].toString() 
+                          : '',
+                    );
+                    debugPrint("After switch - giftWithPackageType: ${cubit.giftWithPackageType}");
+                  },
+                ),
+              ],
+            ],
+          )
+        : Center(
+            child: Text(
+              'Loading gift package options...',
+              style: TextStyles.textStyle12Regular.copyWith(
+                color: ColorManager.gray,
+              ),
+            ),
+          );
+  } else {
+    // Use money package lists
+    return cubit.moneyPackageListPrice.isNotEmpty && cubit.moneyPackageListImage.isNotEmpty
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (cubit.moneyPackageListPrice.length > 0)
+                _buildPackageOption(
+                  context,
+                  price: cubit.moneyPackageListPrice[0].toString(),
+                  imageUrl: cubit.moneyPackageListImage.length > 0 
+                      ? cubit.moneyPackageListImage[0].toString() 
+                      : '',
+                  isSelected: cubit.giftWithPackage && cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[0].toString()),
+                  onTap: () {
+                    debugPrint("=== MONEY PACKAGE 0 SELECTED ===");
+                    debugPrint("Price: ${cubit.moneyPackageListPrice[0].toString()}");
+                    debugPrint("Image: ${cubit.moneyPackageListImage.length > 0 ? cubit.moneyPackageListImage[0].toString() : ''}");
+                    debugPrint("Before switch - moneyWithPackageType: ${cubit.moneyWithPackageType}");
+                    // First enable packaging, then set the package type
+                    cubit.switchGiftWithPackage(true);
+                    cubit.switchMoneyWithPackageType(
+                      int.parse(cubit.moneyPackageListPrice[0].toString()),
+                      cubit.moneyPackageListImage.length > 0 
+                          ? cubit.moneyPackageListImage[0].toString() 
+                          : '',
+                    );
+                    debugPrint("After switch - moneyWithPackageType: ${cubit.moneyWithPackageType}");
+                  },
+                ),
+              if (cubit.moneyPackageListPrice.length > 1) ...[
+                SizedBox(width: mediaQuery.width * 0.05),
+                _buildPackageOption(
+                  context,
+                  price: cubit.moneyPackageListPrice[1].toString(),
+                  imageUrl: cubit.moneyPackageListImage.length > 1 
+                      ? cubit.moneyPackageListImage[1].toString() 
+                      : '',
+                  isSelected: cubit.giftWithPackage && cubit.moneyWithPackageType == int.parse(cubit.moneyPackageListPrice[1].toString()),
+                  onTap: () {
+                    debugPrint("=== MONEY PACKAGE 1 SELECTED ===");
+                    debugPrint("Price: ${cubit.moneyPackageListPrice[1].toString()}");
+                    debugPrint("Image: ${cubit.moneyPackageListImage.length > 1 ? cubit.moneyPackageListImage[1].toString() : ''}");
+                    debugPrint("Before switch - moneyWithPackageType: ${cubit.moneyWithPackageType}");
+                    // First enable packaging, then set the package type
+                    cubit.switchGiftWithPackage(true);
+                    cubit.switchMoneyWithPackageType(
+                      int.parse(cubit.moneyPackageListPrice[1].toString()),
+                      cubit.moneyPackageListImage.length > 1 
+                          ? cubit.moneyPackageListImage[1].toString() 
+                          : '',
+                    );
+                    debugPrint("After switch - moneyWithPackageType: ${cubit.moneyWithPackageType}");
+                  },
+                ),
+              ],
+            ],
+          )
+        : Center(
+            child: Text(
+              'Loading money package options...',
+              style: TextStyles.textStyle12Regular.copyWith(
+                color: ColorManager.gray,
+              ),
+            ),
+          );
+  }
 }

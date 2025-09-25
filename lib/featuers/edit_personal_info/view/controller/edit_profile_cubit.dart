@@ -19,11 +19,12 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
        String? phone,
        String? birthDate,
        context,
-       String? gender}) async {
+       String? gender,
+       String? email}) async {
     emit(EditProfileLoadingState());
     var result = await editProfileUseCases.editProfile(
       birthDate: birthDate,
-        name: name, phone: phone, context: context, gender: gender);
+        name: name, phone: phone, context: context, gender: gender, email: email);
     result.fold((l) {
       emit(EditProfileErrorState(message: l.message));
     }, (r) {
@@ -33,25 +34,33 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
 
   bool isUsed = false;
 
-  Future<void> getUserInfo({required String phone,required context,required String name,required String gender,required String date})async{
+  Future<void> getUserInfo({required String phone,required context,required String name,required String gender,required String date, String? email})async{
     isUsed=false;
     emit(CheckPhoneLoadingState());
-    FirebaseFirestore.instance.collection('users').where('phone',isEqualTo: phone)
-        .get().then((value) {
-      value.docs.forEach((element) {
-        print(element.data());
-      });
+    
+    try {
+      // check if phone number is used by other user
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('phone', isEqualTo: phone)
+          .get();
+      
+      // Filter out the current user from results
+      final otherUsersWithSamePhone = querySnapshot.docs
+          .where((doc) => doc.id != UserDataFromStorage.uIdFromStorage)
+          .toList();
+      
+      debugPrint('Found ${otherUsersWithSamePhone.length} other users with same phone number');
 
-      print('Length ${value.docs.length}');
-
-      if(value.docs.isEmpty){
+      if(otherUsersWithSamePhone.isEmpty){
         isUsed=false;
-        editProfile(
+        await editProfile(
           name:name,
           context: context,
           gender: gender,
           phone: phone,
-          birthDate: date
+          birthDate: date,
+          email: email
         );
       }else{
         isUsed=true;
@@ -59,12 +68,11 @@ class EditProfileCubit extends Cubit<EditProfileStates> {
       }
 
       emit(CheckPhoneSuccessState());
-    }).catchError((error){
+    } catch (error) {
       isUsed=false;
       debugPrint("error in getting user info: $error");
       emit(CheckPhoneErrorState());
-      return;
-    });
+    }
   }
 
   void setBrithDate(

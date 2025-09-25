@@ -10,6 +10,7 @@ abstract class EditProfileDataSource {
       String? phone,
       String? gender,
       String? birthDate,
+      String? email,
       context});
 }
 
@@ -25,17 +26,28 @@ class EditProfileDataSourceImplement extends EditProfileDataSource {
        String? birthDate,
        String? phone,
        context,
-       String? gender}) async {
+       String? gender,
+       String? email}) async {
     try {
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(UserDataFromStorage.uIdFromStorage)
-          .update({
+      // Prepare update data
+      Map<String, dynamic> updateData = {
         'name': name,
         'phone': phone,
         'gender': gender,
         'brithDate': birthDate
-      });
+      };
+      
+      // Add email to update data if provided
+      if (email != null && email.isNotEmpty) {
+        updateData['email'] = email;
+        // Update shared preferences with new email
+        UserDataFromStorage.setEmail(email);
+      }
+      
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(UserDataFromStorage.uIdFromStorage)
+          .update(updateData);
       baseAuthDataSource.getUserData(
           uId: UserDataFromStorage.uIdFromStorage, context: context);
     } on FirebaseException catch (error) {

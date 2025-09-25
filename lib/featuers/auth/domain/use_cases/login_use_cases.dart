@@ -12,8 +12,9 @@ class LoginUseCases{
   Future<Either<Faliure,void>> login({
     required String email,
     required context,
-    required String password})async {
-    return await authBaseRepository.login(email:email, password:password,context: context);
+    required String password,
+    bool isMobileLogin = false})async {
+    return await authBaseRepository.login(email:email, password:password,context: context, isMobileLogin: isMobileLogin);
   }
 
 }

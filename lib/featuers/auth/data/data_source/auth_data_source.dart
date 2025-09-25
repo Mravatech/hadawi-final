@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
@@ -8,22 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
-import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
-import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/verifiy_otp_code_screen.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
-import 'package:hadawi_app/utiles/error_handling/faliure/faliure.dart';
-import 'package:hadawi_app/utiles/helper/material_navigation.dart';
-import 'package:hadawi_app/utiles/services/dio_helper.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:hadawi_app/widgets/toastification_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:toastification/toastification.dart';
 
 abstract class BaseAuthDataSource {
   Future<void> login(
-      {required String email, required String password, required context});
+      {required String email, required String password, required context, bool isMobileLogin = false});
 
   Future<void> register(
       {required String email,
@@ -49,6 +43,8 @@ abstract class BaseAuthDataSource {
     required String gender,
     required String city,
     required String password,
+    String firstName = '',
+    String lastName = '',
   });
 
   Future<void> logout();
@@ -97,16 +93,99 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
   Future<void> login(
       {required String email,
       required String password,
-      required context}) async {
+      required context,
+      bool isMobileLogin = false}) async {
     try {
-      final user = await firebaseAuth.signInWithEmailAndPassword(
-          email: '$email@gmail.com', password: email);
-      print(user.user!.uid);
-
-      await getUserData(uId: user.user!.uid, context: context);
+      if (isMobileLogin) {
+        // For mobile login, use custom authentication system
+        debugPrint("Mobile login: Using custom authentication system");
+        
+        // Check if user exists in Firestore by phone number
+        final userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phone', isEqualTo: email) // email parameter contains phone number for mobile login
+            .limit(1)
+            .get();
+        
+        if (userQuery.docs.isEmpty) {
+          debugPrint("User not found in Firestore");
+          throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'user-not-found'));
+        }
+        
+        final userDoc = userQuery.docs.first;
+        final userData = userDoc.data();
+        
+        // Verify password if provided
+        if (password.isNotEmpty && userData['password'] != password) {
+          debugPrint("Invalid password");
+          throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'invalid-credential'));
+        }
+        
+        // Generate custom authentication token
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final random = Random().nextInt(999999);
+        final customToken = '${userDoc.id}_${email}_${timestamp}_${random}_custom_auth';
+        debugPrint("Generated custom auth token for mobile login");
+        
+        // Store user data in secure storage
+        await UserDataFromStorage.setUid(userDoc.id);
+        await UserDataFromStorage.setUserName(userData['name'] ?? '');
+        await UserDataFromStorage.setEmail(userData['email'] ?? '');
+        await UserDataFromStorage.setPhoneNumber(userData['phone'] ?? '');
+        await UserDataFromStorage.setGender(userData['gender'] ?? '');
+        await UserDataFromStorage.setBrithDate(userData['brithDate'] ?? '');
+        await UserDataFromStorage.setUserIsGuest(false);
+        await UserDataFromStorage.setAuthToken(customToken);
+        
+        debugPrint("Custom mobile login successful");
+      } else {
+        // For email/password login, use custom authentication system
+        debugPrint("Email login: Using custom authentication system");
+        
+        // Check if user exists in Firestore by email
+        final userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+        
+        if (userQuery.docs.isEmpty) {
+          debugPrint("User not found in Firestore");
+          throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'user-not-found'));
+        }
+        
+        final userDoc = userQuery.docs.first;
+        final userData = userDoc.data();
+        
+        // Verify password
+        if (userData['password'] != password) {
+          debugPrint("Invalid password");
+          throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'invalid-credential'));
+        }
+        
+        // Generate custom authentication token
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        final random = Random().nextInt(999999);
+        final customToken = '${userDoc.id}_${email}_${timestamp}_${random}_custom_auth';
+        debugPrint("Generated custom auth token for email login");
+        
+        // Store user data in secure storage
+        await UserDataFromStorage.setUid(userDoc.id);
+        await UserDataFromStorage.setUserName(userData['name'] ?? '');
+        await UserDataFromStorage.setEmail(userData['email'] ?? '');
+        await UserDataFromStorage.setPhoneNumber(userData['phone'] ?? '');
+        await UserDataFromStorage.setGender(userData['gender'] ?? '');
+        await UserDataFromStorage.setBrithDate(userData['brithDate'] ?? '');
+        await UserDataFromStorage.setUserIsGuest(false);
+        await UserDataFromStorage.setAuthToken(customToken);
+        
+        debugPrint("Custom email login successful");
+      }
     } on FirebaseAuthException catch (e) {
+      debugPrint("Firebase login error: ${e.message}");
       throw FirebaseExceptions(firebaseAuthException: e);
     } on Exception catch (e) {
+      debugPrint("General login error: $e");
       throw Exception(e.toString());
     }
   }
@@ -140,19 +219,73 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
     required String city,
   }) async {
     try {
-      final user = await firebaseAuth.createUserWithEmailAndPassword(
-          email: '$phone@gmail.com', password: phone);
+      debugPrint("Custom registration: Checking for existing users");
+      
+      // Check if user already exists by email
+      final emailQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+      
+      // Check if user already exists by phone (if phone is provided)
+      QuerySnapshot phoneQuery;
+      if (phone.isNotEmpty) {
+        phoneQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phone', isEqualTo: phone)
+            .limit(1)
+            .get();
+      } else {
+        // Create empty query snapshot
+        phoneQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .limit(0)
+            .get();
+      }
+      
+      if (emailQuery.docs.isNotEmpty) {
+        debugPrint("User already exists with this email");
+        throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'email-already-in-use'));
+      }
+      
+      if (phone.isNotEmpty && phoneQuery.docs.isNotEmpty) {
+        debugPrint("User already exists with this phone number");
+        throw FirebaseExceptions(firebaseAuthException: FirebaseAuthException(code: 'phone-number-already-exists'));
+      }
+      
+      // Generate a unique user ID for Firestore
+      final userId = FirebaseFirestore.instance.collection('users').doc().id;
+      debugPrint("Creating new user with ID: $userId");
+      
       await saveUserData(
         email: email,
         phone: phone,
         name: name,
         password: password,
-        uId: user.user!.uid,
+        uId: userId,
         brithDate: brithDate,
         city: city,
         gender: gender,
       );
-      await getUserData(uId: user.user!.uid, context: context);
+      
+      // Generate custom authentication token
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final random = Random().nextInt(999999);
+      final customToken = '${userId}_${email}_${timestamp}_${random}_custom_auth';
+      debugPrint("Generated custom auth token for new user");
+      
+      // Store user data in secure storage
+      await UserDataFromStorage.setUid(userId);
+      await UserDataFromStorage.setUserName(name);
+      await UserDataFromStorage.setEmail(email);
+      await UserDataFromStorage.setPhoneNumber(phone);
+      await UserDataFromStorage.setGender(gender);
+      await UserDataFromStorage.setBrithDate(brithDate);
+      await UserDataFromStorage.setUserIsGuest(false);
+      await UserDataFromStorage.setAuthToken(customToken);
+      
+      debugPrint("Custom registration successful");
     } on FirebaseAuthException catch (e) {
       print('error $e');
       throw FirebaseExceptions(firebaseAuthException: e);
@@ -168,12 +301,16 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       required String brithDate,
       required String gender,
       required String password,
-      required String city}) async {
+      required String city,
+      String firstName = '',
+      String lastName = ''}) async {
     UserModel userModel = UserModel(
       email: email,
       date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
       phone: phone,
       name: name,
+      firstName: firstName,
+      lastName: lastName,
       token: '',
       uId: uId,
       brithDate: brithDate,
@@ -309,15 +446,32 @@ class AuthDataSourceImplement extends BaseAuthDataSource {
       // Only proceed if we have a user
       if (user != null) {
         try {
+          // Extract firstName and lastName from displayName
+          String firstName = '';
+          String lastName = '';
+          String fullName = user.displayName ?? '';
+          
+          if (fullName.isNotEmpty) {
+            List<String> nameParts = fullName.split(' ');
+            if (nameParts.isNotEmpty) {
+              firstName = nameParts[0];
+              if (nameParts.length > 1) {
+                lastName = nameParts.sublist(1).join(' ');
+              }
+            }
+          }
+          
           await saveUserData(
               email: user.email ?? '',
               phone: '',
-              name: user.displayName ?? '',
+              name: fullName,
               uId: user.uid,
               city: city,
               password: '',
               gender: gender,
-              brithDate: brithDate
+              brithDate: brithDate,
+              firstName: firstName,
+              lastName: lastName
           );
 
           await getUserData(uId: user.uid, context: context);

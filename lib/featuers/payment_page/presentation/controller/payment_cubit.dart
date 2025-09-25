@@ -7,16 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/payment_page/date/models/payment_model.dart';
 import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_states.dart';
-import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/utiles/router/app_router.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:hadawi_app/widgets/toast.dart';
+import 'package:hadawi_app/utiles/services/email_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:share_plus/share_plus.dart';
-
-import '../view/apply_payment.dart';
 
 class PaymentCubit extends Cubit<PaymentStates> {
   PaymentCubit() : super(PaymentInitialState());
@@ -57,11 +52,14 @@ class PaymentCubit extends Cubit<PaymentStates> {
     double paymentCounterValue = double.parse(
         convertArabicToEnglishNumbers(paymentAmountController.text.toString()));
 
+    // Calculate new total amount
+    double newTotalAmount = paymentAmount + paymentCounterValue;
+
     await FirebaseFirestore.instance
         .collection("Occasions")
         .doc(occasionId)
         .update({
-      "moneyGiftAmount": paymentAmount + paymentCounterValue,
+      "moneyGiftAmount": newTotalAmount,
     });
 
     await FirebaseFirestore.instance
@@ -108,8 +106,15 @@ class PaymentCubit extends Cubit<PaymentStates> {
         "personName": UserDataFromStorage.userNameFromStorage,
         "personPhone": UserDataFromStorage.phoneNumberFromStorage,
         "personEmail": UserDataFromStorage.emailFromStorage,
-      }).then((value) {
+      }).then((value) async {
         debugPrint("payment added to payments collection");
+        
+        // Check if occasion target is reached and send email notification
+        await _checkAndSendOccasionCompletionEmail(
+          occasionId: occasionId,
+          newTotalAmount: newTotalAmount,
+        );
+        
         emit(PaymentAddSuccessState());
       }).catchError((error) {
         debugPrint(
@@ -547,6 +552,125 @@ class PaymentCubit extends Cubit<PaymentStates> {
     } catch (e) {
       print('Error occurred: $e');
       emit(PaymentCreateLinkErrorState());
+    }
+  }
+
+  /// Private method to check if occasion target is reached and send email notification
+  Future<void> _checkAndSendOccasionCompletionEmail({
+    required String occasionId,
+    required double newTotalAmount,
+  }) async {
+    try {
+      // Get occasion details from Firestore
+      final occasionDoc = await FirebaseFirestore.instance
+          .collection("Occasions")
+          .doc(occasionId)
+          .get();
+
+      if (!occasionDoc.exists) {
+        debugPrint("❌ Occasion document not found: $occasionId");
+        return;
+      }
+
+      final occasionData = occasionDoc.data()!;
+      final targetAmount = double.parse(occasionData['giftPrice'].toString());
+      
+      debugPrint("🎯 Checking occasion completion: $occasionId");
+      debugPrint("💰 Current amount: $newTotalAmount, Target amount: $targetAmount");
+
+      // Check if target amount is reached
+      if (newTotalAmount >= targetAmount) {
+        debugPrint("🎉 Occasion target reached! Sending email notification...");
+        
+        // Send email notification
+        final emailSent = await EmailService.sendOccasionCompletionNotification(
+          occasionName: occasionData['occasionName'] ?? 'Unknown Occasion',
+          occasionId: occasionId,
+          targetAmount: targetAmount,
+          currentAmount: newTotalAmount,
+          personName: occasionData['personName'] ?? 'Unknown',
+          personEmail: occasionData['personEmail'] ?? '',
+          personPhone: occasionData['personPhone'] ?? '',
+          occasionDate: occasionData['occasionDate'] ?? '',
+          giftName: occasionData['giftName'] ?? 'Unknown Gift',
+          giftPrice: targetAmount,
+        );
+
+        if (emailSent) {
+          debugPrint("✅ Email notification sent successfully for occasion: $occasionId");
+          
+          // Optional: Mark occasion as completed in Firestore
+          await FirebaseFirestore.instance
+              .collection("Occasions")
+              .doc(occasionId)
+              .update({
+            'isCompleted': true,
+            'completionDate': DateTime.now().toIso8601String(),
+            'emailNotificationSent': true,
+          });
+          
+          debugPrint("📝 Occasion marked as completed in Firestore");
+        } else {
+          debugPrint("❌ Failed to send email notification for occasion: $occasionId");
+        }
+      } else {
+        debugPrint("⏳ Occasion target not yet reached. Remaining: ${targetAmount - newTotalAmount} SAR");
+      }
+    } catch (e) {
+      debugPrint("❌ Error checking occasion completion: $e");
+    }
+  }
+
+  /// Public method to manually check and send email notification for a specific occasion
+  /// This can be called from other parts of the app if needed
+  Future<void> checkOccasionCompletionAndSendEmail({
+    required String occasionId,
+  }) async {
+    try {
+      final occasionDoc = await FirebaseFirestore.instance
+          .collection("Occasions")
+          .doc(occasionId)
+          .get();
+
+      if (!occasionDoc.exists) {
+        debugPrint("❌ Occasion document not found: $occasionId");
+        return;
+      }
+
+      final occasionData = occasionDoc.data()!;
+      final currentAmount = double.parse(occasionData['moneyGiftAmount'].toString());
+
+      await _checkAndSendOccasionCompletionEmail(
+        occasionId: occasionId,
+        newTotalAmount: currentAmount,
+      );
+    } catch (e) {
+      debugPrint("❌ Error in manual occasion completion check: $e");
+    }
+  }
+
+  /// Send a test email to verify the email service is working
+  /// Call this method to test your email configuration
+  Future<void> sendTestEmail({String? recipientEmail}) async {
+    emit(PaymentAddLoadingState());
+    
+    try {
+      debugPrint("🧪 Starting email service test...");
+      
+      final emailSent = await EmailService.sendTestEmail(
+        recipientEmail: recipientEmail,
+      );
+      
+      if (emailSent) {
+        debugPrint("✅ Test email sent successfully!");
+        emit(PaymentAddSuccessState());
+      } else {
+        debugPrint("❌ Test email failed to send");
+        emit(PaymentAddErrorState());
+      }
+    } catch (e) {
+      debugPrint("❌ Error sending test email: $e");
+      emit(PaymentAddErrorState());
     }
   }
 

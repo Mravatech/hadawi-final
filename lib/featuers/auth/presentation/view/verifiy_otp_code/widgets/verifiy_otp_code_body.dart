@@ -5,18 +5,18 @@ import 'dart:ui' as ui;
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/verifiy_otp_code/widgets/resend_code_button.dart';
+import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_profile_cubit.dart';
+import 'package:hadawi_app/featuers/edit_personal_info/view/screens/edit_personal_info.dart';
 import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
+import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
-
-import '../../../../../../utiles/router/app_router.dart';
 
 class VerfiyCodeViewBody extends StatefulWidget {
   const VerfiyCodeViewBody({
@@ -49,10 +49,16 @@ class VerfiyCodeViewBody extends StatefulWidget {
 class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
   TextEditingController verifyOtpPinPutController = TextEditingController();
   GlobalKey<FormState> otpKey = GlobalKey<FormState>();
+  bool hasError = false;
 
   @override
   void initState() {
     super.initState();
+    debugPrint("VerfiyCodeViewBody initialized with:");
+    debugPrint("  phone: '${widget.phone}'");
+    debugPrint("  email: '${widget.email}'");
+    debugPrint("  password: '${widget.password}'");
+    debugPrint("  isLogin: ${widget.isLogin}");
     context.read<AuthCubit>().resendOtpTimer();
   }
 
@@ -139,17 +145,32 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                       fieldWidth: 40,
                       activeFillColor: Colors.white,
                       inactiveFillColor: ColorManager.gray,
-                      inactiveColor: ColorManager.gray,
-                      activeColor: ColorManager.primaryBlue,
-                      selectedColor: ColorManager.gray,
-                      selectedFillColor: ColorManager.gray,
+                      inactiveColor: hasError ? ColorManager.error : ColorManager.gray,
+                      activeColor: hasError ? ColorManager.error : ColorManager.primaryBlue,
+                      selectedColor: hasError ? ColorManager.error : ColorManager.gray,
+                      selectedFillColor: hasError ? Colors.red.shade50 : ColorManager.gray,
+                      errorBorderColor: ColorManager.error,
                     ),
                     keyboardType: TextInputType.number,
                     animationDuration: const Duration(milliseconds: 300),
                     enableActiveFill: true,
                     controller: verifyOtpPinPutController,
-                    onCompleted: (v) {},
-                    onChanged: (value) {},
+                    onCompleted: (v) {
+                      // Clear error state when user completes input
+                      if (hasError) {
+                        setState(() {
+                          hasError = false;
+                        });
+                      }
+                    },
+                    onChanged: (value) {
+                      // Clear error state when user starts typing
+                      if (hasError) {
+                        setState(() {
+                          hasError = false;
+                        });
+                      }
+                    },
                     beforeTextPaste: (text) {
                       return true;
                     },
@@ -175,32 +196,51 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                 BlocConsumer<AuthCubit, AuthStates>(
                   listener: (context, state) {
                     if (state is VerifiyOtpCodeSuccessState){
-                      if(widget.isLogin){
-                        context.read<AuthCubit>().login(
-                          email: widget.email,
-                          password: widget.password,
-                          context: context,
-                        );
-                      }else{
-                        context.read<AuthCubit>().register(
-                            email: widget.email,
-                            password: widget.password,
-                            phone: widget.phone,
-                            name: widget.name,
-                            context: context,
-                            brithDate: widget.brithDate,
-                            gender: widget.gender,
-                            city: widget.city);
+                      // Clear any error state
+                      if (hasError) {
+                        setState(() {
+                          hasError = false;
+                        });
                       }
+                      
+                      // Show success message
+                      customToast(
+                        title: 'OTP verified! Starting phone authentication...',
+                        color: ColorManager.primaryBlue,
+                      );
+                      
+                      // Authenticate with Firebase after manual OTP verification
+                      context.read<AuthCubit>().authenticateAfterManualOtp(
+                        phone: widget.phone,
+                        email: widget.email,
+                        password: widget.password,
+                        context: context,
+                        isLogin: widget.isLogin,
+                      );
                     }
                     if (state is VerifiyOtpCodeErrorState) {
+                      setState(() {
+                        hasError = true;
+                      });
+                      // Clear the OTP field to allow user to retry
+                      verifyOtpPinPutController.clear();
+                      customToast(
+                        title: state.message,
+                        color: ColorManager.error,
+                      );
                     }
                     if(state is UserRegisterErrorState){
                       customToast(
                           title:AppLocalizations.of(context)!.translate('phoneToastError').toString(), color: ColorManager.error);
                     }
                     if(state is UserRegisterSuccessState){
-                      customPushAndRemoveUntil(context, HomeLayout());
+customPushAndRemoveUntil(context, HomeLayout());
+                    }
+                    if(state is ProfileCompletionRequiredState){
+                      customPushAndRemoveUntil(context, BlocProvider(
+                        create: (context) => EditProfileCubit(editProfileUseCases: getIt()),
+                        child: EditProfileScreen(),
+                      ));
                     }
                     if (state is UserLoginSuccessState) {
                       saveData(
@@ -215,10 +255,16 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                       customPushAndRemoveUntil(context, HomeLayout());
                     }
                     if (state is UserLoginErrorState) {
-                      // customToast(
-                      //   title: AppLocalizations.of(context)!.translate('phoneError')!.toString(),
-                      //   color: ColorManager.error,
-                      // );
+                      customToast(
+                        title: state.message,
+                        color: ColorManager.error,
+                      );
+                    }
+                    if (state is UserSaveDataErrorState) {
+                      customToast(
+                        title: state.message,
+                        color: ColorManager.error,
+                      );
                     }
                   },
                   builder: (context, state) {
@@ -228,6 +274,33 @@ class _VerfiyCodeViewBodyState extends State<VerfiyCodeViewBody> {
                         : DefaultButton(
                         buttonText: AppLocalizations.of(context)!.translate('confirm').toString(),
                         onPressed: () {
+                          // Validate OTP input
+                          if (verifyOtpPinPutController.text.isEmpty) {
+                            customToast(
+                              title: 'Please enter the verification code',
+                              color: ColorManager.error,
+                            );
+                            return;
+                          }
+                          
+                          if (verifyOtpPinPutController.text.length != 6) {
+                            customToast(
+                              title: 'Please enter a complete 6-digit code',
+                              color: ColorManager.error,
+                            );
+                            return;
+                          }
+                          
+                          // Check if input contains only numbers
+                          if (!RegExp(r'^\d{6}$').hasMatch(verifyOtpPinPutController.text)) {
+                            customToast(
+                              title: 'Please enter only numbers',
+                              color: ColorManager.error,
+                            );
+                            return;
+                          }
+                          
+                          // Use custom OTP verification (not Firebase phone auth)
                           cubit.verifyOtp(
                             otp: int.parse(verifyOtpPinPutController.text),
                           );

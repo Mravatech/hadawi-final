@@ -1,0 +1,277 @@
+{
+  "metadata": {
+    "timestamp": "20250924_221320",
+    "project_id": "transport-app-d662f",
+    "collection_name": "users",
+    "users_to_delete": [
+      "gkyKqKv19ZOJEUZJcH7LgEKsIHz1",
+      "Glga8igSdVRB9qWbfzII64I0QFo1",
+      "BoxmHNGkqhUFpooYz267R0N3wFn1",
+      "6LXgXp3eBLRgVZK9NsvYlEcJGPq1",
+      "NMJm7HC0ErYEeqzISkj0flptFHs2",
+      "2FeSXtewhoViJjSPUOwh4u7rLUD2",
+      "PNuTizjJ5udpGA0AhIORDaA7tQm1",
+      "jXz8kKi7QFNT4IzjHZ7mLukl0VY2",
+      "phone_1752001463225_9zww5ogFnTabUFOC",
+      "ugyL6cOhBFZiPpnaZySP4eZ0TVv2",
+      "pqeZw4V4ICTgRjVnmTYGmR9IRBv2",
+      "lGoeiOruNFXkylvVsLFSB0R67z32"
+    ],
+    "duplicate_groups": 8,
+    "backup_reason": "duplicate_cleanup"
+  },
+  "users_to_delete": [
+    {
+      "uId": "gkyKqKv19ZOJEUZJcH7LgEKsIHz1",
+      "token": "",
+      "city": "",
+      "phone": "564940300",
+      "private": false,
+      "date": "2025-09-09",
+      "gender": "",
+      "email": "564940300",
+      "brithDate": "",
+      "name": "",
+      "block": false,
+      "_document_id": "gkyKqKv19ZOJEUZJcH7LgEKsIHz1"
+    },
+    {
+      "uId": "Glga8igSdVRB9qWbfzII64I0QFo1",
+      "token": "",
+      "city": "جده",
+      "phone": "564940300",
+      "private": false,
+      "date": "2025-04-22",
+      "gender": "Female",
+      "email": "noo@gmail.com",
+      "brithDate": "2025-04-08",
+      "name": "nn",
+      "block": false,
+      "_document_id": "Glga8igSdVRB9qWbfzII64I0QFo1"
+    },
+    {
+      "uId": "BoxmHNGkqhUFpooYz267R0N3wFn1",
+      "token": "cGNXkBuyokjngY1Pv25cHf:APA91bGuAsxE-9c58o3aRlHAUoonXw9_P5MrXhU5dsdleDbHIp1ZrMjZNSFvvGudOQwT9iz0T2vPazuJ52sLCsZeCqWrIX2wTxY1hjmKtm4rweJJvFZqHV8",
+      "city": "",
+      "phone": "0564940300",
+      "private": false,
+      "date": "2025-04-22",
+      "gender": "",
+      "email": "alsayednoor@icloud.com",
+      "brithDate": "",
+      "block": false,
+      "name": "Apple User",
+      "_document_id": "BoxmHNGkqhUFpooYz267R0N3wFn1"
+    },
+    {
+      "uId": "6LXgXp3eBLRgVZK9NsvYlEcJGPq1",
+      "token": "dgurzoCNmEdAu_lwXgEhDx:APA91bHAvBw9nfOHaOvt-jbPBf75gFbX43_EwHuhSZtSkTCtVbRt4FObA3igWYW08Q1Zyon6eSkQm40wj9dMJMmIubGEW6IhvB8KFhJEPhEJJ10sRMdK1Ts",
+      "city": "",
+      "phone": "564940300",
+      "private": false,
+      "date": "2025-09-09",
+      "gender": "",
+      "email": "",
+      "brithDate": "",
+      "block": false,
+      "name": "",
+      "_document_id": "6LXgXp3eBLRgVZK9NsvYlEcJGPq1"
+    },
+    {
+      "uId": "NMJm7HC0ErYEeqzISkj0flptFHs2",
+      "token": "",
+      "city": "",
+      "phone": "233222323",
+      "private": false,
+      "date": "2025-07-08",
+      "gender": "",
+      "email": "",
+      "brithDate": "",
+      "name": "",
+      "block": false,
+      "_document_id": "NMJm7HC0ErYEeqzISkj0flptFHs2"
+    },
+    {
+      "uId": "2FeSXtewhoViJjSPUOwh4u7rLUD2",
+      "token": "",
+      "city": "",
+      "phone": "888588388",
+      "private": false,
+      "date": "2025-07-08",
+      "gender": "",
+      "email": "",
+      "brithDate": "",
+      "name": "",
+      "block": false,
+      "_document_id": "2FeSXtewhoViJjSPUOwh4u7rLUD2"
+    },
+    {
+      "uId": "PNuTizjJ5udpGA0AhIORDaA7tQm1",
+      "token": "",
+      "city": "حوطة بني تميم",
+      "phone": "1277556432",
+      "date": "2025-04-05",
+      "gender": "Male",
+      "email": "nowf@gmail.com",
+      "brithDate": "2025-04-02",
+      "name": "Nowf",
+      "block": false,
+      "_document_id": "PNuTizjJ5udpGA0AhIORDaA7tQm1"
+    },
+    {
+      "uId": "jXz8kKi7QFNT4IzjHZ7mLukl0VY2",
+      "token": "cFhH4FU8M0_DrDOlUl6vrZ:APA91bGIdJf1LAR3OuQcjXlVj1fIXMoBadE8joyv3GrWBImcqsYQBzMQjkYFvGLdT_vg93bA_bdl1LWtZGyaq3wYo-AZ7B1ORiBkL15NyYj4QRWyBGEy-Is",
+      "city": "",
+      "phone": "888588388",
+      "private": false,
+      "date": "2025-07-08",
+      "gender": "",
+      "email": "",
+      "brithDate": "",
+      "name": "",
+      "block": false,
+      "_document_id": "jXz8kKi7QFNT4IzjHZ7mLukl0VY2"
+    },
+    {
+      "uId": "phone_1752001463225_9zww5ogFnTabUFOC",
+      "token": "",
+      "city": "",
+      "phone": "877277772",
+      "private": false,
+      "date": "2025-07-08",
+      "gender": "",
+      "email": "",
+      "brithDate": "",
+      "name": "",
+      "block": false,
+      "_document_id": "phone_1752001463225_9zww5ogFnTabUFOC"
+    },
+    {
+      "uId": "ugyL6cOhBFZiPpnaZySP4eZ0TVv2",
+      "token": "dentqevfQVCbu6RZo_Fnk8:APA91bHe7rXrlTNluF0yVK9Mvrxx_E68QyoQRYErrt2oNGbhNKJCOg_6CXkTMQNTCoBd4OlW8RIl215fkQeMLugQoFgRiiKlHRkFYF0vP4Wgyb-rKgpcJ5c",
+      "city": "",
+      "phone": "155458393",
+      "private": false,
+      "date": "2025-09-03",
+      "gender": "Male",
+      "email": "maheradel@gmail.com",
+      "brithDate": "2001-03-21",
+      "name": "Maher Adel",
+      "block": false,
+      "_document_id": "ugyL6cOhBFZiPpnaZySP4eZ0TVv2"
+    },
+    {
+      "uId": "pqeZw4V4ICTgRjVnmTYGmR9IRBv2",
+      "token": "cpVjTbIjSOiW9o3phPmdPT:APA91bGek51mbv8dyc1V2JRjc5d_nZS1MfF1sqMiBTju_EmeV7N1OBLNJEjMHFvuxx2uFAhf2bMnIZhstj9Ld9JWJGc7sPvOm7e0MBGHn9VRQ1zdHDCJ-ms",
+      "city": "",
+      "phone": "564940300",
+      "private": false,
+      "date": "2025-04-23",
+      "gender": "Male",
+      "email": "maheradel12@gmail.com",
+      "brithDate": "2001-03-01",
+      "name": "ماهر عادل",
+      "block": false,
+      "_document_id": "pqeZw4V4ICTgRjVnmTYGmR9IRBv2"
+    },
+    {
+      "uId": "lGoeiOruNFXkylvVsLFSB0R67z32",
+      "token": "",
+      "city": "حوطة بني تميم",
+      "phone": "1234567890",
+      "date": "2025-03-28",
+      "gender": "Male",
+      "email": "mohammed@gmail.com",
+      "brithDate": "2025-03-28",
+      "name": "mo",
+      "block": false,
+      "_document_id": "lGoeiOruNFXkylvVsLFSB0R67z32"
+    }
+  ],
+  "duplicate_groups": [
+    {
+      "primary_field": "phone",
+      "field_value": "888588388",
+      "user_ids": [
+        "jXz8kKi7QFNT4IzjHZ7mLukl0VY2",
+        "d2KrRYdDXnMjIO8L03sWlZ121gm2",
+        "2FeSXtewhoViJjSPUOwh4u7rLUD2"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "564940300",
+      "user_ids": [
+        "gkyKqKv19ZOJEUZJcH7LgEKsIHz1",
+        "Glga8igSdVRB9qWbfzII64I0QFo1",
+        "6LXgXp3eBLRgVZK9NsvYlEcJGPq1",
+        "BbqOv1fuIwdVonduMOuUvHIscb43",
+        "pqeZw4V4ICTgRjVnmTYGmR9IRBv2"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "0564940300",
+      "user_ids": [
+        "BoxmHNGkqhUFpooYz267R0N3wFn1",
+        "DBFKT9gFyYghp6uQaiYzXrhm0Lm1"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "233222323",
+      "user_ids": [
+        "NMJm7HC0ErYEeqzISkj0flptFHs2",
+        "eBFYOJYOkjMOu6h4sC52cpc5Wof1"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "1277556432",
+      "user_ids": [
+        "PNuTizjJ5udpGA0AhIORDaA7tQm1",
+        "ULWmhqXttkaE3MtKECpFaCvCho72"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "1234567890",
+      "user_ids": [
+        "lGoeiOruNFXkylvVsLFSB0R67z32",
+        "aaVtb61hmrYTsPY9aIMjvtuAnZS2"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "877277772",
+      "user_ids": [
+        "phone_1752001463225_9zww5ogFnTabUFOC",
+        "phone_877277772"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "155458393",
+      "user_ids": [
+        "ugyL6cOhBFZiPpnaZySP4eZ0TVv2",
+        "pzsQ2mriblMdlQm7XyszuVIxtgp2"
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    }
+  ]
+}

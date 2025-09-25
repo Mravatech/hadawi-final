@@ -1,0 +1,580 @@
+{
+  "timestamp": "2025-09-24T21:57:06.611822",
+  "total_users_scanned": 216,
+  "duplicate_groups_found": 11,
+  "total_duplicates": 31,
+  "users_deleted": 0,
+  "backup_created": true,
+  "backup_path": "duplicate_cleanup_backups/duplicate_users_backup_20250924_215709.json",
+  "errors": [],
+  "duplicate_groups": [
+    {
+      "primary_field": "email",
+      "field_value": "mahmoudreda1811@gmail.com",
+      "user_ids": [
+        "4gwu4KzFawRRq1Emq1qO3FqnCKJ3",
+        "yz24vNpAFMNLpkH7alLg2RFMe412",
+        "4QyDrKKWMfXpTopzlkrxkmalvbz1",
+        "wvgzV8GiWHPkdEJByMQVubVUbrg2",
+        "0G8SSpieMqQwRfqeub07phxShts1",
+        "by4GQxuFSee9fIMXOFCIKAd5K1W2",
+        "rVVSAtaTIHhPKVLrONbr2bFiScT2"
+      ],
+      "users_data": [
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "0G8SSpieMqQwRfqeub07phxShts1",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "_document_id": "0G8SSpieMqQwRfqeub07phxShts1"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "4QyDrKKWMfXpTopzlkrxkmalvbz1",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "_document_id": "4QyDrKKWMfXpTopzlkrxkmalvbz1"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "4gwu4KzFawRRq1Emq1qO3FqnCKJ3",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "",
+          "_document_id": "4gwu4KzFawRRq1Emq1qO3FqnCKJ3"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "by4GQxuFSee9fIMXOFCIKAd5K1W2",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "_document_id": "by4GQxuFSee9fIMXOFCIKAd5K1W2"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "rVVSAtaTIHhPKVLrONbr2bFiScT2",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "_document_id": "rVVSAtaTIHhPKVLrONbr2bFiScT2"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "block": false,
+          "phone": "",
+          "date": "2025-04-11",
+          "uId": "wvgzV8GiWHPkdEJByMQVubVUbrg2",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "_document_id": "wvgzV8GiWHPkdEJByMQVubVUbrg2"
+        },
+        {
+          "name": "Mahmoud Reda",
+          "city": "",
+          "brithDate": "",
+          "private": false,
+          "block": false,
+          "phone": "",
+          "date": "2025-06-28",
+          "uId": "yz24vNpAFMNLpkH7alLg2RFMe412",
+          "gender": "",
+          "email": "mahmoudreda1811@gmail.com",
+          "token": "dKxZ6TnOQsOw_dBaeg-OXu:APA91bHfspPMnMmMeaB2G2rLIkPJ-EYwY_-_LbDsMGwUPamqC8HD0BLlRJftKm1OSlGfO76_sGWlRSVzLnppusvOU4sCYvLBp3saOjaD9664TbYOEON4X0w",
+          "_document_id": "yz24vNpAFMNLpkH7alLg2RFMe412"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "rooosa203@gmail.co",
+      "user_ids": [
+        "hHE9lUrJuoUrxFyGCLci2Lq1E4z2",
+        "1wJk43vP4YZ6OZyT2xaFBgUEGFj1",
+        "uYIjsw5qBIRCgrtu20aUMaRjYm92"
+      ],
+      "users_data": [
+        {
+          "name": "\u0623\u0645\u0627\u0646\u064a",
+          "city": "",
+          "brithDate": "1981-03-25",
+          "private": false,
+          "block": false,
+          "phone": "568022203",
+          "date": "2025-09-17",
+          "uId": "1wJk43vP4YZ6OZyT2xaFBgUEGFj1",
+          "gender": "Female",
+          "email": "rooosa203@gmail.co",
+          "token": "cXnRq888SPOY4t7SL9GGIj:APA91bEkzRDrDhfHly3k687515N8bzDAqE7FAQeR-B016hdLqFSaZ0Ehru1o84dLYKNOOaE5PiQt6Nl7pP0LaUOdCP_1QpJQ24pFBFdZtFI55zdsXc03Huo",
+          "_document_id": "1wJk43vP4YZ6OZyT2xaFBgUEGFj1"
+        },
+        {
+          "name": "\u0623\u0645\u0627\u0646\u064a",
+          "city": "",
+          "brithDate": "1981-03-25",
+          "private": false,
+          "block": false,
+          "phone": "568022203",
+          "date": "2025-09-17",
+          "uId": "hHE9lUrJuoUrxFyGCLci2Lq1E4z2",
+          "gender": "Female",
+          "email": "rooosa203@gmail.co",
+          "token": "cXnRq888SPOY4t7SL9GGIj:APA91bEkzRDrDhfHly3k687515N8bzDAqE7FAQeR-B016hdLqFSaZ0Ehru1o84dLYKNOOaE5PiQt6Nl7pP0LaUOdCP_1QpJQ24pFBFdZtFI55zdsXc03Huo",
+          "_document_id": "hHE9lUrJuoUrxFyGCLci2Lq1E4z2"
+        },
+        {
+          "name": "\u0623\u0645\u0627\u0646\u064a",
+          "city": "",
+          "brithDate": "1981-03-25",
+          "private": false,
+          "block": false,
+          "phone": "568022203",
+          "date": "2025-09-17",
+          "uId": "uYIjsw5qBIRCgrtu20aUMaRjYm92",
+          "gender": "Female",
+          "email": "rooosa203@gmail.co",
+          "token": "cXnRq888SPOY4t7SL9GGIj:APA91bEkzRDrDhfHly3k687515N8bzDAqE7FAQeR-B016hdLqFSaZ0Ehru1o84dLYKNOOaE5PiQt6Nl7pP0LaUOdCP_1QpJQ24pFBFdZtFI55zdsXc03Huo",
+          "_document_id": "uYIjsw5qBIRCgrtu20aUMaRjYm92"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "nouralsaid09@gmail.com",
+      "user_ids": [
+        "67l9cj4Pj7UgAv6KXBo4tsnz0Ff1",
+        "frqVk7NHLiMxj7QBX4PMPkCUqrm1"
+      ],
+      "users_data": [
+        {
+          "name": "Noor Alsaid",
+          "city": "",
+          "phone": "",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "date": "2025-09-03",
+          "uId": "67l9cj4Pj7UgAv6KXBo4tsnz0Ff1",
+          "gender": "",
+          "email": "nouralsaid09@gmail.com",
+          "token": "dgurzoCNmEdAu_lwXgEhDx:APA91bHAvBw9nfOHaOvt-jbPBf75gFbX43_EwHuhSZtSkTCtVbRt4FObA3igWYW08Q1Zyon6eSkQm40wj9dMJMmIubGEW6IhvB8KFhJEPhEJJ10sRMdK1Ts",
+          "_document_id": "67l9cj4Pj7UgAv6KXBo4tsnz0Ff1"
+        },
+        {
+          "name": "Noor Alsaid",
+          "city": "",
+          "phone": "",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "date": "2025-06-21",
+          "uId": "frqVk7NHLiMxj7QBX4PMPkCUqrm1",
+          "gender": "",
+          "email": "nouralsaid09@gmail.com",
+          "token": "dd0hxR1pSXCxrjdb371S9H:APA91bEaobYvz1iYsgCp_oOe_9ZkTlG0CofAiRLejEhU96JEHOz6eP431fgQIuoiDCBPJsaiZ5AiMfq1_yiFNR6TOrsvLMB9NSGtK_KIJfXBYdZUIgRxPP4",
+          "_document_id": "frqVk7NHLiMxj7QBX4PMPkCUqrm1"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "techissued@gmail.com",
+      "user_ids": [
+        "Pd9HNF2p9udx9UrmU4tFdIIJ4c33",
+        "9aYlexyne2NWxqJVOvK30jfwoj82"
+      ],
+      "users_data": [
+        {
+          "name": "Shari",
+          "city": "",
+          "phone": "554875275",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-07-08",
+          "date": "2025-07-08",
+          "uId": "9aYlexyne2NWxqJVOvK30jfwoj82",
+          "gender": "Male",
+          "email": "techissued@gmail.com",
+          "token": "fQmfQF_RN0XktyZEKpPKi7:APA91bGTOLrI2Q7ji8rpC16R1e6MbZANfn6B9c2nazao17IxpnmSJ2WbE_CEkClj71kkSFp56KNrUzJaYf56yC7GUuHTmx7esVXo8Xa7nL5__K_t2oRZgQk",
+          "_document_id": "9aYlexyne2NWxqJVOvK30jfwoj82"
+        },
+        {
+          "name": "Shafii",
+          "city": "",
+          "phone": "",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "date": "2025-09-03",
+          "uId": "Pd9HNF2p9udx9UrmU4tFdIIJ4c33",
+          "gender": "",
+          "email": "techissued@gmail.com",
+          "token": "dVjgFFfjkEhKhScwqaPEFH:APA91bG5FgSOhFFGZazpAz4NQYAV5D9bz8r-XF2-c0kv2LUbXkZ8E1bvdeS4qhFrwkfEy_75meUTpbfU_b9shfuKnFVmMap_VtlhUJXuQ79SkU54HWVfcSk",
+          "_document_id": "Pd9HNF2p9udx9UrmU4tFdIIJ4c33"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "n@gmail.com",
+      "user_ids": [
+        "BbqOv1fuIwdVonduMOuUvHIscb43",
+        "kjww8RzHMqYUb4kTI6OqOPLp1qr2"
+      ],
+      "users_data": [
+        {
+          "name": "Noor",
+          "city": "",
+          "phone": "564940300",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-05-16",
+          "date": "2025-05-16",
+          "uId": "BbqOv1fuIwdVonduMOuUvHIscb43",
+          "gender": "Female",
+          "email": "n@gmail.com",
+          "token": "fkSvgPLLdUv7jjrFlFSDj6:APA91bECQA6qlfoEjK484sCZx3aP25aHVMeNguinWuWZnrW2wzKCAds1X2hmoMkzwpGC9dudqsY3nMEwdmfHKzWQ2oM8nAx56w8sOutwlCylQXRGsCBwmnQ",
+          "_document_id": "BbqOv1fuIwdVonduMOuUvHIscb43"
+        },
+        {
+          "phone": "0569490300",
+          "city": "\u062d\u0648\u0637\u0629 \u0628\u0646\u064a \u062a\u0645\u064a\u0645",
+          "name": "noor",
+          "block": true,
+          "brithDate": "2025-03-01",
+          "date": "2025-03-29",
+          "uId": "kjww8RzHMqYUb4kTI6OqOPLp1qr2",
+          "gender": "Female",
+          "email": "n@gmail.com",
+          "token": "",
+          "_document_id": "kjww8RzHMqYUb4kTI6OqOPLp1qr2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "alsayednoor@icloud.com",
+      "user_ids": [
+        "shmmZfmZO1ZioHwc7ADUq3yZnEP2",
+        "BoxmHNGkqhUFpooYz267R0N3wFn1"
+      ],
+      "users_data": [
+        {
+          "phone": "0564940300",
+          "city": "",
+          "name": "Apple User",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "date": "2025-04-22",
+          "uId": "BoxmHNGkqhUFpooYz267R0N3wFn1",
+          "gender": "",
+          "email": "alsayednoor@icloud.com",
+          "token": "cGNXkBuyokjngY1Pv25cHf:APA91bGuAsxE-9c58o3aRlHAUoonXw9_P5MrXhU5dsdleDbHIp1ZrMjZNSFvvGudOQwT9iz0T2vPazuJ52sLCsZeCqWrIX2wTxY1hjmKtm4rweJJvFZqHV8",
+          "_document_id": "BoxmHNGkqhUFpooYz267R0N3wFn1"
+        },
+        {
+          "name": "Apple User",
+          "city": "",
+          "phone": "",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "date": "2025-09-04",
+          "uId": "shmmZfmZO1ZioHwc7ADUq3yZnEP2",
+          "gender": "",
+          "email": "alsayednoor@icloud.com",
+          "token": "dgurzoCNmEdAu_lwXgEhDx:APA91bHAvBw9nfOHaOvt-jbPBf75gFbX43_EwHuhSZtSkTCtVbRt4FObA3igWYW08Q1Zyon6eSkQm40wj9dMJMmIubGEW6IhvB8KFhJEPhEJJ10sRMdK1Ts",
+          "_document_id": "shmmZfmZO1ZioHwc7ADUq3yZnEP2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "mmdouh12@gmail.com",
+      "user_ids": [
+        "DVNTzIBsapeso5ridrczpMLWSd83",
+        "SS1BcpyZjEZei2129RaftNypaZp1"
+      ],
+      "users_data": [
+        {
+          "phone": "565656001",
+          "city": "",
+          "name": "test123",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-09-01",
+          "date": "2025-09-04",
+          "uId": "DVNTzIBsapeso5ridrczpMLWSd83",
+          "gender": "Male",
+          "email": "mmdouh12@gmail.com",
+          "token": "",
+          "_document_id": "DVNTzIBsapeso5ridrczpMLWSd83"
+        },
+        {
+          "phone": "565656001",
+          "city": "",
+          "name": "test123",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-09-01",
+          "date": "2025-09-04",
+          "uId": "SS1BcpyZjEZei2129RaftNypaZp1",
+          "gender": "Male",
+          "email": "mmdouh12@gmail.com",
+          "token": "",
+          "_document_id": "SS1BcpyZjEZei2129RaftNypaZp1"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "mmdouh1112@gmail.com",
+      "user_ids": [
+        "Vv3T1TTiUybwI57GKjCdbYypTHa2",
+        "dK0IYDHTdyWzIkY50Ne6GWN9yrw2",
+        "GHZwypEvsvQsR1N9MwSnfEistNw1"
+      ],
+      "users_data": [
+        {
+          "phone": "562378039",
+          "city": "",
+          "name": "Mohamed mmdouh",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-09-04",
+          "date": "2025-09-04",
+          "uId": "GHZwypEvsvQsR1N9MwSnfEistNw1",
+          "gender": "Male",
+          "email": "mmdouh1112@gmail.com",
+          "token": "",
+          "_document_id": "GHZwypEvsvQsR1N9MwSnfEistNw1"
+        },
+        {
+          "date": "2025-06-12",
+          "city": "",
+          "phone": "",
+          "private": false,
+          "block": false,
+          "brithDate": "",
+          "name": "Mohamed Mmdouh",
+          "uId": "Vv3T1TTiUybwI57GKjCdbYypTHa2",
+          "gender": "",
+          "email": "mmdouh1112@gmail.com",
+          "token": "eGLVvW32-kI5pYo811En_p:APA91bG2tsnY77K4whAT5KZyZtBZJapaWbDDxw1V_6Tk_l7ekZ5_dAmhXdjylPiJloKOtZTfqD5SqH9LKHQhSCg-GXbp-40xbApFgPKrUDKlBP-LZsIAy1U",
+          "_document_id": "Vv3T1TTiUybwI57GKjCdbYypTHa2"
+        },
+        {
+          "phone": "562378039",
+          "city": "",
+          "name": "Mohamed Mmdouh",
+          "private": false,
+          "block": false,
+          "brithDate": "2000-06-15",
+          "date": "2025-09-01",
+          "uId": "dK0IYDHTdyWzIkY50Ne6GWN9yrw2",
+          "gender": "Male",
+          "email": "mmdouh1112@gmail.com",
+          "token": "",
+          "_document_id": "dK0IYDHTdyWzIkY50Ne6GWN9yrw2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "nm4008985@gmail.com",
+      "user_ids": [
+        "Ll0lCEh4gzgSiL72HOoHad5zLYL2",
+        "efyzXIooQMWQTQLzxKvnIrIwHt22",
+        "SluofXPEtKbiFw3o4JsJtOHBjJx1",
+        "bg3giLbPTVfF3FW3mN4CUYBWHgy1"
+      ],
+      "users_data": [
+        {
+          "name": "\u0646\u0627\u062f\u064a\u0627",
+          "city": "",
+          "phone": "501416423",
+          "private": false,
+          "block": false,
+          "brithDate": "1996-08-15",
+          "date": "2025-08-28",
+          "uId": "Ll0lCEh4gzgSiL72HOoHad5zLYL2",
+          "gender": "Female",
+          "email": "nm4008985@gmail.com",
+          "token": "cch4w_0Eg0dGg6wUiM3H-S:APA91bGKiFvENDLRsavdO3bEPvSqMqvZ-t9-2OMNQoeUigusMPiStzynMuaOh6J1rCaIbphcsre06A5-mwizYe-3fa2iC9Idf0kiYl9GTUX4YBvPDQikPeY",
+          "_document_id": "Ll0lCEh4gzgSiL72HOoHad5zLYL2"
+        },
+        {
+          "name": "\u0646\u0627\u062f\u064a\u0627",
+          "city": "",
+          "phone": "501416423",
+          "private": false,
+          "block": false,
+          "brithDate": "1996-08-15",
+          "date": "2025-08-28",
+          "uId": "SluofXPEtKbiFw3o4JsJtOHBjJx1",
+          "gender": "Female",
+          "email": "nm4008985@gmail.com",
+          "token": "cch4w_0Eg0dGg6wUiM3H-S:APA91bGKiFvENDLRsavdO3bEPvSqMqvZ-t9-2OMNQoeUigusMPiStzynMuaOh6J1rCaIbphcsre06A5-mwizYe-3fa2iC9Idf0kiYl9GTUX4YBvPDQikPeY",
+          "_document_id": "SluofXPEtKbiFw3o4JsJtOHBjJx1"
+        },
+        {
+          "name": "\u0646\u0627\u062f\u064a\u0627",
+          "city": "",
+          "phone": "501416423",
+          "private": false,
+          "block": false,
+          "brithDate": "1996-08-15",
+          "date": "2025-08-28",
+          "uId": "bg3giLbPTVfF3FW3mN4CUYBWHgy1",
+          "gender": "Female",
+          "email": "nm4008985@gmail.com",
+          "token": "cch4w_0Eg0dGg6wUiM3H-S:APA91bGKiFvENDLRsavdO3bEPvSqMqvZ-t9-2OMNQoeUigusMPiStzynMuaOh6J1rCaIbphcsre06A5-mwizYe-3fa2iC9Idf0kiYl9GTUX4YBvPDQikPeY",
+          "_document_id": "bg3giLbPTVfF3FW3mN4CUYBWHgy1"
+        },
+        {
+          "phone": "501416423",
+          "city": "",
+          "name": "\u0646\u0627\u062f\u064a\u0627",
+          "private": false,
+          "block": false,
+          "brithDate": "1996-08-15",
+          "date": "2025-08-28",
+          "uId": "efyzXIooQMWQTQLzxKvnIrIwHt22",
+          "gender": "Female",
+          "email": "nm4008985@gmail.com",
+          "token": "",
+          "_document_id": "efyzXIooQMWQTQLzxKvnIrIwHt22"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "mo@gmail.com",
+      "user_ids": [
+        "vYtzQCQzGJcbz4Zio5KRXWyq4bF3",
+        "UFFzl0tI0TTWOaAErqx48Ux7Ia73"
+      ],
+      "users_data": [
+        {
+          "phone": "567803900",
+          "city": "",
+          "name": "mo mmdouh",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-09-04",
+          "date": "2025-09-04",
+          "uId": "UFFzl0tI0TTWOaAErqx48Ux7Ia73",
+          "gender": "Male",
+          "email": "mo@gmail.com",
+          "token": "",
+          "_document_id": "UFFzl0tI0TTWOaAErqx48Ux7Ia73"
+        },
+        {
+          "phone": "567803900",
+          "city": "",
+          "name": "mo mmdouh",
+          "private": false,
+          "block": false,
+          "brithDate": "2025-09-04",
+          "date": "2025-09-04",
+          "uId": "vYtzQCQzGJcbz4Zio5KRXWyq4bF3",
+          "gender": "Male",
+          "email": "mo@gmail.com",
+          "token": "",
+          "_document_id": "vYtzQCQzGJcbz4Zio5KRXWyq4bF3"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "email",
+      "field_value": "nour@gmail.com",
+      "user_ids": [
+        "wLTIn2U4FEYLVq73MXXuoy1uOzG2",
+        "pAng4CLGhuQZ5fMslZjt48RsUFl1"
+      ],
+      "users_data": [
+        {
+          "phone": "056494301",
+          "city": "",
+          "name": "Nour",
+          "private": false,
+          "block": false,
+          "brithDate": "2004-03-18",
+          "date": "2025-09-04",
+          "uId": "pAng4CLGhuQZ5fMslZjt48RsUFl1",
+          "gender": "Female",
+          "email": "nour@gmail.com",
+          "token": "euffDrmtTLOcZ2c1TNugNC:APA91bHyS5CL4xoPm14vJt9x5ZkCRh5Cq3IRUYh-ZmFDzxyNQSwwyH6n6lo644YuX3DTFiOvOSelpW7h-RbBd98zbz9OpLZX1LQpLA2J4-CdmT-_-rPMT6Q",
+          "_document_id": "pAng4CLGhuQZ5fMslZjt48RsUFl1"
+        },
+        {
+          "name": "Nout",
+          "city": "",
+          "brithDate": "2004-03-18",
+          "private": false,
+          "block": false,
+          "phone": "056494300",
+          "date": "2025-09-04",
+          "uId": "wLTIn2U4FEYLVq73MXXuoy1uOzG2",
+          "gender": "Female",
+          "email": "nour@gmail.com",
+          "token": "euffDrmtTLOcZ2c1TNugNC:APA91bHyS5CL4xoPm14vJt9x5ZkCRh5Cq3IRUYh-ZmFDzxyNQSwwyH6n6lo644YuX3DTFiOvOSelpW7h-RbBd98zbz9OpLZX1LQpLA2J4-CdmT-_-rPMT6Q",
+          "_document_id": "wLTIn2U4FEYLVq73MXXuoy1uOzG2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    }
+  ]
+}

@@ -1,35 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
 import 'package:hadawi_app/featuers/auth/presentation/view/Login/login_screen.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/controller/home_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/controller/visitors_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/active_occasion_card.dart';
-import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_card.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_bar_widget.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/search_result_container.dart';
-import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/tutorial_coach_widget.dart';
-import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/visitors_home_shimmer.dart';
 import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/size_config/app_size_config.dart';
 import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/cashe_helper/cashe_helper.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/utiles/localiztion/localization_cubit.dart';
-import 'package:hadawi_app/utiles/localiztion/localization_states.dart';
-import 'package:hadawi_app/utiles/router/app_router.dart';
-import 'package:hadawi_app/utiles/services/notification_service.dart';
 import 'package:hadawi_app/utiles/services/service_locator.dart';
-import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toastification_widget.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:toastification/toastification.dart';
-import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 import '../../../../../styles/colors/color_manager.dart';
 import '../../../../../utiles/shared_preferences/shared_preference.dart';
@@ -112,10 +101,12 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                             final banner = banners[index];
                             return GestureDetector(
                               onTap: () {
-                                context.read<VisitorsCubit>().lanuchToUrl(banner.url);
+                                if (banner.actionUrl != null) {
+                                  context.read<VisitorsCubit>().lanuchToUrl(banner.actionUrl!);
+                                }
                               },
                               child: CachedNetworkImage(
-                                imageUrl: banner.image,
+                                imageUrl: banner.imageUrl ?? '',
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => const Center(
                                   child: CupertinoActivityIndicator(),
@@ -206,7 +197,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
               Column(
                 children: [
                   Container(
-                    height: mediaQuery.height * 0.2,
+                    height: mediaQuery.height * 0.15,
                     width: double.infinity,
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Container(
@@ -219,7 +210,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             SizedBox(
-                              height: SizeConfig.height * 0.045,
+                              height: SizeConfig.height * 0.01,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
@@ -357,185 +348,184 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: SizeConfig.height * 0.02,
-                            ),
-                            Container(
-                              height: SizeConfig.height * 0.06,
-                              width: SizeConfig.width,
-                              decoration: BoxDecoration(
-                                color: ColorManager.gray,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20)),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  InkWell(
-                                    onTap: () async {
-                                      if (UserDataFromStorage.userIsGuest ==
-                                          false) {
-                                        await AuthCubit.get(context)
-                                            .getUserInfo(
-                                                uId: UserDataFromStorage
-                                                    .uIdFromStorage,
-                                                context: context);
-                                        if (UserDataFromStorage
-                                                .uIdFromStorage ==
-                                            '') {
-                                          toastificationWidget(
-                                              context: context,
-                                              title: AppLocalizations.of(
-                                                      context)!
-                                                  .translate('errorOccurred')
-                                                  .toString(),
-                                              body: AppLocalizations.of(
-                                                      context)!
-                                                  .translate('deleteMessage')
-                                                  .toString(),
-                                              type: ToastificationType.error);
-                                          customPushReplacement(
-                                              context, LoginScreen());
-                                        } else {
-                                          if (UserDataFromStorage
-                                                  .isUserBlocked ==
-                                              true) {
-                                            AuthCubit.get(context).logout();
-                                            customPushReplacement(
-                                                context, LoginScreen());
-                                            toastificationWidget(
-                                                context: context,
-                                                title: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('blockOccurred')
-                                                    .toString(),
-                                                body: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('blockMessage')
-                                                    .toString(),
-                                                type: ToastificationType.error);
-                                          } else {
-                                            cubit.changeActiveOrders(true);
-                                          }
-                                        }
-                                      } else {
-                                        cubit.changeActiveOrders(true);
-                                      }
-                                    },
-                                    child: Container(
-                                      height: SizeConfig.height * 0.06,
-                                      width: SizeConfig.width * 0.5,
-                                      decoration: BoxDecoration(
-                                        color: cubit.isActiveOrders
-                                            ? ColorManager.primaryBlue
-                                            : ColorManager.gray,
-                                        borderRadius: CashHelper.getData(
-                                                        key: CashHelper
-                                                            .languageKey)
-                                                    .toString() ==
-                                                'en'
-                                            ? BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                              )
-                                            : BorderRadius.only(
-                                                topRight: Radius.circular(20)),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('activeOrders')
-                                              .toString(),
-                                          style: TextStyles.textStyle18Medium
-                                              .copyWith(
-                                                  color: ColorManager.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  InkWell(
-                                    onTap: () async {
-                                      if (UserDataFromStorage.userIsGuest ==
-                                          false) {
-                                        await AuthCubit.get(context)
-                                            .getUserInfo(
-                                                uId: UserDataFromStorage
-                                                    .uIdFromStorage,
-                                                context: context);
-                                        if (UserDataFromStorage
-                                                .uIdFromStorage ==
-                                            '') {
-                                          toastificationWidget(
-                                              context: context,
-                                              title: AppLocalizations.of(
-                                                      context)!
-                                                  .translate('errorOccurred')
-                                                  .toString(),
-                                              body: AppLocalizations.of(
-                                                      context)!
-                                                  .translate('deleteMessage')
-                                                  .toString(),
-                                              type: ToastificationType.error);
-                                          customPushReplacement(
-                                              context, LoginScreen());
-                                        } else {
-                                          if (UserDataFromStorage
-                                                  .isUserBlocked ==
-                                              true) {
-                                            AuthCubit.get(context).logout();
-                                            customPushReplacement(
-                                                context, LoginScreen());
-                                            toastificationWidget(
-                                                context: context,
-                                                title: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('blockOccurred')
-                                                    .toString(),
-                                                body: AppLocalizations.of(
-                                                        context)!
-                                                    .translate('blockMessage')
-                                                    .toString(),
-                                                type: ToastificationType.error);
-                                          } else {
-                                            cubit.changeActiveOrders(false);
-                                          }
-                                        }
-                                      } else {
-                                        cubit.changeActiveOrders(false);
-                                      }
-                                    },
-                                    child: Container(
-                                      height: SizeConfig.height * 0.06,
-                                      width: SizeConfig.width * 0.5,
-                                      decoration: BoxDecoration(
-                                        color: cubit.isActiveOrders
-                                            ? ColorManager.gray
-                                            : ColorManager.primaryBlue,
-                                        borderRadius: CashHelper.getData(
-                                                        key: CashHelper
-                                                            .languageKey)
-                                                    .toString() ==
-                                                'en'
-                                            ? BorderRadius.only(
-                                                topRight: Radius.circular(20))
-                                            : BorderRadius.only(
-                                                topLeft: Radius.circular(20)),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .translate('completedOrders')
-                                              .toString(),
-                                          style: TextStyles.textStyle18Medium
-                                              .copyWith(
-                                                  color: ColorManager.black),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                     
+                            // Active Orders and Completed Orders tabs commented out
+                            // Container(
+                            //   height: SizeConfig.height * 0.06,
+                            //   width: SizeConfig.width,
+                            //   decoration: BoxDecoration(
+                            //     color: ColorManager.gray,
+                            //     borderRadius: BorderRadius.only(
+                            //         topLeft: Radius.circular(20),
+                            //         topRight: Radius.circular(20)),
+                            //   ),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.start,
+                            //     children: [
+                            //       InkWell(
+                            //         onTap: () async {
+                            //           if (UserDataFromStorage.userIsGuest ==
+                            //               false) {
+                            //             await AuthCubit.get(context)
+                            //                 .getUserInfo(
+                            //                     uId: UserDataFromStorage
+                            //                         .uIdFromStorage,
+                            //                     context: context);
+                            //             if (UserDataFromStorage
+                            //                     .uIdFromStorage ==
+                            //                 '') {
+                            //               toastificationWidget(
+                            //                   context: context,
+                            //                   title: AppLocalizations.of(
+                            //                           context)!
+                            //                       .translate('errorOccurred')
+                            //                       .toString(),
+                            //                   body: AppLocalizations.of(
+                            //                           context)!
+                            //                       .translate('deleteMessage')
+                            //                       .toString(),
+                            //                   type: ToastificationType.error);
+                            //               customPushReplacement(
+                            //                   context, LoginScreen());
+                            //             } else {
+                            //               if (UserDataFromStorage
+                            //                       .isUserBlocked ==
+                            //                   true) {
+                            //                 AuthCubit.get(context).logout();
+                            //                 customPushReplacement(
+                            //                     context, LoginScreen());
+                            //                 toastificationWidget(
+                            //                     context: context,
+                            //                     title: AppLocalizations.of(
+                            //                             context)!
+                            //                         .translate('blockOccurred')
+                            //                         .toString(),
+                            //                     body: AppLocalizations.of(
+                            //                             context)!
+                            //                         .translate('blockMessage')
+                            //                         .toString(),
+                            //                     type: ToastificationType.error);
+                            //               } else {
+                            //                 cubit.changeActiveOrders(true);
+                            //               }
+                            //             }
+                            //           } else {
+                            //             cubit.changeActiveOrders(true);
+                            //           }
+                            //         },
+                            //         child: Container(
+                            //           height: SizeConfig.height * 0.06,
+                            //           width: SizeConfig.width * 0.5,
+                            //           decoration: BoxDecoration(
+                            //             color: cubit.isActiveOrders
+                            //                 ? ColorManager.primaryBlue
+                            //                 : ColorManager.gray,
+                            //             borderRadius: CashHelper.getData(
+                            //                             key: CashHelper
+                            //                                 .languageKey)
+                            //                         .toString() ==
+                            //                     'en'
+                            //                 ? BorderRadius.only(
+                            //                     topLeft: Radius.circular(20),
+                            //                   )
+                            //                 : BorderRadius.only(
+                            //                     topRight: Radius.circular(20)),
+                            //           ),
+                            //           child: Center(
+                            //             child: Text(
+                            //               AppLocalizations.of(context)!
+                            //                   .translate('activeOrders')
+                            //                   .toString(),
+                            //               style: TextStyles.textStyle18Medium
+                            //                   .copyWith(
+                            //                       color: ColorManager.black),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //       InkWell(
+                            //         onTap: () async {
+                            //           if (UserDataFromStorage.userIsGuest ==
+                            //               false) {
+                            //             await AuthCubit.get(context)
+                            //                 .getUserInfo(
+                            //                     uId: UserDataFromStorage
+                            //                         .uIdFromStorage,
+                            //                     context: context);
+                            //             if (UserDataFromStorage
+                            //                     .uIdFromStorage ==
+                            //                 '') {
+                            //               toastificationWidget(
+                            //                   context: context,
+                            //                   title: AppLocalizations.of(
+                            //                           context)!
+                            //                       .translate('errorOccurred')
+                            //                       .toString(),
+                            //                   body: AppLocalizations.of(
+                            //                           context)!
+                            //                       .translate('deleteMessage')
+                            //                       .toString(),
+                            //                   type: ToastificationType.error);
+                            //               customPushReplacement(
+                            //                   context, LoginScreen());
+                            //             } else {
+                            //               if (UserDataFromStorage
+                            //                       .isUserBlocked ==
+                            //                   true) {
+                            //                 AuthCubit.get(context).logout();
+                            //                 customPushReplacement(
+                            //                     context, LoginScreen());
+                            //                 toastificationWidget(
+                            //                     context: context,
+                            //                     title: AppLocalizations.of(
+                            //                             context)!
+                            //                         .translate('blockOccurred')
+                            //                         .toString(),
+                            //                     body: AppLocalizations.of(
+                            //                             context)!
+                            //                         .translate('blockMessage')
+                            //                         .toString(),
+                            //                     type: ToastificationType.error);
+                            //               } else {
+                            //                 cubit.changeActiveOrders(false);
+                            //               }
+                            //             }
+                            //           } else {
+                            //             cubit.changeActiveOrders(false);
+                            //           }
+                            //         },
+                            //         child: Container(
+                            //           height: SizeConfig.height * 0.06,
+                            //           width: SizeConfig.width * 0.5,
+                            //           decoration: BoxDecoration(
+                            //             color: cubit.isActiveOrders
+                            //                 ? ColorManager.gray
+                            //                 : ColorManager.primaryBlue,
+                            //             borderRadius: CashHelper.getData(
+                            //                             key: CashHelper
+                            //                                 .languageKey)
+                            //                         .toString() ==
+                            //                     'en'
+                            //                 ? BorderRadius.only(
+                            //                     topRight: Radius.circular(20))
+                            //                 : BorderRadius.only(
+                            //                     topLeft: Radius.circular(20)),
+                            //           ),
+                            //           child: Center(
+                            //             child: Text(
+                            //               AppLocalizations.of(context)!
+                            //                   .translate('completedOrders')
+                            //                   .toString(),
+                            //               style: TextStyles.textStyle18Medium
+                            //                   .copyWith(
+                            //                       color: ColorManager.black),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         )),
                   ),
@@ -552,7 +542,7 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                           children: [
                             /// search bar
                             Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(5.0),
                               child: SearchBarWidget(
                                 onChanged: (value) async {
                                   print('search value $value');
@@ -560,6 +550,259 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                 },
                                 searchController: cubit.searchController,
                               ),
+                            ),
+
+                            /// Banner Carousel
+                            BlocBuilder<VisitorsCubit, VisitorsState>(
+                              builder: (context, state) {
+                                debugPrint('Banner count: ${cubit.banners.length}');
+                                debugPrint('Banner: ${cubit.banners}');
+                                debugPrint('Banner state: $state');
+                                
+                                if (cubit.banners.isEmpty) {
+                                  debugPrint('Banners list is empty, showing default banner');
+                                  // Show default banner if no banners are loaded
+                                  return Container(
+                                    height: 120,
+                                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [Color(0xFF1a1a1a), Color(0xFF2d2d2d), Color(0xFF1a1a1a)],
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.3),
+                                          blurRadius: 8,
+                                          offset: Offset(0, 4),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Positioned.fill(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(16),
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [Color(0xFF1a1a1a), Color(0xFF2d2d2d), Color(0xFF1a1a1a)],
+                                              ),
+                                            ),
+                                            child: CustomPaint(
+                                              painter: StripesPainter(),
+                                            ),
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(16),
+                                          child: Row(
+                                            children: [
+                                              Container(
+                                                width: 80,
+                                                height: 80,
+                                                decoration: BoxDecoration(
+                                                  color: Color(0xFF00FF88),
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color(0xFF00FF88).withOpacity(0.5),
+                                                      blurRadius: 20,
+                                                      spreadRadius: 2,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Center(
+                                                  child: Text(
+                                                    '%',
+                                                    style: TextStyle(
+                                                      fontSize: 36,
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.white,
+                                                      shadows: [
+                                                        Shadow(
+                                                          color: Colors.black.withOpacity(0.3),
+                                                          offset: Offset(2, 2),
+                                                          blurRadius: 4,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 16),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    Text(
+                                                      'عروض تحلي الاحتفال',
+                                                      style: TextStyle(
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    SizedBox(height: 8),
+                                                    Container(
+                                                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: Color(0xFFFF6B35),
+                                                        borderRadius: BorderRadius.circular(20),
+                                                      ),
+                                                      child: Text(
+                                                        'اطلب الآن',
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w600,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                
+                                return Column(
+                                  children: [
+                                    Container(
+                                      height: 120,
+                                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                      child: PageView.builder(
+                                        controller: cubit.bannerController,
+                                        itemCount: cubit.banners.length,
+                                        onPageChanged: (index) {
+                                          cubit.updateBannerIndex(index);
+                                        },
+                                        itemBuilder: (context, index) {
+                                          // Debug banner data
+                                          debugPrint('Banner $index - Image URL: ${cubit.banners[index].imageUrl}');
+                                          debugPrint('Banner $index - Title: ${cubit.banners[index].title}');
+                                          debugPrint('Banner $index - Icon: ${cubit.banners[index].icon}');
+                                          debugPrint('Banner $index - Action URL: ${cubit.banners[index].actionUrl}');
+                                          
+                                          // Ensure we have at least 2 colors for the gradient
+                                          List<Color> bannerColors = cubit.banners[index].colors;
+                                          if (bannerColors.length < 2) {
+                                            bannerColors = [bannerColors.isNotEmpty ? bannerColors[0] : Colors.grey, Colors.grey[300]!];
+                                          }
+                                          
+                                          return GestureDetector(
+                                            onTap: () {
+                                              debugPrint('Banner tapped: ${cubit.banners[index].id}');
+                                              debugPrint('Banner action URL: ${cubit.banners[index].actionUrl}');
+                                              if (cubit.banners[index].actionUrl != null) {
+                                                cubit.lanuchToUrl(cubit.banners[index].actionUrl!);
+                                              }
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(16),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black.withOpacity(0.3),
+                                                    blurRadius: 8,
+                                                    offset: Offset(0, 4),
+                                                  ),
+                                                ],
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(16),
+                                                child: Stack(
+                                                  children: [
+                                                    // Background image or gradient
+                                                    Positioned.fill(
+                                                      child: cubit.banners[index].imageUrl != null && cubit.banners[index].imageUrl!.isNotEmpty
+                                                          ? CachedNetworkImage(
+                                                              imageUrl: cubit.banners[index].imageUrl!,
+                                                              fit: BoxFit.cover,
+                                                              placeholder: (context, url) {
+                                                                debugPrint('Loading banner image: ${cubit.banners[index].imageUrl}');
+                                                                return Container(
+                                                                  decoration: BoxDecoration(
+                                                                    gradient: LinearGradient(
+                                                                      begin: Alignment.topLeft,
+                                                                      end: Alignment.bottomRight,
+                                                                      colors: bannerColors,
+                                                                    ),
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: CircularProgressIndicator(
+                                                                      color: Colors.white,
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                              errorWidget: (context, url, error) {
+                                                                debugPrint('Error loading banner image: $error');
+                                                                debugPrint('Failed URL: $url');
+                                                                return Container(
+                                                                  decoration: BoxDecoration(
+                                                                    gradient: LinearGradient(
+                                                                      begin: Alignment.topLeft,
+                                                                      end: Alignment.bottomRight,
+                                                                      colors: bannerColors,
+                                                                    ),
+                                                                  ),
+                                                                  child: CustomPaint(
+                                                                    painter: StripesPainter(),
+                                                                  ),
+                                                                );
+                                                              },
+                                                            )
+                                                          : Container(
+                                                              decoration: BoxDecoration(
+                                                                gradient: LinearGradient(
+                                                                  begin: Alignment.topLeft,
+                                                                  end: Alignment.bottomRight,
+                                                                  colors: bannerColors,
+                                                                ),
+                                                              ),
+                                                              child: CustomPaint(
+                                                                painter: StripesPainter(),
+                                                              ),
+                                                            ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: List.generate(
+                                        cubit.banners.length,
+                                        (index) => Container(
+                                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                                          width: 8,
+                                          height: 8,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: cubit.currentBannerIndex == index
+                                                ? ColorManager.primaryBlue
+                                                : Colors.grey[300],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
                             ),
 
                             state is GetOccasionsLoadingState || state is GetOccasionsStillLoadingState
@@ -582,57 +825,43 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                           ),
                                         ],
                                       )
-                                : cubit.isActiveOrders
-                                    ? cubit.activeOccasions.isNotEmpty
-                                        ? ListView.separated(
-                                            physics: NeverScrollableScrollPhysics(),
-                                            shrinkWrap: true,
-                                            padding: const EdgeInsets.all(16),
-                                            itemCount: cubit.activeOccasions.length,
-                                            separatorBuilder: (context, index) => SizedBox(height: 16),
-                                            itemBuilder: (context, index) {
-                                              return InkWell(
-                                                onTap: () async {
-                                                  if (UserDataFromStorage.userIsGuest == false) {
-                                                    await AuthCubit.get(context).getUserInfo(
-                                                      uId: UserDataFromStorage.uIdFromStorage,
-                                                      context: context
+                                : cubit.activeOccasions.isNotEmpty
+                                    ? ListView.separated(
+                                        physics: NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        padding: const EdgeInsets.all(16),
+                                        itemCount: cubit.activeOccasions.length,
+                                        separatorBuilder: (context, index) => SizedBox(height: 16),
+                                        itemBuilder: (context, index) {
+                                          return InkWell(
+                                            onTap: () async {
+                                              if (UserDataFromStorage.userIsGuest == false) {
+                                                await AuthCubit.get(context).getUserInfo(
+                                                  uId: UserDataFromStorage.uIdFromStorage,
+                                                  context: context
+                                                );
+                                                if (UserDataFromStorage.uIdFromStorage == '') {
+                                                  toastificationWidget(
+                                                    context: context,
+                                                    title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
+                                                    body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
+                                                    type: ToastificationType.error
+                                                  );
+                                                  customPushReplacement(context, LoginScreen());
+                                                } else {
+                                                  if (UserDataFromStorage.isUserBlocked == true) {
+                                                    customPushReplacement(context, LoginScreen());
+                                                    toastificationWidget(
+                                                      context: context,
+                                                      title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
+                                                      body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
+                                                      type: ToastificationType.error
                                                     );
-                                                    if (UserDataFromStorage.uIdFromStorage == '') {
-                                                      toastificationWidget(
-                                                        context: context,
-                                                        title: AppLocalizations.of(context)!.translate('errorOccurred').toString(),
-                                                        body: AppLocalizations.of(context)!.translate('deleteMessage').toString(),
-                                                        type: ToastificationType.error
-                                                      );
-                                                      customPushReplacement(context, LoginScreen());
-                                                    } else {
-                                                      if (UserDataFromStorage.isUserBlocked == true) {
-                                                        customPushReplacement(context, LoginScreen());
-                                                        toastificationWidget(
-                                                          context: context,
-                                                          title: AppLocalizations.of(context)!.translate('blockOccurred').toString(),
-                                                          body: AppLocalizations.of(context)!.translate('blockMessage').toString(),
-                                                          type: ToastificationType.error
-                                                        );
-                                                      } else {
-                                                        customPushNavigator(
-                                                          context,
-                                                          BlocProvider(
-                                                            create: (context) => VisitorsCubit(getIt(), getIt(), getIt()),
-                                                            child: OccasionDetails(
-                                                              occasionId: cubit.activeOccasions[index].occasionId,
-                                                              fromHome: true,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      }
-                                                    }
                                                   } else {
                                                     customPushNavigator(
                                                       context,
-                                                      BlocProvider.value(
-                                                        value: cubit,
+                                                      BlocProvider(
+                                                        create: (context) => VisitorsCubit(getIt(), getIt(), getIt()),
                                                         child: OccasionDetails(
                                                           occasionId: cubit.activeOccasions[index].occasionId,
                                                           fromHome: true,
@@ -640,77 +869,38 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
                                                       ),
                                                     );
                                                   }
-                                                },
-                                                child: ActiveOccasionCard(
-                                                  occasionEntity: cubit.activeOccasions[index],
-                                                ),
-                                              );
+                                                }
+                                              } else {
+                                                customPushNavigator(
+                                                  context,
+                                                  BlocProvider.value(
+                                                    value: cubit,
+                                                    child: OccasionDetails(
+                                                      occasionId: cubit.activeOccasions[index].occasionId,
+                                                      fromHome: true,
+                                                    ),
+                                                  ),
+                                                );
+                                              }
                                             },
-                                          )
-                                        : SizedBox(
-                                            height: SizeConfig.height * 0.25,
-                                            child: Center(
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate("occasionsListEmpty")
-                                                    .toString(),
-                                                style: TextStyles.textStyle18Medium
-                                                    .copyWith(color: ColorManager.primaryBlue),
-                                              ),
+                                            child: ActiveOccasionCard(
+                                              occasionEntity: cubit.activeOccasions[index],
                                             ),
-                                          )
-                                    : cubit.doneOccasions.isNotEmpty
-                                        ? Column(
-                                           crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(
-                                                  horizontal: 15,
-                                              ),
-                                              child: Text(AppLocalizations.of(context)!.translate("messageDone").toString(),
-                                                textAlign: TextAlign.center,
-                                                style: TextStyles.textStyle18Medium.copyWith(color: ColorManager.primaryBlue,fontWeight: FontWeight.bold,fontSize: 12),),
-                                            ),
-                                            GridView.builder(
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                padding: const EdgeInsets.all(15),
-                                                gridDelegate:
-                                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        mainAxisSpacing: 15,
-                                                        crossAxisSpacing: 15,
-                                                        crossAxisCount: 2,
-                                                        childAspectRatio: 1 / 1.3),
-                                                itemBuilder: (context, index) {
-                                                  return InkWell(
-                                                      onTap: () {},
-                                                      child: OccasionCard(
-                                                        occasionEntity: cubit
-                                                            .doneOccasions[index],
-                                                      ));
-                                                },
-                                                itemCount:
-                                                    cubit.doneOccasions.length,
-                                              ),
-                                          ],
-                                        )
-                                        : SizedBox(
-                                            height: SizeConfig.height * 0.25,
-                                            child: Center(
-                                              child: Text(
-                                                AppLocalizations.of(context)!
-                                                    .translate(
-                                                        "occasionsListEmpty")
-                                                    .toString(),
-                                                style: TextStyles
-                                                    .textStyle18Medium
-                                                    .copyWith(
-                                                        color: ColorManager
-                                                            .primaryBlue),
-                                              ),
-                                            ),
+                                          );
+                                        },
+                                      )
+                                    : SizedBox(
+                                        height: SizeConfig.height * 0.25,
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .translate("occasionsListEmpty")
+                                                .toString(),
+                                            style: TextStyles.textStyle18Medium
+                                                .copyWith(color: ColorManager.primaryBlue),
                                           ),
+                                        ),
+                                      ),
                           ],
                         ),
                       ),
@@ -733,4 +923,27 @@ class _VisitorsViewBodyState extends State<VisitorsViewBody>
       },
     );
   }
+}
+
+// Custom painter for the banner background stripes
+class StripesPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = Colors.white.withOpacity(0.05)
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    // Draw vertical stripes
+    for (double i = 0; i < size.width; i += 8) {
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }

@@ -1,5 +1,4 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/material.dart';
 
 
 class UserDataFromStorage {
@@ -37,6 +36,7 @@ class UserDataFromStorage {
   static late String folderNumFromStorage;
   static late String cityFromStorage;
   static late String uIdFromStorage;
+  static late String authTokenFromStorage;
   static late double balanceFromStorage;
   static late double cReductionFromStorage;
   static late double detectionFromStorage;
@@ -243,6 +243,11 @@ class UserDataFromStorage {
       _setData();
     }
 
+    static setAuthToken(String value) {
+      authTokenFromStorage = value;
+      _setData();
+    }
+
     static setNewOccasion(String value) {
       newOccasion = value;
       _setData();
@@ -333,6 +338,7 @@ class UserDataFromStorage {
       prefs.setString("folderNumFromStorage", folderNumFromStorage);
       prefs.setString("cityFromStorage", cityFromStorage);
       prefs.setString("uIdFromStorage", uIdFromStorage);
+      prefs.setString("authTokenFromStorage", authTokenFromStorage);
       prefs.setDouble("cReductionFromStorage", cReductionFromStorage);
       prefs.setDouble("balanceFromStorage", balanceFromStorage);
       prefs.setDouble("detectionFromStorage", detectionFromStorage);
@@ -354,6 +360,7 @@ class UserDataFromStorage {
       prefs.setString("folderNumFromStorage", folderNumFromStorage);
       prefs.setString("cityFromStorage", cityFromStorage);
       prefs.setString("uIdFromStorage", uIdFromStorage);
+      prefs.setString("authTokenFromStorage", authTokenFromStorage);
       prefs.setDouble("cReductionFromStorage", cReductionFromStorage);
       prefs.setDouble("balanceFromStorage", balanceFromStorage);
       prefs.setDouble("detectionFromStorage", detectionFromStorage);
@@ -411,6 +418,7 @@ class UserDataFromStorage {
       cityFromStorage = prefs.getString("cityFromStorage") ?? '';
       macAddressFromStorage = prefs.getString("macAddressFromStorage") ?? '';
       uIdFromStorage = prefs.getString("uIdFromStorage") ?? '';
+      authTokenFromStorage = prefs.getString("authTokenFromStorage") ?? '';
       cReductionFromStorage = prefs.getDouble("cReductionFromStorage") ?? 0.0;
       balanceFromStorage = prefs.getDouble("balanceFromStorage") ?? 0.0;
       detectionFromStorage = prefs.getDouble("detectionFromStorage") ?? 0.0;

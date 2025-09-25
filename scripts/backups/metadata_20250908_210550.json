@@ -1,0 +1,21 @@
+{
+  "timestamp": "20250908_210550",
+  "project_id": "transport-app-d662f",
+  "collections": [
+    "users",
+    "occasions",
+    "friends",
+    "visitors",
+    "payments",
+    "notifications",
+    "settings",
+    "wallets",
+    "auth_tokens",
+    "user_sessions"
+  ],
+  "total_documents": 246,
+  "backup_size_bytes": 33617,
+  "checksum": "76d22d0ab672da4a8a5c2c3dfef57f94f61d6adce880864f8018c5cf13bc39e9",
+  "duration_seconds": 144.776536,
+  "status": "success"
+}

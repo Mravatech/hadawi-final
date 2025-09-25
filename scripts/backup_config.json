@@ -1,0 +1,24 @@
+{
+  "project_id": "transport-app-d662f",
+  "backup_dir": "./backups",
+  "collections": [
+    "users",
+    "occasions", 
+    "friends",
+    "visitors",
+    "payments",
+    "notifications",
+    "settings",
+    "wallets",
+    "auth_tokens",
+    "user_sessions"
+  ],
+  "compression": true,
+  "encryption": false,
+  "retention_days": 30,
+  "gcs_bucket": null,
+  "gcs_prefix": "firestore-backups",
+  "max_retries": 3,
+  "batch_size": 100
+}
+

@@ -1,0 +1,16 @@
+{
+  "project_id": "transport-app-d662f",
+  "collection_name": "users",
+  "detection_fields": [
+    "phone"
+  ],
+  "fuzzy_threshold": 1.0,
+  "dry_run": false,
+  "create_backup": true,
+  "backup_dir": "./duplicate_cleanup_backups",
+  "max_duplicates_per_group": 10,
+  "preserve_oldest": true,
+  "preserve_most_complete": true,
+  "batch_size": 100,
+  "log_level": "INFO"
+}

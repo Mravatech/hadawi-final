@@ -12,12 +12,14 @@ class EditProfileUseCases {
        String? birthDate,
        String? gender,
        String? name,
-       context}) async {
+       context,
+       String? email}) async {
     return await editProfileRepo.editProfile(
         phone: phone,
         birthDate: birthDate,
         userName: name,
         context: context,
-        gender: gender);
+        gender: gender,
+        email: email);
   }
 }

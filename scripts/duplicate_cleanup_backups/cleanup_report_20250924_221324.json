@@ -1,0 +1,388 @@
+{
+  "timestamp": "2025-09-24T22:13:18.335562",
+  "total_users_scanned": 196,
+  "duplicate_groups_found": 8,
+  "total_duplicates": 20,
+  "users_deleted": 12,
+  "backup_created": true,
+  "backup_path": "duplicate_cleanup_backups/duplicate_users_backup_20250924_221320.json",
+  "errors": [],
+  "duplicate_groups": [
+    {
+      "primary_field": "phone",
+      "field_value": "888588388",
+      "user_ids": [
+        "jXz8kKi7QFNT4IzjHZ7mLukl0VY2",
+        "d2KrRYdDXnMjIO8L03sWlZ121gm2",
+        "2FeSXtewhoViJjSPUOwh4u7rLUD2"
+      ],
+      "users_data": [
+        {
+          "uId": "2FeSXtewhoViJjSPUOwh4u7rLUD2",
+          "token": "",
+          "city": "",
+          "phone": "888588388",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "2FeSXtewhoViJjSPUOwh4u7rLUD2"
+        },
+        {
+          "uId": "d2KrRYdDXnMjIO8L03sWlZ121gm2",
+          "token": "cFhH4FU8M0_DrDOlUl6vrZ:APA91bGIdJf1LAR3OuQcjXlVj1fIXMoBadE8joyv3GrWBImcqsYQBzMQjkYFvGLdT_vg93bA_bdl1LWtZGyaq3wYo-AZ7B1ORiBkL15NyYj4QRWyBGEy-Is",
+          "city": "",
+          "phone": "888588388",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "d2KrRYdDXnMjIO8L03sWlZ121gm2"
+        },
+        {
+          "uId": "jXz8kKi7QFNT4IzjHZ7mLukl0VY2",
+          "token": "cFhH4FU8M0_DrDOlUl6vrZ:APA91bGIdJf1LAR3OuQcjXlVj1fIXMoBadE8joyv3GrWBImcqsYQBzMQjkYFvGLdT_vg93bA_bdl1LWtZGyaq3wYo-AZ7B1ORiBkL15NyYj4QRWyBGEy-Is",
+          "city": "",
+          "phone": "888588388",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "jXz8kKi7QFNT4IzjHZ7mLukl0VY2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "564940300",
+      "user_ids": [
+        "gkyKqKv19ZOJEUZJcH7LgEKsIHz1",
+        "Glga8igSdVRB9qWbfzII64I0QFo1",
+        "6LXgXp3eBLRgVZK9NsvYlEcJGPq1",
+        "BbqOv1fuIwdVonduMOuUvHIscb43",
+        "pqeZw4V4ICTgRjVnmTYGmR9IRBv2"
+      ],
+      "users_data": [
+        {
+          "uId": "6LXgXp3eBLRgVZK9NsvYlEcJGPq1",
+          "token": "dgurzoCNmEdAu_lwXgEhDx:APA91bHAvBw9nfOHaOvt-jbPBf75gFbX43_EwHuhSZtSkTCtVbRt4FObA3igWYW08Q1Zyon6eSkQm40wj9dMJMmIubGEW6IhvB8KFhJEPhEJJ10sRMdK1Ts",
+          "city": "",
+          "phone": "564940300",
+          "private": false,
+          "date": "2025-09-09",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "block": false,
+          "name": "",
+          "_document_id": "6LXgXp3eBLRgVZK9NsvYlEcJGPq1"
+        },
+        {
+          "uId": "BbqOv1fuIwdVonduMOuUvHIscb43",
+          "token": "fkSvgPLLdUv7jjrFlFSDj6:APA91bECQA6qlfoEjK484sCZx3aP25aHVMeNguinWuWZnrW2wzKCAds1X2hmoMkzwpGC9dudqsY3nMEwdmfHKzWQ2oM8nAx56w8sOutwlCylQXRGsCBwmnQ",
+          "city": "",
+          "phone": "564940300",
+          "private": false,
+          "date": "2025-05-16",
+          "gender": "Female",
+          "email": "n@gmail.com",
+          "brithDate": "2025-05-16",
+          "name": "Noor",
+          "block": false,
+          "_document_id": "BbqOv1fuIwdVonduMOuUvHIscb43"
+        },
+        {
+          "uId": "Glga8igSdVRB9qWbfzII64I0QFo1",
+          "token": "",
+          "city": "\u062c\u062f\u0647",
+          "phone": "564940300",
+          "private": false,
+          "date": "2025-04-22",
+          "gender": "Female",
+          "email": "noo@gmail.com",
+          "brithDate": "2025-04-08",
+          "name": "nn",
+          "block": false,
+          "_document_id": "Glga8igSdVRB9qWbfzII64I0QFo1"
+        },
+        {
+          "uId": "gkyKqKv19ZOJEUZJcH7LgEKsIHz1",
+          "token": "",
+          "city": "",
+          "phone": "564940300",
+          "private": false,
+          "date": "2025-09-09",
+          "gender": "",
+          "email": "564940300",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "gkyKqKv19ZOJEUZJcH7LgEKsIHz1"
+        },
+        {
+          "uId": "pqeZw4V4ICTgRjVnmTYGmR9IRBv2",
+          "token": "cpVjTbIjSOiW9o3phPmdPT:APA91bGek51mbv8dyc1V2JRjc5d_nZS1MfF1sqMiBTju_EmeV7N1OBLNJEjMHFvuxx2uFAhf2bMnIZhstj9Ld9JWJGc7sPvOm7e0MBGHn9VRQ1zdHDCJ-ms",
+          "city": "",
+          "phone": "564940300",
+          "private": false,
+          "date": "2025-04-23",
+          "gender": "Male",
+          "email": "maheradel12@gmail.com",
+          "brithDate": "2001-03-01",
+          "name": "\u0645\u0627\u0647\u0631 \u0639\u0627\u062f\u0644",
+          "block": false,
+          "_document_id": "pqeZw4V4ICTgRjVnmTYGmR9IRBv2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "0564940300",
+      "user_ids": [
+        "BoxmHNGkqhUFpooYz267R0N3wFn1",
+        "DBFKT9gFyYghp6uQaiYzXrhm0Lm1"
+      ],
+      "users_data": [
+        {
+          "uId": "BoxmHNGkqhUFpooYz267R0N3wFn1",
+          "token": "cGNXkBuyokjngY1Pv25cHf:APA91bGuAsxE-9c58o3aRlHAUoonXw9_P5MrXhU5dsdleDbHIp1ZrMjZNSFvvGudOQwT9iz0T2vPazuJ52sLCsZeCqWrIX2wTxY1hjmKtm4rweJJvFZqHV8",
+          "city": "",
+          "phone": "0564940300",
+          "private": false,
+          "date": "2025-04-22",
+          "gender": "",
+          "email": "alsayednoor@icloud.com",
+          "brithDate": "",
+          "block": false,
+          "name": "Apple User",
+          "_document_id": "BoxmHNGkqhUFpooYz267R0N3wFn1"
+        },
+        {
+          "uId": "DBFKT9gFyYghp6uQaiYzXrhm0Lm1",
+          "token": "",
+          "city": "\u062c\u062f\u0629",
+          "phone": "0564940300",
+          "date": "2025-04-22",
+          "gender": "Female",
+          "email": "nan@gmail.com",
+          "brithDate": "2014-04-15",
+          "name": "n",
+          "block": false,
+          "_document_id": "DBFKT9gFyYghp6uQaiYzXrhm0Lm1"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "233222323",
+      "user_ids": [
+        "NMJm7HC0ErYEeqzISkj0flptFHs2",
+        "eBFYOJYOkjMOu6h4sC52cpc5Wof1"
+      ],
+      "users_data": [
+        {
+          "uId": "NMJm7HC0ErYEeqzISkj0flptFHs2",
+          "token": "",
+          "city": "",
+          "phone": "233222323",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "NMJm7HC0ErYEeqzISkj0flptFHs2"
+        },
+        {
+          "uId": "eBFYOJYOkjMOu6h4sC52cpc5Wof1",
+          "token": "e1645jVIwU18j2QwRhfr7w:APA91bFuXjOY1IGnh1eeGgotpz6C9CPE1YXsyXS1ME_GtkXQeuJ7ednCjhqeJGK0hODF2u6c4A6sv8xWvIHuLAOKAhi2P2xwGlq87uZLGkU-B1gG5IbREEA",
+          "city": "",
+          "phone": "233222323",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "eBFYOJYOkjMOu6h4sC52cpc5Wof1"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "1277556432",
+      "user_ids": [
+        "PNuTizjJ5udpGA0AhIORDaA7tQm1",
+        "ULWmhqXttkaE3MtKECpFaCvCho72"
+      ],
+      "users_data": [
+        {
+          "uId": "PNuTizjJ5udpGA0AhIORDaA7tQm1",
+          "token": "",
+          "city": "\u062d\u0648\u0637\u0629 \u0628\u0646\u064a \u062a\u0645\u064a\u0645",
+          "phone": "1277556432",
+          "date": "2025-04-05",
+          "gender": "Male",
+          "email": "nowf@gmail.com",
+          "brithDate": "2025-04-02",
+          "name": "Nowf",
+          "block": false,
+          "_document_id": "PNuTizjJ5udpGA0AhIORDaA7tQm1"
+        },
+        {
+          "uId": "ULWmhqXttkaE3MtKECpFaCvCho72",
+          "token": "cxKma7_0SciOIcQ3wWNF41:APA91bEOso3mv9T1nJeC496Tlf5VqeaEHowYsoTmyTyBWrnbyf--nH6UKJxWpgJSweRQrWr8FMniCDhh-lQ9o-s9uWoEYa3MMhj4crEcntj3GiIJCC2DkMI",
+          "city": "\u062d\u0631\u064a\u0645\u0644\u0627\u0621",
+          "phone": "1277556432",
+          "date": "2025-04-05",
+          "gender": "Male",
+          "email": "hgg@gmail.com",
+          "brithDate": "2025-04-04",
+          "name": "gsgsg",
+          "block": false,
+          "_document_id": "ULWmhqXttkaE3MtKECpFaCvCho72"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "1234567890",
+      "user_ids": [
+        "lGoeiOruNFXkylvVsLFSB0R67z32",
+        "aaVtb61hmrYTsPY9aIMjvtuAnZS2"
+      ],
+      "users_data": [
+        {
+          "uId": "aaVtb61hmrYTsPY9aIMjvtuAnZS2",
+          "token": "eOmW6DleQkWu8VzxLHEELd:APA91bG1mxa6oNtvmigrqDDXt9a0FKp28hB2iov_aex46uvqLpGESWhU83IPl6l1Po_O275Pop5EbzBRsgZ8CSDvlKzf_mwrw3QV0W92QvZ-oplPMG3o65I",
+          "city": "makaa",
+          "phone": "1234567890",
+          "private": true,
+          "date": "2025-03-28",
+          "gender": "Male",
+          "email": "mmdouh1@gmail.com",
+          "brithDate": "2000-06-15",
+          "name": "mohamed",
+          "block": false,
+          "_document_id": "aaVtb61hmrYTsPY9aIMjvtuAnZS2"
+        },
+        {
+          "uId": "lGoeiOruNFXkylvVsLFSB0R67z32",
+          "token": "",
+          "city": "\u062d\u0648\u0637\u0629 \u0628\u0646\u064a \u062a\u0645\u064a\u0645",
+          "phone": "1234567890",
+          "date": "2025-03-28",
+          "gender": "Male",
+          "email": "mohammed@gmail.com",
+          "brithDate": "2025-03-28",
+          "name": "mo",
+          "block": false,
+          "_document_id": "lGoeiOruNFXkylvVsLFSB0R67z32"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "877277772",
+      "user_ids": [
+        "phone_1752001463225_9zww5ogFnTabUFOC",
+        "phone_877277772"
+      ],
+      "users_data": [
+        {
+          "uId": "phone_1752001463225_9zww5ogFnTabUFOC",
+          "token": "",
+          "city": "",
+          "phone": "877277772",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "",
+          "email": "",
+          "brithDate": "",
+          "name": "",
+          "block": false,
+          "_document_id": "phone_1752001463225_9zww5ogFnTabUFOC"
+        },
+        {
+          "uId": "phone_877277772",
+          "token": "e1645jVIwU18j2QwRhfr7w:APA91bFuXjOY1IGnh1eeGgotpz6C9CPE1YXsyXS1ME_GtkXQeuJ7ednCjhqeJGK0hODF2u6c4A6sv8xWvIHuLAOKAhi2P2xwGlq87uZLGkU-B1gG5IbREEA",
+          "city": "",
+          "phone": "877277772",
+          "private": false,
+          "date": "2025-07-08",
+          "gender": "Male",
+          "email": "",
+          "brithDate": "2025-07-02",
+          "block": false,
+          "name": "Shhaha",
+          "_document_id": "phone_877277772"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    },
+    {
+      "primary_field": "phone",
+      "field_value": "155458393",
+      "user_ids": [
+        "ugyL6cOhBFZiPpnaZySP4eZ0TVv2",
+        "pzsQ2mriblMdlQm7XyszuVIxtgp2"
+      ],
+      "users_data": [
+        {
+          "uId": "pzsQ2mriblMdlQm7XyszuVIxtgp2",
+          "token": "d_Eu1hpGTbCcq9Yo2AlbY9:APA91bHoZbN-82Ankm5ZsG0dKgK1cWtG_E26yBP7xucCYuLJedAHF1W5qIX1YSSrurfQYTNGPDIMe455OIaig9Y41eCtO8X718khajuk8NFrSdPnBNHBou4",
+          "city": "",
+          "phone": "155458393",
+          "private": false,
+          "date": "2025-05-16",
+          "gender": "Male",
+          "email": "maher12@gmail.com",
+          "brithDate": "2001-03-21",
+          "name": "maher adel",
+          "block": false,
+          "_document_id": "pzsQ2mriblMdlQm7XyszuVIxtgp2"
+        },
+        {
+          "uId": "ugyL6cOhBFZiPpnaZySP4eZ0TVv2",
+          "token": "dentqevfQVCbu6RZo_Fnk8:APA91bHe7rXrlTNluF0yVK9Mvrxx_E68QyoQRYErrt2oNGbhNKJCOg_6CXkTMQNTCoBd4OlW8RIl215fkQeMLugQoFgRiiKlHRkFYF0vP4Wgyb-rKgpcJ5c",
+          "city": "",
+          "phone": "155458393",
+          "private": false,
+          "date": "2025-09-03",
+          "gender": "Male",
+          "email": "maheradel@gmail.com",
+          "brithDate": "2001-03-21",
+          "name": "Maher Adel",
+          "block": false,
+          "_document_id": "ugyL6cOhBFZiPpnaZySP4eZ0TVv2"
+        }
+      ],
+      "confidence_score": 1.0,
+      "detection_method": "merged_exact_match"
+    }
+  ]
+}

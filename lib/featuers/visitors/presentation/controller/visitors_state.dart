@@ -75,3 +75,6 @@ class FollowersErrorState extends VisitorsState{
  final  String message;
   FollowersErrorState({required this.message});
 }
+
+// Banner states
+class BannerIndexChangedState extends VisitorsState{}

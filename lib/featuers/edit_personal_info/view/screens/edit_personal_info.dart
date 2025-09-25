@@ -1,29 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/constants/app_constants.dart';
-import 'package:hadawi_app/featuers/auth/presentation/controller/auth_cubit.dart';
-import 'package:hadawi_app/featuers/auth/presentation/controller/auth_states.dart';
 import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_profile_cubit.dart';
 import 'package:hadawi_app/featuers/edit_personal_info/view/controller/edit_profile_states.dart';
-import 'package:hadawi_app/featuers/splash/preentation/view/widgets/logo_image.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/styles/size_config/app_size_config.dart';
-import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/utiles/services/service_locator.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
-import 'package:hadawi_app/widgets/default_button.dart';
-import 'package:hadawi_app/widgets/default_text_field.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:intl/intl.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 import '../../../auth/presentation/view/register/widgets/country_code_widget.dart';
 import '../../../auth/presentation/view/register/widgets/select_gender_widget.dart';
 import '../../../home_layout/presentation/controller/home_cubit.dart';
+import '../../../home_layout/presentation/view/home_layout/home_layout.dart';
+import '../../../../utiles/helper/material_navigation.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -61,10 +52,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: Colors.white,
         leading: IconButton(
           onPressed: () {
-            setState(() {
-              context.read<HomeCubit>().currentIndex = 2;
-            });
-            Navigator.pop(context);
+            // Navigate to HomeLayout with Profile tab selected
+            context.read<HomeCubit>().changeIndex(index: 2);
+            customPushAndRemoveUntil(context, HomeLayout());
           },
           icon: Icon(Icons.arrow_back, color: Color(0xFF8B7BA8)),
         ),
@@ -88,9 +78,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           if (state is EditProfileErrorState) {
             customToast(title: state.message, color: ColorManager.error);
           }
+          if (state is EditProfileSuccessState) {
+            // Navigate to HomeLayout with Profile tab selected after successful update
+            context.read<HomeCubit>().changeIndex(index: 2);
+            customPushAndRemoveUntil(context, HomeLayout());
+          }
           if (state is CheckPhoneSuccessState) {
             if (context.read<EditProfileCubit>().isUsed == false) {
-              Navigator.pop(context);
+              // Navigate to HomeLayout with Profile tab selected after successful update
+              context.read<HomeCubit>().changeIndex(index: 2);
+              customPushAndRemoveUntil(context, HomeLayout());
             }
           }
         },
@@ -142,10 +139,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               title: AppLocalizations.of(context)!.translate('email').toString(),
                               controller: emailController,
                               hint: AppLocalizations.of(context)!.translate('emailHint').toString(),
-                              enabled: false,
+                              enabled: UserDataFromStorage.emailFromStorage.isEmpty,
+                              keyboardType: TextInputType.emailAddress,
                               validator: (value) {
                                 if (value!.isEmpty) {
                                   return AppLocalizations.of(context)!.translate('emailHint').toString();
+                                }
+                                // Add email format validation
+                                if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                                  return 'Please enter a valid email address';
                                 }
                                 return null;
                               },
@@ -237,12 +239,20 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
+                              // Check if email is empty and being updated
+                              String? emailToUpdate;
+                              if (UserDataFromStorage.emailFromStorage.isEmpty && 
+                                  emailController.text.isNotEmpty) {
+                                emailToUpdate = emailController.text;
+                              }
+                              
                               context.read<EditProfileCubit>().getUserInfo(
                                     date: dateController.text,
                                     phone: phoneController.text,
                                     context: context,
                                     gender: context.read<EditProfileCubit>().genderValue,
                                     name: nameController.text,
+                                    email: emailToUpdate,
                                   );
                             }
                           },

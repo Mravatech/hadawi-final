@@ -95,13 +95,20 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver {
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: EdgeInsets.all(mediaQuery.width * 0.05),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+          body: SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: mediaQuery.height - kToolbarHeight - MediaQuery.of(context).padding.top - 50,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(mediaQuery.width * 0.05),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
                   // Occasion Type with animation
                   AnimatedOpacity(
                     duration: Duration(milliseconds: 500),
@@ -214,6 +221,9 @@ class _OccasionQrState extends State<OccasionQr> with WidgetsBindingObserver {
                     ],
                   ),
                 ],
+                    ),
+                  ),
+                ),
               ),
             ),
           ),

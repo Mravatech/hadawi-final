@@ -4,13 +4,9 @@ import 'package:hadawi_app/featuers/friends/presentation/controller/firends_stat
 import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubit.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:hadawi_app/widgets/default_app_bar_widget.dart';
-import 'package:hadawi_app/widgets/default_button.dart';
 import 'package:hadawi_app/widgets/toast.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class FollowingRequestScreen extends StatefulWidget {
   const FollowingRequestScreen({super.key});
@@ -126,146 +122,110 @@ class _FollowingRequestScreenState extends State<FollowingRequestScreen> with Wi
             );
           }
 
-          return ListView.builder(
+          return GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             physics: AlwaysScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
+              childAspectRatio: 0.75,
+            ),
             itemCount: cubit.followersRequest.length,
             itemBuilder: (context, index) {
               final request = cubit.followersRequest[index];
               return Container(
-                margin: EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color(0xFF8B7BA8).withOpacity(0.08),
-                      blurRadius: 15,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+                  color: Colors.grey[200],
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Row(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      // Handle user tap - show profile or actions
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Container(
-                            width: 56,
-                            height: 56,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Color(0xFF8B7BA8).withOpacity(0.2),
-                                  Color(0xFF8B7BA8).withOpacity(0.1),
-                                ],
-                              ),
+                          Text(
+                            request.userName,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.grey[800],
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(28),
-                              child: Image.asset(
-                                AssetsManager.userIcon,
-                                width: 32,
-                                height: 32,
-                                color: Color(0xFF8B7BA8),
-                              ),
-                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  request.userName,
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black87,
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Wants to follow you',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Color(0xFF8B7BA8),
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
+                          SizedBox(height: 4),
+                          Text(
+                            'Wants to follow you',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    await cubit.acceptFollowRequest(
+                                      userId: UserDataFromStorage.uIdFromStorage,
+                                      followerId: request.userId,
+                                      userName: request.userName,
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Color(0xFF8B7BA8),
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.translate('follow').toString(),
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    await cubit.rejectFollowRequest(
+                                      userId: UserDataFromStorage.uIdFromStorage,
+                                      followerId: request.userId,
+                                    );
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.grey[300],
+                                    foregroundColor: Colors.grey[700],
+                                    padding: EdgeInsets.symmetric(vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.translate('decline').toString(),
+                                    style: TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () async {
-                                await cubit.acceptFollowRequest(
-                                  userId: UserDataFromStorage.uIdFromStorage,
-                                  followerId: request.userId,
-                                  userName: request.userName,
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: Color(0xFF8B7BA8),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('follow').toString(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: TextButton(
-                              onPressed: () async {
-                                await cubit.rejectFollowRequest(
-                                  userId: UserDataFromStorage.uIdFromStorage,
-                                  followerId: request.userId,
-                                );
-                              },
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: ColorManager.error,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  side: BorderSide(
-                                    color: ColorManager.error.withOpacity(0.5),
-                                    width: 1,
-                                  ),
-                                ),
-                                padding: EdgeInsets.symmetric(vertical: 12),
-                                elevation: 0,
-                              ),
-                              child: Text(
-                                AppLocalizations.of(context)!.translate('decline').toString(),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               );

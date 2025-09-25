@@ -1,8 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hadawi_app/featuers/auth/data/data_source/auth_data_source.dart';
-import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
 import 'package:hadawi_app/featuers/auth/domain/base_repository/auth_base_repository.dart';
 import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/utiles/error_handling/exceptions/exceptions.dart';
@@ -17,10 +15,11 @@ class AuthRepositoryImplement extends AuthBaseRepository {
   Future<Either<Faliure, void>> login(
       {required String email,
       required String password,
-      required context}) async {
+      required context,
+      bool isMobileLogin = false}) async {
     try {
       return Right(await baseAuthDataSource.login(
-          email: email, password: password, context: context));
+          email: email, password: password, context: context, isMobileLogin: isMobileLogin));
     } on FirebaseExceptions catch (e) {
       return Left(FirebaseFaliure.fromMessage(e));
     }
@@ -72,7 +71,9 @@ class AuthRepositoryImplement extends AuthBaseRepository {
       required String brithDate,
       required String gender,
       required String password,
-      required String city}) async {
+      required String city,
+      String firstName = '',
+      String lastName = ''}) async {
     try {
       return Right(await baseAuthDataSource.saveUserData(
           email: email,
@@ -82,7 +83,9 @@ class AuthRepositoryImplement extends AuthBaseRepository {
           brithDate: brithDate,
           gender: gender,
           password: password,
-          city: city));
+          city: city,
+          firstName: firstName,
+          lastName: lastName));
     } on FireStoreException catch (e) {
       return Left(FirebaseFaliure(message: e.firebaseException.message!));
     }

@@ -101,6 +101,18 @@
                 <string>hadawiapp.page.link</string>
             </array>
         </dict>
+        
+        <!-- Firebase Phone Authentication -->
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+            <string>firebase-phone-auth</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>app-1-1698335350-ios-76209b1f710d416c8aed57</string>
+            </array>
+        </dict>
     </array>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen</string>

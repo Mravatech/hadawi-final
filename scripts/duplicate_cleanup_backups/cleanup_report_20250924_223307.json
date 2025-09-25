@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-09-24T22:33:05.010345",
+  "total_users_scanned": 184,
+  "duplicate_groups_found": 0,
+  "total_duplicates": 0,
+  "users_deleted": 0,
+  "backup_created": false,
+  "backup_path": null,
+  "errors": [],
+  "duplicate_groups": []
+}

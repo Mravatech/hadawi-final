@@ -283,7 +283,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                   ),
                                 ),
                                 Text(
-                                  '${model.giftPrice.toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                                  '${_calculateTotalAmount(model).toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
                                   style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
@@ -324,7 +324,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                                 color: Color(0xFFF0EEF5),
                               ),
                               FractionallySizedBox(
-                                widthFactor: (model.moneyGiftAmount / model.giftPrice).clamp(0.0, 1.0),
+                                widthFactor: (model.moneyGiftAmount / _calculateTotalAmount(model)).clamp(0.0, 1.0),
                                 child: Container(
                                   height: 12,
                                   decoration: BoxDecoration(
@@ -338,18 +338,18 @@ class _OccasionDetailsState extends State<OccasionDetails> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          '${((model.moneyGiftAmount / model.giftPrice) * 100).toStringAsFixed(2)}%',
+                          '${((model.moneyGiftAmount / _calculateTotalAmount(model)) * 100).toStringAsFixed(2)}%',
                           style: TextStyle(
                             fontSize: 14,
                             color: Color(0xFF8B7BA8),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        if (model.giftPrice > model.moneyGiftAmount)
+                        if (_calculateTotalAmount(model) > model.moneyGiftAmount)
                           Padding(
                             padding: const EdgeInsets.only(top: 8.0),
                             child: Text(
-                              '${AppLocalizations.of(context)!.translate('remainingBalance').toString()}: ${(model.giftPrice - model.moneyGiftAmount).toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
+                              '${AppLocalizations.of(context)!.translate('remainingBalance').toString()}: ${(_calculateTotalAmount(model) - model.moneyGiftAmount).toStringAsFixed(0)} ${AppLocalizations.of(context)!.translate('rsa').toString()}',
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey[600],
@@ -612,7 +612,7 @@ class _OccasionDetailsState extends State<OccasionDetails> {
   Widget _buildActionButtons(VisitorsCubit cubit, VisitorsState state, bool isActiveOccasion) {
     if (!isActiveOccasion) return SizedBox();
 
-    final bool canInteract = cubit.occasionDetailsModel.giftPrice > cubit.occasionDetailsModel.moneyGiftAmount;
+    final bool canInteract = _calculateTotalAmount(cubit.occasionDetailsModel) > cubit.occasionDetailsModel.moneyGiftAmount;
     final buttonStyle = ElevatedButton.styleFrom(
       backgroundColor: canInteract ? ColorManager.primaryBlue : Colors.grey,
       foregroundColor: Colors.white,
@@ -687,5 +687,32 @@ class _OccasionDetailsState extends State<OccasionDetails> {
         ),
       ],
     );
+  }
+
+  double _calculateTotalAmount(dynamic model) {
+    // Use the exact same calculation logic as getTotalGiftPrice() in OccasionCubit
+    double giftPriceNumber = model.giftPrice ?? 0.0;
+    
+    // Use gift packaging if it's a gift type occasion, otherwise use money packaging
+    String packagePrice = (model.giftType == 'هدية') ? model.packagePrice : model.packagePrice;
+    double packagePriceNumber = double.tryParse(packagePrice) ?? 0.0;
+    
+    double deliveryTax = model.deliveryPrice ?? 0.0;
+    double serviceTax = model.appCommission ?? 0.0;
+    double discountValue = model.discount ?? 0.0;
+    
+    // Exact same calculation as getTotalGiftPrice(): (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue
+    double total = (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue;
+    
+    debugPrint("=== TOTAL CALCULATION (Exact Copy of getTotalGiftPrice) ===");
+    debugPrint("giftPriceNumber: $giftPriceNumber");
+    debugPrint("packagePrice: $packagePrice");
+    debugPrint("packagePriceNumber: $packagePriceNumber");
+    debugPrint("deliveryTax: $deliveryTax");
+    debugPrint("serviceTax: $serviceTax");
+    debugPrint("discountValue: $discountValue");
+    debugPrint("Final total: $total");
+    
+    return total;
   }
 }

@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/featuers/home_layout/presentation/view/home_layout/home_layout.dart';
-import 'package:hadawi_app/featuers/occasions/domain/entities/occastion_entity.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_cubit.dart';
 import 'package:hadawi_app/featuers/occasions_list/presentation/controller/occasions_list_states.dart';
-import 'package:hadawi_app/featuers/occasions_list/presentation/view/widgets/occasions_card.dart';
+import 'package:hadawi_app/featuers/payment_page/presentation/controller/payment_cubit.dart';
 import 'package:hadawi_app/featuers/visitors/presentation/view/widgets/occasion_details.dart';
 import 'package:hadawi_app/generated/assets.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
-import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/styles/size_config/app_size_config.dart';
-import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/helper/material_navigation.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
-import 'package:hadawi_app/utiles/router/app_router.dart';
 
 class MyOccasions extends StatefulWidget {
   const MyOccasions({super.key});
@@ -32,21 +26,22 @@ class _MyOccasionsState extends State<MyOccasions> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<OccasionsListCubit, OccasionsListStates>(
-      listener: (context, state) {},
-      builder: (context, state) {
-        if (state is GetMyOccasionListLoadingState) {
-          return Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B7BA8)),
-            ),
-          );
-        }
+    return Scaffold(
+      body: BlocConsumer<OccasionsListCubit, OccasionsListStates>(
+        listener: (context, state) {},
+        builder: (context, state) {
+          if (state is GetMyOccasionListLoadingState) {
+            return Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF8B7BA8)),
+              ),
+            );
+          }
 
-        final occasions = OccasionsListCubit.get(context).myOccasionsList;
-        
-        if (state is GetMyOccasionListSuccessState && occasions.isNotEmpty) {
-          return RefreshIndicator(
+          final occasions = OccasionsListCubit.get(context).myOccasionsList;
+          
+          if (state is GetMyOccasionListSuccessState && occasions.isNotEmpty) {
+            return RefreshIndicator(
             color: Color(0xFF8B7BA8),
             onRefresh: () async {
               await OccasionsListCubit.get(context).getMyOccasionsList();
@@ -126,10 +121,10 @@ class _MyOccasionsState extends State<MyOccasions> {
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                   ),
-                                  if (occasion.personName?.isNotEmpty ?? false) ...[
+                                  if (occasion.personName.isNotEmpty) ...[
                                     SizedBox(height: 4),
                                     Text(
-                                      occasion.personName!,
+                                      occasion.personName,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[600],
@@ -172,10 +167,12 @@ class _MyOccasionsState extends State<MyOccasions> {
                 ),
                 textAlign: TextAlign.center,
               ),
+              SizedBox(height: 24),
             ],
           ),
         );
-      },
+        },
+      ),
     );
   }
 }

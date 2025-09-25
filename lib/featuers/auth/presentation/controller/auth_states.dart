@@ -83,6 +83,8 @@ class SignInWithSocialMediaErrorState extends AuthStates {
   SignInWithSocialMediaErrorState({required this.message});
 }
 
+class ProfileCompletionRequiredState extends AuthStates {}
+
 class SetBrithDayValueState extends AuthStates {}
 
 class SelectGenderTypeState extends AuthStates {}

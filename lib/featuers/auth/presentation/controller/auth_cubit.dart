@@ -5,8 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hadawi_app/featuers/auth/data/models/user_model.dart';
-import 'package:hadawi_app/featuers/auth/domain/entities/user_entities.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/check_user_login_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/delete_user_use_cases.dart';
 import 'package:hadawi_app/featuers/auth/domain/use_cases/get_user_info_use_cases.dart';
@@ -107,11 +105,12 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> login(
       {required String email,
       required String password,
-      required context}) async {
+      required context,
+      bool isMobileLogin = false}) async {
     emit(UserLoginLoadingState());
     try {
       final result = await loginUseCases.login(
-          email: email, password: password, context: context);
+          email: email, password: password, context: context, isMobileLogin: isMobileLogin);
       result.fold((l) {
         emit(UserLoginErrorState(message: l.message));
       }, (r) {
@@ -146,8 +145,8 @@ class AuthCubit extends Cubit<AuthStates> {
       debugPrint('Register Error**********${l.message}');
       emit(UserRegisterErrorState(message: l.message));
     }, (r) {
-      debugPrint('Register Success**********');
-      emit(UserRegisterSuccessState());
+      debugPrint('Register Success********** - profile completion required');
+      emit(ProfileCompletionRequiredState());
     });
   }
 
@@ -160,7 +159,8 @@ class AuthCubit extends Cubit<AuthStates> {
     List.generate(length, (index) => chars[random.nextInt(chars.length)])
         .join();
     otpCode = code;
-    debugPrint("Generated Code: $code");
+    debugPrint("Generated OTP Code: $code");
+    debugPrint("Stored otpCode: $otpCode");
     emit(GenerateCodeSuccessState());
     return code;
   }
@@ -168,21 +168,28 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> sendOtp({required String phone,}) async {
     emit(SendOtpLoadingState());
     try {
+      debugPrint("Sending OTP to phone: $phone");
+      debugPrint("Current otpCode: $otpCode");
+      
       if (phone.isEmpty) {
         emit(SendOtpErrorState(message: 'Phone number is required'));
         return;
       }
       if (otpCode.isEmpty || !RegExp(r'^\d+$').hasMatch(otpCode)) {
+        debugPrint("Invalid OTP code: $otpCode");
         emit(SendOtpErrorState(message: 'Invalid OTP code'));
         return;
       }
 
       final parsedOtp = int.parse(otpCode);
+      debugPrint("Sending OTP: $parsedOtp to phone: $phone");
       final result = await registerUseCases.sendOtp(phone: phone, otp: parsedOtp, );
 
       result.fold((l) {
+        debugPrint("Send OTP error: ${l.message}");
         emit(SendOtpErrorState(message: l.message));
       }, (r) {
+        debugPrint("OTP sent successfully!");
         customToast(title: 'تم ارسال كود التحقق', color: ColorManager.primaryBlue);
         emit(SendOtpSuccessState());
       });
@@ -193,11 +200,218 @@ class AuthCubit extends Cubit<AuthStates> {
   }
   void verifyOtp({required int otp}) {
     emit(VerifiyOtpCodeLoadingState());
+    debugPrint("Verifying OTP: $otp against stored code: $otpCode");
+    if (otpCode.isEmpty) {
+      emit(VerifiyOtpCodeErrorState(message: 'No OTP code found. Please request a new code.'));
+      return;
+    }
     if (otp == int.parse(otpCode)) {
+      debugPrint("Manual OTP verification successful! Now proceeding with Firebase phone auth...");
       emit(VerifiyOtpCodeSuccessState());
     } else {
-      emit(VerifiyOtpCodeErrorState(message: 'Invalid OTP code'));
+      debugPrint("OTP verification failed: $otp != ${int.parse(otpCode)}");
+      emit(VerifiyOtpCodeErrorState(message: 'The verification code you entered is incorrect. Please try again.'));
     }
+  }
+
+  // Method to handle authentication after manual OTP verification
+  // Uses custom authentication system with Firestore users collection
+  Future<void> authenticateAfterManualOtp({
+    required String phone,
+    required String email,
+    required String password,
+    required BuildContext context,
+    required bool isLogin,
+  }) async {
+    emit(VerifiyOtpCodeLoadingState());
+    debugPrint("Manual OTP verified, now using custom authentication for: '$phone'");
+    debugPrint("Email parameter: '$email'");
+    debugPrint("Password parameter: '$password'");
+    debugPrint("Is login: $isLogin");
+    
+    try {
+      if (isLogin) {
+        // For login, validate user with custom authentication
+        await _customAuthenticateUser(phone, email, password, context);
+      } else {
+        // For registration, create new user with custom authentication
+        await _customRegisterUser(phone, email, password, context);
+      }
+    } catch (e) {
+      debugPrint("Custom authentication after manual OTP failed: $e");
+      emit(VerifiyOtpCodeErrorState(message: 'Authentication failed: $e'));
+    }
+  }
+
+  // Custom authentication system - validate user against Firestore users collection
+  // Supports both phone and email login (cross-credential authentication)
+  Future<void> _customAuthenticateUser(String phone, String email, String password, BuildContext context) async {
+    try {
+      debugPrint("Custom authentication: Validating user with phone: '$phone', email: '$email'");
+      
+      QuerySnapshot userQuery;
+      String searchField;
+      
+      // Determine if we're searching by phone or email
+      if (phone.isNotEmpty) {
+        // Search by phone number
+        userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phone', isEqualTo: phone)
+            .limit(1)
+            .get();
+        searchField = 'phone';
+      } else if (email.isNotEmpty) {
+        // Search by email
+        userQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+        searchField = 'email';
+      } else {
+        debugPrint("Custom auth: No phone or email provided");
+        emit(VerifiyOtpCodeErrorState(message: 'Please provide phone number or email.'));
+        return;
+      }
+      
+      if (userQuery.docs.isEmpty) {
+        debugPrint("Custom auth: User not found in Firestore by $searchField, auto-registering...");
+        // Auto-register the user since they've verified their phone number via OTP
+        await _customRegisterUser(phone, email, password, context);
+        return;
+      }
+      
+      final userDoc = userQuery.docs.first;
+      final userData = userDoc.data() as Map<String, dynamic>;
+      
+      // Validate password if provided
+      if (password.isNotEmpty && userData['password'] != password) {
+        debugPrint("Custom auth: Invalid password");
+        emit(VerifiyOtpCodeErrorState(message: 'Invalid password.'));
+        return;
+      }
+      
+      // Generate custom authentication token
+      final customToken = _generateCustomAuthToken(userDoc.id, phone.isNotEmpty ? phone : email);
+      debugPrint("Custom auth: Generated token for user: ${userDoc.id}");
+      
+      // Store authentication data
+      await _storeCustomAuthData(userDoc.id, userData, customToken);
+      
+      debugPrint("Custom authentication successful");
+      
+      // Check if profile is complete after storing data
+      if (isProfileComplete()) {
+        emit(UserLoginSuccessState());
+      } else {
+        emit(ProfileCompletionRequiredState());
+      }
+    } catch (e) {
+      debugPrint("Custom authentication error: $e");
+      emit(VerifiyOtpCodeErrorState(message: 'Authentication failed: $e'));
+    }
+  }
+
+  // Custom registration system - create new user in Firestore users collection
+  // Checks for existing users by both email and phone to prevent duplicates
+  Future<void> _customRegisterUser(String phone, String email, String password, BuildContext context) async {
+    try {
+      debugPrint("Custom registration: Creating user with phone: '$phone', email: '$email'");
+      
+      // Check if user already exists by phone (if phone is provided)
+      if (phone.isNotEmpty) {
+        final phoneQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('phone', isEqualTo: phone)
+            .limit(1)
+            .get();
+        
+        if (phoneQuery.docs.isNotEmpty) {
+          debugPrint("Custom registration: User already exists with this phone, authenticating instead");
+          await _customAuthenticateUser(phone, email, password, context);
+          return;
+        }
+      }
+      
+      // Check if user already exists by email (if email is provided)
+      if (email.isNotEmpty) {
+        final emailQuery = await FirebaseFirestore.instance
+            .collection('users')
+            .where('email', isEqualTo: email)
+            .limit(1)
+            .get();
+        
+        if (emailQuery.docs.isNotEmpty) {
+          debugPrint("Custom registration: User already exists with this email, authenticating instead");
+          await _customAuthenticateUser(phone, email, password, context);
+          return;
+        }
+      }
+      
+      // Generate unique user ID
+      final userId = FirebaseFirestore.instance.collection('users').doc().id;
+      debugPrint("Custom registration: Creating new user with ID: $userId");
+      
+      // Create user document in Firestore
+      await saveUserData(
+        uId: userId,
+        email: email,
+        phone: phone,
+        name: '',
+        brithDate: '',
+        gender: '',
+        password: password,
+        city: '',
+      );
+      
+      // Generate custom authentication token
+      final customToken = _generateCustomAuthToken(userId, phone.isNotEmpty ? phone : email);
+      debugPrint("Custom registration: Generated token for new user: $userId");
+      
+      // Store authentication data
+      await _storeCustomAuthData(userId, {
+        'name': '',
+        'email': email,
+        'phone': phone,
+        'gender': '',
+        'brithDate': '',
+        'city': '',
+      }, customToken);
+      
+      debugPrint("Custom registration successful - profile completion required");
+      emit(ProfileCompletionRequiredState());
+    } catch (e) {
+      debugPrint("Custom registration error: $e");
+      emit(VerifiyOtpCodeErrorState(message: 'Registration failed: $e'));
+    }
+  }
+
+  // Generate custom authentication token
+  String _generateCustomAuthToken(String userId, String phone) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final random = Random().nextInt(999999);
+    // Create a custom token that includes user ID, phone, and timestamp
+    final token = '${userId}_${phone}_${timestamp}_${random}_custom_auth';
+    debugPrint("Generated custom auth token: $token");
+    return token;
+  }
+
+  // Store custom authentication data
+  Future<void> _storeCustomAuthData(String userId, Map<String, dynamic> userData, String customToken) async {
+    // Store user data in secure storage
+    await UserDataFromStorage.setUid(userId);
+    await UserDataFromStorage.setUserName(userData['name'] ?? '');
+    await UserDataFromStorage.setEmail(userData['email'] ?? '');
+    await UserDataFromStorage.setPhoneNumber(userData['phone'] ?? '');
+    await UserDataFromStorage.setGender(userData['gender'] ?? '');
+    await UserDataFromStorage.setBrithDate(userData['brithDate'] ?? '');
+    await UserDataFromStorage.setUserIsGuest(false);
+    
+    // Store custom authentication token
+    await UserDataFromStorage.setAuthToken(customToken);
+    
+    debugPrint("Custom auth data stored successfully");
   }
   Future<void> saveUserData(
       {required String uId,
@@ -207,7 +421,9 @@ class AuthCubit extends Cubit<AuthStates> {
       required String brithDate,
       required String gender,
       required String password,
-      required String city}) async {
+      required String city,
+      String firstName = '',
+      String lastName = ''}) async {
     emit(UserSaveDataLoadingState());
     final result = await saveDataUseCases.saveUserData(
         uId: uId,
@@ -217,7 +433,9 @@ class AuthCubit extends Cubit<AuthStates> {
         brithDate: brithDate,
         password: password,
         gender: gender,
-        city: city);
+        city: city,
+        firstName: firstName,
+        lastName: lastName);
     result.fold((l) {
       emit(UserSaveDataErrorState(message: l.message));
     }, (r) {
@@ -265,7 +483,13 @@ class AuthCubit extends Cubit<AuthStates> {
         emit(SignInWithSocialMediaErrorState(message: l.message));
       }, (r) {
         customToast(title: 'تم التسجيل', color: ColorManager.primaryBlue);
-        emit(SignInWithSocialMediaSuccessState());
+        
+        // Check if profile is complete after Google authentication
+        if (isProfileComplete()) {
+          emit(SignInWithSocialMediaSuccessState());
+        } else {
+          emit(ProfileCompletionRequiredState());
+        }
       });
     } catch (e) {
       emit(SignInWithSocialMediaErrorState(message: ''));
@@ -398,7 +622,7 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
-  Future<void> signInWithApple() async {
+  Future<void> signInWithApple({required BuildContext context}) async {
     emit(SignInWithSocialMediaLoadingState());
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -416,53 +640,40 @@ class AuthCubit extends Cubit<AuthStates> {
       final userCredential =
       await FirebaseAuth.instance.signInWithCredential(oauthCredential);
 
+      // Extract firstName and lastName from Apple credential
+      String firstName = credential.givenName ?? "";
+      String lastName = credential.familyName ?? "";
       String userName = credential.givenName != null && credential.familyName != null
           ? '${credential.givenName} ${credential.familyName}'
-          : userCredential.user?.displayName ?? "Apple User";
+          : userCredential.user?.displayName ?? "";
 
       // Handle potentially null email
       String userEmail = credential.email ?? userCredential.user?.email ?? "";
 
-      UserModel userModel = UserModel(
-        email: userEmail,
-        date: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-        phone: "",
-        name: userName,
-        uId: userCredential.user!.uid,
-        brithDate: "",
-        gender: "",
-        city: "",
-        password: '',
-        private: false,
-        block: false,
-        token: '',
-      );
-
       try {
-        // Check if user document already exists
-        final userDoc = await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .get();
+        // Use the same saveUserData method as Google login for consistency
+        await saveDataUseCases.saveUserData(
+          email: userEmail,
+          phone: '',
+          name: userName,
+          uId: userCredential.user!.uid,
+          brithDate: '',
+          gender: '',
+          city: '',
+          password: '',
+          firstName: firstName,
+          lastName: lastName,
+        );
 
-        if (!userDoc.exists) {
-          // Create new user document if it doesn't exist
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(userCredential.user!.uid)
-              .set(userModel.toMap());
+        // Get user data to populate local storage
+        await getUserInfoUseCases.getUserInfo(uId: userCredential.user!.uid, context: context);
+
+        // Check if profile is complete after storing data
+        if (isProfileComplete()) {
+          emit(SignInWithSocialMediaSuccessState());
+        } else {
+          emit(ProfileCompletionRequiredState());
         }
-
-        // Save user data to local storage
-        UserDataFromStorage.setUid(userCredential.user!.uid);
-        UserDataFromStorage.setUserName(userName);
-        UserDataFromStorage.setEmail(userEmail);
-        UserDataFromStorage.setPhoneNumber('');
-        UserDataFromStorage.setGender('');
-        UserDataFromStorage.setBrithDate('');
-        UserDataFromStorage.setUserIsGuest(false);
-
-        emit(SignInWithSocialMediaSuccessState());
       } on FirebaseException catch (e) {
         emit(SignInWithSocialMediaErrorState(message: e.toString()));
         throw FireStoreException(firebaseException: e);
@@ -539,6 +750,18 @@ class AuthCubit extends Cubit<AuthStates> {
         "https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
 
       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
+  }
+
+  // Check if user profile is complete (only essential fields: name, email, phone)
+  bool isProfileComplete() {
+    final userName = UserDataFromStorage.userNameFromStorage;
+    final userEmail = UserDataFromStorage.emailFromStorage;
+    final userPhone = UserDataFromStorage.phoneNumberFromStorage;
+
+    // Check if essential fields are filled (name, email, phone number)
+    return userName.isNotEmpty &&
+           userEmail.isNotEmpty &&
+           userPhone.isNotEmpty;
   }
 
 }

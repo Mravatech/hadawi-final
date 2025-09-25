@@ -119,10 +119,20 @@ class OccasionCubit extends Cubit<OccasionState> {
 
   String selectedGiftPackageImage = '';
   String selectedMoneyPackageImage = '';
+  bool packagingInitializedFromModel = false;
 
   void switchGiftWithPackageType(int value, String image) {
+    debugPrint("=== SWITCHING PACKAGE TYPE ===");
+    debugPrint("New value: $value");
+    debugPrint("New image: '$image'");
     selectedGiftPackageImage = image;
     giftWithPackageType = value;
+    debugPrint("giftWithPackageType set to: $giftWithPackageType");
+    debugPrint("selectedGiftPackageImage set to: '$selectedGiftPackageImage'");
+    
+    // Recalculate total cost when package type changes
+    getTotalGiftPrice();
+    
     emit(SwitchGiftWithPackageTypeSuccess());
   }
 
@@ -133,7 +143,21 @@ class OccasionCubit extends Cubit<OccasionState> {
   }
 
   void switchGiftWithPackage(bool value) {
+    debugPrint("=== SWITCHING GIFT WITH PACKAGE ===");
+    debugPrint("New value: $value");
     giftWithPackage = value;
+    
+    // If switching to without packaging, reset the package type and image
+    if (!value) {
+      giftWithPackageType = 0;
+      selectedGiftPackageImage = '';
+      debugPrint("Reset packaging values - giftWithPackageType: $giftWithPackageType, selectedGiftPackageImage: '$selectedGiftPackageImage'");
+    }
+    
+    // Recalculate total cost when packaging option changes
+    getTotalGiftPrice();
+    
+    debugPrint("giftWithPackage set to: $giftWithPackage");
     emit(SwitchGiftWithPackageSuccess());
   }
 
@@ -237,12 +261,14 @@ class OccasionCubit extends Cubit<OccasionState> {
   double getTotalGiftPrice() {
     final text = convertArabicToEnglishNumbers(moneyAmountController.text.trim());
     double giftPriceNumber = double.tryParse(text) ?? 0.0;
-    String packagePrice = isPresent?giftWithPackageType.toString():moneyWithPackageType.toString();
+    
+    // Use gift packaging if it's a gift type occasion, otherwise use money packaging
+    String packagePrice = (giftType == 'هدية') ? giftWithPackageType.toString() : moneyWithPackageType.toString();
     double packagePriceNumber = double.tryParse(packagePrice) ?? 0.0;
 
 
     giftPrice = (giftPriceNumber + packagePriceNumber + deliveryTax + serviceTax) - discountValue;
-
+    
     emit(GetTotalGiftPriceSuccessState());
     return giftPrice;
   }
@@ -313,6 +339,11 @@ class OccasionCubit extends Cubit<OccasionState> {
           ? await uploadImages()
           : [];
       debugPrint('imageUrl: $imageUrl');
+      debugPrint("=== CREATING OCCASION ===");
+      debugPrint("giftPrice: $giftPrice");
+      debugPrint("packagePrice: ${isPresent? giftWithPackageType.toString() : moneyWithPackageType.toString()}");
+      debugPrint("deliveryPrice: $deliveryTax");
+      debugPrint("appCommission: $serviceTax");
       final result = await OccasionRepoImp().addOccasions(
         isForMe: isForMe,
         isActive: true,
@@ -341,7 +372,7 @@ class OccasionCubit extends Cubit<OccasionState> {
         isContainName: giftContainsNameValue,
         isPrivate: isPublicValue,
         discount: discountValue,
-        appCommission: totalPriceCalculate,
+        appCommission: serviceTax,
         deliveryPrice: deliveryTax,
         type: dropdownOccasionType??'',
         packageImage: isPresent? selectedGiftPackageImage : selectedMoneyPackageImage,
@@ -431,9 +462,19 @@ class OccasionCubit extends Cubit<OccasionState> {
       giftPackageListImage = value.docs[0]['pakaging_gift_image'];
       occasionTypeItems = List<Map<String, dynamic>>.from(value.docs[0]['occasionType']);
       serviceTax = double.parse(value.docs[0]['service_tax'].toString());
+      debugPrint('=== TAXES LOADED ===');
+      debugPrint('deliveryTax: $deliveryTax');
+      debugPrint('serviceTax: $serviceTax');
       debugPrint('occasionTypeItems: ${value.docs[0]['occasionType']}');
-      selectedGiftPackageImage = giftPackageListImage[0].toString();
-      giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
+      
+      // Only set default values if they haven't been set from the model
+      if (!packagingInitializedFromModel) {
+        selectedGiftPackageImage = giftPackageListImage[0].toString();
+        giftWithPackageType = int.parse(giftPackageListPrice[0].toString());
+        debugPrint("Set default packaging values from getOccasionTaxes");
+      } else {
+        debugPrint("Skipped setting default packaging values - already initialized from model");
+      }
       moneyWithPackageType = int.parse(moneyPackageListPrice[0].toString());
       print('giftPackageListImage: $giftPackageListImage');
       emit(GetOccasionTaxesSuccessState());
@@ -715,6 +756,11 @@ List<dynamic> urls=[];
   }) async {
     emit(UpdateOccasionLoadingState());
     try {
+      debugPrint("=== UPDATING OCCASION ===");
+      debugPrint("giftWithPackage: $giftWithPackage");
+      debugPrint("giftWithPackageType: $giftWithPackageType");
+      debugPrint("selectedGiftPackageImage: '$selectedGiftPackageImage'");
+      
       final List<String>? imageUrl = images.isNotEmpty ? await uploadImages():null;
       await FirebaseFirestore.instance
           .collection('Occasions')
@@ -736,7 +782,18 @@ List<dynamic> urls=[];
         'note': giftDeliveryNoteController.text,
         'type': dropdownOccasionType,
         'isPrivate': isPublicValue,
+        'packagePrice': giftWithPackage ? (giftType == 'هدية' ? giftWithPackageType.toString() : moneyWithPackageType.toString()) : '',
+        'packageImage': giftWithPackage ? (giftType == 'هدية' ? selectedGiftPackageImage : selectedMoneyPackageImage) : '',
+        'deliveryPrice': deliveryTax,
+        'appCommission': serviceTax,
       });
+
+      debugPrint("=== OCCASION UPDATED SUCCESSFULLY ===");
+      debugPrint("Saved giftPrice (total): ${getTotalGiftPrice()}");
+      debugPrint("Saved packagePrice: '${giftWithPackage ? (giftType == 'هدية' ? giftWithPackageType.toString() : moneyWithPackageType.toString()) : ''}'");
+      debugPrint("Saved packageImage: '${giftWithPackage ? (giftType == 'هدية' ? selectedGiftPackageImage : selectedMoneyPackageImage) : ''}'");
+      debugPrint("Saved deliveryPrice: $deliveryTax");
+      debugPrint("Saved appCommission: $serviceTax");
 
       emit(UpdateOccasionSuccessState());
     } catch (e) {

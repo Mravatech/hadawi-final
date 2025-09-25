@@ -15,7 +15,6 @@ import 'package:hadawi_app/featuers/payment_page/date/models/payment_model.dart'
 import 'package:hadawi_app/featuers/visitors/data/models/banner_model.dart';
 import 'package:hadawi_app/featuers/visitors/domain/use_cases/send_follow_request_use_cases.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../occasions/domain/entities/occastion_entity.dart';
 part 'visitors_state.dart';
@@ -23,11 +22,19 @@ part 'visitors_state.dart';
 class VisitorsCubit extends Cubit<VisitorsState> {
   VisitorsCubit(this.sendFollowRequestUseCases, this.getFollowingUseCases,
       this.getFollowersUseCases)
-      : super(VisitorsInitial());
+      : super(VisitorsInitial()) {
+    _initializeBanners();
+    bannerController = PageController();
+  }
 
   SendFollowRequestUseCases sendFollowRequestUseCases;
   GetFollowingUseCases getFollowingUseCases;
   GetFollowersUseCases getFollowersUseCases;
+
+  // Banner functionality
+  late PageController bannerController;
+  List<BannerModel> banners = [];
+  int currentBannerIndex = 0;
 
   List<OccasionEntity> activeOccasions = [];
   List<CompleteOccasionModel> doneOccasions = [];
@@ -208,8 +215,6 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     emit(ChangeActiveOrdersState());
   }
 
-  List<BannerModel> banners = [];
-
   Future<void> getBannerData() async {
     banners.clear();
     emit(GetBannerDataLoadingState());
@@ -221,7 +226,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
       
       for (var doc in querySnapshot.docs) {
         debugPrint('Banner data: ${doc.data()}');
-        banners.add(BannerModel.fromMap(doc.data()));
+        banners.add(BannerModel.fromJson(doc.data()));
       }
       
       debugPrint('Processed ${banners.length} banners');
@@ -311,7 +316,7 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     FirebaseFirestore.instance.collection('Occasions').doc(occasionId).get().then((value) {
       occasionDetailsModel = OccasionModel.fromJson(value.data()!);
       checkIsOccasionActive(occasionDetailsModel.isActive);
-      debugPrint("occasionModel: ${occasionDetailsModel!.occasionName}");
+      debugPrint("occasionModel: ${occasionDetailsModel.occasionName}");
       emit(GetOccasionDataSuccessState());
     }).catchError((error){
       debugPrint("error in getting occasion data: $error");
@@ -478,5 +483,52 @@ class VisitorsCubit extends Cubit<VisitorsState> {
     isActive = value;
     emit(IsActiveSuccess());
     return isActive;
+  }
+
+  // Banner methods
+  void _initializeBanners() {
+    debugPrint('Initializing banners...');
+    banners = [
+      BannerModel(
+        id: '1',
+        title: 'عروض تحلي الاحتفال',
+        icon: '%',
+        buttonText: 'اطلب الآن',
+        colors: [Color(0xFF1a1a1a), Color(0xFF2d2d2d), Color(0xFF1a1a1a)],
+        iconColor: Color(0xFF00FF88),
+        buttonColor: Color(0xFFFF6B35),
+      ),
+      BannerModel(
+        id: '2',
+        title: 'خصومات خاصة',
+        icon: '🎁',
+        buttonText: 'احصل على العرض',
+        colors: [Color(0xFF2E3192), Color(0xFF1BFFFF), Color(0xFF2E3192)],
+        iconColor: Color(0xFFFFD700),
+        buttonColor: Color(0xFFE91E63),
+      ),
+      BannerModel(
+        id: '3',
+        title: 'عروض نهاية الأسبوع',
+        icon: '⚡',
+        buttonText: 'تسوق الآن',
+        colors: [Color(0xFF667eea), Color(0xFF764ba2), Color(0xFF667eea)],
+        iconColor: Color(0xFFFF6B6B),
+        buttonColor: Color(0xFF4ECDC4),
+      ),
+    ];
+    debugPrint('Banners initialized: ${banners.length} banners');
+  }
+
+  void updateBannerIndex(int index) {
+    currentBannerIndex = index;
+    emit(BannerIndexChangedState());
+  }
+
+
+  @override
+  Future<void> close() {
+    bannerController.dispose();
+    return super.close();
   }
 }

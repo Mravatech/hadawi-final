@@ -29,14 +29,28 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     emit(GetOthersOccasionListLoadingState());
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
+        Set<String> addedOccasionIds = {}; // Track added occasion IDs to prevent duplicates
+        
         for (var element in value.docs) {
-
-          if(element["isForMe"]== false && element['personId'] == UserDataFromStorage.uIdFromStorage){
-            othersOccasionsList.add(OccasionModel.fromJson(element.data()));
+          // Only include occasions that are for others (isForMe == false) and are active and not fully funded
+          if(element["isForMe"] == false && 
+             element['personId'] == UserDataFromStorage.uIdFromStorage &&
+             element['isActive'] == true && 
+             element['giftPrice'].toInt() > element['moneyGiftAmount'].toInt()){
+            
+            // Check if we've already added this occasion ID to prevent duplicates
+            String occasionId = element.id;
+            if (!addedOccasionIds.contains(occasionId)) {
+              othersOccasionsList.add(OccasionModel.fromJson(element.data()));
+              addedOccasionIds.add(occasionId);
+              debugPrint("Added others occasion: ${element['type']} with ID: $occasionId");
+            } else {
+              debugPrint("Skipped duplicate others occasion: ${element['type']} with ID: $occasionId");
+            }
           }
         }
       });
-      debugPrint("occasionsList: $othersOccasionsList");
+      debugPrint("Final othersOccasionsList count: ${othersOccasionsList.length}");
       emit(GetOthersOccasionListSuccessState());
     } catch (e) {
       debugPrint("error when get others occasion : ${e.toString()}");
@@ -49,16 +63,33 @@ class OccasionsListCubit extends Cubit<OccasionsListStates> {
     emit(GetMyOccasionListLoadingState());
     try {
       await FirebaseFirestore.instance.collection('Occasions').get().then((value){
+        Set<String> addedOccasionIds = {}; // Track added occasion IDs to prevent duplicates
+        
         for (var element in value.docs) {
-          if(element['personId'] == UserDataFromStorage.uIdFromStorage && element['isActive'] == true && element['giftPrice'].toInt() > element['moneyGiftAmount'].toInt()){
-            myOccasionsList.add(OccasionModel.fromJson(element.data()));
+          // Only include occasions that are for me (isForMe == true) and are active and not fully funded
+          if(element['personId'] == UserDataFromStorage.uIdFromStorage && 
+             element['isActive'] == true && 
+             element['giftPrice'].toInt() > element['moneyGiftAmount'].toInt() &&
+             element['isForMe'] == true){
+            
+            // Check if we've already added this occasion ID to prevent duplicates
+            String occasionId = element.id;
+            if (!addedOccasionIds.contains(occasionId)) {
+              myOccasionsList.add(OccasionModel.fromJson(element.data()));
+              addedOccasionIds.add(occasionId);
+              debugPrint("element[''] ${OccasionModel.fromJson(element.data())}");
+              debugPrint("Added occasion: ${element['type']} with ID: $occasionId");
+            } else {
+              debugPrint("Skipped duplicate occasion: ${element['type']} with ID: $occasionId");
+            }
           }
         }
       });
       myOccasionsList.forEach((element) {
         print('element.occasionDate ${element.giftImage}' );
       });
-      debugPrint("occasionsList: $myOccasionsList");
+      debugPrint("Final occasionsList count: ${myOccasionsList.length}");
+      debugPrint("myOccasionsList ${myOccasionsList.map((e) => e.toJson()).toList()}");
       emit(GetMyOccasionListSuccessState());
     } catch (e) {
       debugPrint("error when get my occasion : ${e.toString()}");

@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-09-24T21:37:37.370539",
+  "total_users_scanned": 0,
+  "duplicate_groups_found": 0,
+  "total_duplicates": 0,
+  "users_deleted": 0,
+  "backup_created": false,
+  "backup_path": null,
+  "errors": [
+    "'DuplicateGroup' object has no attribute 'user_data'"
+  ],
+  "duplicate_groups": []
+}

@@ -350,20 +350,12 @@ class OccasionSummary extends StatelessWidget {
                           context,
                           title: AppLocalizations.of(context)!.translate('pricing').toString(),
                           children: [
-                            if (cubit.isPresent == false && cubit.giftWithPackage != false)
-                              _buildInfoRow(
-                                context,
-                                label: AppLocalizations.of(context)!.translate('deliveryPrice').toString(),
-                                value: "${cubit.deliveryTax} ${AppLocalizations.of(context)!.translate('rsa')}",
-                                subtitle: "المطلوب مبلغ مالي مع تغليف",
-                              ),
-                            if (cubit.isPresent == true && cubit.giftWithPackage != false)
-                              _buildInfoRow(
-                                context,
-                                label: AppLocalizations.of(context)!.translate('deliveryPrice').toString(),
-                                value: "${cubit.deliveryTax} ${AppLocalizations.of(context)!.translate('rsa')}",
-                                subtitle: "المطلوب هدية مع التغليف",
-                              ),
+                            // Show delivery tax for all occasions
+                            _buildInfoRow(
+                              context,
+                              label: AppLocalizations.of(context)!.translate('deliveryPrice').toString(),
+                              value: "${cubit.deliveryTax} ${AppLocalizations.of(context)!.translate('rsa')}",
+                            ),
 
                             if (cubit.showDiscountValue)
                               _buildInfoRow(

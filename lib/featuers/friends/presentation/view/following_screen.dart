@@ -4,7 +4,6 @@ import 'package:hadawi_app/featuers/friends/presentation/controller/firends_stat
 import 'package:hadawi_app/featuers/friends/presentation/controller/friends_cubit.dart';
 import 'package:hadawi_app/styles/assets/asset_manager.dart';
 import 'package:hadawi_app/styles/colors/color_manager.dart';
-import 'package:hadawi_app/styles/text_styles/text_styles.dart';
 import 'package:hadawi_app/utiles/localiztion/app_localization.dart';
 import 'package:hadawi_app/utiles/shared_preferences/shared_preference.dart';
 import 'package:hadawi_app/widgets/toast.dart';
@@ -105,99 +104,55 @@ class _FollowingScreenState extends State<FollowingScreen> {
           );
         }
 
-        return ListView.builder(
+        return GridView.builder(
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           physics: AlwaysScrollableScrollPhysics(),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16.0,
+            mainAxisSpacing: 16.0,
+            childAspectRatio: 0.85,
+          ),
           itemCount: cubit.followers.length,
           itemBuilder: (context, index) {
             final following = cubit.followers[index];
             return Container(
-              margin: EdgeInsets.only(bottom: 12),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xFF8B7BA8).withOpacity(0.08),
-                    blurRadius: 15,
-                    offset: Offset(0, 4),
-                  ),
-                ],
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(12),
                   onTap: () {
                     // Handle user tap - show profile or actions
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Row(
+                    padding: EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Container(
-                          width: 56,
-                          height: 56,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Color(0xFF8B7BA8).withOpacity(0.2),
-                                Color(0xFF8B7BA8).withOpacity(0.1),
-                              ],
-                            ),
+                        Text(
+                          following.userName,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[800],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(28),
-                            child: Image.asset(
-                              AssetsManager.userIcon,
-                              width: 32,
-                              height: 32,
-                              color: Color(0xFF8B7BA8),
-                            ),
-                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                following.userName,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black87,
-                                ),
-                              ),
-                              SizedBox(height: 4),
-                              Text(
-                                'You follow',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Color(0xFF8B7BA8),
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
+                        SizedBox(height: 4),
+                        Text(
+                          'You follow',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[600],
                           ),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Color(0xFF8B7BA8).withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            'Following',
-                            style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF8B7BA8),
-                            ),
-                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
